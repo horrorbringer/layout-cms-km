@@ -1,15 +1,86 @@
 @import "tailwindcss";
 
+@theme {
+  /* ========================================================================
+     THEME SELECTION (Uncomment ONE block below to activate)
+     ======================================================================== */
+
+  /* --- 1. CORPORATE STANDARD (Default - Matching Logo) --- */
+  /* Trustworthy Navy + Bold Red */
+  --color-titan-navy: #0A192F;
+  --color-titan-navy-light: #172A45;
+  --color-titan-navy-lighter: #233554;
+  --color-titan-navy-subtle: #8892b0;
+
+  --color-titan-red: #ED1C24;
+  --color-titan-red-hover: #D91B22;
+
+  /* --- 2. INDUSTRIAL SAFETY --- */
+  /* Rugged Slate + Construction Yellow */
+  /*
+  --color-titan-navy: #111827; 
+  --color-titan-navy-light: #1F2937;
+  --color-titan-navy-lighter: #374151;
+  --color-titan-navy-subtle: #9CA3AF;
+
+  --color-titan-red: #FFD500;
+  --color-titan-red-hover: #E3BC00;
+  */
+
+  /* --- 3. EXECUTIVE PRESTIGE --- */
+  /* Luxurious Black + Gold */
+  /*
+  --color-titan-navy: #000000;
+  --color-titan-navy-light: #1A1A1A;
+  --color-titan-navy-lighter: #333333;
+  --color-titan-navy-subtle: #999999;
+
+  --color-titan-red: #D4AF37;
+  --color-titan-red-hover: #C5A028;
+  */
+
+  /* --- 4. ECO SUSTAINABLE --- */
+  /* Forest Green + Leaf Green */
+  /*
+  --color-titan-navy: #064E3B;
+  --color-titan-navy-light: #065F46;
+  --color-titan-navy-lighter: #047857;
+  --color-titan-navy-subtle: #6EE7B7;
+
+  --color-titan-red: #65A30D;
+  --color-titan-red-hover: #4D7C0F;
+  */
+
+  /* --- 5. MODERN TECH --- */
+  /* Deep Blue + Electric Cyan */
+  /*
+  --color-titan-navy: #0F172A;
+  --color-titan-navy-light: #1E293B;
+  --color-titan-navy-lighter: #334155;
+  --color-titan-navy-subtle: #94A3B8;
+
+  --color-titan-red: #06B6D4;
+  --color-titan-red-hover: #0891B2;
+  */
+
+  /* --- AUXILIARY PALETTE (Always Available) --- */
+  --color-titan-gold: #C5A059;
+  --color-titan-yellow: #FFD500;
+
+  --color-titan-white: #E6F1FF;
+  --color-titan-bg: #f5f8fc;
+  --color-titan-bg-alt: #eaeff5;
+
+  --color-innovator-glass: rgba(255, 255, 255, 0.05);
+  --color-innovator-border: rgba(255, 255, 255, 0.1);
+
+  --font-titan: var(--font-inter), sans-serif;
+  --font-innovator: var(--font-roboto), sans-serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,7 +91,7 @@
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
+  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }

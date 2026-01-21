@@ -1,65 +1,70 @@
-import Image from "next/image";
+
+import Link from 'next/link';
+import { ArrowRight, Layout, Monitor, Image, Building, Ruler, Box, Star } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center py-20 px-4 font-sans text-slate-800">
+      <div className="max-w-6xl w-full">
+        <div className="text-center mb-16">
+          <div className="inline-block bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-widest px-4 py-1 rounded-full mb-4">Internal Review</div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">KIM MEX Design Concepts</h1>
+          <p className="text-xl text-slate-500 max-w-2xl mx-auto">Select a design direction below to launch the interactive prototype.</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Option A */}
+          <Link href="/design-a" className="group block bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-slate-100 ring-2 ring-transparent hover:ring-titan-navy">
+            <div className="h-2 bg-titan-navy w-full"></div>
+            <div className="p-8">
+              <div className="mb-6 bg-slate-100 w-14 h-14 rounded-lg flex items-center justify-center text-titan-navy group-hover:bg-titan-navy group-hover:text-white transition-colors">
+                <Layout size={28} />
+              </div>
+              <h2 className="text-2xl font-bold mb-2 text-slate-900">A. The Titan</h2>
+              <p className="text-slate-500 text-sm mb-6 h-10">High-impact corporate presence with parallax effects and bold branding.</p>
+              <div className="flex items-center text-titan-navy font-bold text-sm uppercase tracking-wide">
+                View Prototype <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Option X - The Final */}
+          <Link href="/design-x" className="group block bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-slate-100 ring-2 ring-transparent hover:ring-titan-red">
+            <div className="h-2 bg-gradient-to-r from-titan-navy via-titan-red to-titan-navy w-full"></div>
+            <div className="p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-3 bg-titan-red text-white text-xs font-bold uppercase tracking-widest rounded-bl-xl shadow-md">Selected</div>
+
+              <div className="mb-6 bg-titan-bg w-14 h-14 rounded-lg flex items-center justify-center text-titan-red group-hover:bg-titan-red group-hover:text-white transition-colors">
+                <Star size={28} />
+              </div>
+              <h2 className="text-2xl font-black mb-2 text-slate-900">X. The Premium</h2>
+              <p className="text-slate-500 text-sm mb-6 h-10">Sophisticated blend of corporate authority and modern elegance.</p>
+
+              <div className="flex items-center text-titan-red font-bold text-sm uppercase tracking-wide">
+                View X <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Option Y - The Visionary */}
+          <Link href="/design-y" className="group block bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-slate-100 ring-2 ring-transparent hover:ring-titan-gold">
+            <div className="h-2 bg-gradient-to-r from-titan-navy via-titan-gold to-titan-navy w-full"></div>
+            <div className="p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-3 bg-titan-gold text-white text-xs font-bold uppercase tracking-widest rounded-bl-xl shadow-md">New</div>
+
+              <div className="mb-6 bg-titan-bg w-14 h-14 rounded-lg flex items-center justify-center text-titan-gold group-hover:bg-titan-gold group-hover:text-white transition-colors">
+                <Image size={28} />
+              </div>
+              <h2 className="text-2xl font-black mb-2 text-slate-900">Y. The Visionary</h2>
+              <p className="text-slate-500 text-sm mb-6 h-10">Ultra-clean, editorial aesthetic with bold typography and heavy use of white space.</p>
+
+              <div className="flex items-center text-titan-gold font-bold text-sm uppercase tracking-wide">
+                View Y <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </Link>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
