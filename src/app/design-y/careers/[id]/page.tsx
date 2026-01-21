@@ -238,7 +238,7 @@ export default function CareerDetailPage() {
                     <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
                         <div className="max-w-3xl">
                             <div className="flex items-center gap-3 mb-6">
-                                <span className={`w-3 h-3 rounded-full animate-pulse ${jobData[id]?.status === 'Urgent' ? 'bg-titan-red' : 'bg-green-500'}`}></span>
+                                <span className={`w-3 h-3 rounded-full animate-pulse ${job.status === 'Urgent' ? 'bg-titan-red' : 'bg-green-500'}`}></span>
                                 <span className="font-mono text-xs text-titan-navy/40 uppercase tracking-widest">Protocol ID: {id || job.id}</span>
                             </div>
                             <h1 className="text-5xl md:text-7xl font-black text-titan-navy tracking-tighter leading-[0.9] mb-8">
