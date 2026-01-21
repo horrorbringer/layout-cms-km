@@ -22,7 +22,7 @@ const types = [
 
 const statuses = ['All', 'Completed', 'Under Construction'];
 
-export default function ProjectsPage() {
+function ProjectsPageContent() {
     const searchParams = useSearchParams();
     const initialStatus = searchParams.get('status') || 'All';
 
@@ -171,5 +171,13 @@ export default function ProjectsPage() {
                 )}
             </section>
         </div>
+    );
+}
+
+export default function ProjectsPage() {
+    return (
+        <React.Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center text-titan-navy font-bold">Loading Projects...</div>}>
+            <ProjectsPageContent />
+        </React.Suspense>
     );
 }

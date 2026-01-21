@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Download, ArrowLeft, Maximize2 } from 'lucide-react';
 import Link from 'next/link';
 
-export default function SimplePdfViewer() {
+function SimplePdfViewerContent() {
     const searchParams = useSearchParams();
     const docTitle = searchParams.get('title') || 'Document';
 
@@ -92,5 +92,13 @@ export default function SimplePdfViewer() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function SimplePdfViewer() {
+    return (
+        <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-titan-bg text-titan-navy/50 font-mono uppercase tracking-widest">Loading Document Viewer...</div>}>
+            <SimplePdfViewerContent />
+        </React.Suspense>
     );
 }

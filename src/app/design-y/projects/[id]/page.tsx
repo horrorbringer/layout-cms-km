@@ -9,7 +9,7 @@ import { projects } from '../../data/projectData'; // Import centralized data
 
 // Reuse the central data source. If ID not found, fallback to first item
 const getProject = (id: string | number) => {
-    const found = projects.find(p => p.id === Number(id));
+    const found = projects.find(p => p.id === String(id));
     return found || projects[0];
 };
 
@@ -46,7 +46,7 @@ export default function ProjectDetailTechnical() {
                         <div className="flex flex-col md:flex-row justify-between items-end gap-8">
                             <div>
                                 <div className="flex items-center gap-4 mb-4">
-                                    <span className="font-mono text-xs uppercase tracking-widest border border-white/30 px-2 py-1 bg-titan-navy/20 backdrop-blur-sm">Fig. {project.id < 10 ? `0${project.id}` : project.id}</span>
+                                    <span className="font-mono text-xs uppercase tracking-widest border border-white/30 px-2 py-1 bg-titan-navy/20 backdrop-blur-sm">Fig. {project.id.toUpperCase()}</span>
                                     <span className="font-mono text-xs uppercase tracking-widest text-titan-red font-bold bg-white/10 px-2 py-1 backdrop-blur-sm">{project.type}</span>
                                 </div>
                                 <h1 className="text-5xl md:text-[7vw] font-black leading-[0.9] tracking-tighter mb-4 drop-shadow-2xl">
