@@ -1,75 +1,88 @@
 'use client';
 
 import React from 'react';
-import { Phone, Facebook, Linkedin, Youtube, Search, ArrowRight, ChevronDown, Menu, X, Mail, MapPin } from 'lucide-react';
+import { Phone, Facebook, Linkedin, Youtube, Search, ArrowRight, ChevronDown, Menu, X, Mail, MapPin, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import FooterX from './components/FooterX';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 
-const navItems = [
-    {
-        label: 'About Us', href: '/design-x/about',
-        children: [
-            { label: 'Company Profile', href: '/design-x/about#profile', desc: 'Learn about our history' },
-            { label: 'Leadership', href: '/design-x/about#leadership', desc: 'Meet our team' },
-            { label: 'Quality & Safety', href: '/design-x/about#safety', desc: 'Our standards' }
-        ]
-    },
-    {
-        label: 'Services', href: '/design-x/services',
-        children: [
-            { label: 'Design & Build', href: '/design-x/services/design-build', desc: 'Full lifecycle solutions' },
-            { label: 'Building Renovation', href: '/design-x/services/renovation', desc: 'Revitalize existing structures' },
-            { label: 'Project Management', href: '/design-x/services/project-management', desc: 'Oversight & control' },
-            { label: 'Consultants', href: '/design-x/services/consultants', desc: 'Expert advisory services' }
-        ]
-    },
-    {
-        label: 'Projects', href: '/design-x/projects',
-        children: [
-            { 
-                label: 'Done Projects', 
-                href: '/design-x/projects/completed', 
-                desc: 'View our portfolio',
-                children: [
-                    { label: 'Government', href: '/design-x/projects/completed?type=Government Office Building' },
-                    { label: 'Public Service', href: '/design-x/projects/completed?type=Public Service Building' },
-                    { label: 'Private', href: '/design-x/projects/completed?type=Private Building' },
-                    { label: 'Water Treatment', href: '/design-x/projects/completed?type=Water Treatment Plant' },
-                    { label: 'Slope', href: '/design-x/projects/completed?type=Slope Construction' }
-                ]
-            },
-            { 
-                label: 'Implement Projects', 
-                href: '/design-x/projects/implementation', 
-                desc: 'Current developments',
-                children: [
-                    { label: 'Government', href: '/design-x/projects/implementation?type=Government Office Building' },
-                    { label: 'Public Service', href: '/design-x/projects/implementation?type=Public Service Building' },
-                    { label: 'Private', href: '/design-x/projects/implementation?type=Private Building' },
-                    { label: 'Water Treatment', href: '/design-x/projects/implementation?type=Water Treatment Plant' },
-                    { label: 'Slope', href: '/design-x/projects/implementation?type=Slope Construction' }
-                ]
-            }
-        ]
-    },
-    {
-        label: 'News', href: '/design-x/news',
-        children: [
-            { label: 'News & Updates', href: '/design-x/news', desc: 'Latest announcements' },
-            { label: 'Doc Collection', href: '/design-x/documents', desc: 'Resources & documents' }
-        ]
-    },
-    { label: 'Careers', href: '/design-x/careers' },
-    { label: 'Contact', href: '/design-x/contact' }
-];
-
-export default function DesignXLayout({ children }: { children: React.ReactNode }) {
+function LayoutContent({ children }: { children: React.ReactNode }) {
+    const { t, language, setLanguage, fontClassName } = useLanguage();
+    
+    // Adjust sizes for Khmer to match legibility of English
+    const isKh = language === 'kh';
+    // Top bar: smaller text
+    const textTopBar = isKh ? 'text-[12px]' : 'text-[11px]';
+    // Main Nav: Standard is 13px uppercase, Khmer needs bigger
+    const textMainNav = isKh ? 'text-base' : 'text-[13px]';
+    // Dropdown items: Standard is sm (14px)
+    const textDropdown = isKh ? 'text-base' : 'text-sm';
+    
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [hoveredNav, setHoveredNav] = React.useState<number | null>(null);
     const [isSearchOpen, setIsSearchOpen] = React.useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
     const [expandedMobileItem, setExpandedMobileItem] = React.useState<number | null>(null);
+
+    // Navigation Items (Dynamic based on language)
+    const navItems = [
+        {
+            label: t('About Us'), href: '/design-x/about',
+            children: [
+                { label: t('Company Profile'), href: '/design-x/about#profile', desc: t('Learn about our history') },
+                { label: t('Leadership'), href: '/design-x/about#leadership', desc: t('Meet our team') },
+                { label: t('Quality & Safety'), href: '/design-x/about#safety', desc: t('Our standards') }
+            ]
+        },
+        {
+            label: t('Services'), href: '/design-x/services',
+            children: [
+                { label: t('Design & Build'), href: '/design-x/services/design-build', desc: t('Full lifecycle solutions') },
+                { label: t('Building Renovation'), href: '/design-x/services/renovation', desc: t('Revitalize existing structures') },
+                { label: t('Project Management'), href: '/design-x/services/project-management', desc: t('Oversight & control') },
+                { label: t('Consultants'), href: '/design-x/services/consultants', desc: t('Expert advisory services') }
+            ]
+        },
+        {
+            label: t('Projects'), href: '/design-x/projects',
+            children: [
+                { 
+                    label: t('Done Projects'), 
+                    href: '/design-x/projects/completed', 
+                    desc: t('View our portfolio'),
+                    children: [
+                        { label: t('Government'), href: '/design-x/projects/completed?type=Government Office Building' },
+                        { label: t('Public Service'), href: '/design-x/projects/completed?type=Public Service Building' },
+                        { label: t('Private'), href: '/design-x/projects/completed?type=Private Building' },
+                        { label: t('Water Treatment'), href: '/design-x/projects/completed?type=Water Treatment Plant' },
+                        { label: t('Slope'), href: '/design-x/projects/completed?type=Slope Construction' }
+                    ]
+                },
+                { 
+                    label: t('Implement Projects'), 
+                    href: '/design-x/projects/implementation', 
+                    desc: t('Current developments'),
+                    children: [
+                        { label: t('Government'), href: '/design-x/projects/implementation?type=Government Office Building' },
+                        { label: t('Public Service'), href: '/design-x/projects/implementation?type=Public Service Building' },
+                        { label: t('Private'), href: '/design-x/projects/implementation?type=Private Building' },
+                        { label: t('Water Treatment'), href: '/design-x/projects/implementation?type=Water Treatment Plant' },
+                        { label: t('Slope'), href: '/design-x/projects/implementation?type=Slope Construction' }
+                    ]
+                }
+            ]
+        },
+        {
+            label: t('News'), href: '/design-x/news',
+            children: [
+                { label: t('News & Updates'), href: '/design-x/news', desc: t('Latest announcements') },
+                { label: t('Doc Collection'), href: '/design-x/documents', desc: t('Resources & documents') }
+            ]
+        },
+        { label: t('Careers'), href: '/design-x/careers' },
+        { label: t('Contact'), href: '/design-x/contact' }
+    ];
 
     React.useEffect(() => {
         const updateScroll = () => {
@@ -91,12 +104,12 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
     }, []);
 
     return (
-        <div className="bg-white font-sans text-titan-navy min-h-screen flex flex-col">
+        <div className={`bg-white text-titan-navy min-h-screen flex flex-col ${fontClassName}`}>
 
             {/* --- FIXED HEADER GROUP --- */}
             <header className="fixed top-0 left-0 w-full z-[100]">
                 {/* --- TOP BAR --- */}
-                <div className={`bg-titan-navy text-white text-[11px] tracking-wide font-medium transition-all duration-500 overflow-hidden ${isScrolled ? 'h-0 opacity-0' : 'h-10 opacity-100'}`}>
+                <div className={`bg-titan-navy text-white ${textTopBar} tracking-wide font-medium transition-all duration-500 overflow-hidden ${isScrolled ? 'h-0 opacity-0' : 'h-10 opacity-100'}`}>
                     <div className="max-w-[1600px] mx-auto px-6 h-full flex justify-between items-center">
                         <div className="flex gap-6 items-center">
                             <span className="flex items-center gap-2 hover:text-accent-orange cursor-pointer transition">
@@ -111,7 +124,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                         <div className="flex gap-4 items-center">
                             <div className="hidden sm:flex items-center gap-2 text-white/60">
                                 <MapPin size={12} />
-                                <span>Phnom Penh, Cambodia</span>
+                                <span>{t('Phnom Penh, Cambodia')}</span>
                             </div>
                             <div className="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
                             <div className="flex gap-2">
@@ -124,6 +137,23 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                 <a href="#" className="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
                                     <Youtube size={12} />
                                 </a>
+                            </div>
+
+                            {/* LANGUAGE SWITCHER */}
+                            <div className="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
+                            <div className="flex items-center gap-1 bg-white/10 rounded px-1 py-0.5">
+                                <button 
+                                    onClick={() => setLanguage('en')}
+                                    className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-all ${language === 'en' ? 'bg-accent-orange text-white' : 'text-white/60 hover:text-white'}`}
+                                >
+                                    EN
+                                </button>
+                                <button 
+                                    onClick={() => setLanguage('kh')}
+                                    className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-all ${language === 'kh' ? 'bg-accent-orange text-white' : 'text-white/60 hover:text-white'}`}
+                                >
+                                    KH
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -147,7 +177,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                         KIMMEX
                                     </span>
                                     <span className="block text-[9px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 mt-0.5 text-titan-navy/50">
-                                        Construction & Investment
+                                        {t('Construction & Investment')}
                                     </span>
                                 </div>
                             </Link>
@@ -165,7 +195,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                             href={item.href}
                                             className="flex items-center gap-1 px-5 py-8 cursor-pointer relative"
                                         >
-                                            <span className="text-[13px] font-bold uppercase tracking-wide transition-all duration-200 text-titan-navy group-hover/nav:text-accent-orange">
+                                            <span className={`${textMainNav} font-bold uppercase tracking-wide transition-all duration-200 text-titan-navy group-hover/nav:text-accent-orange`}>
                                                 {item.label}
                                             </span>
                                             {item.children && (
@@ -191,7 +221,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                                                     className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors group/item"
                                                                 >
                                                                     <div>
-                                                                        <div className="font-bold text-titan-navy group-hover/item:text-accent-orange transition-colors text-sm">
+                                                                        <div className={`font-bold text-titan-navy group-hover/item:text-accent-orange transition-colors ${textDropdown}`}>
                                                                             {child.label}
                                                                         </div>
                                                                         {child.desc && (
@@ -217,7 +247,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                                                                     <Link
                                                                                         key={subIdx}
                                                                                         href={sub.href}
-                                                                                        className="group/sub flex items-center justify-between px-5 py-3 text-sm font-bold text-titan-navy/70 hover:text-accent-orange hover:bg-gray-50 transition-all"
+                                                                                        className={`group/sub flex items-center justify-between px-5 py-3 ${textDropdown} font-bold text-titan-navy/70 hover:text-accent-orange hover:bg-gray-50 transition-all`}
                                                                                     >
                                                                                         <span>{sub.label}</span>
                                                                                         <ArrowRight size={14} className="opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
@@ -252,7 +282,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                     href="/design-x/contact"
                                     className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm uppercase tracking-wide transition-all duration-300 bg-accent-orange text-white hover:bg-titan-navy"
                                 >
-                                    Get Quote
+                                    {t('Get Quote')}
                                     <ArrowRight size={16} />
                                 </Link>
 
@@ -358,7 +388,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                         onClick={() => setIsMobileMenuOpen(false)}
                                         className="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-lg font-bold text-sm uppercase tracking-wide bg-accent-orange text-white"
                                     >
-                                        Get a Free Quote
+                                        {t('Get a Free Quote')}
                                         <ArrowRight size={16} />
                                     </Link>
                                 </div>
@@ -374,6 +404,21 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                             <Mail size={14} className="text-accent-orange" />
                                             info@kimmex.com.kh
                                         </a>
+                                    </div>
+                                    {/* Mobile Language Switcher */}
+                                    <div className="mt-4 flex gap-2">
+                                        <button 
+                                            onClick={() => setLanguage('en')}
+                                            className={`flex-1 py-2 rounded text-xs font-bold transition-all border ${language === 'en' ? 'bg-accent-orange text-white border-accent-orange' : 'bg-white text-titan-navy border-gray-200'}`}
+                                        >
+                                            English
+                                        </button>
+                                        <button 
+                                            onClick={() => setLanguage('kh')}
+                                            className={`flex-1 py-2 rounded text-xs font-bold transition-all border ${language === 'kh' ? 'bg-accent-orange text-white border-accent-orange' : 'bg-white text-titan-navy border-gray-200'}`}
+                                        >
+                                            ខ្មែរ
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -412,7 +457,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                                 <input
                                     autoFocus
                                     type="text"
-                                    placeholder="Search projects, services, news..."
+                                    placeholder={t('Search...')}
                                     className="w-full bg-transparent pl-14 pr-24 py-5 text-lg font-medium text-titan-navy outline-none placeholder:text-titan-navy/30 border-b border-gray-100"
                                 />
                                 <button
@@ -425,13 +470,13 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
 
                             {/* Quick Links */}
                             <div className="p-5">
-                                <p className="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-4">Quick Links</p>
+                                <p className="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-4">{t('Quick Links')}</p>
                                 <div className="grid grid-cols-2 gap-2">
                                     {[
-                                        { label: 'Our Projects', href: '/design-x/projects', icon: '🏗️' },
-                                        { label: 'Services', href: '/design-x/services', icon: '⚙️' },
-                                        { label: 'About Us', href: '/design-x/about', icon: '🏢' },
-                                        { label: 'Contact', href: '/design-x/contact', icon: '📞' },
+                                        { label: t('Projects'), href: '/design-x/projects', icon: '🏗️' },
+                                        { label: t('Services'), href: '/design-x/services', icon: '⚙️' },
+                                        { label: t('About Us'), href: '/design-x/about', icon: '🏢' },
+                                        { label: t('Contact'), href: '/design-x/contact', icon: '📞' },
                                     ].map((link, i) => (
                                         <Link 
                                             key={i} 
@@ -449,7 +494,7 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
 
                             {/* Categories */}
                             <div className="px-5 pb-5">
-                                <p className="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-3">Categories</p>
+                                <p className="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-3">{t('Categories')}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {['Commercial', 'Infrastructure', 'Industrial', 'Renovation', 'Government'].map(tag => (
                                         <span key={tag} className="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-accent-orange hover:text-white transition-all">
@@ -463,5 +508,13 @@ export default function DesignXLayout({ children }: { children: React.ReactNode 
                 )}
             </AnimatePresence>
         </div>
+    );
+}
+
+export default function DesignXLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <LanguageProvider>
+            <LayoutContent>{children}</LayoutContent>
+        </LanguageProvider>
     );
 }

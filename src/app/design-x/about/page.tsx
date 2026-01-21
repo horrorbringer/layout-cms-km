@@ -60,6 +60,125 @@ function AnimatedCounter({ value, suffix = '', label }: { value: number; suffix?
     );
 }
 
+// Org Chart Node Type
+type OrgNodeData = {
+    name: string;
+    role: string;
+    image?: string;
+    children?: OrgNodeData[];
+};
+
+// Recursive Org Chart Node Component
+function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boolean }) {
+    const hasChildren = node.children && node.children.length > 0;
+
+    return (
+        <div className={`flex flex-col ${isRoot ? 'items-center' : 'items-start lg:items-center'} w-full lg:w-auto`}>
+            {/* Node Card */}
+            <FadeInWhenVisible>
+                <Link href={`/design-x/team/${node.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}>
+                    <div className={`relative z-10 bg-white rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 group flex items-center lg:flex-col border-l-4 lg:border-l-0 lg:border-t-4 border-titan-red cursor-pointer
+                        ${isRoot 
+                            ? 'p-6 lg:p-6 min-w-[280px] lg:w-72 flex-col text-center shadow-2xl ring-1 ring-black/5' 
+                            : 'p-3 lg:p-4 w-full max-w-md lg:w-52 lg:min-w-[180px] border border-gray-100 hover:border-titan-red/20 hover:shadow-lg'}
+                    `}>
+                        {/* Image Circle */}
+                        <div className={`rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center bg-gray-50 flex-shrink-0 relative mr-4 lg:mr-0 lg:mb-4 group-hover:scale-105 transition-transform duration-500
+                            ${isRoot 
+                                ? 'w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-titan-navy to-titan-navy-light ring-4 ring-titan-red/10' 
+                                : 'w-16 h-16 lg:w-20 lg:h-20 ring-2 ring-gray-100'}
+                        `}>
+                            {node.image ? (
+                                <img src={node.image} alt={node.name} className="w-full h-full object-cover" />
+                            ) : (
+                                <span className={`font-black ${isRoot ? 'text-3xl lg:text-5xl text-white/20' : 'text-xl lg:text-2xl text-titan-navy/20'}`}>
+                                    {node.name.split(' ').pop()?.charAt(0)}
+                                </span>
+                            )}
+                        </div>
+
+                        <div className={`${isRoot ? 'text-center' : 'text-left lg:text-center'}`}>
+                            <h3 className={`font-black text-titan-navy uppercase leading-tight lg:mb-1 ${isRoot ? 'text-lg lg:text-xl' : 'text-sm lg:text-sm'}`}>
+                                {node.name}
+                            </h3>
+                            <p className={`text-titan-red font-bold uppercase tracking-widest ${isRoot ? 'text-xs lg:text-sm' : 'text-[10px] text-titan-navy/60'}`}>
+                                {node.role}
+                            </p>
+                        </div>
+
+                        {/* Decorative glowing effect for Root */}
+                        {isRoot && <div className="absolute inset-0 bg-titan-red/5 blur-3xl -z-10 rounded-full transform scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>}
+                    </div>
+                </Link>
+            </FadeInWhenVisible>
+
+            {/* Recursive Children & Connectors */}
+            {hasChildren && (
+                <div className="flex flex-col lg:items-center w-full lg:w-auto">
+                    {/* DESKTOP: Vertical Line from Parent */}
+                    <div className="hidden lg:block w-px h-6 bg-gray-300"></div>
+
+                    {/* CHILDREN CONTAINER */}
+                    <div className={`
+                        relative flex 
+                        flex-col lg:flex-row 
+                        
+                        /* Mobile: Indented vertical list */
+                        ml-6 pl-6 pt-6 border-l-2 border-dashed border-gray-200 space-y-6
+                        
+                        /* Desktop: Horizontal row (Reset Mobile) */
+                        lg:ml-0 lg:pl-0 lg:pt-6 lg:border-l-0 lg:space-y-0
+                    `}>
+                        {/* DESKTOP: Horizontal Connector Line */}
+                        {node.children!.length > 1 && (
+                            <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 h-px bg-gray-300 w-[calc(100%-2rem)]"></div>
+                        )}
+
+                        {node.children!.map((child, index) => (
+                            <div key={index} className="flex flex-col lg:items-center relative lg:px-2 w-full lg:w-auto">
+                                
+                                {/* MOBILE: Horizontal dash from vertical line to child */}
+                                <div className="lg:hidden absolute top-6 -left-6 w-6 h-0.5 bg-gray-200"></div>
+
+                                {/* DESKTOP: Vertical Line to Child */}
+                                {node.children!.length > 1 && (
+                                     <div className={`hidden lg:block absolute top-[-1.5rem] w-px h-6 bg-gray-300 left-1/2 -translate-x-1/2
+                                        ${index === 0 ? 'rounded-tl-lg' : ''} 
+                                        ${index === node.children!.length - 1 ? 'rounded-tr-lg' : ''}
+                                     `}></div>
+                                )}
+                                
+                                <div className="relative w-full lg:w-auto">
+                                     {/* DESKTOP: Connector upwards if multiple children */}
+                                     {node.children!.length > 1 && (
+                                         <div className="hidden lg:block absolute -top-6 left-1/2 -translate-x-1/2 w-px h-6 bg-gray-300"></div>
+                                     )}
+                                     
+                                     {/* DESKTOP: Horizontal Line Segment for this child */}
+                                     {node.children!.length > 1 && (
+                                         <>
+                                            {/* Left half line */}
+                                            {index > 0 && (
+                                                <div className="hidden lg:block absolute -top-6 right-1/2 w-[calc(50%+0.5rem)] h-px bg-gray-300"></div>
+                                            )}
+                                            {/* Right half line */}
+                                            {index < node.children!.length - 1 && (
+                                                <div className="hidden lg:block absolute -top-6 left-1/2 w-[calc(50%+0.5rem)] h-px bg-gray-300"></div>
+                                            )}
+                                         </>
+                                     )}
+
+                                     <OrgTreeNode node={child} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function AboutPage() {
     const heroRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -111,20 +230,43 @@ export default function AboutPage() {
         }
     ];
 
-    const leadership = [
-        { name: 'Okhna. TOUCH KIM', role: 'Chief Executive Officer', image: '/team/ceo.jpg' },
-        { name: 'Mr. PAUCH BUNPHEAKDEY', role: 'Deputy General Manager', image: '/team/dgm.jpg' },
-        { name: 'Mr. LENG VANNARITH', role: 'Finance Director', image: '/team/fd.jpg' },
-        { name: 'Mr. OUNG CHAKNORA', role: 'Senior Project Manager', image: '/team/spm.jpg' },
-        { name: 'Mr. SUM ROTANA', role: 'Project Manager', image: '/team/pm.jpg' },
-    ];
-
-    const departmentHeads = [
-        { name: 'Mr. KRAI KEAK', role: 'MEP Operations Manager', image: '/team/mep.jpg' },
-        { name: 'Mr. CHHUNDY RYTA', role: 'Deputy Architect Manager', image: '/team/arch.jpg' },
-        { name: 'Mr. TOUCH PUTHEANY', role: 'MEP Design Manager', image: '/team/design.jpg' },
-        { name: 'Mr. RY KEN', role: 'Deputy QS Manager', image: '/team/qs.jpg' },
-    ];
+    const orgData: OrgNodeData = {
+        name: 'Okhna. TOUCH KIM',
+        role: 'Chief Executive Officer',
+        image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400&h=400',
+        children: [
+            {
+                name: 'Mr. PAUCH BUNPHEAKDEY',
+                role: 'Deputy General Manager',
+                image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400&h=400',
+                children: [
+                    { name: 'Mr. KRAI KEAK', role: 'MEP Operations Manager', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400' },
+                    { name: 'Mr. CHHUNDY RYTA', role: 'Deputy Architect Manager', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400&h=400' },
+                ]
+            },
+            {
+                name: 'Mr. LENG VANNARITH',
+                role: 'Finance Director',
+                image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=400',
+                children: []
+            },
+            {
+                name: 'Mr. OUNG CHAKNORA',
+                role: 'Senior Project Manager',
+                image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400&h=400',
+                children: [
+                    { name: 'Mr. TOUCH PUTHEANY', role: 'MEP Design Manager', image: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&q=80&w=400&h=400' },
+                    { name: 'Mr. RY KEN', role: 'Deputy QS Manager', image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=400&h=400' },
+                ]
+            },
+            {
+                name: 'Mr. SUM ROTANA',
+                role: 'Project Manager',
+                image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=400',
+                children: []
+            }
+        ]
+    };
 
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy">
@@ -404,83 +546,25 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* === LEADERSHIP TEAM === */}
-            <section className="py-24 px-6 bg-white">
+            {/* === LEADERSHIP TEAM (Org Chart) === */}
+            <section className="py-24 px-6 bg-white overflow-hidden">
                 <div className="max-w-[1400px] mx-auto">
                     <FadeInWhenVisible>
-                        <div className="text-center mb-16">
+                        <div className="text-center mb-20">
                             <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our People</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-4">Leadership Team</h2>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-4">Organizational Structure</h2>
                             <p className="text-titan-navy/50 text-lg max-w-2xl mx-auto">
-                                Meet the experienced professionals who guide our company towards excellence.
+                                Led by industry veterans with a shared vision for excellence and sustainable growth.
                             </p>
                         </div>
                     </FadeInWhenVisible>
 
-                    {/* CEO - Featured */}
-                    <FadeInWhenVisible>
-                        <div className="flex justify-center mb-16">
-                            <div className="text-center group">
-                                <div className="w-48 h-60 md:w-56 md:h-72 bg-gradient-to-br from-titan-navy to-titan-navy-light rounded-2xl overflow-hidden shadow-xl mx-auto mb-6 ring-4 ring-titan-red/20 group-hover:ring-titan-red/50 transition-all duration-300">
-                                    <div className="w-full h-full bg-titan-navy/20 flex items-center justify-center">
-                                        <span className="text-6xl font-black text-white/20">TK</span>
-                                    </div>
-                                </div>
-                                <h3 className="text-xl font-black text-titan-navy uppercase">Okhna. TOUCH KIM</h3>
-                                <p className="text-titan-red text-sm font-bold uppercase tracking-widest mt-1">Founder & CEO</p>
-                            </div>
+                    {/* ORG CHART VISUALIZATION */}
+                    <div className="relative overflow-x-auto pb-12 custom-scrollbar">
+                        <div className="min-w-max px-4 flex justify-center">
+                            <OrgTreeNode node={orgData} isRoot={true} />
                         </div>
-                    </FadeInWhenVisible>
-
-                    {/* Connector Line */}
-                    <div className="hidden lg:flex justify-center mb-8">
-                        <div className="w-px h-12 bg-gray-200"></div>
                     </div>
-
-                    {/* Senior Management */}
-                    <FadeInWhenVisible delay={0.1}>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mb-20">
-                            {leadership.slice(1).map((leader, i) => (
-                                <div key={i} className="text-center group">
-                                    <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden shadow-md mx-auto mb-4 group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-300">
-                                        <div className="w-full h-full bg-titan-navy/10 flex items-center justify-center">
-                                            <span className="text-3xl font-black text-titan-navy/20">
-                                                {leader.name.split(' ').pop()?.charAt(0)}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <h4 className="text-sm font-bold text-titan-navy uppercase leading-tight">{leader.name}</h4>
-                                    <p className="text-xs text-titan-navy/40 uppercase tracking-wider mt-1">{leader.role}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </FadeInWhenVisible>
-
-                    {/* Department Heads */}
-                    <FadeInWhenVisible delay={0.2}>
-                        <div className="relative mb-12">
-                            <div className="absolute inset-x-0 top-1/2 h-px bg-gray-100"></div>
-                            <div className="relative bg-white px-6 mx-auto w-fit">
-                                <span className="text-titan-navy/40 text-xs font-bold uppercase tracking-widest">Department Heads</span>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-                            {departmentHeads.map((leader, i) => (
-                                <div key={i} className="text-center group">
-                                    <div className="aspect-[3/4] bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden shadow-sm mx-auto mb-3 group-hover:shadow-md transition-all duration-300">
-                                        <div className="w-full h-full bg-titan-navy/5 flex items-center justify-center">
-                                            <span className="text-2xl font-black text-titan-navy/10">
-                                                {leader.name.split(' ').pop()?.charAt(0)}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <h4 className="text-xs font-bold text-titan-navy uppercase leading-tight">{leader.name}</h4>
-                                    <p className="text-[10px] text-titan-navy/40 uppercase tracking-wider mt-1">{leader.role}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </FadeInWhenVisible>
                 </div>
             </section>
 

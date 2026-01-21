@@ -1,8 +1,12 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { Facebook, Linkedin, Youtube, Instagram, MapPin, Phone, Mail, HardHat } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function FooterX() {
+    const { t } = useLanguage();
     const currentYear = new Date().getFullYear();
 
     return (
@@ -19,7 +23,7 @@ export default function FooterX() {
                             </div>
                         </div>
                         <p className="text-white/50 text-sm leading-relaxed max-w-xs">
-                            Engineering the future of Cambodia since 1999. Delivering excellence in high-rise, infrastructure, and industrial construction with unwavering commitment to quality and safety.
+                            {t('Footer Desc')}
                         </p>
                         <div className="flex gap-3 pt-2">
                             <a href="#" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
@@ -41,15 +45,15 @@ export default function FooterX() {
                     <div>
                         <h4 className="font-bold text-sm uppercase tracking-widest mb-8 text-accent-orange flex items-center gap-2">
                             <HardHat size={14} />
-                            Explore
+                            {t('Explore')}
                         </h4>
                         <ul className="space-y-4 text-sm text-white/50">
                             {[
-                                { label: 'Our Projects', href: '/design-x/projects' },
-                                { label: 'Services', href: '/design-x/services' },
-                                { label: 'About Us', href: '/design-x/about' },
-                                { label: 'News & Insights', href: '/design-x/news' },
-                                { label: 'Careers', href: '/design-x/careers' },
+                                { label: t('Projects'), href: '/design-x/projects' },
+                                { label: t('Services'), href: '/design-x/services' },
+                                { label: t('About Us'), href: '/design-x/about' },
+                                { label: t('News & Insights'), href: '/design-x/news' },
+                                { label: t('Careers'), href: '/design-x/careers' },
                             ].map((link, i) => (
                                 <li key={i}>
                                     <Link href={link.href} className="hover:text-accent-orange hover:pl-2 transition-all flex items-center gap-2">
@@ -64,16 +68,16 @@ export default function FooterX() {
                     <div>
                         <h4 className="font-bold text-sm uppercase tracking-widest mb-8 text-accent-orange flex items-center gap-2">
                             <HardHat size={14} />
-                            Capabilities
+                            {t('Capabilities')}
                         </h4>
                         <ul className="space-y-4 text-sm text-white/50">
                             {[
-                                'General Construction',
-                                'Design & Build',
-                                'MEP Engineering',
-                                'Steel Structure',
-                                'Renovation',
-                                'Project Management'
+                                t('General Construction'),
+                                t('Design & Build'),
+                                t('MEP Engineering'),
+                                t('Steel Structure'),
+                                t('Renovation'),
+                                t('Project Management')
                             ].map((item, i) => (
                                 <li key={i} className="flex items-center gap-2 hover:text-accent-orange transition-colors cursor-default">
                                     <span className="w-1.5 h-1.5 bg-accent-orange rounded-full"></span>
@@ -87,14 +91,14 @@ export default function FooterX() {
                     <div>
                         <h4 className="font-bold text-sm uppercase tracking-widest mb-8 text-accent-orange flex items-center gap-2">
                             <HardHat size={14} />
-                            Contact
+                            {t('Contact')}
                         </h4>
                         <ul className="space-y-6 text-sm text-white/50">
                             <li className="flex gap-4">
                                 <MapPin size={20} className="text-accent-orange shrink-0" />
                                 <span>
                                     #123 Monivong Blvd, Boeung Keng Kang 1,<br />
-                                    Phnom Penh, Cambodia
+                                    {t('Phnom Penh, Cambodia')}
                                 </span>
                             </li>
                             <li className="flex gap-4 items-center">
@@ -111,10 +115,10 @@ export default function FooterX() {
 
                 {/* Bottom Bar */}
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
-                    <p>&copy; {currentYear} Kimmex Construction & Investment Co., Ltd. All rights reserved.</p>
+                    <p>&copy; {currentYear} Kimmex Construction & Investment Co., Ltd. {t('All rights reserved')}.</p>
                     <div className="flex gap-6">
-                        <Link href="#" className="hover:text-accent-orange transition-colors">Privacy Policy</Link>
-                        <Link href="#" className="hover:text-accent-orange transition-colors">Terms of Service</Link>
+                        <Link href="#" className="hover:text-accent-orange transition-colors">{t('Privacy Policy')}</Link>
+                        <Link href="#" className="hover:text-accent-orange transition-colors">{t('Terms of Service')}</Link>
                     </div>
                 </div>
             </div>
