@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import {
     Building, ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Ruler, Users,
     DraftingCompass, PenTool, Hammer, Lightbulb, Briefcase,
@@ -9,6 +9,24 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+
+// Animation wrapper
+function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            transition={{ duration: 0.6, delay, ease: "easeOut" }}
+            className={className}
+        >
+            {children}
+        </motion.div>
+    );
+}
 
 // --- Types ---
 type Project = {
@@ -170,192 +188,248 @@ const services: ServiceData[] = [
 export default function ServiceDetailPage() {
     const params = useParams();
     const id = Array.isArray(params.id) ? params.id[0] : params.id || 'design-build';
-    // Fallback to first if not found, or handle 404
+    // Fallback to first if not found
     const service = services.find(s => s.id === id) || services[0];
     const Icon = service.icon || Building;
 
+    const heroRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ["start start", "end start"]
+    });
+    const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+    const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy">
-            {/* --- 1. SERVICE HERO --- */}
-            <section className="relative h-[70vh] bg-titan-navy overflow-hidden flex items-center justify-center">
-                <div className="absolute inset-0">
-                    <img src={service.heroImage} alt={service.title} className="w-full h-full object-cover opacity-40" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/50 to-transparent"></div>
-                </div>
+            
+            {/* === 1. PARALLAX HERO === */}
+            <section ref={heroRef} className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">
+                <motion.div style={{ y: heroY, scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }} className="absolute inset-0">
+                    <img src={service.heroImage} alt={service.title} className="w-full h-[120%] object-cover opacity-50 mix-blend-overlay" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/80 via-titan-navy/40 to-titan-navy"></div>
+                </motion.div>
 
-                <div className="relative z-10 text-center max-w-5xl px-6 pt-20">
-                    <Link href="/design-x/services" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors font-bold uppercase tracking-widest text-xs mb-8">
-                        <ArrowLeft size={14} /> Back to Services
+                <motion.div style={{ opacity: heroOpacity }} className="relative z-10 text-center max-w-5xl px-6 pt-20">
+                    <Link href="/design-x/services" className="inline-flex items-center gap-2 text-white/60 hover:text-titan-red transition-all font-bold uppercase tracking-widest text-xs mb-8 group">
+                        <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:border-titan-red group-hover:bg-titan-red group-hover:text-white transition-all">
+                            <ArrowLeft size={12} />
+                        </div>
+                        Back to Services
                     </Link>
+
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="mx-auto w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-md border border-white/20"
+                        transition={{ duration: 0.6 }}
+                        className="mx-auto w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center mb-8 backdrop-blur-md border border-white/10 shadow-2xl"
                     >
-                        <Icon size={40} className="text-white" />
+                        <Icon size={48} className="text-white drop-shadow-lg" />
                     </motion.div>
+
                     <motion.h1
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-6xl md:text-8xl font-black text-white mb-6 uppercase tracking-tight"
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 uppercase tracking-tighter"
                     >
                         {service.title}
                     </motion.h1>
-                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto font-light">
+                    
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto font-light leading-relaxed"
+                    >
                         {service.subtitle}
-                    </p>
-                </div>
+                    </motion.p>
+                </motion.div>
             </section>
 
-            {/* --- 2. SERVICE OVERVIEW (What & Who) --- */}
+            {/* === 2. SERVICE OVERVIEW === */}
             <section className="py-24 px-6 max-w-[1400px] mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                    <div>
+                    <FadeInWhenVisible>
                         <div className="mb-12">
                             <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Overview</span>
-                            <h2 className="text-4xl font-black text-titan-navy mb-6">What is {service.title}?</h2>
-                            <p className="text-lg text-titan-navy-subtle leading-relaxed">
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">Redefining {service.title}</h2>
+                            <p className="text-lg md:text-xl text-titan-navy/60 leading-relaxed mb-10">
                                 {service.description}
                             </p>
                         </div>
 
-                        <div className="bg-titan-bg-alt p-8 rounded-xl border-l-4 border-titan-red">
-                            <h3 className="text-xl font-bold text-titan-navy mb-3 flex items-center gap-2">
-                                <Users size={20} className="text-titan-red" /> Who is this for?
+                        <div className="bg-gray-50 p-8 rounded-2xl border-l-4 border-titan-red shadow-sm">
+                            <h3 className="text-xl font-bold text-titan-navy mb-3 flex items-center gap-3">
+                                <div className="p-2 bg-titan-red/10 rounded-lg">
+                                    <Users size={20} className="text-titan-red" /> 
+                                </div>
+                                Ideal For
                             </h3>
-                            <p className="text-titan-navy-subtle">
+                            <p className="text-titan-navy/70 leading-relaxed">
                                 {service.targetAudience}
                             </p>
                         </div>
-                    </div>
-                    <div className="relative">
-                        <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative z-10">
-                            <img src={service.heroImage} alt="Service Overview" className="w-full h-full object-cover" />
+                    </FadeInWhenVisible>
+
+                    <FadeInWhenVisible delay={0.2}>
+                        <div className="relative group">
+                            <div className="absolute -inset-4 bg-titan-red/5 rounded-[2rem] rotate-2 group-hover:rotate-1 transition-transform duration-500"></div>
+                            <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative z-10">
+                                <img src={service.heroImage} alt="Service Overview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500"></div>
+                            </div>
                         </div>
-                        <div className="absolute -bottom-10 -right-10 w-full h-full border-2 border-titan-navy/10 rounded-2xl -z-0"></div>
-                    </div>
+                    </FadeInWhenVisible>
                 </div>
             </section>
 
-            {/* --- 3. SCOPE OF WORK --- */}
-            <section className="py-24 bg-titan-navy text-white">
-                <div className="max-w-[1400px] mx-auto px-6">
-                    <div className="text-center mb-16">
-                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Scope of Work</span>
-                        <h2 className="text-4xl font-black mb-6">What We Cover</h2>
-                        <div className="w-20 h-1 bg-white/20 mx-auto"></div>
-                    </div>
+            {/* === 3. SCOPE OF WORK === */}
+            <section className="py-24 bg-titan-navy text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-titan-red/5 rounded-full blur-[120px] pointer-events-none"></div>
+                
+                <div className="max-w-[1400px] mx-auto px-6 relative z-10">
+                    <FadeInWhenVisible>
+                        <div className="text-center mb-16">
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Scope of Work</span>
+                            <h2 className="text-4xl md:text-5xl font-black mb-6">Comprehensive Coverage</h2>
+                            <p className="text-white/60 text-lg max-w-2xl mx-auto">We handle every detail so you don&apos;t have to. Here&apos;s what&apos;s included in our service.</p>
+                        </div>
+                    </FadeInWhenVisible>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {service.scopeOfWork.map((item, i) => (
-                            <div key={i} className="flex items-start gap-4 p-6 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors">
-                                <CheckCircle2 className="text-titan-red shrink-0 mt-1" size={24} />
-                                <span className="font-bold text-lg">{item}</span>
-                            </div>
+                            <FadeInWhenVisible key={i} delay={i * 0.1}>
+                                <div className="group flex items-start gap-5 p-8 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-titan-red/30 transition-all duration-300 h-full">
+                                    <div className="w-10 h-10 rounded-full bg-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white transition-colors duration-300">
+                                        <CheckCircle2 className="text-titan-red group-hover:text-white" size={20} />
+                                    </div>
+                                    <span className="font-bold text-lg leading-tight pt-2 group-hover:text-titan-red transition-colors">{item}</span>
+                                </div>
+                            </FadeInWhenVisible>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* --- 4. PROCESS / HOW WE DELIVER --- */}
-            <section className="py-24 px-6 bg-titan-bg-alt">
+            {/* === 4. PROCESS / HOW WE DELIVER === */}
+            <section className="py-24 px-6 bg-gray-50">
                 <div className="max-w-[1400px] mx-auto">
-                    <div className="text-center max-w-3xl mx-auto mb-20">
-                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our Process</span>
-                        <h2 className="text-4xl font-black text-titan-navy mb-6">How We Deliver Excellence</h2>
-                        <p className="text-titan-navy-subtle text-xl">A transparent, structured approach to ensure your project's success.</p>
-                    </div>
+                    <FadeInWhenVisible>
+                        <div className="text-center max-w-3xl mx-auto mb-20">
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our Process</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">The Path to Success</h2>
+                            <p className="text-titan-navy/60 text-xl">A transparent, structured approach to ensure your project&apos;s success.</p>
+                        </div>
+                    </FadeInWhenVisible>
 
                     <div className="relative">
                         {/* Connecting Line */}
-                        <div className="absolute left-[28px] top-0 bottom-0 w-[2px] bg-titan-navy/10 md:hidden"></div>
-                        <div className="hidden md:block absolute top-[45px] left-0 right-0 h-[2px] bg-titan-navy/10"></div>
+                        <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-[3px] bg-gradient-to-r from-gray-200 via-titan-red/20 to-gray-200"></div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
                             {service.process.map((step, i) => (
-                                <div key={i} className="relative flex flex-row md:flex-col gap-6 md:gap-8 items-start md:items-center">
-                                    <div className="relative z-10 w-14 h-14 md:w-24 md:h-24 bg-white rounded-full border-4 border-titan-bg-alt flex items-center justify-center shrink-0 shadow-lg md:mx-auto">
-                                        <span className="text-xl md:text-3xl font-black text-titan-red">{step.step}</span>
+                                <FadeInWhenVisible key={i} delay={i * 0.1}>
+                                    <div className="flex flex-col items-center text-center group">
+                                        <div className="w-32 h-32 bg-white rounded-full border-8 border-gray-100 flex items-center justify-center mb-8 shadow-xl group-hover:border-titan-red/20 group-hover:scale-110 transition-all duration-300 relative">
+                                            <span className="text-4xl font-black text-gray-200 group-hover:text-titan-red transition-colors absolute top-2 right-6">{step.step}</span>
+                                            <Briefcase className="text-titan-navy w-10 h-10 relative z-10 group-hover:text-titan-red transition-colors" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-titan-navy mb-3">{step.title}</h3>
+                                        <p className="text-titan-navy/60 leading-relaxed px-4">{step.desc}</p>
                                     </div>
-                                    <div className="md:text-center pt-2 md:pt-0">
-                                        <h3 className="text-xl font-bold text-titan-navy mb-2">{step.title}</h3>
-                                        <p className="text-sm text-titan-navy-subtle leading-relaxed">{step.desc}</p>
-                                    </div>
-                                </div>
+                                </FadeInWhenVisible>
                             ))}
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* --- 5. KEY BENEFITS --- */}
+            {/* === 5. KEY BENEFITS === */}
             <section className="py-24 px-6 max-w-[1400px] mx-auto">
-                <div className="text-center mb-16">
-                    <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Why Choose Us</span>
-                    <h2 className="text-4xl font-black text-titan-navy">Key Benefits</h2>
-                </div>
+                <FadeInWhenVisible>
+                    <div className="text-center mb-16">
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Why Choose Us</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-titan-navy">Value Delivered</h2>
+                    </div>
+                </FadeInWhenVisible>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {service.benefits.map((benefit, i) => (
-                        <div key={i} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 group">
-                            <div className="w-14 h-14 bg-titan-bg-alt rounded-full flex items-center justify-center mb-6 group-hover:bg-titan-red transition-colors">
-                                <benefit.icon size={28} className="text-titan-navy group-hover:text-white transition-colors" />
+                        <FadeInWhenVisible key={i} delay={i * 0.1}>
+                            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 group h-full">
+                                <div className="w-16 h-16 bg-titan-navy/5 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
+                                    <benefit.icon size={30} className="text-titan-navy group-hover:text-white transition-colors" />
+                                </div>
+                                <h3 className="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">{benefit.title}</h3>
+                                <p className="text-titan-navy/60 leading-relaxed">
+                                    {benefit.desc}
+                                </p>
                             </div>
-                            <h3 className="text-xl font-bold text-titan-navy mb-3">{benefit.title}</h3>
-                            <p className="text-titan-navy-subtle text-sm">
-                                {benefit.desc}
-                            </p>
-                        </div>
+                        </FadeInWhenVisible>
                     ))}
                 </div>
             </section>
 
-            {/* --- 6. FEATURED PROJECTS --- */}
+            {/* === 6. FEATURED PROJECTS === */}
             {service.relatedProjects.length > 0 && (
                 <section className="py-24 bg-titan-navy text-white px-6">
                     <div className="max-w-[1400px] mx-auto">
-                        <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-                            <div>
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Portfolio</span>
-                                <h2 className="text-4xl font-black">Featured {service.title} Projects</h2>
-                            </div>
-                            <Link href="/design-x/projects" className="mt-6 md:mt-0 px-8 py-3 border border-white/20 hover:bg-white hover:text-titan-navy transition-all font-bold uppercase tracking-widest text-sm flex items-center gap-2 rounded-sm">
-                                View All Projects <ArrowRight size={16} />
-                            </Link>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {service.relatedProjects.map((project, i) => (
-                                <Link key={i} href={`/design-x/projects/${project.id}`} className="group relative aspect-[16/9] overflow-hidden rounded-lg cursor-pointer block">
-                                    <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
-                                    <div className="absolute bottom-0 left-0 p-8">
-                                        <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-2 block">{project.category}</span>
-                                        <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-                                        <div className="flex items-center gap-2 text-white/70 text-sm">
-                                            <MapPin size={16} /> {project.location}
-                                        </div>
-                                    </div>
-                                    <div className="absolute top-6 right-6 bg-white text-titan-navy w-12 h-12 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                        <ArrowRight size={20} />
-                                    </div>
+                        <FadeInWhenVisible>
+                            <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-8">
+                                <div>
+                                    <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Portfolio</span>
+                                    <h2 className="text-4xl md:text-5xl font-black">Featured Projects</h2>
+                                </div>
+                                <Link href="/design-x/projects" className="mt-8 md:mt-0 px-8 py-3 bg-white/10 hover:bg-white hover:text-titan-navy transition-all font-bold uppercase tracking-widest text-sm flex items-center gap-2 rounded-lg backdrop-blur-sm">
+                                    View All Projects <ArrowRight size={16} />
                                 </Link>
+                            </div>
+                        </FadeInWhenVisible>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            {service.relatedProjects.map((project, i) => (
+                                <FadeInWhenVisible key={i} delay={i * 0.1}>
+                                    <Link href={`/design-x/projects/${project.id}`} className="group relative aspect-[16/9] overflow-hidden rounded-2xl cursor-pointer block shadow-2xl">
+                                        <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+                                        
+                                        <div className="absolute bottom-0 left-0 p-8 w-full">
+                                            <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                                <span className="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{project.category}</span>
+                                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{project.title}</h3>
+                                                <div className="flex items-center gap-2 text-white/80 text-sm">
+                                                    <MapPin size={16} className="text-titan-red" /> {project.location}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="absolute top-6 right-6 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+                                            <ArrowRight size={20} className="text-white" />
+                                        </div>
+                                    </Link>
+                                </FadeInWhenVisible>
                             ))}
                         </div>
                     </div>
                 </section>
             )}
 
-            {/* --- FOOTER CTA --- */}
-            <section className="py-20 bg-titan-red text-white text-center px-6">
-                <div className="max-w-2xl mx-auto">
-                    <h2 className="text-3xl md:text-5xl font-black mb-8">Ready to start?</h2>
-                    <p className="text-white/90 text-xl mb-10">
-                        Contact our expert team today for a free consultation and feasibility study.
-                    </p>
-                    <Link href="/design-x/contact" className="inline-block bg-white text-titan-red px-12 py-5 font-bold uppercase tracking-widest hover:bg-titan-navy hover:text-white transition-all shadow-xl rounded-sm">
-                        Request Quote
-                    </Link>
+            {/* === FOOTER CTA === */}
+            <section className="py-24 bg-white text-center px-6">
+                <div className="max-w-3xl mx-auto bg-titan-red rounded-3xl p-12 md:p-16 shadow-2xl shadow-titan-red/30 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[50px] translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[50px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+                    
+                    <FadeInWhenVisible>
+                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Ready to start?</h2>
+                        <p className="text-white/90 text-xl mb-10 font-medium">
+                            Contact our expert team today for a free consultation and feasibility study.
+                        </p>
+                        <Link href="/design-x/contact" className="inline-flex items-center gap-2 bg-white text-titan-red px-10 py-5 font-bold uppercase tracking-widest hover:bg-titan-navy hover:text-white transition-all shadow-xl rounded-lg">
+                            Request Quote <ArrowRight size={18} />
+                        </Link>
+                    </FadeInWhenVisible>
                 </div>
             </section>
         </div>

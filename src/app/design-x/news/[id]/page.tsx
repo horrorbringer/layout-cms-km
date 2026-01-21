@@ -3,10 +3,10 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, User, Clock, Share2, Facebook, Linkedin, Twitter, Tag, ArrowRight, FileText, ImageIcon } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Clock, Share2, Facebook, Linkedin, Twitter, Tag, ArrowRight, FileText, ImageIcon, Download, Copy, Printer, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// Mock Data (Expanded to include Gallery and Documents)
+// Mock Data
 const newsData: any = {
     '1': {
         id: '1',
@@ -15,7 +15,7 @@ const newsData: any = {
         date: 'Oct 15, 2025',
         author: 'PR Team',
         readTime: '5 min read',
-        image: 'https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&q=80&w=1600',
+        image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop',
         content: `
             <p class="lead">We are thrilled to announce that Kimmex Construction has been honored with the Gold Award for "Best Commercial Project" at the 2025 PropertyGuru Cambodia Property Awards. This recognition celebrates our commitment to excellence in the design and construction of the new Ministry of Interior complex.</p>
             
@@ -74,7 +74,6 @@ const newsData: any = {
     }
 };
 
-// Fallback related items for demo
 const relatedNews = [
     {
         id: '2',
@@ -101,119 +100,85 @@ export default function NewsDetailPage() {
     const idParam = params?.id;
     const id = Array.isArray(idParam) ? idParam[0] : idParam;
 
-    // Look up article
     const article = (id && newsData[id]) ? newsData[id] : (!id || !newsData[id]) ? newsData['1'] : newsData['default'];
-
-    // Filter related news to exclude current one
     const currentRelated = relatedNews.filter(n => n.id !== article.id).slice(0, 3);
 
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy">
-            {/* --- 1. HERO --- */}
-            {/* --- 1. HERO --- */}
-            {/* --- 1. HERO --- */}
-            <div className="h-[85vh] w-full relative overflow-hidden group">
-                <motion.img
-                    initial={{ scale: 1.1 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 1.5 }}
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover"
-                />
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-slate-900/60"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-transparent"></div>
-
-                {/* Back Button - Top Left */}
-                <div className="absolute top-40 left-0 w-full px-6 z-30">
-                    <div className="max-w-[1600px] mx-auto">
-                        <Link href="/design-x/news" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-all bg-white/5 hover:bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/10 hover:border-white/30">
-                            <ArrowLeft size={12} /> Back to News
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Hero Content */}
-                <div className="absolute bottom-0 left-0 w-full px-6 pb-20 z-20">
-                    <div className="max-w-[1600px] mx-auto">
-                        <div className="max-w-6xl">
-                            <motion.h1
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-8 leading-[0.95] drop-shadow-2xl tracking-tight"
-                            >
-                                {article.title}
-                            </motion.h1>
-
-                            {/* --- 2. META --- */}
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.2 }}
-                                className="flex flex-wrap items-center gap-8 text-white/90 text-xs font-bold uppercase tracking-widest border-t border-white/10 pt-8"
-                            >
-                                <span className="flex items-center gap-3"><Calendar size={16} className="text-titan-red" /> {article.date}</span>
-                                <span className="flex items-center gap-3"><User size={16} className="text-titan-red" /> {article.author}</span>
-                                <span className="flex items-center gap-3"><Clock size={16} className="text-titan-red" /> {article.readTime}</span>
-                            </motion.div>
+            
+            {/* --- HEADER --- */}
+            <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+                <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+                    <Link href="/design-x/news" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-titan-navy hover:text-titan-red transition-colors">
+                        <ArrowLeft size={14} /> Back to News
+                    </Link>
+                    <div className="flex items-center gap-4">
+                        <div className="hidden md:flex items-center gap-2 text-xs text-titan-navy-subtle">
+                            <span>Share:</span>
+                            <div className="flex gap-2">
+                                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors"><Facebook size={14} /></button>
+                                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors"><Linkedin size={14} /></button>
+                                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors"><Twitter size={14} /></button>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </header>
+
+            {/* --- HERO: Clean Title & Meta --- */}
+            <div className="max-w-[1000px] mx-auto px-6 pt-16 pb-12 text-center">
+                <div className="mb-6 flex flex-wrap justify-center gap-3">
+                    <span className="bg-titan-red/10 text-titan-red px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-widest">
+                        {article.category}
+                    </span>
+                </div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-titan-navy mb-8 leading-tight">
+                    {article.title}
+                </h1>
+                <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-bold uppercase tracking-widest text-titan-navy-subtle">
+                    <span className="flex items-center gap-2"><Calendar size={14} /> {article.date}</span>
+                    <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                    <span className="flex items-center gap-2"><User size={14} /> {article.author}</span>
+                    <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                    <span className="flex items-center gap-2"><Clock size={14} /> {article.readTime}</span>
+                </div>
             </div>
 
-            {/* --- CONTENT LAYOUT --- */}
-            <section className="py-20 px-6 max-w-[1400px] mx-auto">
-                <div className="flex flex-col lg:flex-row gap-20">
+            {/* --- HERO IMAGE: Full Width Container --- */}
+            <div className="w-full px-6 mb-16">
+                <div className="max-w-[1400px] mx-auto rounded-2xl overflow-hidden shadow-2xl aspect-[21/9]">
+                    <img 
+                        src={article.image} 
+                        alt={article.title} 
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            </div>
 
-                    {/* LEFT COLUMN: Main Body, Gallery, Documents */}
-                    <div className="lg:w-2/3">
-
-                        {/* --- 3. MAIN ARTICLE BODY --- */}
+            {/* --- CONTENT AREA --- */}
+            <div className="max-w-[1400px] mx-auto px-6 pb-24">
+                <div className="flex flex-col lg:flex-row gap-16">
+                    
+                    {/* LEFT: Article Body (65%) */}
+                    <div className="lg:w-[65%]">
                         <article className="prose prose-lg prose-slate max-w-none 
                             prose-headings:font-black prose-headings:text-titan-navy 
-                            prose-p:text-titan-navy-subtle prose-p:leading-relaxed
-                            prose-strong:text-titan-navy prose-strong:font-bold
-                            prose-li:text-titan-navy-subtle
-                            first-letter:text-5xl first-letter:font-black first-letter:text-titan-red first-letter:mr-3 first-letter:float-left"
+                            prose-p:text-titan-navy-subtle prose-p:leading-relaxed prose-p:text-lg
+                            prose-strong:text-titan-navy
+                            first-letter:text-5xl first-letter:font-black first-letter:text-titan-navy first-letter:mr-3 first-letter:float-left"
                             dangerouslySetInnerHTML={{ __html: article.content }}
                         />
 
-                        {/* --- 4. IMAGES / DOCUMENTS --- */}
-
-                        {/* Documents Download */}
-                        {article.documents && article.documents.length > 0 && (
-                            <div className="mt-12 bg-titan-bg-alt p-8 rounded-xl border border-titan-navy-light/10">
-                                <h3 className="text-lg font-black text-titan-navy mb-6 flex items-center gap-2 uppercase tracking-wide">
-                                    <FileText className="text-titan-red" /> Attached Documents
-                                </h3>
-                                <div className="space-y-3">
-                                    {article.documents.map((doc: any, i: number) => (
-                                        <div key={i} className="flex items-center justify-between bg-white p-4 rounded-lg border border-gray-100 hover:border-titan-red/30 transition-all cursor-pointer group shadow-sm">
-                                            <div className="flex items-center gap-3">
-                                                <div className="bg-red-50 p-2 rounded text-titan-red group-hover:bg-titan-red group-hover:text-white transition-colors">
-                                                    <FileText size={20} />
-                                                </div>
-                                                <span className="font-bold text-titan-navy text-sm">{doc.name}</span>
-                                            </div>
-                                            <span className="text-xs font-bold text-titan-navy-subtle uppercase tracking-widest">{doc.size}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Gallery Grid */}
+                        {/* Gallery */}
                         {article.gallery && article.gallery.length > 0 && (
                             <div className="mt-16">
-                                <h3 className="text-xl font-black text-titan-navy mb-8 flex items-center gap-2 uppercase tracking-wide">
-                                    <ImageIcon className="text-titan-red" /> Event Gallery
+                                <h3 className="text-xl font-black text-titan-navy mb-6 flex items-center gap-2">
+                                    <ImageIcon className="text-titan-red" size={20} /> Event Gallery
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     {article.gallery.map((img: string, i: number) => (
-                                        <div key={i} className={`rounded-xl overflow-hidden shadow-lg border border-gray-100 cursor-pointer group relative ${i === 0 ? 'col-span-2 aspect-[16/9]' : 'aspect-square'}`}>
-                                            <img src={img} alt="Gallery" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+                                        <div key={i} className={`rounded-xl overflow-hidden shadow-sm ${i === 0 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'}`}>
+                                            <img src={img} alt="Gallery" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                                         </div>
                                     ))}
                                 </div>
@@ -221,49 +186,67 @@ export default function NewsDetailPage() {
                         )}
 
                         {/* Tags */}
-                        <div className="mt-16 pt-8 border-t border-gray-100">
-                            <h3 className="text-sm font-bold text-titan-navy uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Tag size={16} /> Related Tags
-                            </h3>
-                            <div className="flex flex-wrap gap-2">
-                                {article.tags.map((tag: string) => (
-                                    <span key={tag} className="px-4 py-2 bg-gray-50 text-titan-navy-subtle text-xs font-bold hover:bg-titan-red hover:text-white transition-colors rounded-sm cursor-pointer border border-transparent hover:border-titan-red">
-                                        #{tag}
-                                    </span>
-                                ))}
-                            </div>
+                        <div className="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-2">
+                            {article.tags.map((tag: string) => (
+                                <span key={tag} className="px-3 py-1 bg-gray-50 text-titan-navy-subtle text-xs font-bold uppercase tracking-wider rounded hover:bg-titan-navy hover:text-white transition-colors cursor-pointer">
+                                    #{tag}
+                                </span>
+                            ))}
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: Sidebar & Related */}
-                    <div className="lg:w-1/3">
-                        <div className="sticky top-32 space-y-12">
-                            {/* Share */}
-                            <div className="bg-white p-8 rounded-xl shadow-xl border border-gray-100">
-                                <h3 className="text-lg font-black text-titan-navy mb-6 uppercase tracking-wide flex items-center gap-2">
-                                    <Share2 size={18} className="text-titan-red" /> Share Article
-                                </h3>
-                                <div className="flex gap-4">
-                                    <button className="flex-1 h-12 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all"><Facebook size={20} /></button>
-                                    <button className="flex-1 h-12 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] transition-all"><Linkedin size={20} /></button>
-                                    <button className="flex-1 h-12 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-black hover:text-white hover:border-black transition-all"><Twitter size={20} /></button>
+                    {/* RIGHT: Sidebar (35%) */}
+                    <div className="lg:w-[35%] space-y-8">
+                        <div className="sticky top-24 space-y-8">
+                            
+                            {/* Author Card */}
+                            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 flex items-center gap-4">
+                                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-titan-navy font-black text-lg border border-gray-200 shadow-sm">
+                                    {article.author.charAt(0)}
+                                </div>
+                                <div>
+                                    <span className="block text-xs font-bold text-titan-navy-subtle uppercase tracking-widest">Written By</span>
+                                    <span className="font-bold text-titan-navy">{article.author}</span>
                                 </div>
                             </div>
 
-                            {/* --- 5. RELATED NEWS --- */}
+                            {/* Documents */}
+                            {article.documents && article.documents.length > 0 && (
+                                <div className="bg-titan-navy text-white rounded-xl p-6 shadow-lg relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-titan-red rounded-full blur-[40px] opacity-30 -mr-8 -mt-8"></div>
+                                    <h3 className="text-sm font-black uppercase tracking-widest mb-4 flex items-center gap-2 relative z-10">
+                                        <FileText size={16} /> Downloads
+                                    </h3>
+                                    <div className="space-y-3 relative z-10">
+                                        {article.documents.map((doc: any, i: number) => (
+                                            <div key={i} className="flex items-center justify-between bg-white/10 hover:bg-white/20 p-3 rounded-lg transition-colors cursor-pointer group">
+                                                <div className="flex items-center gap-3 overflow-hidden">
+                                                    <FileText size={16} className="shrink-0 text-titan-red" />
+                                                    <span className="text-xs font-bold truncate">{doc.name}</span>
+                                                </div>
+                                                <Download size={14} className="shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Related News (Sidebar) */}
                             <div>
-                                <h3 className="text-lg font-black text-titan-navy mb-6 uppercase tracking-wide border-l-4 border-titan-red pl-4">
-                                    Related News
+                                <h3 className="text-sm font-black text-titan-navy uppercase tracking-widest mb-6 border-l-4 border-titan-red pl-3">
+                                    Latest Stories
                                 </h3>
                                 <div className="space-y-6">
                                     {currentRelated.map((news) => (
-                                        <Link href={`/design-x/news/${news.id}`} key={news.id} className="group block bg-white rounded-lg overflow-hidden border border-gray-100 hover:shadow-lg transition-all">
-                                            <div className="aspect-video relative overflow-hidden">
+                                        <Link href={`/design-x/news/${news.id}`} key={news.id} className="group flex gap-4 items-start">
+                                            <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-100">
                                                 <img src={news.image} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                             </div>
-                                            <div className="p-4">
-                                                <span className="text-[10px] font-bold text-titan-navy-subtle uppercase tracking-widest mb-2 block">{news.date}</span>
-                                                <h4 className="font-bold text-titan-navy group-hover:text-titan-red transition-colors line-clamp-2 leading-tight">
+                                            <div>
+                                                <span className="text-[10px] font-bold text-titan-navy-subtle uppercase tracking-widest mb-1 block">
+                                                    {news.date}
+                                                </span>
+                                                <h4 className="text-sm font-bold text-titan-navy group-hover:text-titan-red transition-colors leading-snug line-clamp-2">
                                                     {news.title}
                                                 </h4>
                                             </div>
@@ -276,7 +259,8 @@ export default function NewsDetailPage() {
                     </div>
 
                 </div>
-            </section>
+            </div>
+
         </div>
     );
 }

@@ -108,6 +108,15 @@ export default function ProjectDetailPage() {
     // Use fallback if id is undefined or not found in data
     const project = (id && projectDetails[id]) ? projectDetails[id] : projectDetails['moi'];
 
+    // Determine back link based on status
+    const backLink = project.status === 'Completed' 
+        ? '/design-x/projects/completed' 
+        : '/design-x/projects/implementation';
+    
+    const backLabel = project.status === 'Completed'
+        ? 'Back to Done Projects'
+        : 'Back to Implementation';
+
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy relative">
             {/* --- HERO SECTION --- */}
@@ -118,8 +127,8 @@ export default function ProjectDetailPage() {
                 </div>
 
                 <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 pb-20">
-                    <Link href="/design-x/projects" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors font-bold uppercase tracking-widest text-xs mb-8">
-                        <ArrowLeft size={14} /> Back to Projects
+                    <Link href={backLink} className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors font-bold uppercase tracking-widest text-xs mb-8">
+                        <ArrowLeft size={14} /> {backLabel}
                     </Link>
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -266,7 +275,7 @@ export default function ProjectDetailPage() {
             <section className="py-24 px-6 max-w-[1400px] mx-auto">
                 <div className="flex justify-between items-end mb-12">
                     <h2 className="text-3xl font-black text-titan-navy">Similar Projects</h2>
-                    <Link href="/design-x/projects" className="font-bold text-titan-red hover:underline flex items-center gap-2 text-sm uppercase tracking-widest">
+                    <Link href={backLink} className="font-bold text-titan-red hover:underline flex items-center gap-2 text-sm uppercase tracking-widest">
                         View All <ArrowRight size={16} />
                     </Link>
                 </div>
