@@ -1,51 +1,20 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Menu, X, Facebook, Linkedin, Youtube, Phone, Mail, MapPin, ChevronDown, ChevronRight, Globe, Shield, Zap, MousePointer2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
+import { 
+    ArrowRight, Menu, X, Facebook, Linkedin, Youtube, 
+    Shield, Award, Users, TrendingUp, Heart, Lightbulb, 
+    Handshake, Clock, CheckCircle2, Quote, ChevronRight,
+    Building, Ruler, Truck, DraftingCompass, HardHat, 
+    Hammer, Briefcase, LayoutTemplate, PenTool, GraduationCap, 
+    Landmark, Settings, ShieldCheck, Zap, Globe, MousePointer2,
+    ArrowLeft, Star, MapPin
+} from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
-// --- COMPONENTS ---
-
-const FeatureCard = ({ title, desc, icon: Icon, index }: { title: string, desc: string, icon: any, index: number }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
-        viewport={{ once: true, margin: "-50px" }}
-        className="bg-[#F5F5F7] p-8 md:p-10 rounded-[2rem] hover:bg-titan-navy hover:text-white transition-all duration-500 group cursor-default h-full flex flex-col justify-between"
-    >
-        <div>
-            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-white/10 group-hover:text-white text-titan-navy transition-colors">
-                <Icon size={28} strokeWidth={1.5} />
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold mb-4">{title}</h3>
-            <p className="text-gray-500 group-hover:text-white/60 leading-relaxed transition-colors text-sm md:text-base">
-                {desc}
-            </p>
-        </div>
-        <div className="mt-8 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-            <ArrowRight size={20} />
-        </div>
-    </motion.div>
-);
-
-const ImageReveal = ({ src, alt }: { src: string, alt: string }) => (
-    <div className="overflow-hidden rounded-[2rem] relative h-[400px] md:h-[500px] w-full group">
-        <motion.img 
-            initial={{ scale: 1.2 }}
-            whileInView={{ scale: 1 }}
-            transition={{ duration: 1.5 }}
-            src={src} 
-            alt={alt} 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
-            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">View Case Study</span>
-            <h3 className="text-2xl md:text-3xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">{alt}</h3>
-        </div>
-    </div>
-);
+// --- SHARED COMPONENTS (Reused for consistency) ---
 
 const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: () => void, navItems: any[] }) => {
     const [activeCategory, setActiveCategory] = useState<number | null>(0);
@@ -268,11 +237,189 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
     );
 }
 
-// --- MAIN PAGE ---
+// Helper: Fade In Wrapper
+function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
 
-export default function DesignA_ContainerNav() {
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.6, delay, ease: "easeOut" }}
+            className={className}
+        >
+            {children}
+        </motion.div>
+    );
+}
+
+// --- DATA TYPES ---
+type Project = {
+    id: string;
+    title: string;
+    location: string;
+    image: string;
+    category: string;
+};
+
+type ServiceData = {
+    id: string;
+    title: string;
+    subtitle: string;
+    icon: any;
+    heroImage: string;
+    description: string;
+    targetAudience: string;
+    scopeOfWork: string[];
+    process: { step: string; title: string; desc: string }[];
+    benefits: { title: string; desc: string; icon: any }[];
+    relatedProjects: Project[];
+};
+
+// --- MOCK DATA ---
+const services: ServiceData[] = [
+    {
+        id: 'design-build',
+        title: 'Design & Build',
+        subtitle: 'From Concept to Creation',
+        icon: PenTool,
+        heroImage: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop',
+        description: 'Our flagship service integrating architectural creativity with engineering precision. We manage the entire project lifecycle, ensuring a seamless transition from the drawing board to the final handover. This unified approach minimizes risks and accelerates delivery.',
+        targetAudience: 'Ideal for property developers, commercial business owners, and private investors looking for a single point of responsibility.',
+        scopeOfWork: [
+            'Architectural Conceptualization & 3D Rendering',
+            'Structural & Civil Engineering',
+            'Mechanical, Electrical, & Plumbing (MEP) Design',
+            'Permit Acquisition & Regulatory Approvals',
+            'Turnkey Construction Execution',
+            'Interior Design & Fit-out'
+        ],
+        process: [
+            { step: '01', title: 'Consultation', desc: 'Understanding your vision, budget, and feasibility analysis.' },
+            { step: '02', title: 'Design & Plan', desc: 'Developing detailed architectural and engineering blueprints.' },
+            { step: '03', title: 'Build', desc: 'Construction execution with rigorous quality control.' },
+            { step: '04', title: 'Handover', desc: 'Final inspection, documentation, and key delivery.' }
+        ],
+        benefits: [
+            { title: 'Single Point of Contact', desc: 'Streamlined communication and accountability.', icon: Users },
+            { title: 'Accelerated Timeline', desc: 'Overlapping design and construction phases.', icon: Clock },
+            { title: 'Cost Certainty', desc: ' minimized change orders and precise budgeting.', icon: TrendingUp },
+            { title: 'Quality Assurance', desc: 'Integrated teams ensure design intent is met.', icon: ShieldCheck }
+        ],
+        relatedProjects: [
+            { id: '1', title: 'Vattanac Capital Extension', location: 'Phnom Penh', category: 'Commercial', image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2670&auto=format&fit=crop' },
+            { id: '2', title: 'Skyline Residential', location: 'Siem Reap', category: 'Residential', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop' }
+        ]
+    },
+    {
+        id: 'renovation',
+        title: 'Building Renovation',
+        subtitle: 'Restoring Value & Aesthetics',
+        icon: Hammer,
+        heroImage: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2531&auto=format&fit=crop',
+        description: 'We breathe new life into existing structures. Whether it is a heritage restoration or a modern office fit-out, our renovation team focuses on enhancing functionality, energy efficiency, and aesthetics while preserving the building\'s unique character.',
+        targetAudience: 'Owners of aging properties, offices needing modernization, and heritage building conservators.',
+        scopeOfWork: [
+            'Structural Strengthening & Retrofitting',
+            'Facade Upgrades & Cladding',
+            'MEP System Modernization',
+            'Interior Fit-outs for Office & Retail',
+            'Waterproofing & Insulation',
+            'Heritage Preservation'
+        ],
+        process: [
+            { step: '01', title: 'Assessment', desc: 'Thorough site inspection, structural analysis, and measurement.' },
+            { step: '02', title: 'Proposal', desc: 'Design concepts, material selection, and cost estimation.' },
+            { step: '03', title: 'Execution', desc: 'Renovation work managed to minimize operational disruption.' },
+            { step: '04', title: 'Reveal', desc: 'Showcasing the revitalized space ready for occupancy.' }
+        ],
+        benefits: [
+            { title: 'Increased Property Value', desc: 'Modern amenities boost market potential.', icon: TrendingUp },
+            { title: 'Energy Efficiency', desc: 'New systems reduce long-term operational costs.', icon: Lightbulb },
+            { title: 'Safety Upgrade', desc: 'Bringing old structures up to current safety codes.', icon: ShieldCheck },
+            { title: 'Aesthetic Appeal', desc: 'Fresh, modern looks that attract tenants/customers.', icon: Star }
+        ],
+        relatedProjects: [
+            { id: '3', title: 'Colonial Villa Restoration', location: 'Kep', category: 'Heritage', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2670&auto=format&fit=crop' },
+            { id: '4', title: 'Tech Hub Office', location: 'Phnom Penh', category: 'Corporate', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2670&auto=format&fit=crop' }
+        ]
+    },
+    {
+        id: 'project-management',
+        title: 'Project Management',
+        subtitle: 'On Time, On Budget, On Point',
+        icon: Briefcase,
+        heroImage: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2670&auto=format&fit=crop',
+        description: 'Rigorous oversight ensuring your project is delivered to the highest standards. We act as your representative, bringing professional discipline to manage contractors, schedules, costs, and risks effectively.',
+        targetAudience: 'Investors and owners who need expert representation and control over complex projects.',
+        scopeOfWork: [
+            'Project Planning & Scheduling',
+            'Cost Estimation & Budget Control',
+            'Contract Administration',
+            'Health, Safety & Environment (HSE) Oversight',
+            'Quality Assurance (QA/QC) Inspections',
+            'Risk Management & Mitigation'
+        ],
+        process: [
+            { step: '01', title: 'Planning', desc: 'Defining detailed project scope, schedule, and budget baselines.' },
+            { step: '02', title: 'Procurement', desc: 'Tendering, evaluating, and selecting the best vendors.' },
+            { step: '03', title: 'Supervision', desc: 'Daily on-site management, coordination, and reporting.' },
+            { step: '04', title: 'Closure', desc: 'Final accounting, documentation, and project close-out.' }
+        ],
+        benefits: [
+            { title: 'Risk Mitigation', desc: 'Proactive identification and resolution of issues.', icon: ShieldCheck },
+            { title: 'Budget Control', desc: 'Detailed tracking prevents cost overruns.', icon: TrendingUp },
+            { title: 'Timely Delivery', desc: 'Strict schedule enforcement avoids delays.', icon: Clock },
+            { title: 'Quality Standards', desc: 'Ensure final build meets all specifications.', icon: CheckCircle2 }
+        ],
+        relatedProjects: [
+            { id: '5', title: 'Logistics Center Ph-1', location: 'Sihanoukville', category: 'Industrial', image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2670&auto=format&fit=crop' }
+        ]
+    },
+    {
+        id: 'consultants',
+        title: 'Consultants',
+        subtitle: 'Strategic Expertise',
+        icon: Lightbulb,
+        heroImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2670&auto=format&fit=crop',
+        description: 'Beyond construction, we provide the strategic insights needed to make informed investment decisions. Our consultants utilize market data and technical expertise to help you optimize value and ensure regulatory compliance before you build.',
+        targetAudience: 'Developers, land owners, and government bodies requiring technical and financial validation.',
+        scopeOfWork: [
+            'Feasibility Studies & Market Analysis',
+            'Value Engineering & Cost Optimization',
+            'Technical Due Diligence',
+            'Regulatory Compliance Advisory',
+            'Sustainability & Green Building Consulting',
+            'Master Planning'
+        ],
+        process: [
+            { step: '01', title: 'Analysis', desc: 'Deep dive into project requirements, site data, and goals.' },
+            { step: '02', title: 'Strategy', desc: 'Developing a comprehensive roadmap and technical solutions.' },
+            { step: '03', title: 'Advisory', desc: 'Ongoing expert guidance during decision-making phases.' },
+            { step: '04', title: 'Reporting', desc: 'Delivering detailed reports and actionable recommendations.' }
+        ],
+        benefits: [
+            { title: 'Informed Decisions', desc: 'Data-driven insights reduce investment risk.', icon: Lightbulb },
+            { title: 'Cost Optimization', desc: 'Value engineering saves money without cutting quality.', icon: TrendingUp },
+            { title: 'Regulatory Ease', desc: 'Smooth navigation of complex local building codes.', icon: CheckCircle2 },
+            { title: 'Sustainability', desc: 'Expertise in green building standards (LEED, etc.).', icon: Star }
+        ],
+        relatedProjects: [
+            { id: '6', title: 'Eco-Resort Masterplan', location: 'Koh Kong', category: 'Hospitality', image: 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=2670&auto=format&fit=crop' }
+        ]
+    }
+];
+
+export default function ServiceDetailDesignAPage() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const params = useParams();
+    const id = Array.isArray(params.id) ? params.id[0] : params.id || 'design-build';
+    // Fallback to first if not found
+    const service = services.find(s => s.id === id) || services[0];
+    const Icon = service.icon || Building;
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -280,7 +427,6 @@ export default function DesignA_ContainerNav() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Full Content Structure from Design X
     const navItems = [
         {
             label: 'About Us', href: '/design-a/about',
@@ -345,17 +491,16 @@ export default function DesignA_ContainerNav() {
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
                 
-                {/* --- NAVIGATION (Minimal / Hidden Concept) --- */}
+                {/* --- NAVIGATION --- */}
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
-                        
-                        {/* Logo (Top Left) */}
+                        {/* Logo */}
                         <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
                             <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
                             <span className="font-bold text-lg tracking-tight">KIMMEX</span>
                         </div>
 
-                        {/* Menu Trigger (Top Right) */}
+                        {/* Menu Trigger */}
                         <button 
                             onClick={() => setIsMenuOpen(true)}
                             className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
@@ -369,165 +514,193 @@ export default function DesignA_ContainerNav() {
                     </div>
                 </div>
 
-                {/* Full Screen Menu Overlay with RICH CONTENT */}
                 <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} navItems={navItems} />
 
-                {/* --- HERO SECTION --- */}
-                <header className="pt-32 md:pt-40 pb-12 md:pb-20 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center min-h-[85vh]">
-                    <div className="max-w-2xl order-2 lg:order-1">
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8"
-                        >
-                            Est. 1999 • Phnom Penh
-                        </motion.div>
-                        <motion.h1 
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, duration: 0.8 }}
-                            className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-8 md:mb-10"
-                        >
-                            Constructing <br/>
-                            <span className="text-gray-300">Excellence.</span>
-                        </motion.h1>
-                        <motion.p 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3, duration: 0.8 }}
-                            className="text-lg md:text-xl text-gray-500 leading-relaxed mb-10 md:mb-12 max-w-lg"
-                        >
-                            We are Cambodia's leading construction firm, merging technical precision with sustainable innovation.
-                        </motion.p>
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="flex gap-4"
-                        >
-                            <button className="flex items-center gap-3 text-lg font-bold hover:gap-6 transition-all group">
-                                View Projects 
-                                <div className="w-10 h-10 bg-[#F5F5F7] rounded-full flex items-center justify-center group-hover:bg-titan-navy group-hover:text-white transition-colors shadow-sm">
-                                    <ArrowRight size={18} />
-                                </div>
-                            </button>
-                        </motion.div>
-                    </div>
-
-                    <div className="relative h-[400px] md:h-[600px] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden group order-1 lg:order-2 shadow-2xl">
-                        <motion.img
-                            initial={{ scale: 1.1 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 1.5, ease: "easeOut" }}
-                            src="https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=2800"
-                            alt="Hero Architecture"
-                            className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/10"></div>
+                {/* --- HEADER / HERO --- */}
+                <header className="relative h-[70vh] flex items-center justify-center overflow-hidden bg-titan-navy rounded-b-[4rem]">
+                     <div className="absolute inset-0">
+                         <img 
+                            src={service.heroImage} 
+                            alt={service.title} 
+                            className="w-full h-full object-cover opacity-50 mix-blend-overlay"
+                         />
+                         <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/90 via-titan-navy/30 to-titan-navy"></div>
+                     </div>
+                     
+                     <motion.div 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="max-w-4xl text-center relative z-10 px-6 pt-20"
+                    >
+                        <Link href="/design-a/services" className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur rounded-full text-xs font-bold uppercase tracking-widest text-white mb-8 border border-white/20 hover:bg-white hover:text-titan-navy transition-all">
+                            <ArrowLeft size={14} /> Back to Services
+                        </Link>
                         
-                        <motion.div 
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.8 }}
-                            className="absolute bottom-6 right-6 md:bottom-8 md:right-8 bg-white/80 backdrop-blur-md p-6 rounded-2xl max-w-[200px] md:max-w-xs shadow-lg z-10 border border-white/50"
-                        >
-                            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Current Focus</div>
-                            <div className="text-sm md:text-lg font-bold text-titan-navy">Sustainable Infrastructure Development</div>
-                        </motion.div>
-                    </div>
+                        <div className="mx-auto w-24 h-24 bg-white rounded-3xl flex items-center justify-center mb-8 shadow-2xl text-titan-navy">
+                             <Icon size={48} />
+                        </div>
+
+                        <h1 className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-6 text-white">
+                            {service.title}
+                        </h1>
+                        <p className="text-lg md:text-2xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-light">
+                            {service.subtitle}
+                        </p>
+                    </motion.div>
                 </header>
 
-                {/* --- STATS MARQUEE (Infinite Scroll) --- */}
-                <div className="bg-titan-navy text-white py-6 md:py-8 overflow-hidden">
-                    <div className="flex gap-12 md:gap-24 animate-marquee whitespace-nowrap">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-                                <span className="font-bold text-lg md:text-xl tracking-wider">ISO 9001:2015 CERTIFIED</span>
-                                <div className="w-2 h-2 bg-titan-red rounded-full"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* --- SERVICES --- */}
-                <section className="py-20 md:py-32 px-6 md:px-12">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight max-w-md leading-tight">Capabilities & <br/>Expertise</h2>
-                        <a href="#" className="font-bold border-b border-titan-navy pb-1 hover:text-titan-red hover:border-titan-red transition-colors">View All Capabilities</a>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <FeatureCard 
-                            index={0}
-                            title="Design & Build" 
-                            desc="Comprehensive delivery from initial concept to final handover." 
-                            icon={MousePointer2} 
-                        />
-                        <FeatureCard 
-                            index={1}
-                            title="Infrastructure" 
-                            desc="Roads, bridges, and public utility networks connecting the nation." 
-                            icon={Globe} 
-                        />
-                        <FeatureCard 
-                            index={2}
-                            title="Renovation" 
-                            desc="Modernizing existing structures with structural integrity." 
-                            icon={Zap} 
-                        />
-                        <FeatureCard 
-                            index={3}
-                            title="Management" 
-                            desc="Rigorous project oversight and quality assurance." 
-                            icon={Shield} 
-                        />
-                    </div>
-                </section>
-
-                {/* --- FEATURED WORK --- */}
-                <section className="py-20 md:py-32 px-6 md:px-12 bg-[#F5F5F7] rounded-none md:rounded-[3rem] mx-0 md:mx-8 mb-8 md:mb-12">
-                    <div className="max-w-[1600px] mx-auto">
-                        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Portfolio</span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-6">Building Landmarks</h2>
-                            <p className="text-gray-500 text-base md:text-lg leading-relaxed">
-                                From government headquarters to commercial high-rises, our portfolio defines the modern Cambodian skyline.
+                {/* --- OVERVIEW --- */}
+                <section className="px-6 md:px-12 py-20 md:py-32">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+                        <FadeInWhenVisible>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Overview</span>
+                            <h2 className="text-3xl md:text-5xl font-bold mb-8 leading-tight">Comprehensive solutions for <span className="text-gray-400">modern challenges.</span></h2>
+                            <p className="text-gray-500 text-lg leading-relaxed mb-12">
+                                {service.description}
                             </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                            <div className="space-y-8 mt-0 lg:mt-24">
-                                <ImageReveal src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670" alt="Ministry of Economy" />
-                                <div className="px-2 md:px-8">
-                                    <h3 className="text-2xl font-bold mb-2">Government Projects</h3>
-                                    <p className="text-gray-500">Trusted partner for national infrastructure.</p>
-                                </div>
+                            
+                            <div className="bg-[#F5F5F7] p-8 rounded-3xl">
+                                <h3 className="font-bold text-xl mb-4 flex items-center gap-3">
+                                    <Users className="text-titan-red" />
+                                    Ideal For
+                                </h3>
+                                <p className="text-gray-600">
+                                    {service.targetAudience}
+                                </p>
                             </div>
-                            <div className="space-y-8">
-                                <div className="px-2 md:px-8 text-left lg:text-right hidden lg:block">
-                                    <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
-                                    <p className="text-gray-500">High-rise engineering excellence.</p>
+                        </FadeInWhenVisible>
+
+                        <div className="space-y-8">
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {service.benefits.map((benefit, i) => (
+                                    <FadeInWhenVisible key={i} delay={i * 0.1}>
+                                        <div className="bg-white border border-gray-100 p-6 rounded-[2rem] hover:shadow-xl transition-all hover:border-titan-red/20 group h-full">
+                                            <div className="w-12 h-12 bg-titan-navy/5 rounded-xl flex items-center justify-center mb-4 group-hover:bg-titan-red group-hover:text-white transition-colors">
+                                                <benefit.icon size={24} />
+                                            </div>
+                                            <h3 className="font-bold text-lg mb-2">{benefit.title}</h3>
+                                            <p className="text-sm text-gray-500 leading-relaxed">{benefit.desc}</p>
+                                        </div>
+                                    </FadeInWhenVisible>
+                                ))}
+                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* --- SCOPE & PROCESS --- */}
+                <section className="px-6 md:px-12 mb-20 md:mb-32">
+                    <div className="bg-titan-navy rounded-[3rem] p-8 md:p-20 text-white relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-titan-red/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+                        <div className="relative z-10">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24">
+                                {/* Scope */}
+                                <div>
+                                    <h3 className="text-3xl font-bold mb-8 border-b border-white/10 pb-6">Scope of Work</h3>
+                                    <div className="space-y-4">
+                                        {service.scopeOfWork.map((item, i) => (
+                                            <div key={i} className="flex items-start gap-4 group">
+                                                <div className="w-6 h-6 rounded-full bg-titan-red/20 flex items-center justify-center shrink-0 mt-1 group-hover:bg-titan-red transition-colors">
+                                                    <CheckCircle2 size={14} className="text-titan-red group-hover:text-white transition-colors" />
+                                                </div>
+                                                <span className="text-lg text-white/80 group-hover:text-white transition-colors">{item}</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                                <ImageReveal src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2670" alt="Vattanac Extension" />
-                                <div className="px-2 md:px-8 lg:hidden">
-                                    <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
-                                    <p className="text-gray-500">High-rise engineering excellence.</p>
+
+                                {/* Process */}
+                                <div>
+                                     <h3 className="text-3xl font-bold mb-8 border-b border-white/10 pb-6">Our Process</h3>
+                                     <div className="space-y-8">
+                                         {service.process.map((step, i) => (
+                                             <div key={i} className="flex gap-6 group">
+                                                 <div className="text-4xl font-black text-white/10 group-hover:text-titan-red transition-colors w-16 text-right shrink-0">
+                                                     {step.step}
+                                                 </div>
+                                                 <div>
+                                                     <h4 className="text-xl font-bold mb-2">{step.title}</h4>
+                                                     <p className="text-white/50 text-sm leading-relaxed">{step.desc}</p>
+                                                 </div>
+                                             </div>
+                                         ))}
+                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+
+                {/* --- FEATURED PROJECTS --- */}
+                {service.relatedProjects.length > 0 && (
+                    <section className="px-6 md:px-12 mb-20">
+                         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                            <div>
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Portfolio</span>
+                                <h2 className="text-3xl md:text-5xl font-bold">Related Projects</h2>
+                            </div>
+                            <Link href="/design-a/projects" className="font-bold border-b border-titan-navy pb-1 hover:text-titan-red hover:border-titan-red transition-colors">View All Projects</Link>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {service.relatedProjects.map((project, i) => (
+                                <FadeInWhenVisible key={i}>
+                                    <Link href={`/design-a/projects/${project.id}`} className="group relative aspect-[16/9] block rounded-[2.5rem] overflow-hidden">
+                                        <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                                        
+                                        <div className="absolute bottom-0 left-0 p-10 w-full">
+                                            <span className="inline-block bg-white text-titan-navy text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-md mb-4">{project.category}</span>
+                                            <h3 className="text-3xl font-bold text-white mb-2">{project.title}</h3>
+                                            <div className="flex items-center gap-2 text-white/80">
+                                                <MapPin size={16} /> {project.location}
+                                            </div>
+                                        </div>
+
+                                        <div className="absolute top-8 right-8 w-14 h-14 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+                                            <ArrowRight size={24} />
+                                        </div>
+                                    </Link>
+                                </FadeInWhenVisible>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                 {/* --- CTA --- */}
+                 <section className="px-6 md:px-12 mb-20">
+                    <div className="bg-[#F5F5F7] rounded-[3rem] p-12 md:p-20 text-center">
+                        <h2 className="text-3xl md:text-5xl font-bold mb-6 text-titan-navy">Start your {service.title} project</h2>
+                        <p className="text-gray-500 text-lg mb-10 max-w-2xl mx-auto">
+                            Contact our expert team today for a free consultation and feasibility study.
+                        </p>
+                        <div className="flex flex-col sm:flex-row justify-center gap-4">
+                            <Link href="/design-a/contact" className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20">
+                                Request Quote
+                            </Link>
+                            <Link href="/design-a/projects" className="bg-white text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors shadow-sm">
+                                View Portfolio
+                            </Link>
+                        </div>
+                    </div>
+                 </section>
 
                 {/* --- FOOTER --- */}
-                <footer className="pt-20 md:pt-32 pb-12 px-6 md:px-12 bg-white">
+                <footer className="pt-20 pb-12 px-6 md:px-12 bg-white rounded-t-[3rem] mt-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 mb-20">
                         <div>
                             <h2 className="text-5xl md:text-8xl font-bold tracking-tight mb-8 text-titan-navy">
                                 KIMMEX
                             </h2>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <button className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20">Start Project</button>
-                                <button className="bg-gray-100 text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">Contact Us</button>
+                                <Link href="/design-a/contact" className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20 text-center">
+                                    Start Project
+                                </Link>
+                                <Link href="/design-a/projects" className="bg-gray-100 text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors text-center">
+                                    View Projects
+                                </Link>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 text-sm text-gray-500">

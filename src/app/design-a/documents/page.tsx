@@ -2,50 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Menu, X, Facebook, Linkedin, Youtube, Phone, Mail, MapPin, ChevronDown, ChevronRight, Globe, Shield, Zap, MousePointer2 } from 'lucide-react';
+import { 
+    FileText, Download, Bell, ArrowRight, Calendar, Tag, ChevronRight, 
+    Search, Filter, FolderOpen, Database, Menu, X, Facebook, Linkedin, Youtube, Check
+} from 'lucide-react';
 import Link from 'next/link';
 
-// --- COMPONENTS ---
-
-const FeatureCard = ({ title, desc, icon: Icon, index }: { title: string, desc: string, icon: any, index: number }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
-        viewport={{ once: true, margin: "-50px" }}
-        className="bg-[#F5F5F7] p-8 md:p-10 rounded-[2rem] hover:bg-titan-navy hover:text-white transition-all duration-500 group cursor-default h-full flex flex-col justify-between"
-    >
-        <div>
-            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-white/10 group-hover:text-white text-titan-navy transition-colors">
-                <Icon size={28} strokeWidth={1.5} />
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold mb-4">{title}</h3>
-            <p className="text-gray-500 group-hover:text-white/60 leading-relaxed transition-colors text-sm md:text-base">
-                {desc}
-            </p>
-        </div>
-        <div className="mt-8 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-            <ArrowRight size={20} />
-        </div>
-    </motion.div>
-);
-
-const ImageReveal = ({ src, alt }: { src: string, alt: string }) => (
-    <div className="overflow-hidden rounded-[2rem] relative h-[400px] md:h-[500px] w-full group">
-        <motion.img 
-            initial={{ scale: 1.2 }}
-            whileInView={{ scale: 1 }}
-            transition={{ duration: 1.5 }}
-            src={src} 
-            alt={alt} 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
-            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">View Case Study</span>
-            <h3 className="text-2xl md:text-3xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">{alt}</h3>
-        </div>
-    </div>
-);
+// --- SHARED COMPONENTS ---
 
 const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: () => void, navItems: any[] }) => {
     const [activeCategory, setActiveCategory] = useState<number | null>(0);
@@ -77,7 +40,6 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                     
                     {/* Main Content Area */}
                     <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-                        
                         {/* Left: Main Navigation List */}
                         <div className="w-full md:w-1/2 lg:w-5/12 p-8 md:p-12 overflow-y-auto border-r border-white/10 flex flex-col justify-center">
                             <nav className="flex flex-col gap-2">
@@ -268,11 +230,77 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
     );
 }
 
-// --- MAIN PAGE ---
+// --- MOCK DATA ---
+const documents = [
+    {
+        id: 1,
+        title: 'Kimmex Engineering Standards 2026: High-Rise Structural Integrity',
+        date: 'Jan 10, 2026',
+        category: 'Engineering',
+        size: '15.4 MB',
+        type: 'PDF',
+        description: 'Comprehensive guidelines and technical specifications for structural steel and concrete reinforcement in high-rise developments greater than 40 floors.',
+        image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+        id: 2,
+        title: 'Sustainable Materials Research: Green Concrete Viability',
+        date: 'Dec 15, 2025',
+        category: 'Research',
+        size: '4.2 MB',
+        type: 'PDF',
+        description: 'Internal research findings on the cost-benefit analysis and long-term durability of recycled aggregate concrete in tropical climates.',
+        image: 'https://images.unsplash.com/photo-1518135714426-c18f5ffb6f4d?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+        id: 3,
+        title: 'Standard Operating Procedures (SOP): Heavy Machinery Safety',
+        date: 'Nov 22, 2025',
+        category: 'Safety',
+        size: '12.8 MB',
+        type: 'PDF',
+        description: 'Mandatory safety protocols for crane and excavator operators, including pre-start checks and emergency shutdown procedures.',
+        image: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+        id: 4,
+        title: 'Urban Planning Case Study: Phnom Penh 2030',
+        date: 'Oct 05, 2025',
+        category: 'Case Study',
+        size: '25 MB',
+        type: 'PDF',
+        description: 'A forward-looking analysis of infrastructure needs for the expanding metropolitan area, prepared by Kimmex Strategy Division.',
+        image: 'https://images.unsplash.com/photo-1486325212027-8081648c82ee?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+        id: 5,
+        title: 'ISO 9001:2015 Quality Management Framework',
+        date: 'Sep 12, 2025',
+        category: 'Corporate',
+        size: '3.5 MB',
+        type: 'PDF',
+        description: 'Official documentation of our quality assurance processes, utilized across all project lifecycles.',
+        image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+        id: 6,
+        title: 'Technical Specification: Solar Facade Integration',
+        date: 'Aug 20, 2025',
+        category: 'Technical',
+        size: '8.1 MB',
+        type: 'PDF',
+        description: 'Technical drawings and electrical specifications for integrating BIPV (Building Integrated Photovoltaics) into glass facades.',
+        image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop'
+    }
+];
 
-export default function DesignA_ContainerNav() {
+const categories = ['All Types', 'Engineering', 'Safety', 'Research', 'Corporate', 'Technical', 'Case Study'];
+
+export default function DocCollectionDesignAPage() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [activeCategory, setActiveCategory] = useState('All Types');
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -280,7 +308,13 @@ export default function DesignA_ContainerNav() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Full Content Structure from Design X
+    const filteredDocs = documents.filter(doc => {
+        const matchesCategory = activeCategory === 'All Types' || doc.category === activeCategory;
+        const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              doc.description.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
+
     const navItems = [
         {
             label: 'About Us', href: '/design-a/about',
@@ -345,17 +379,16 @@ export default function DesignA_ContainerNav() {
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
                 
-                {/* --- NAVIGATION (Minimal / Hidden Concept) --- */}
+                {/* --- NAVIGATION --- */}
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
-                        
-                        {/* Logo (Top Left) */}
+                        {/* Logo */}
                         <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
                             <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
                             <span className="font-bold text-lg tracking-tight">KIMMEX</span>
                         </div>
 
-                        {/* Menu Trigger (Top Right) */}
+                        {/* Menu Trigger */}
                         <button 
                             onClick={() => setIsMenuOpen(true)}
                             className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
@@ -369,165 +402,204 @@ export default function DesignA_ContainerNav() {
                     </div>
                 </div>
 
-                {/* Full Screen Menu Overlay with RICH CONTENT */}
                 <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} navItems={navItems} />
 
-                {/* --- HERO SECTION --- */}
-                <header className="pt-32 md:pt-40 pb-12 md:pb-20 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center min-h-[85vh]">
-                    <div className="max-w-2xl order-2 lg:order-1">
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8"
-                        >
-                            Est. 1999 • Phnom Penh
-                        </motion.div>
-                        <motion.h1 
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, duration: 0.8 }}
-                            className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-8 md:mb-10"
-                        >
-                            Constructing <br/>
-                            <span className="text-gray-300">Excellence.</span>
-                        </motion.h1>
-                        <motion.p 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3, duration: 0.8 }}
-                            className="text-lg md:text-xl text-gray-500 leading-relaxed mb-10 md:mb-12 max-w-lg"
-                        >
-                            We are Cambodia's leading construction firm, merging technical precision with sustainable innovation.
-                        </motion.p>
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="flex gap-4"
-                        >
-                            <button className="flex items-center gap-3 text-lg font-bold hover:gap-6 transition-all group">
-                                View Projects 
-                                <div className="w-10 h-10 bg-[#F5F5F7] rounded-full flex items-center justify-center group-hover:bg-titan-navy group-hover:text-white transition-colors shadow-sm">
-                                    <ArrowRight size={18} />
-                                </div>
-                            </button>
-                        </motion.div>
-                    </div>
-
-                    <div className="relative h-[400px] md:h-[600px] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden group order-1 lg:order-2 shadow-2xl">
-                        <motion.img
-                            initial={{ scale: 1.1 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 1.5, ease: "easeOut" }}
-                            src="https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=2800"
-                            alt="Hero Architecture"
-                            className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/10"></div>
-                        
-                        <motion.div 
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.8 }}
-                            className="absolute bottom-6 right-6 md:bottom-8 md:right-8 bg-white/80 backdrop-blur-md p-6 rounded-2xl max-w-[200px] md:max-w-xs shadow-lg z-10 border border-white/50"
-                        >
-                            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Current Focus</div>
-                            <div className="text-sm md:text-lg font-bold text-titan-navy">Sustainable Infrastructure Development</div>
-                        </motion.div>
-                    </div>
-                </header>
-
-                {/* --- STATS MARQUEE (Infinite Scroll) --- */}
-                <div className="bg-titan-navy text-white py-6 md:py-8 overflow-hidden">
-                    <div className="flex gap-12 md:gap-24 animate-marquee whitespace-nowrap">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-                                <span className="font-bold text-lg md:text-xl tracking-wider">ISO 9001:2015 CERTIFIED</span>
-                                <div className="w-2 h-2 bg-titan-red rounded-full"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* --- SERVICES --- */}
-                <section className="py-20 md:py-32 px-6 md:px-12">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight max-w-md leading-tight">Capabilities & <br/>Expertise</h2>
-                        <a href="#" className="font-bold border-b border-titan-navy pb-1 hover:text-titan-red hover:border-titan-red transition-colors">View All Capabilities</a>
+                {/* --- HERO --- */}
+                <header className="relative h-[60vh] flex items-center justify-center overflow-hidden bg-titan-navy rounded-b-[4rem]">
+                    <div className="absolute inset-0">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10"></div>
+                        <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent"></div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <FeatureCard 
-                            index={0}
-                            title="Design & Build" 
-                            desc="Comprehensive delivery from initial concept to final handover." 
-                            icon={MousePointer2} 
-                        />
-                        <FeatureCard 
-                            index={1}
-                            title="Infrastructure" 
-                            desc="Roads, bridges, and public utility networks connecting the nation." 
-                            icon={Globe} 
-                        />
-                        <FeatureCard 
-                            index={2}
-                            title="Renovation" 
-                            desc="Modernizing existing structures with structural integrity." 
-                            icon={Zap} 
-                        />
-                        <FeatureCard 
-                            index={3}
-                            title="Management" 
-                            desc="Rigorous project oversight and quality assurance." 
-                            icon={Shield} 
-                        />
-                    </div>
-                </section>
-
-                {/* --- FEATURED WORK --- */}
-                <section className="py-20 md:py-32 px-6 md:px-12 bg-[#F5F5F7] rounded-none md:rounded-[3rem] mx-0 md:mx-8 mb-8 md:mb-12">
-                    <div className="max-w-[1600px] mx-auto">
-                        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Portfolio</span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-6">Building Landmarks</h2>
-                            <p className="text-gray-500 text-base md:text-lg leading-relaxed">
-                                From government headquarters to commercial high-rises, our portfolio defines the modern Cambodian skyline.
-                            </p>
+                    <motion.div 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="relative z-10 text-center max-w-4xl px-6 pt-20"
+                    >
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur rounded-full text-xs font-bold uppercase tracking-widest text-white mb-8 border border-white/20">
+                            <Database size={14} className="text-titan-red" />
+                            Resource Center
                         </div>
+                        <h1 className="text-5xl md:text-8xl font-black text-white mb-8 tracking-tight leading-[0.9]">
+                            Doc <span className="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-white">Collection.</span>
+                        </h1>
+                        <p className="text-lg md:text-xl text-white/70 font-light max-w-xl mx-auto leading-relaxed mb-10">
+                            Access our centralized repository of engineering standards, research papers, technical specifications, and corporate policies.
+                        </p>
+                    </motion.div>
+                </header>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                            <div className="space-y-8 mt-0 lg:mt-24">
-                                <ImageReveal src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670" alt="Ministry of Economy" />
-                                <div className="px-2 md:px-8">
-                                    <h3 className="text-2xl font-bold mb-2">Government Projects</h3>
-                                    <p className="text-gray-500">Trusted partner for national infrastructure.</p>
-                                </div>
-                            </div>
-                            <div className="space-y-8">
-                                <div className="px-2 md:px-8 text-left lg:text-right hidden lg:block">
-                                    <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
-                                    <p className="text-gray-500">High-rise engineering excellence.</p>
-                                </div>
-                                <ImageReveal src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2670" alt="Vattanac Extension" />
-                                <div className="px-2 md:px-8 lg:hidden">
-                                    <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
-                                    <p className="text-gray-500">High-rise engineering excellence.</p>
-                                </div>
+                <div className="max-w-[1400px] mx-auto px-6 relative z-20 pb-20 mt-12 md:mt-20">
+                    
+                    {/* --- CONTROLS BAR --- */}
+                    <div className="bg-white p-6 rounded-[2rem] shadow-lg border border-gray-100 mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+                        {/* Categories Scroll */}
+                        <div className="w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
+                            <div className="flex gap-2">
+                                {categories.map((cat) => (
+                                    <button
+                                        key={cat}
+                                        onClick={() => setActiveCategory(cat)}
+                                        className={`whitespace-nowrap px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wide transition-all ${
+                                            activeCategory === cat 
+                                            ? 'bg-titan-navy text-white shadow-md' 
+                                            : 'bg-[#F5F5F7] text-titan-navy/60 hover:bg-gray-200 hover:text-titan-navy'
+                                        }`}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
                             </div>
                         </div>
+
+                        {/* Search */}
+                        <div className="relative w-full md:w-80 shrink-0 group">
+                            <input
+                                type="text"
+                                placeholder="Search by title or keyword..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full bg-[#F5F5F7] border border-transparent hover:bg-white hover:border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red transition-all"
+                            />
+                            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-titan-red transition-colors" />
+                        </div>
                     </div>
-                </section>
+
+                    {/* --- LATEST RELEASE (FEATURED) --- */}
+                    {activeCategory === 'All Types' && filteredDocs.length > 0 && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-16"
+                        >
+                            <Link href={`/design-a/documents/${documents[0].id}`} className="group bg-white rounded-[3rem] overflow-hidden shadow-xl border border-gray-100 grid grid-cols-1 lg:grid-cols-5 hover:shadow-2xl transition-all duration-300">
+                                <div className="lg:col-span-3 relative overflow-hidden aspect-video lg:aspect-auto">
+                                    <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-titan-navy/0 transition-colors z-10"></div>
+                                    <img
+                                        src={documents[0].image}
+                                        alt={documents[0].title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                    />
+                                    <div className="absolute top-8 left-8 z-20">
+                                        <span className="bg-titan-red text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-lg backdrop-blur-md">
+                                            Latest Release
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="lg:col-span-2 p-10 md:p-16 flex flex-col justify-center bg-white relative">
+                                    <div className="mb-8 flex flex-wrap gap-3">
+                                        <span className="px-4 py-2 bg-[#F5F5F7] rounded-lg text-[10px] font-bold uppercase tracking-wider text-titan-navy">
+                                            {documents[0].category}
+                                        </span>
+                                        <span className="px-4 py-2 bg-[#F5F5F7] rounded-lg text-[10px] font-bold uppercase tracking-wider text-titan-navy/60">
+                                            {documents[0].type} • {documents[0].size}
+                                        </span>
+                                    </div>
+                                    <h2 className="text-3xl md:text-4xl font-bold text-titan-navy mb-6 group-hover:text-titan-red transition-colors leading-tight">
+                                        {documents[0].title}
+                                    </h2>
+                                    <p className="text-titan-navy/60 mb-10 leading-relaxed text-lg">
+                                        {documents[0].description}
+                                    </p>
+                                    <div className="mt-auto">
+                                        <button className="w-full bg-titan-navy text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors flex items-center justify-center gap-3 shadow-lg">
+                                            <Download size={18} /> Download Document
+                                        </button>
+                                    </div>
+                                </div>
+                            </Link>
+                        </motion.div>
+                    )}
+
+                    {/* --- GRID LAYOUT --- */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {filteredDocs.slice(activeCategory === 'All Types' ? 1 : 0).map((doc, index) => (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.05 }}
+                                key={doc.id}
+                            >
+                                <Link href={`/design-a/documents/${doc.id}`} className="group flex flex-col h-full bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-2">
+                                    <div className="aspect-[4/3] relative overflow-hidden bg-titan-bg m-2 rounded-[1.5rem]">
+                                        <img
+                                            src={doc.image}
+                                            alt={doc.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                                        />
+                                        
+                                        <div className="absolute top-4 left-4">
+                                            <span className="bg-white/90 backdrop-blur-md text-titan-navy px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg shadow-sm">
+                                                {doc.category}
+                                            </span>
+                                        </div>
+
+                                        {/* Hover Action */}
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-titan-navy/20 backdrop-blur-[2px]">
+                                            <div className="bg-white text-titan-navy px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wide flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl">
+                                                View Details <ChevronRight size={14} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-8 flex flex-col flex-1">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] font-bold text-titan-navy/40 uppercase tracking-wider mb-1">Published</span>
+                                                <span className="text-xs font-bold text-titan-navy">{doc.date}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F5F5F7] rounded-lg text-[10px] font-bold text-titan-navy">
+                                                <FileText size={12} className="text-titan-red" />
+                                                {doc.type}
+                                            </div>
+                                        </div>
+
+                                        <h3 className="text-xl font-bold text-titan-navy mb-4 group-hover:text-titan-red transition-colors leading-tight line-clamp-2">
+                                            {doc.title}
+                                        </h3>
+                                        
+                                        <p className="text-sm text-titan-navy/60 mb-8 line-clamp-2 leading-relaxed">
+                                            {doc.description}
+                                        </p>
+
+                                        <div className="mt-auto pt-6 border-t border-titan-navy/5 flex justify-between items-center text-xs">
+                                            <span className="font-bold text-titan-navy/40">{doc.size}</span>
+                                            <span className="font-bold text-titan-navy group-hover:text-titan-red transition-colors flex items-center gap-2 uppercase tracking-wider">
+                                                <Download size={14} /> Download
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    {filteredDocs.length === 0 && (
+                        <div className="text-center py-20 bg-[#F5F5F7] rounded-[2.5rem] border-2 border-dashed border-gray-200">
+                            <p className="text-titan-navy/50 font-medium">No documents found matching your criteria.</p>
+                            <button onClick={() => { setActiveCategory('All Types'); setSearchQuery(''); }} className="mt-4 text-titan-red font-bold text-sm uppercase tracking-wide hover:underline">
+                                Clear Filters
+                            </button>
+                        </div>
+                    )}
+                </div>
 
                 {/* --- FOOTER --- */}
-                <footer className="pt-20 md:pt-32 pb-12 px-6 md:px-12 bg-white">
+                <footer className="pt-20 pb-12 px-6 md:px-12 bg-white rounded-t-[3rem] mt-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 mb-20">
                         <div>
                             <h2 className="text-5xl md:text-8xl font-bold tracking-tight mb-8 text-titan-navy">
                                 KIMMEX
                             </h2>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <button className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20">Start Project</button>
-                                <button className="bg-gray-100 text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">Contact Us</button>
+                                <Link href="/design-a/contact" className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20 text-center">
+                                    Start Project
+                                </Link>
+                                <Link href="/design-a/projects" className="bg-gray-100 text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors text-center">
+                                    View Projects
+                                </Link>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 text-sm text-gray-500">

@@ -1,51 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Menu, X, Facebook, Linkedin, Youtube, Phone, Mail, MapPin, ChevronDown, ChevronRight, Globe, Shield, Zap, MousePointer2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
+import { 
+    ArrowRight, Menu, X, Facebook, Linkedin, Youtube, 
+    Shield, Award, Users, TrendingUp, Heart, Lightbulb, 
+    Handshake, Clock, CheckCircle2, Quote, ChevronRight,
+    Building, Ruler, Truck, DraftingCompass, HardHat, 
+    Hammer, Briefcase, LayoutTemplate, PenTool, GraduationCap, 
+    Landmark, Settings, ShieldCheck, Zap, Globe, MousePointer2
+} from 'lucide-react';
 import Link from 'next/link';
 
-// --- COMPONENTS ---
-
-const FeatureCard = ({ title, desc, icon: Icon, index }: { title: string, desc: string, icon: any, index: number }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
-        viewport={{ once: true, margin: "-50px" }}
-        className="bg-[#F5F5F7] p-8 md:p-10 rounded-[2rem] hover:bg-titan-navy hover:text-white transition-all duration-500 group cursor-default h-full flex flex-col justify-between"
-    >
-        <div>
-            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-white/10 group-hover:text-white text-titan-navy transition-colors">
-                <Icon size={28} strokeWidth={1.5} />
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold mb-4">{title}</h3>
-            <p className="text-gray-500 group-hover:text-white/60 leading-relaxed transition-colors text-sm md:text-base">
-                {desc}
-            </p>
-        </div>
-        <div className="mt-8 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-            <ArrowRight size={20} />
-        </div>
-    </motion.div>
-);
-
-const ImageReveal = ({ src, alt }: { src: string, alt: string }) => (
-    <div className="overflow-hidden rounded-[2rem] relative h-[400px] md:h-[500px] w-full group">
-        <motion.img 
-            initial={{ scale: 1.2 }}
-            whileInView={{ scale: 1 }}
-            transition={{ duration: 1.5 }}
-            src={src} 
-            alt={alt} 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
-            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">View Case Study</span>
-            <h3 className="text-2xl md:text-3xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">{alt}</h3>
-        </div>
-    </div>
-);
+// --- SHARED COMPONENTS (Reused for consistency) ---
 
 const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: () => void, navItems: any[] }) => {
     const [activeCategory, setActiveCategory] = useState<number | null>(0);
@@ -268,9 +235,27 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
     );
 }
 
-// --- MAIN PAGE ---
+// Helper: Fade In Wrapper
+function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
 
-export default function DesignA_ContainerNav() {
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.6, delay, ease: "easeOut" }}
+            className={className}
+        >
+            {children}
+        </motion.div>
+    );
+}
+
+// --- PAGE COMPONENT ---
+
+export default function ServicesPageDesignA() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -280,7 +265,6 @@ export default function DesignA_ContainerNav() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Full Content Structure from Design X
     const navItems = [
         {
             label: 'About Us', href: '/design-a/about',
@@ -339,23 +323,72 @@ export default function DesignA_ContainerNav() {
         { label: 'Contact', href: '/design-a/contact' }
     ];
 
+    const services = [
+        {
+            id: 'design-build',
+            title: 'Design & Build',
+            desc: 'A seamless integration of architectural creativity and engineering precision. We handle the entire lifecycle from concept to completion.',
+            icon: PenTool,
+            features: ['Architectural Design', 'Structural Engineering', 'Permit Acquisition', 'Turnkey Construction'],
+            image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop'
+        },
+        {
+            id: 'renovation',
+            title: 'Renovation',
+            desc: 'Revitalizing existing structures to meet modern standards. We breathe new life into aged buildings while ensuring structural integrity.',
+            icon: Hammer,
+            features: ['Interior Fit-outs', 'Facade Upgrades', 'Structural Strengthening', 'MEP Retrofitting'],
+            image: 'https://images.unsplash.com/photo-1581094794329-c8112c4e5190?q=80&w=800&auto=format&fit=crop'
+        },
+        {
+            id: 'project-management',
+            title: 'Project Management',
+            desc: 'Rigorous oversight ensuring on-time, on-budget delivery. We represent your interests on the field, managing contractors and risks.',
+            icon: Briefcase,
+            features: ['Cost Control', 'Quality Assurance', 'Schedule Management', 'Safety Compliance'],
+            image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop'
+        },
+        {
+            id: 'consultants',
+            title: 'Consultancy',
+            desc: 'Strategic expertise to validate and optimize your investment. We provide technical and financial insights before you build.',
+            icon: Lightbulb,
+            features: ['Feasibility Studies', 'Value Engineering', 'Technical Audits', 'Regulatory Advice'],
+            image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop'
+        }
+    ];
+
+    const process = [
+        { step: '01', title: 'Consultation', desc: 'Understanding your vision & requirements.' },
+        { step: '02', title: 'Concept', desc: 'Drafting plans & architectural rendering.' },
+        { step: '03', title: 'Planning', desc: 'Cost estimation & timeline scheduling.' },
+        { step: '04', title: 'Execution', desc: 'Construction with rigorous supervision.' },
+        { step: '05', title: 'Handover', desc: 'Final delivery & post-project support.' }
+    ];
+
+    const sectors = [
+        { title: 'Government', icon: Landmark, image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop' },
+        { title: 'Education', icon: GraduationCap, image: 'https://images.unsplash.com/photo-1599687267104-d510688a4e32?q=80&w=800&auto=format&fit=crop' },
+        { title: 'Commercial', icon: Building, image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop' },
+        { title: 'Infrastructure', icon: Truck, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=800&auto=format&fit=crop' },
+    ];
+
     return (
         <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 font-sans text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
             
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
                 
-                {/* --- NAVIGATION (Minimal / Hidden Concept) --- */}
+                {/* --- NAVIGATION --- */}
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
-                        
-                        {/* Logo (Top Left) */}
+                        {/* Logo */}
                         <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
                             <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
                             <span className="font-bold text-lg tracking-tight">KIMMEX</span>
                         </div>
 
-                        {/* Menu Trigger (Top Right) */}
+                        {/* Menu Trigger */}
                         <button 
                             onClick={() => setIsMenuOpen(true)}
                             className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
@@ -369,165 +402,173 @@ export default function DesignA_ContainerNav() {
                     </div>
                 </div>
 
-                {/* Full Screen Menu Overlay with RICH CONTENT */}
                 <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} navItems={navItems} />
 
                 {/* --- HERO SECTION --- */}
-                <header className="pt-32 md:pt-40 pb-12 md:pb-20 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center min-h-[85vh]">
-                    <div className="max-w-2xl order-2 lg:order-1">
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8"
-                        >
-                            Est. 1999 • Phnom Penh
-                        </motion.div>
-                        <motion.h1 
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, duration: 0.8 }}
-                            className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-8 md:mb-10"
-                        >
-                            Constructing <br/>
-                            <span className="text-gray-300">Excellence.</span>
-                        </motion.h1>
-                        <motion.p 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3, duration: 0.8 }}
-                            className="text-lg md:text-xl text-gray-500 leading-relaxed mb-10 md:mb-12 max-w-lg"
-                        >
-                            We are Cambodia's leading construction firm, merging technical precision with sustainable innovation.
-                        </motion.p>
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="flex gap-4"
-                        >
-                            <button className="flex items-center gap-3 text-lg font-bold hover:gap-6 transition-all group">
-                                View Projects 
-                                <div className="w-10 h-10 bg-[#F5F5F7] rounded-full flex items-center justify-center group-hover:bg-titan-navy group-hover:text-white transition-colors shadow-sm">
-                                    <ArrowRight size={18} />
-                                </div>
-                            </button>
-                        </motion.div>
-                    </div>
-
-                    <div className="relative h-[400px] md:h-[600px] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden group order-1 lg:order-2 shadow-2xl">
-                        <motion.img
-                            initial={{ scale: 1.1 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 1.5, ease: "easeOut" }}
-                            src="https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=2800"
-                            alt="Hero Architecture"
-                            className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/10"></div>
-                        
-                        <motion.div 
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.8 }}
-                            className="absolute bottom-6 right-6 md:bottom-8 md:right-8 bg-white/80 backdrop-blur-md p-6 rounded-2xl max-w-[200px] md:max-w-xs shadow-lg z-10 border border-white/50"
-                        >
-                            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Current Focus</div>
-                            <div className="text-sm md:text-lg font-bold text-titan-navy">Sustainable Infrastructure Development</div>
-                        </motion.div>
-                    </div>
+                <header className="pt-32 md:pt-40 pb-12 md:pb-20 px-6 md:px-12 min-h-[60vh] flex flex-col justify-end relative">
+                     <div className="absolute top-0 right-0 w-1/2 h-full bg-[#F5F5F7] -z-10 rounded-bl-[4rem] hidden lg:block"></div>
+                     
+                     <motion.div 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="max-w-4xl"
+                    >
+                         <div className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8 border border-titan-navy/5">
+                            Est. 1999 • Services
+                        </div>
+                        <h1 className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
+                            Our <span className="text-gray-300">Expertise.</span>
+                        </h1>
+                        <p className="text-lg md:text-xl text-gray-500 max-w-2xl leading-relaxed">
+                            Delivering precision, innovation, and excellence in every project. We turn complex challenges into enduring structures.
+                        </p>
+                    </motion.div>
                 </header>
 
-                {/* --- STATS MARQUEE (Infinite Scroll) --- */}
-                <div className="bg-titan-navy text-white py-6 md:py-8 overflow-hidden">
-                    <div className="flex gap-12 md:gap-24 animate-marquee whitespace-nowrap">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-                                <span className="font-bold text-lg md:text-xl tracking-wider">ISO 9001:2015 CERTIFIED</span>
-                                <div className="w-2 h-2 bg-titan-red rounded-full"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                {/* --- SERVICES GRID --- */}
+                <section className="px-6 md:px-12 mb-20 md:mb-32">
+                    <div className="grid grid-cols-1 gap-12">
+                        {services.map((service, i) => (
+                            <FadeInWhenVisible key={i} delay={i * 0.1}>
+                                <div className="group bg-[#F5F5F7] rounded-[2.5rem] overflow-hidden hover:bg-titan-navy hover:text-white transition-all duration-500 flex flex-col lg:flex-row h-full">
+                                    {/* Content */}
+                                    <div className="p-8 md:p-16 lg:w-1/2 flex flex-col justify-center order-2 lg:order-1">
+                                        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-titan-navy mb-8 group-hover:bg-white/10 group-hover:text-white transition-colors shadow-sm">
+                                            <service.icon size={32} />
+                                        </div>
+                                        <h3 className="text-3xl md:text-4xl font-bold mb-6">{service.title}</h3>
+                                        <p className="text-gray-500 group-hover:text-white/60 text-lg leading-relaxed mb-10 transition-colors">
+                                            {service.desc}
+                                        </p>
+                                        
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            {service.features.map((feature, idx) => (
+                                                <div key={idx} className="flex items-center gap-3 font-medium text-titan-navy/70 group-hover:text-white/80 transition-colors">
+                                                    <div className="w-2 h-2 rounded-full bg-titan-red shrink-0"></div>
+                                                    {feature}
+                                                </div>
+                                            ))}
+                                        </div>
 
-                {/* --- SERVICES --- */}
-                <section className="py-20 md:py-32 px-6 md:px-12">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight max-w-md leading-tight">Capabilities & <br/>Expertise</h2>
-                        <a href="#" className="font-bold border-b border-titan-navy pb-1 hover:text-titan-red hover:border-titan-red transition-colors">View All Capabilities</a>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <FeatureCard 
-                            index={0}
-                            title="Design & Build" 
-                            desc="Comprehensive delivery from initial concept to final handover." 
-                            icon={MousePointer2} 
-                        />
-                        <FeatureCard 
-                            index={1}
-                            title="Infrastructure" 
-                            desc="Roads, bridges, and public utility networks connecting the nation." 
-                            icon={Globe} 
-                        />
-                        <FeatureCard 
-                            index={2}
-                            title="Renovation" 
-                            desc="Modernizing existing structures with structural integrity." 
-                            icon={Zap} 
-                        />
-                        <FeatureCard 
-                            index={3}
-                            title="Management" 
-                            desc="Rigorous project oversight and quality assurance." 
-                            icon={Shield} 
-                        />
+                                        <div className="mt-10">
+                                            <Link href={`/design-a/services/${service.id}`} className="inline-flex items-center gap-3 font-bold text-titan-navy group-hover:text-white transition-colors uppercase tracking-widest text-sm">
+                                                Learn More <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                                            </Link>
+                                        </div>
+                                    </div>
+
+                                    {/* Image */}
+                                    <div className="lg:w-1/2 h-64 lg:h-auto relative overflow-hidden order-1 lg:order-2">
+                                        <img 
+                                            src={service.image} 
+                                            alt={service.title} 
+                                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                        />
+                                        <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-titan-navy/0 transition-colors"></div>
+                                    </div>
+                                </div>
+                            </FadeInWhenVisible>
+                        ))}
                     </div>
                 </section>
 
-                {/* --- FEATURED WORK --- */}
-                <section className="py-20 md:py-32 px-6 md:px-12 bg-[#F5F5F7] rounded-none md:rounded-[3rem] mx-0 md:mx-8 mb-8 md:mb-12">
-                    <div className="max-w-[1600px] mx-auto">
-                        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Portfolio</span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-6">Building Landmarks</h2>
-                            <p className="text-gray-500 text-base md:text-lg leading-relaxed">
-                                From government headquarters to commercial high-rises, our portfolio defines the modern Cambodian skyline.
+                {/* --- METHODOLOGY / PROCESS --- */}
+                <section className="px-6 md:px-12 py-20 bg-titan-navy text-white rounded-[3rem] mx-0 md:mx-6 mb-20 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/10 rounded-full blur-[100px] pointer-events-none"></div>
+                    
+                    <div className="max-w-[1400px] mx-auto relative z-10">
+                         <div className="text-center mb-16">
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">How We Work</span>
+                            <h2 className="text-3xl md:text-5xl font-bold mb-6">Our Methodology</h2>
+                            <p className="text-white/60 text-lg max-w-2xl mx-auto">
+                                A systematic approach ensuring transparency, safety, and excellence from the first meeting to final handover.
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                            <div className="space-y-8 mt-0 lg:mt-24">
-                                <ImageReveal src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670" alt="Ministry of Economy" />
-                                <div className="px-2 md:px-8">
-                                    <h3 className="text-2xl font-bold mb-2">Government Projects</h3>
-                                    <p className="text-gray-500">Trusted partner for national infrastructure.</p>
-                                </div>
-                            </div>
-                            <div className="space-y-8">
-                                <div className="px-2 md:px-8 text-left lg:text-right hidden lg:block">
-                                    <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
-                                    <p className="text-gray-500">High-rise engineering excellence.</p>
-                                </div>
-                                <ImageReveal src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2670" alt="Vattanac Extension" />
-                                <div className="px-2 md:px-8 lg:hidden">
-                                    <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
-                                    <p className="text-gray-500">High-rise engineering excellence.</p>
-                                </div>
-                            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+                            {process.map((step, i) => (
+                                <FadeInWhenVisible key={i} delay={i * 0.1}>
+                                    <div className="bg-white/5 rounded-3xl p-8 border border-white/5 hover:bg-white/10 transition-colors text-center h-full group">
+                                        <div className="text-5xl font-black text-white/10 mb-4 group-hover:text-titan-red transition-colors">{step.step}</div>
+                                        <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                                        <p className="text-white/50 text-sm leading-relaxed">{step.desc}</p>
+                                    </div>
+                                </FadeInWhenVisible>
+                            ))}
                         </div>
                     </div>
                 </section>
 
+                {/* --- SECTORS --- */}
+                <section className="px-6 md:px-12 py-20 mb-20">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                        <div>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Industries</span>
+                            <h2 className="text-3xl md:text-5xl font-bold">Sectors We Serve</h2>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                         {sectors.map((sector, i) => (
+                            <FadeInWhenVisible key={i} delay={i * 0.1}>
+                                <div className="group relative h-[450px] overflow-hidden rounded-[2.5rem] cursor-pointer">
+                                    <img
+                                        src={sector.image}
+                                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                        alt={sector.title}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-transparent"></div>
+                                    
+                                    <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                                        <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center text-white mb-4 group-hover:bg-titan-red transition-colors">
+                                            <sector.icon size={20} />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-white mb-2">{sector.title}</h3>
+                                        <div className="h-0 group-hover:h-auto overflow-hidden transition-all duration-300 opacity-0 group-hover:opacity-100">
+                                            <p className="text-white/70 text-sm pt-2">
+                                                Providing world-class solutions for {sector.title.toLowerCase()} infrastructure.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </FadeInWhenVisible>
+                        ))}
+                    </div>
+                </section>
+
+                 {/* --- CTA --- */}
+                 <section className="px-6 md:px-12 mb-20">
+                    <div className="bg-[#F5F5F7] rounded-[3rem] p-12 md:p-20 text-center">
+                        <h2 className="text-3xl md:text-5xl font-bold mb-6 text-titan-navy">Have a project in mind?</h2>
+                        <p className="text-gray-500 text-lg mb-10 max-w-2xl mx-auto">
+                            Let&apos;s discuss how we can bring your vision to life with our expert engineering and construction services.
+                        </p>
+                        <div className="flex flex-col sm:flex-row justify-center gap-4">
+                            <Link href="/design-a/contact" className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20">
+                                Get a Free Quote
+                            </Link>
+                            <Link href="/design-a/projects" className="bg-white text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors shadow-sm">
+                                View Our Work
+                            </Link>
+                        </div>
+                    </div>
+                 </section>
+
                 {/* --- FOOTER --- */}
-                <footer className="pt-20 md:pt-32 pb-12 px-6 md:px-12 bg-white">
+                <footer className="pt-20 pb-12 px-6 md:px-12 bg-white rounded-t-[3rem] mt-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 mb-20">
                         <div>
                             <h2 className="text-5xl md:text-8xl font-bold tracking-tight mb-8 text-titan-navy">
                                 KIMMEX
                             </h2>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <button className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20">Start Project</button>
-                                <button className="bg-gray-100 text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">Contact Us</button>
+                                <Link href="/design-a/contact" className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20 text-center">
+                                    Start Project
+                                </Link>
+                                <Link href="/design-a/projects" className="bg-gray-100 text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors text-center">
+                                    View Projects
+                                </Link>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 text-sm text-gray-500">

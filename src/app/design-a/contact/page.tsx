@@ -2,50 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Menu, X, Facebook, Linkedin, Youtube, Phone, Mail, MapPin, ChevronDown, ChevronRight, Globe, Shield, Zap, MousePointer2 } from 'lucide-react';
+import { 
+    MapPin, Phone, Mail, Clock, Send, Facebook, Linkedin, 
+    Instagram, ArrowRight, MessageSquare, Menu, X, Youtube, ChevronRight 
+} from 'lucide-react';
 import Link from 'next/link';
 
-// --- COMPONENTS ---
-
-const FeatureCard = ({ title, desc, icon: Icon, index }: { title: string, desc: string, icon: any, index: number }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
-        viewport={{ once: true, margin: "-50px" }}
-        className="bg-[#F5F5F7] p-8 md:p-10 rounded-[2rem] hover:bg-titan-navy hover:text-white transition-all duration-500 group cursor-default h-full flex flex-col justify-between"
-    >
-        <div>
-            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-white/10 group-hover:text-white text-titan-navy transition-colors">
-                <Icon size={28} strokeWidth={1.5} />
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold mb-4">{title}</h3>
-            <p className="text-gray-500 group-hover:text-white/60 leading-relaxed transition-colors text-sm md:text-base">
-                {desc}
-            </p>
-        </div>
-        <div className="mt-8 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-            <ArrowRight size={20} />
-        </div>
-    </motion.div>
-);
-
-const ImageReveal = ({ src, alt }: { src: string, alt: string }) => (
-    <div className="overflow-hidden rounded-[2rem] relative h-[400px] md:h-[500px] w-full group">
-        <motion.img 
-            initial={{ scale: 1.2 }}
-            whileInView={{ scale: 1 }}
-            transition={{ duration: 1.5 }}
-            src={src} 
-            alt={alt} 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
-            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">View Case Study</span>
-            <h3 className="text-2xl md:text-3xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">{alt}</h3>
-        </div>
-    </div>
-);
+// --- SHARED COMPONENTS ---
 
 const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: () => void, navItems: any[] }) => {
     const [activeCategory, setActiveCategory] = useState<number | null>(0);
@@ -77,7 +40,6 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                     
                     {/* Main Content Area */}
                     <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-                        
                         {/* Left: Main Navigation List */}
                         <div className="w-full md:w-1/2 lg:w-5/12 p-8 md:p-12 overflow-y-auto border-r border-white/10 flex flex-col justify-center">
                             <nav className="flex flex-col gap-2">
@@ -104,7 +66,6 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                 >
                                                     {item.label}
                                                     <ChevronRight size={32} className={`md:hidden transition-transform ${activeCategory === i ? 'rotate-90' : ''}`} />
-                                                    {/* Desktop Active Arrow */}
                                                     <ArrowRight size={32} className={`hidden md:block transition-all duration-300 ${activeCategory === i ? 'opacity-100 translate-x-0 text-titan-red' : 'opacity-0 -translate-x-4'}`} />
                                                 </button>
                                             ) : (
@@ -115,36 +76,6 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                     {item.label}
                                                 </Link>
                                             )}
-                                            
-                                            {/* Mobile Accordion */}
-                                            <AnimatePresence>
-                                                {activeCategory === i && (
-                                                    <motion.div 
-                                                        initial={{ height: 0, opacity: 0 }}
-                                                        animate={{ height: 'auto', opacity: 1 }}
-                                                        exit={{ height: 0, opacity: 0 }}
-                                                        className="md:hidden overflow-hidden pl-4 mt-2 border-l border-white/20 mb-4"
-                                                    >
-                                                        {item.children?.map((child: any, idx: number) => (
-                                                            <div key={idx}>
-                                                                <Link href={child.href} className="block py-2 text-lg text-white/80 font-medium">
-                                                                    {child.label}
-                                                                </Link>
-                                                                {/* Mobile 3rd Level */}
-                                                                {child.children && (
-                                                                    <div className="pl-4 border-l border-white/10 mt-1 mb-2">
-                                                                        {child.children.map((sub: any, subIdx: number) => (
-                                                                            <Link key={subIdx} href={sub.href} className="block py-1 text-sm text-white/50">
-                                                                                {sub.label}
-                                                                            </Link>
-                                                                        ))}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        ))}
-                                                    </motion.div>
-                                                )}
-                                            </AnimatePresence>
                                         </motion.div>
                                     </div>
                                 ))}
@@ -153,7 +84,6 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
 
                         {/* Right: Sub-navigation & Details (Desktop Only) */}
                         <div className="hidden md:flex w-1/2 lg:w-7/12 p-12 flex-col bg-white/5 relative overflow-hidden">
-                            {/* Dynamic Background Blob based on Index */}
                             <motion.div 
                                 animate={{ 
                                     background: activeCategory !== null ? `radial-gradient(circle at ${activeCategory * 10}% 50%, rgba(255, 107, 0, 0.15), transparent 60%)` : 'none'
@@ -163,7 +93,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
 
                             <div className="relative z-10 h-full flex flex-col justify-center">
                                 <AnimatePresence mode="wait">
-                                    {activeCategory !== null && navItems[activeCategory].children ? (
+                                    {activeCategory !== null && navItems[activeCategory]?.children ? (
                                         <motion.div
                                             key={activeCategory}
                                             initial={{ opacity: 0, x: 20 }}
@@ -194,48 +124,19 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                                 {child.desc || "Learn more about our capabilities."}
                                                             </p>
                                                         </Link>
-
-                                                        {/* Level 3 Hover Content */}
-                                                        {child.children && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, height: 0 }}
-                                                                animate={{ 
-                                                                    opacity: activeSubCategory === idx ? 1 : 0,
-                                                                    height: activeSubCategory === idx ? 'auto' : 0,
-                                                                    marginTop: activeSubCategory === idx ? 16 : 0
-                                                                }}
-                                                                className="overflow-hidden pl-4 border-l border-white/10"
-                                                            >
-                                                                {child.children.map((sub: any, subIdx: number) => (
-                                                                    <Link 
-                                                                        key={subIdx} 
-                                                                        href={sub.href}
-                                                                        className="block py-2 text-sm text-white/50 hover:text-titan-red hover:translate-x-1 transition-all"
-                                                                    >
-                                                                        {sub.label}
-                                                                    </Link>
-                                                                ))}
-                                                            </motion.div>
-                                                        )}
                                                     </div>
                                                 ))}
                                             </div>
                                         </motion.div>
                                     ) : (
-                                        <motion.div 
-                                            key="empty"
-                                            initial={{ opacity: 0 }} 
-                                            animate={{ opacity: 1 }}
-                                            className="h-full flex flex-col justify-center items-center text-white/20"
-                                        >
+                                        <div className="h-full flex flex-col justify-center items-center text-white/20">
                                             <div className="text-6xl mb-4 font-thin opacity-20">{activeCategory !== null ? '0' + (activeCategory + 1) : '00'}</div>
                                             <div className="text-xl font-medium">Direct Link</div>
-                                        </motion.div>
+                                        </div>
                                     )}
                                 </AnimatePresence>
                             </div>
 
-                            {/* Contact Footer in Overlay */}
                             <div className="relative z-10 border-t border-white/10 pt-8 mt-auto grid grid-cols-3 gap-8 text-white/60">
                                 <div>
                                     <div className="text-xs font-bold uppercase tracking-wider text-white mb-1">Call</div>
@@ -253,7 +154,6 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                         </div>
                     </div>
 
-                    {/* Bottom Bar */}
                     <div className="p-8 md:px-12 md:py-6 border-t border-white/10 flex justify-between items-center text-sm font-bold text-white/40 uppercase tracking-widest shrink-0 bg-[#151525]">
                         <div className="flex gap-6">
                             <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16}/> <span className="hidden md:inline">Facebook</span></a>
@@ -268,9 +168,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
     );
 }
 
-// --- MAIN PAGE ---
-
-export default function DesignA_ContainerNav() {
+export default function ContactDesignAPage() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -280,7 +178,6 @@ export default function DesignA_ContainerNav() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Full Content Structure from Design X
     const navItems = [
         {
             label: 'About Us', href: '/design-a/about',
@@ -345,17 +242,16 @@ export default function DesignA_ContainerNav() {
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
                 
-                {/* --- NAVIGATION (Minimal / Hidden Concept) --- */}
+                {/* --- NAVIGATION --- */}
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
-                        
-                        {/* Logo (Top Left) */}
+                        {/* Logo */}
                         <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
                             <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
                             <span className="font-bold text-lg tracking-tight">KIMMEX</span>
                         </div>
 
-                        {/* Menu Trigger (Top Right) */}
+                        {/* Menu Trigger */}
                         <button 
                             onClick={() => setIsMenuOpen(true)}
                             className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
@@ -369,165 +265,213 @@ export default function DesignA_ContainerNav() {
                     </div>
                 </div>
 
-                {/* Full Screen Menu Overlay with RICH CONTENT */}
                 <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} navItems={navItems} />
 
-                {/* --- HERO SECTION --- */}
-                <header className="pt-32 md:pt-40 pb-12 md:pb-20 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center min-h-[85vh]">
-                    <div className="max-w-2xl order-2 lg:order-1">
-                        <motion.div 
+                {/* --- HERO --- */}
+                <header className="relative h-[60vh] bg-titan-navy flex items-center justify-center overflow-hidden rounded-b-[4rem]">
+                    <div className="absolute inset-0">
+                        <img 
+                            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop" 
+                            alt="Contact Hero" 
+                            className="w-full h-full object-cover opacity-20"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-titan-navy/90"></div>
+                    </div>
+
+                    <div className="relative z-10 text-center max-w-4xl px-6 pt-20">
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-white/90 text-xs font-bold uppercase tracking-widest mb-6 border border-white/10 backdrop-blur-sm"
                         >
-                            Est. 1999 • Phnom Penh
+                            <MessageSquare size={14} className="text-titan-red" />
+                            Let&apos;s Talk
                         </motion.div>
                         <motion.h1 
-                            initial={{ opacity: 0, y: 30 }}
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, duration: 0.8 }}
-                            className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-8 md:mb-10"
+                            transition={{ delay: 0.1 }}
+                            className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight"
                         >
-                            Constructing <br/>
-                            <span className="text-gray-300">Excellence.</span>
+                            GET IN <span className="text-titan-red">TOUCH</span>
                         </motion.h1>
                         <motion.p 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3, duration: 0.8 }}
-                            className="text-lg md:text-xl text-gray-500 leading-relaxed mb-10 md:mb-12 max-w-lg"
+                            transition={{ delay: 0.2 }}
+                            className="text-xl text-white/70 font-light max-w-2xl mx-auto"
                         >
-                            We are Cambodia's leading construction firm, merging technical precision with sustainable innovation.
+                            Have a project in mind or want to learn more about our services? Our team is ready to assist you.
                         </motion.p>
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="flex gap-4"
-                        >
-                            <button className="flex items-center gap-3 text-lg font-bold hover:gap-6 transition-all group">
-                                View Projects 
-                                <div className="w-10 h-10 bg-[#F5F5F7] rounded-full flex items-center justify-center group-hover:bg-titan-navy group-hover:text-white transition-colors shadow-sm">
-                                    <ArrowRight size={18} />
-                                </div>
-                            </button>
-                        </motion.div>
-                    </div>
-
-                    <div className="relative h-[400px] md:h-[600px] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden group order-1 lg:order-2 shadow-2xl">
-                        <motion.img
-                            initial={{ scale: 1.1 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 1.5, ease: "easeOut" }}
-                            src="https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=2800"
-                            alt="Hero Architecture"
-                            className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/10"></div>
-                        
-                        <motion.div 
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.8 }}
-                            className="absolute bottom-6 right-6 md:bottom-8 md:right-8 bg-white/80 backdrop-blur-md p-6 rounded-2xl max-w-[200px] md:max-w-xs shadow-lg z-10 border border-white/50"
-                        >
-                            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Current Focus</div>
-                            <div className="text-sm md:text-lg font-bold text-titan-navy">Sustainable Infrastructure Development</div>
-                        </motion.div>
                     </div>
                 </header>
 
-                {/* --- STATS MARQUEE (Infinite Scroll) --- */}
-                <div className="bg-titan-navy text-white py-6 md:py-8 overflow-hidden">
-                    <div className="flex gap-12 md:gap-24 animate-marquee whitespace-nowrap">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-                                <span className="font-bold text-lg md:text-xl tracking-wider">ISO 9001:2015 CERTIFIED</span>
-                                <div className="w-2 h-2 bg-titan-red rounded-full"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                {/* --- CONTENT GRID --- */}
+                <section className="px-6 pb-32 max-w-[1400px] mx-auto -mt-20 relative z-20">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
-                {/* --- SERVICES --- */}
-                <section className="py-20 md:py-32 px-6 md:px-12">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight max-w-md leading-tight">Capabilities & <br/>Expertise</h2>
-                        <a href="#" className="font-bold border-b border-titan-navy pb-1 hover:text-titan-red hover:border-titan-red transition-colors">View All Capabilities</a>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <FeatureCard 
-                            index={0}
-                            title="Design & Build" 
-                            desc="Comprehensive delivery from initial concept to final handover." 
-                            icon={MousePointer2} 
-                        />
-                        <FeatureCard 
-                            index={1}
-                            title="Infrastructure" 
-                            desc="Roads, bridges, and public utility networks connecting the nation." 
-                            icon={Globe} 
-                        />
-                        <FeatureCard 
-                            index={2}
-                            title="Renovation" 
-                            desc="Modernizing existing structures with structural integrity." 
-                            icon={Zap} 
-                        />
-                        <FeatureCard 
-                            index={3}
-                            title="Management" 
-                            desc="Rigorous project oversight and quality assurance." 
-                            icon={Shield} 
-                        />
-                    </div>
-                </section>
+                        {/* LEFT COLUMN: INFO & LOCATIONS */}
+                        <motion.div 
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="lg:col-span-5 space-y-8"
+                        >
 
-                {/* --- FEATURED WORK --- */}
-                <section className="py-20 md:py-32 px-6 md:px-12 bg-[#F5F5F7] rounded-none md:rounded-[3rem] mx-0 md:mx-8 mb-8 md:mb-12">
-                    <div className="max-w-[1600px] mx-auto">
-                        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Portfolio</span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-6">Building Landmarks</h2>
-                            <p className="text-gray-500 text-base md:text-lg leading-relaxed">
-                                From government headquarters to commercial high-rises, our portfolio defines the modern Cambodian skyline.
-                            </p>
-                        </div>
+                            {/* Contact Info Card */}
+                            <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-xl border border-gray-100 overflow-hidden relative">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-titan-red/5 rounded-full blur-3xl -mr-10 -mt-10"></div>
+                                
+                                <h3 className="text-2xl font-black text-titan-navy mb-8">Headquarters</h3>
+                                
+                                <div className="space-y-8 relative z-10">
+                                    <div className="flex items-start gap-5 group">
+                                        <div className="w-12 h-12 bg-[#F5F5F7] rounded-xl flex items-center justify-center text-titan-red shrink-0 group-hover:bg-titan-red group-hover:text-white transition-colors duration-300">
+                                            <MapPin size={24} />
+                                        </div>
+                                        <div>
+                                            <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">Visit Us</span>
+                                            <p className="text-titan-navy/60 leading-relaxed text-sm">
+                                                #56, Street 315, Boeng Kak 1,<br />
+                                                Tuol Kouk, Phnom Penh, Cambodia
+                                            </p>
+                                        </div>
+                                    </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                            <div className="space-y-8 mt-0 lg:mt-24">
-                                <ImageReveal src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670" alt="Ministry of Economy" />
-                                <div className="px-2 md:px-8">
-                                    <h3 className="text-2xl font-bold mb-2">Government Projects</h3>
-                                    <p className="text-gray-500">Trusted partner for national infrastructure.</p>
+                                    <div className="flex items-start gap-5 group">
+                                        <div className="w-12 h-12 bg-[#F5F5F7] rounded-xl flex items-center justify-center text-titan-red shrink-0 group-hover:bg-titan-red group-hover:text-white transition-colors duration-300">
+                                            <Phone size={24} />
+                                        </div>
+                                        <div>
+                                            <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">Call Us</span>
+                                            <p className="text-titan-navy/60 text-sm">+855 23 999 999</p>
+                                            <p className="text-titan-navy/60 text-xs mt-1">Mon - Sat, 8am - 5pm</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start gap-5 group">
+                                        <div className="w-12 h-12 bg-[#F5F5F7] rounded-xl flex items-center justify-center text-titan-red shrink-0 group-hover:bg-titan-red group-hover:text-white transition-colors duration-300">
+                                            <Mail size={24} />
+                                        </div>
+                                        <div>
+                                            <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">Email Us</span>
+                                            <p className="text-titan-navy/60 text-sm">info@kimmex.com</p>
+                                            <p className="text-titan-navy/60 text-sm">sales@kimmex.com</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Socials */}
+                                <div className="mt-10 pt-8 border-t border-gray-100">
+                                    <h4 className="font-bold text-titan-navy mb-4 text-xs uppercase tracking-widest">Connect With Us</h4>
+                                    <div className="flex gap-3">
+                                        <a href="#" className="w-10 h-10 bg-[#F5F5F7] flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                            <Facebook size={18} />
+                                        </a>
+                                        <a href="#" className="w-10 h-10 bg-[#F5F5F7] flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                            <Linkedin size={18} />
+                                        </a>
+                                        <a href="#" className="w-10 h-10 bg-[#F5F5F7] flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                            <Instagram size={18} />
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="space-y-8">
-                                <div className="px-2 md:px-8 text-left lg:text-right hidden lg:block">
-                                    <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
-                                    <p className="text-gray-500">High-rise engineering excellence.</p>
-                                </div>
-                                <ImageReveal src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2670" alt="Vattanac Extension" />
-                                <div className="px-2 md:px-8 lg:hidden">
-                                    <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
-                                    <p className="text-gray-500">High-rise engineering excellence.</p>
+
+                            {/* Interactive Map Card */}
+                            <div className="bg-white p-2 rounded-[2.5rem] shadow-lg border border-gray-100 h-64 relative group cursor-pointer overflow-hidden">
+                                 <img
+                                    src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop"
+                                    alt="Map Location"
+                                    className="w-full h-full object-cover rounded-[2rem] group-hover:scale-105 transition-transform duration-700 opacity-90"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors rounded-[2rem]">
+                                    <div className="bg-white text-titan-navy px-6 py-3 rounded-full font-bold text-xs uppercase tracking-widest shadow-lg flex items-center gap-2 transform group-hover:-translate-y-1 transition-transform duration-300">
+                                        <MapPin size={14} className="text-titan-red" /> View on Google Maps
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
+
+                        {/* RIGHT COLUMN: CONTACT FORM */}
+                        <motion.div 
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.4 }}
+                            className="lg:col-span-7"
+                        >
+                            <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl border-t-4 border-titan-red relative overflow-hidden h-full">
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-[#F5F5F7] rounded-full -mr-20 -mt-20 opacity-50 pointer-events-none"></div>
+
+                                <div className="relative z-10 mb-10">
+                                    <h3 className="text-3xl font-black text-titan-navy mb-3">Send a Message</h3>
+                                    <p className="text-titan-navy/60">Fill out the form below and our team will get back to you within 24 hours.</p>
+                                </div>
+
+                                <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Full Name *</label>
+                                            <input type="text" className="w-full bg-[#F5F5F7] border border-transparent hover:bg-white hover:border-gray-200 p-4 rounded-xl focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all font-medium text-titan-navy text-sm" placeholder="John Doe" required />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Email Address *</label>
+                                            <input type="email" className="w-full bg-[#F5F5F7] border border-transparent hover:bg-white hover:border-gray-200 p-4 rounded-xl focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all font-medium text-titan-navy text-sm" placeholder="john@example.com" required />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                         <div className="space-y-2">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Phone Number</label>
+                                            <input type="tel" className="w-full bg-[#F5F5F7] border border-transparent hover:bg-white hover:border-gray-200 p-4 rounded-xl focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all font-medium text-titan-navy text-sm" placeholder="+855 ..." />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Subject *</label>
+                                            <div className="relative">
+                                                <select className="w-full bg-[#F5F5F7] border border-transparent hover:bg-white hover:border-gray-200 p-4 rounded-xl focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all font-medium text-titan-navy text-sm appearance-none cursor-pointer">
+                                                    <option>General Inquiry</option>
+                                                    <option>Project Consultation</option>
+                                                    <option>Partnership Proposal</option>
+                                                    <option>Careers</option>
+                                                    <option>Other</option>
+                                                </select>
+                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                                    <ChevronRight size={16} className="rotate-90" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Message *</label>
+                                        <textarea rows={6} className="w-full bg-[#F5F5F7] border border-transparent hover:bg-white hover:border-gray-200 p-4 rounded-xl focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all font-medium text-titan-navy text-sm resize-none" placeholder="Tell us about your project or inquiry..." required></textarea>
+                                    </div>
+
+                                    <button className="w-full bg-titan-navy text-white font-bold uppercase tracking-widest py-5 rounded-xl hover:bg-titan-red transition-all shadow-lg flex items-center justify-center gap-3 group text-sm">
+                                        Send Message
+                                        <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                    </button>
+                                </form>
+                            </div>
+                        </motion.div>
+
                     </div>
                 </section>
 
                 {/* --- FOOTER --- */}
-                <footer className="pt-20 md:pt-32 pb-12 px-6 md:px-12 bg-white">
+                <footer className="pt-20 pb-12 px-6 md:px-12 bg-white rounded-t-[3rem] mt-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 mb-20">
                         <div>
                             <h2 className="text-5xl md:text-8xl font-bold tracking-tight mb-8 text-titan-navy">
                                 KIMMEX
                             </h2>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <button className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20">Start Project</button>
-                                <button className="bg-gray-100 text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">Contact Us</button>
+                                <Link href="/design-a/contact" className="bg-titan-navy text-white px-8 py-4 rounded-full font-bold hover:bg-titan-red transition-colors shadow-lg shadow-titan-navy/20 text-center">
+                                    Start Project
+                                </Link>
+                                <Link href="/design-a/projects/completed" className="bg-gray-100 text-titan-navy px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors text-center">
+                                    View Projects
+                                </Link>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 text-sm text-gray-500">
