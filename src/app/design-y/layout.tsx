@@ -3,6 +3,7 @@
 import React from 'react';
 import { Phone, Facebook, Linkedin, Youtube, Search, ArrowRight, ChevronDown, Menu, Globe, Clock, Activity } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import FooterY from './components/FooterY';
 
