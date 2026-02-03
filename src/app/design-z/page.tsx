@@ -102,34 +102,34 @@ export default function DesignGenX() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <FadeInWhenVisible>
                             <div>
-                                <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">Why Choose Kimmex</span>
-                                <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6 leading-tight">
-                                    Building Excellence Since <span className="text-accent-orange">1999</span>
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Why Choose Kimmex</span>
+                                <h2 className="text-4xl md:text-5xl font-black text-white mix-blend-difference mb-6 leading-tight">
+                                    Building Excellence Since <span className="text-titan-red">1999</span>
                                 </h2>
                                 <p className="text-titan-navy/60 text-lg mb-8">
                                     With over 25 years of experience, we have established ourselves as Cambodia&apos;s most trusted construction partner, delivering projects that stand the test of time.
                                 </p>
 
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-2 gap-4">
                                     {[
                                         { icon: ShieldCheck, title: 'Safety First', desc: 'Zero accident policy' },
                                         { icon: Award, title: 'ISO Certified', desc: '9001:2015 standards' },
                                         { icon: Clock, title: 'On-Time Delivery', desc: '98% completion rate' },
                                         { icon: Target, title: 'Quality Focus', desc: 'Exceeding expectations' },
                                     ].map((item, i) => (
-                                        <div key={i} className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                                            <div className="w-12 h-12 bg-accent-orange/10 rounded-lg flex items-center justify-center shrink-0">
-                                                <item.icon className="text-accent-orange" size={24} />
+                                        <div key={i} className="flex items-start gap-4 p-6 bg-white border-l-4 border-titan-navy hover:border-titan-red transition-all shadow-xl">
+                                            <div className="w-12 h-12 bg-gray-50 flex items-center justify-center shrink-0">
+                                                <item.icon className="text-titan-navy" size={24} />
                                             </div>
                                             <div>
-                                                <div className="font-bold text-titan-navy">{item.title}</div>
-                                                <div className="text-sm text-titan-navy/50">{item.desc}</div>
+                                                <div className="font-black text-titan-navy uppercase text-xs tracking-wider mb-1">{item.title}</div>
+                                                <div className="text-xs text-titan-navy/40 font-bold">{item.desc}</div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
 
-                                <Link href="/design-x/about" className="inline-flex items-center gap-2 mt-8 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
+                                <Link href="/design-z/about" className="inline-flex items-center gap-3 mt-10 text-titan-red font-black uppercase tracking-[0.3em] text-xs hover:gap-6 transition-all">
                                     Learn More About Us <ArrowRight size={16} />
                                 </Link>
                             </div>
@@ -198,24 +198,24 @@ export default function DesignGenX() {
                         </div>
                     </FadeInWhenVisible>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
                         {services.map((s, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
-                                <div className="bg-white p-8 group hover:-translate-y-2 transition-all duration-300 rounded-2xl border-2 border-gray-100 hover:border-accent-orange hover:shadow-xl h-full">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div className="w-14 h-14 bg-accent-orange/10 rounded-xl flex items-center justify-center group-hover:bg-accent-orange transition-all duration-300">
-                                            <s.icon className="text-accent-orange group-hover:text-white transition-colors" size={26} />
-                                        </div>
-                                        <div className="text-3xl font-black text-accent-orange/20 group-hover:text-accent-orange/40 transition-colors">
-                                            {s.stat}
+                                <div className="bg-white p-10 group hover:bg-titan-navy transition-all duration-500 border border-gray-100 h-full relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                                        <s.icon size={80} />
+                                    </div>
+                                    <div className="flex items-center justify-between mb-8">
+                                        <div className="w-14 h-14 bg-titan-bg-alt flex items-center justify-center group-hover:bg-titan-red transition-all duration-300">
+                                            <s.icon className="text-titan-navy group-hover:text-white transition-colors" size={26} />
                                         </div>
                                     </div>
-                                    <h3 className="text-xl font-black text-titan-navy mb-3 group-hover:text-accent-orange transition-colors">{s.title}</h3>
-                                    <p className="text-titan-navy/50 mb-6 text-sm leading-relaxed">{s.desc}</p>
-                                    <ul className="space-y-2 border-t border-gray-100 pt-6">
+                                    <h3 className="text-2xl font-black text-titan-navy group-hover:text-white mb-4 uppercase tracking-tighter">{s.title}</h3>
+                                    <p className="text-titan-navy/50 group-hover:text-white/60 mb-8 text-sm leading-relaxed">{s.desc}</p>
+                                    <ul className="space-y-3 pt-8 border-t border-gray-100 group-hover:border-white/10">
                                         {s.features.map((f, idx) => (
-                                            <li key={idx} className="flex items-center gap-2 text-sm text-titan-navy/60 group-hover:text-titan-navy/80 transition-colors">
-                                                <CheckCircle2 size={16} className="text-accent-orange shrink-0" /> {f}
+                                            <li key={idx} className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-titan-navy/40 group-hover:text-white/40">
+                                                <div className="w-1.5 h-1.5 bg-titan-red rounded-full"></div> {f}
                                             </li>
                                         ))}
                                     </ul>
@@ -226,7 +226,7 @@ export default function DesignGenX() {
 
                     <FadeInWhenVisible>
                         <div className="text-center mt-12">
-                            <Link href="/design-x/services" className="inline-flex items-center gap-2 bg-titan-navy text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-accent-orange transition-all rounded-lg">
+                            <Link href="/design-z/services" className="inline-flex items-center gap-2 bg-titan-navy text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-accent-orange transition-all rounded-lg">
                                 View All Services <ArrowRight size={16} />
                             </Link>
                         </div>
@@ -279,7 +279,7 @@ export default function DesignGenX() {
                                 <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">Our Portfolio</span>
                                 <h2 className="text-4xl font-black text-titan-navy">Featured Projects</h2>
                             </div>
-                            <Link href="/design-x/projects" className="mt-6 md:mt-0 inline-flex items-center gap-2 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
+                            <Link href="/design-z/projects" className="mt-6 md:mt-0 inline-flex items-center gap-2 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
                                 View All Projects <ArrowRight size={16} />
                             </Link>
                         </div>
@@ -288,7 +288,7 @@ export default function DesignGenX() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {projects.map((p, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
-                                <Link href={`/design-x/projects/${p.id}`} className="group block h-full">
+                                <Link href={`/design-z/projects/${p.id}`} className="group block h-full">
                                     <div className="relative overflow-hidden rounded-2xl shadow-lg h-80 w-full">
                                         <Image
                                             src={p.img}
@@ -374,7 +374,7 @@ export default function DesignGenX() {
                                 <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">News & Updates</span>
                                 <h2 className="text-4xl font-black text-titan-navy">Latest Insights</h2>
                             </div>
-                            <Link href="/design-x/news" className="mt-6 md:mt-0 inline-flex items-center gap-2 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
+                            <Link href="/design-z/news" className="mt-6 md:mt-0 inline-flex items-center gap-2 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
                                 View All News <ArrowRight size={16} />
                             </Link>
                         </div>
@@ -424,7 +424,7 @@ export default function DesignGenX() {
                                 <p className="text-white/80 text-lg max-w-xl">Contact us today for a free consultation and let&apos;s build something extraordinary together.</p>
                             </div>
                             <div className="flex flex-wrap gap-4">
-                                <Link href="/design-x/contact" className="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg flex items-center gap-2">
+                                <Link href="/design-z/contact" className="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg flex items-center gap-2">
                                     Get Free Quote <ArrowRight size={16} />
                                 </Link>
                                 <a href="tel:+85523999999" className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-titan-navy transition-all rounded-lg flex items-center gap-2">

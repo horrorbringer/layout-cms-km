@@ -77,7 +77,14 @@ export default function DesignYLayout({ children }: { children: React.ReactNode 
                     {/* Logo Section */}
                     <Link href="/design-y" className="flex items-center gap-4 group relative z-50">
                         <div className="relative overflow-hidden">
-                            <img src="/logo.png" alt="Kimmex" className="h-10 w-auto transition-all duration-500" />
+                            <Image
+                                src="/logo.png"
+                                alt="Kimmex Logo"
+                                width={120}
+                                height={40}
+                                className="h-10 w-auto object-contain"
+                                priority
+                            />
                         </div>
                         <div className="hidden md:flex flex-col leading-none transition-colors duration-500 text-titan-navy">
                             <span className="font-black text-2xl tracking-tighter group-hover:text-titan-red transition-colors">KIMMEX</span>

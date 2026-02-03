@@ -212,7 +212,7 @@ export default function ServiceDetailPage() {
                 </motion.div>
 
                 <motion.div style={{ opacity: heroOpacity }} className="relative z-10 text-center max-w-5xl px-6 pt-20">
-                    <Link href="/design-x/services" className="inline-flex items-center gap-2 text-white/60 hover:text-titan-red transition-all font-bold uppercase tracking-widest text-xs mb-8 group">
+                    <Link href="/design-z/services" className="inline-flex items-center gap-2 text-white/60 hover:text-titan-red transition-all font-bold uppercase tracking-widest text-xs mb-8 group">
                         <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:border-titan-red group-hover:bg-titan-red group-hover:text-white transition-all">
                             <ArrowLeft size={12} />
                         </div>
@@ -382,7 +382,7 @@ export default function ServiceDetailPage() {
                                     <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Portfolio</span>
                                     <h2 className="text-4xl md:text-5xl font-black">Featured Projects</h2>
                                 </div>
-                                <Link href="/design-x/projects" className="mt-8 md:mt-0 px-8 py-3 bg-white/10 hover:bg-white hover:text-titan-navy transition-all font-bold uppercase tracking-widest text-sm flex items-center gap-2 rounded-lg backdrop-blur-sm">
+                                <Link href="/design-z/projects" className="mt-8 md:mt-0 px-8 py-3 bg-white/10 hover:bg-white hover:text-titan-navy transition-all font-bold uppercase tracking-widest text-sm flex items-center gap-2 rounded-lg backdrop-blur-sm">
                                     View All Projects <ArrowRight size={16} />
                                 </Link>
                             </div>
@@ -391,7 +391,7 @@ export default function ServiceDetailPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                             {service.relatedProjects.map((project, i) => (
                                 <FadeInWhenVisible key={i} delay={i * 0.1}>
-                                    <Link href={`/design-x/projects/${project.id}`} className="group relative aspect-[16/9] overflow-hidden rounded-2xl cursor-pointer block shadow-2xl">
+                                    <Link href={`/design-z/projects/${project.id}`} className="group relative aspect-[16/9] overflow-hidden rounded-2xl cursor-pointer block shadow-2xl">
                                         <Image src={project.image} alt={project.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
 
@@ -427,7 +427,7 @@ export default function ServiceDetailPage() {
                         <p className="text-white/90 text-xl mb-10 font-medium">
                             Contact our expert team today for a free consultation and feasibility study.
                         </p>
-                        <Link href="/design-x/contact" className="inline-flex items-center gap-2 bg-white text-titan-red px-10 py-5 font-bold uppercase tracking-widest hover:bg-titan-navy hover:text-white transition-all shadow-xl rounded-lg">
+                        <Link href="/design-z/contact" className="inline-flex items-center gap-2 bg-white text-titan-red px-10 py-5 font-bold uppercase tracking-widest hover:bg-titan-navy hover:text-white transition-all shadow-xl rounded-lg">
                             Request Quote <ArrowRight size={18} />
                         </Link>
                     </FadeInWhenVisible>
