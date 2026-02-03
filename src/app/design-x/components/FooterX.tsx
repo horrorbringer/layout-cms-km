@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Facebook, Linkedin, Youtube, Instagram, MapPin, Phone, Mail, HardHat } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -16,7 +17,7 @@ export default function FooterX() {
                     {/* Column 1: Brand */}
                     <div className="space-y-6">
                         <div className="flex items-center gap-3">
-                            <img src="/logo.png" alt="Kimmex Logo" className="h-10 w-auto" />
+                            <Image src="/logo.png" alt="Kimmex Logo" width={40} height={40} className="h-10 w-auto" />
                             <div className="flex flex-col flex-1">
                                 <span className="font-bold text-xl leading-none tracking-tight text-white">KIMMEX</span>
                                 <span className="text-[10px] uppercase tracking-[0.2em] text-accent-orange">Construction</span>

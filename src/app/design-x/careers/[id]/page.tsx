@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, ArrowRight, MapPin, Briefcase, Clock, CheckCircle, Upload, Send, Share2, Printer, Building, UserCheck, Heart, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Detailed Mock Data
 const jobDetails = [
@@ -81,11 +82,12 @@ export default function CareerDetailPage() {
         <div className="bg-gray-50 min-h-screen font-sans text-titan-navy relative">
             {/* --- HERO / HEADER --- */}
             <section className="relative h-[60vh] bg-titan-navy flex items-end overflow-hidden pb-12">
-                 <div className="absolute inset-0">
-                    <img 
-                        src="/images/career-detail.png" 
-                        alt="Careers Hero" 
-                        className="w-full h-full object-cover opacity-30"
+                <div className="absolute inset-0">
+                    <Image
+                        src="/images/career-detail.png"
+                        alt="Careers Hero"
+                        fill
+                        className="object-cover opacity-30"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/60 to-transparent"></div>
                 </div>
@@ -95,7 +97,7 @@ export default function CareerDetailPage() {
                         <Link href="/design-x/careers" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors font-bold uppercase tracking-widest text-xs mb-8 hover:-translate-x-1 duration-300">
                             <ArrowLeft size={14} /> Back to Careers
                         </Link>
-                        
+
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                             <div>
                                 <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight text-white">{job.title}</h1>
@@ -105,8 +107,8 @@ export default function CareerDetailPage() {
                                     <span className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg border border-white/10 backdrop-blur-sm"><Clock size={16} className="text-titan-red" /> {job.type}</span>
                                 </div>
                             </div>
-                            
-                            <button 
+
+                            <button
                                 onClick={() => document.getElementById('application-form')?.scrollIntoView({ behavior: 'smooth' })}
                                 className="hidden md:flex bg-titan-red text-white px-8 py-4 rounded-lg font-bold uppercase tracking-widest hover:bg-white hover:text-titan-red transition-all shadow-lg hover:shadow-titan-red/20 items-center gap-2"
                             >
@@ -120,7 +122,7 @@ export default function CareerDetailPage() {
             {/* --- CONTENT --- */}
             <div className="max-w-[1200px] mx-auto px-6 py-16 relative z-20">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                    
+
                     {/* LEFT COLUMN: JOB DETAILS */}
                     <div className="lg:col-span-7 space-y-12">
                         {/* Summary */}
@@ -186,7 +188,7 @@ export default function CareerDetailPage() {
                             {/* Application Card */}
                             <div className="bg-white border border-gray-200 shadow-2xl rounded-2xl p-8 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-titan-navy to-titan-red"></div>
-                                
+
                                 <div className="mb-8">
                                     <h3 className="text-2xl font-black text-titan-navy mb-2">Apply Now</h3>
                                     <p className="text-titan-navy-subtle text-sm">Join us as a <span className="font-bold text-titan-navy">{job.title}</span>.</p>
@@ -204,17 +206,17 @@ export default function CareerDetailPage() {
                                                 <input type="text" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder="Doe" required />
                                             </div>
                                         </div>
-                                        
+
                                         <div>
                                             <label className="block text-[10px] font-bold uppercase tracking-widest text-titan-navy mb-1.5">Email Address *</label>
                                             <input type="email" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder="john@example.com" required />
                                         </div>
-                                        
+
                                         <div>
                                             <label className="block text-[10px] font-bold uppercase tracking-widest text-titan-navy mb-1.5">Phone Number *</label>
                                             <input type="tel" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder="+855 ..." required />
                                         </div>
-                                        
+
                                         <div>
                                             <label className="block text-[10px] font-bold uppercase tracking-widest text-titan-navy mb-1.5">Resume / CV *</label>
                                             <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 hover:border-titan-red/50 transition-colors cursor-pointer relative group">

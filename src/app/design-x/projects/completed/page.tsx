@@ -14,7 +14,7 @@ export default function CompletedProjectsPage() {
                 subtitle="A portfolio of successfully delivered landmarks, infrastructure, and commercial developments across Cambodia."
                 heroTag="Success Stories"
                 heroIcon={<CheckCircle size={12} className="text-titan-red" />}
-                heroImage="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop"
+                heroImage="/images/projects/Thumbnail-1.jpg"
                 filterStatus="Completed"
                 badgeConfig={{
                     className: "bg-white text-green-700",

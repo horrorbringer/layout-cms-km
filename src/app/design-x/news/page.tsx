@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar, User, Tag, Search, TrendingUp, Newspaper, ChevronRight, Briefcase, FileText, Download, Check, ChevronDown, Filter } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Mock Data for News
 const allNews = [
@@ -13,7 +14,7 @@ const allNews = [
         category: 'Awards',
         date: 'Oct 15, 2025',
         author: 'PR Team',
-        image: 'https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-8.jpg',
         excerpt: 'We are honored to receive the prestigious Gold Award for the new Ministry of Interior complex, recognized for its architectural excellence and sustainable design.',
         featured: true
     },
@@ -23,7 +24,7 @@ const allNews = [
         category: 'Project Updates',
         date: 'Sep 22, 2025',
         author: 'Project Mgmt',
-        image: 'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-1.jpg',
         excerpt: 'Phase 1 of the massive logistics center has officially begun. This project aims to revolutionize the supply chain infrastructure in the coastal region.',
         featured: false
     },
@@ -33,7 +34,7 @@ const allNews = [
         category: 'Safety',
         date: 'Aug 05, 2025',
         author: 'HSE Dept',
-        image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-2.jpg',
         excerpt: 'A milestone achievement for our construction teams at the Calmette Hospital site, proving that safety and speed can go hand in hand.',
         featured: false
     },
@@ -43,7 +44,7 @@ const allNews = [
         category: 'Sustainability',
         date: 'Jul 12, 2025',
         author: 'Sustainability Lead',
-        image: 'https://images.unsplash.com/photo-1518182170546-0766aaef3194?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-7.jpg',
         excerpt: 'Commiting to a sustainable future, Kimmex pledges to reduce carbon footprint by 30% across all new projects starting 2026.',
         featured: false
     },
@@ -53,7 +54,7 @@ const allNews = [
         category: 'Culture',
         date: 'Jun 20, 2025',
         author: 'HR Dept',
-        image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-5.jpg',
         excerpt: 'Our team gathered in Siem Reap for a weekend of team building, strategy planning, and celebrating our shared successes.',
         featured: false
     },
@@ -63,7 +64,7 @@ const allNews = [
         category: 'Community',
         date: 'May 30, 2025',
         author: 'HR Dept',
-        image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-6.jpg',
         excerpt: 'Fostering the next generation of engineers, we are proud to announce a signed MoU with the Royal University of Phnom Penh.',
         featured: false
     }
@@ -127,20 +128,20 @@ const CustomDropdown = ({ options, value, onChange, icon: Icon, placeholder = "S
 export default function NewsPage() {
     const [activeCategory, setActiveCategory] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
-    
+
     const featuredNews = allNews.find(n => n.featured) || allNews[0];
     // Exclude featured from the main list, but if we filter, we might want to include it? 
     // Usually featured is kept separate at the top. Let's keep it separate for 'All', 
     // but maybe include it if it matches a specific filter? 
     // For simplicity and standard UX, let's keep featured always at top and 'other' list below filtering.
     // Actually, usually filtering affects the list below.
-    
+
     const otherNews = allNews.filter(n => n.id !== featuredNews.id);
 
     const filteredNews = otherNews.filter(n => {
         const matchesCategory = activeCategory === 'All' || n.category === activeCategory;
-        const matchesSearch = n.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                              n.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            n.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 
@@ -149,15 +150,16 @@ export default function NewsPage() {
             {/* --- HERO --- */}
             <section className="relative h-[70vh] bg-titan-navy flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <img 
-                        src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2670&auto=format&fit=crop" 
-                        alt="News Hero" 
-                        className="w-full h-full object-cover opacity-30 scale-105 animate-slow-pan"
+                    <Image
+                        src="/images/projects/Thumbnail-9.jpg"
+                        alt="News Hero"
+                        fill
+                        className="object-cover opacity-30 scale-105 animate-slow-pan"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/60 to-transparent"></div>
                     <div className="absolute inset-0 bg-gradient-to-t from-titan-navy to-transparent opacity-90"></div>
                 </div>
-                
+
                 <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20">
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
@@ -169,7 +171,7 @@ export default function NewsPage() {
                             Latest Updates
                         </div>
                         <h1 className="text-6xl md:text-8xl font-black text-white mb-8 tracking-tight leading-[0.9]">
-                            INSIGHTS & <br/>
+                            INSIGHTS & <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-white">INNOVATION</span>
                         </h1>
                         <p className="text-xl text-white/70 font-light max-w-xl leading-relaxed mb-10 border-l-4 border-titan-red pl-6">
@@ -178,7 +180,7 @@ export default function NewsPage() {
                     </motion.div>
 
                     {/* Featured Headline Card - Floating */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         transition={{ delay: 0.3, duration: 0.8 }}
@@ -206,21 +208,21 @@ export default function NewsPage() {
             </section>
 
             <div className="max-w-[1400px] mx-auto px-6 -mt-24 relative z-20 pb-20">
-                
+
                 {/* --- LAYOUT CONTAINER --- */}
                 <div className="flex flex-col lg:flex-row gap-12">
-                    
+
                     {/* --- MAIN CONTENT (70%) --- */}
                     <div className="lg:w-[70%] space-y-12">
-                        
+
                         {/* FEATURED STORY */}
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                         >
                             <Link href={`/design-x/news/${featuredNews.id}`} className="group relative block rounded-2xl overflow-hidden shadow-xl aspect-[16/9] border border-gray-100">
-                                <img src={featuredNews.image} alt={featuredNews.title} className="w-full h-full object-cover" />
+                                <Image src={featuredNews.image} alt={featuredNews.title} fill className="object-cover" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
                                 <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full md:w-3/4">
                                     <div className="flex items-center gap-3 mb-4">
@@ -254,7 +256,7 @@ export default function NewsPage() {
                                     >
                                         <Link href={`/design-x/news/${news.id}`} className="group flex flex-col h-full bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
                                             <div className="aspect-[3/2] overflow-hidden relative">
-                                                <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
+                                                <Image src={news.image} alt={news.title} fill className="object-cover" />
                                                 <div className="absolute top-4 left-4">
                                                     <span className="bg-white/95 backdrop-blur text-titan-navy px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-sm shadow-sm">
                                                         {news.category}
@@ -283,7 +285,7 @@ export default function NewsPage() {
                         </div>
 
                         {filteredNews.length === 0 && (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200"
@@ -298,29 +300,29 @@ export default function NewsPage() {
 
                     {/* --- SIDEBAR WIDGETS (30%) --- */}
                     <div className="lg:w-[30%] space-y-8 lg:sticky lg:top-24 h-fit">
-                        
+
                         {/* 1. Filter & Search Widget */}
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 className="text-xs font-black text-titan-navy mb-4 uppercase tracking-widest flex items-center gap-2">
                                 <Filter size={14} className="text-titan-red" /> Filter News
                             </h3>
-                            
+
                             <div className="space-y-4">
                                 {/* Search */}
                                 <div className="relative group">
-                                    <input 
-                                        type="text" 
-                                        placeholder="Search articles..." 
+                                    <input
+                                        type="text"
+                                        placeholder="Search articles..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-titan-bg border-transparent border focus:bg-white pl-10 pr-4 py-3 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/20 transition-all" 
+                                        className="w-full bg-titan-bg border-transparent border focus:bg-white pl-10 pr-4 py-3 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/20 transition-all"
                                     />
                                     <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-titan-red transition-colors" />
                                 </div>
 
                                 {/* Categories Dropdown */}
                                 <div>
-                                    <CustomDropdown 
+                                    <CustomDropdown
                                         options={categories}
                                         value={activeCategory}
                                         onChange={setActiveCategory}
@@ -335,7 +337,7 @@ export default function NewsPage() {
                         <div className="bg-titan-navy p-6 rounded-xl shadow-xl text-white relative overflow-hidden group cursor-pointer hover:shadow-2xl transition-all">
                             <Link href="/design-x/careers" className="absolute inset-0 z-20"></Link>
                             <div className="absolute top-0 right-0 w-32 h-32 bg-titan-red rounded-full blur-[60px] opacity-20 -mr-10 -mt-10"></div>
-                            
+
                             <div className="flex items-center justify-between mb-6 relative z-10">
                                 <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                                     <Briefcase size={16} className="text-titan-red" /> We're Hiring

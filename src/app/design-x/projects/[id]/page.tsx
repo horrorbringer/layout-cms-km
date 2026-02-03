@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { ArrowLeft, MapPin, Building, Activity, Tag, HelpCircle, ArrowRight, Share2, Maximize, User, Calendar, CheckCircle2, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 // --- MOCK DATA ---
 const projectDetails: any = {
@@ -18,7 +19,7 @@ const projectDetails: any = {
         area: '45,000 sqm',
         year: '2023',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&q=80&w=1600',
+        image: '/images/projects/Thumbnail-1.jpg',
         description: {
             background: 'The new Ministry of Interior complex was commissioned to centralize administrative functions and provide a modern, secure facility for government operations.',
             objectives: 'To create a landmark building that reflects Khmer architectural heritage while incorporating state-of-the-art security, energy efficiency, and functional office spaces.',
@@ -31,9 +32,9 @@ const projectDetails: any = {
             'Short timeline requiring 24/7 construction shifts.'
         ],
         gallery: [
-            'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=800&auto=format&fit=crop'
+            '/images/projects/Thumbnail-2.jpg',
+            '/images/projects/Thumbnail-3.jpg',
+            '/images/projects/Thumbnail-4.jpg'
         ]
     },
     'mef': {
@@ -45,7 +46,7 @@ const projectDetails: any = {
         area: '38,000 sqm',
         year: '2022',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1600',
+        image: '/images/projects/Thumbnail-2.jpg',
         description: {
             background: 'A dedicated headquarters for the nation\'s financial planning and economic management.',
             objectives: 'Construct a highly functional, secure, and prestigious workspace that accommodates the growing staff of the ministry.',
@@ -53,7 +54,7 @@ const projectDetails: any = {
         },
         services: ['General Construction', 'MEP Works', 'External Infrastructures'],
         challenges: ['Deep basement construction in high water table area.', 'Complex data center cooling requirements.'],
-        gallery: ['https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&q=80&w=800']
+        gallery: ['/images/projects/Thumbnail-5.jpg']
     },
 
     // Water Treatment
@@ -66,7 +67,7 @@ const projectDetails: any = {
         area: '12 Hectares',
         year: '2024',
         status: 'Under Construction',
-        image: 'https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&q=80&w=1600',
+        image: '/images/projects/Thumbnail-1.jpg',
         description: {
             background: 'A critical infrastructure project designed to alleviate water shortages in the western districts of Phnom Penh.',
             objectives: 'Increase production capacity by 50,000 m3/day and ensure compliance with WHO water quality standards.',
@@ -74,7 +75,7 @@ const projectDetails: any = {
         },
         services: ['Civil Works', 'Pipe Laying', 'Pumping Station Construction', 'Reservoir Building'],
         challenges: ['Soft soil conditions requiring extensive piling.', 'Coordination with existing underground utilities.'],
-        gallery: ['https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop']
+        gallery: ['/images/projects/Thumbnail-6.jpg']
     },
 
     // Slope
@@ -87,7 +88,7 @@ const projectDetails: any = {
         area: '5km Length',
         year: '2021',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&q=80&w=1600',
+        image: '/images/projects/Thumbnail-3.jpg',
         description: {
             background: 'Severe erosion along the Mekong riverbank threatened local communities and agricultural land.',
             objectives: 'Stabilize the riverbank using sustainable and durable geotechnical solutions.',
@@ -95,7 +96,7 @@ const projectDetails: any = {
         },
         services: ['Geotechnical Survey', 'Slope Stabilization', 'Gabion Installation'],
         challenges: ['Working against strong river currents.', 'Accessibility for heavy machinery on soft ground.'],
-        gallery: ['https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=800&auto=format&fit=crop']
+        gallery: ['/images/projects/Thumbnail-7.jpg']
     }
 };
 
@@ -109,10 +110,10 @@ export default function ProjectDetailPage() {
     const project = (id && projectDetails[id]) ? projectDetails[id] : projectDetails['moi'];
 
     // Determine back link based on status
-    const backLink = project.status === 'Completed' 
-        ? '/design-x/projects/completed' 
+    const backLink = project.status === 'Completed'
+        ? '/design-x/projects/completed'
         : '/design-x/projects/implementation';
-    
+
     const backLabel = project.status === 'Completed'
         ? 'Back to Done Projects'
         : 'Back to Implementation';
@@ -122,7 +123,7 @@ export default function ProjectDetailPage() {
             {/* --- HERO SECTION --- */}
             <section className="relative h-[70vh] bg-titan-navy flex items-end">
                 <div className="absolute inset-0">
-                    <img src={project.image} alt={project.title} className="w-full h-full object-cover opacity-60" />
+                    <Image src={project.image} alt={project.title} fill className="object-cover opacity-60" />
                     <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent"></div>
                 </div>
 
@@ -263,7 +264,7 @@ export default function ProjectDetailPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {project.gallery.map((img: string, i: number) => (
                             <div key={i} className={`rounded-lg overflow-hidden group cursor-pointer relative ${i === 0 ? 'md:col-span-2 md:row-span-2 aspect-square md:aspect-auto' : 'aspect-[4/3]'}`}>
-                                <img src={img} alt="Gallery" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                <Image src={img} alt="Gallery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                             </div>
                         ))}
@@ -283,13 +284,13 @@ export default function ProjectDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Hardcoded related projects for demo */}
                     {[
-                        { title: 'MEF Building', cat: 'Government', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800' },
-                        { title: 'Bakheng WTP', cat: 'Infrastructure', img: 'https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&q=80&w=800' },
-                        { title: 'Vattanac Capital', cat: 'Private', img: 'https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&q=80&w=800' }
+                        { title: 'MEF Building', cat: 'Government', img: '/images/projects/Thumbnail-2.jpg' },
+                        { title: 'Bakheng WTP', cat: 'Infrastructure', img: '/images/projects/Thumbnail-8.jpg' },
+                        { title: 'Vattanac Capital', cat: 'Private', img: '/images/projects/Thumbnail-5.jpg' }
                     ].map((p, idx) => (
                         <Link href="#" key={idx} className="block group">
                             <div className="aspect-[4/3] rounded-lg overflow-hidden mb-4 relative">
-                                <img src={p.img} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <Image src={p.img} alt={p.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                                 <div className="absolute top-4 left-4 bg-titan-navy text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">{p.cat}</div>
                             </div>
                             <h3 className="text-xl font-bold text-titan-navy group-hover:text-titan-red transition-colors">{p.title}</h3>

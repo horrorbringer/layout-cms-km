@@ -6,7 +6,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Government Office Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-1.jpg',
         summary: 'A landmark administrative complex featuring khmer-inspired architecture and modern security systems.'
     },
     {
@@ -15,7 +15,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Government Office Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-2.jpg',
         summary: 'New headquarters designed to centralize financial operations with high-tech infrastructure.'
     },
     {
@@ -24,7 +24,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Government Office Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-3.jpg',
         summary: 'Modern office tower for the national electricity utility provider.'
     },
     {
@@ -33,7 +33,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Government Office Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-4.jpg',
         summary: 'Administrative center ensuring social security services for the nation.'
     },
     {
@@ -42,7 +42,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Government Office Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-5.jpg',
         summary: 'High-security facility managing national customs operations.'
     },
     {
@@ -51,7 +51,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Government Office Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-6.jpg',
         summary: 'Headquarters designed with transparency and security at its core.'
     },
 
@@ -62,7 +62,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Public Service Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-7.jpg',
         summary: 'State-of-the-art medical facility specializing in critical care and surgery.'
     },
     {
@@ -71,7 +71,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Public Service Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-8.jpg',
         summary: 'Educational complex fostering the next generation of engineers.'
     },
     {
@@ -80,7 +80,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Public Service Building',
         status: 'Under Construction',
-        image: 'https://images.unsplash.com/photo-1599687267104-d510688a4e32?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-9.jpg',
         summary: 'New STEM building expansion to support advanced research capabilities.'
     },
     {
@@ -89,7 +89,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Public Service Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail.jpg',
         summary: 'Upgrading facilities to meet international sporting standards.'
     },
 
@@ -100,7 +100,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Water Treatment Plant',
         status: 'Under Construction',
-        image: 'https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-1.jpg',
         summary: 'Strategic infrastructure project increasing water supply capacity.'
     },
     {
@@ -109,7 +109,7 @@ export const projects = [
         location: 'Kandal',
         type: 'Water Treatment Plant',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-2.jpg',
         summary: 'Ensuring clean water access for the growing provincial population.'
     },
 
@@ -120,7 +120,7 @@ export const projects = [
         location: 'Kandal',
         type: 'Slope Construction',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-3.jpg',
         summary: 'Geotechnical engineering project stabilizing 5km of riverbank against erosion.'
     },
     {
@@ -129,7 +129,7 @@ export const projects = [
         location: 'Sihanoukville',
         type: 'Slope Construction',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-4.jpg',
         summary: 'Advanced soil reinforcement for hillside development safety.'
     },
 
@@ -140,7 +140,7 @@ export const projects = [
         location: 'Phnom Penh',
         type: 'Private Building',
         status: 'Completed',
-        image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200',
+        image: '/images/projects/Thumbnail-5.jpg',
         summary: 'Luxury office and retail fit-out for one of Cambodia’s tallest skyscrapers.'
     }
 ];

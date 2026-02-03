@@ -3,6 +3,7 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Calendar, User, Clock, Share2, Facebook, Linkedin, Twitter, Tag, ArrowRight, FileText, ImageIcon, Download, Copy, Printer, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -15,7 +16,7 @@ const newsData: any = {
         date: 'Oct 15, 2025',
         author: 'PR Team',
         readTime: '5 min read',
-        image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop',
+        image: '/images/projects/Thumbnail-8.jpg',
         content: `
             <p class="lead">We are thrilled to announce that Kimmex Construction has been honored with the Gold Award for "Best Commercial Project" at the 2025 PropertyGuru Cambodia Property Awards. This recognition celebrates our commitment to excellence in the design and construction of the new Ministry of Interior complex.</p>
             
@@ -29,9 +30,9 @@ const newsData: any = {
         `,
         tags: ['Awards', 'Commercial', 'Ministry of Interior', 'Gold Winner'],
         gallery: [
-            'https://images.unsplash.com/photo-1518182170546-0766aaef3194?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800'
+            '/images/projects/Thumbnail-1.jpg',
+            '/images/projects/Thumbnail-2.jpg',
+            '/images/projects/Thumbnail-3.jpg'
         ],
         documents: [
             { name: 'Official Press Release.pdf', size: '2.4 MB' },
@@ -45,7 +46,7 @@ const newsData: any = {
         date: 'Sep 22, 2025',
         author: 'Project Mgmt',
         readTime: '3 min read',
-        image: 'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&q=80&w=1600',
+        image: '/images/projects/Thumbnail-1.jpg',
         content: `
             <p class="lead">Phase 1 of the massive logistics center has officially begun. This project aims to revolutionize the supply chain infrastructure in the coastal region and support the growing export sector.</p>
             <h3>Strategic Importance</h3>
@@ -53,8 +54,8 @@ const newsData: any = {
         `,
         tags: ['Logistics', 'Sihanoukville', 'Infrastructure', 'Phase 1'],
         gallery: [
-            'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&q=80&w=800'
+            '/images/projects/Thumbnail-4.jpg',
+            '/images/projects/Thumbnail-5.jpg'
         ],
         documents: []
     },
@@ -66,7 +67,7 @@ const newsData: any = {
         date: 'Unknown Date',
         author: 'Admin',
         readTime: '1 min read',
-        image: 'https://images.unsplash.com/photo-1504384308090-c54be3852f92?auto=format&fit=crop&q=80&w=1600',
+        image: '/images/projects/Thumbnail.jpg',
         content: '<p>The article you are looking for does not exist or has been removed.</p>',
         tags: [],
         gallery: [],
@@ -79,19 +80,19 @@ const relatedNews = [
         id: '2',
         title: 'Breaking Ground on the New Sihanoukville Logistics Hub',
         date: 'Sep 22, 2025',
-        image: 'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&q=80&w=600'
+        image: '/images/projects/Thumbnail-1.jpg'
     },
     {
         id: '3',
         title: 'Safety First: Achieving 2 Million Man-Hours Without Lost Time Injury',
         date: 'Aug 05, 2025',
-        image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=600'
+        image: '/images/projects/Thumbnail-2.jpg'
     },
     {
         id: '4',
         title: 'Introducing Our New "Green Build" Initiative',
         date: 'Jul 12, 2025',
-        image: 'https://images.unsplash.com/photo-1518182170546-0766aaef3194?auto=format&fit=crop&q=80&w=600'
+        image: '/images/projects/Thumbnail-7.jpg'
     }
 ];
 
@@ -105,7 +106,7 @@ export default function NewsDetailPage() {
 
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy">
-            
+
             {/* --- HEADER --- */}
             <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
                 <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
@@ -147,10 +148,11 @@ export default function NewsDetailPage() {
             {/* --- HERO IMAGE: Full Width Container --- */}
             <div className="w-full px-6 mb-16">
                 <div className="max-w-[1400px] mx-auto rounded-2xl overflow-hidden shadow-2xl aspect-[21/9]">
-                    <img 
-                        src={article.image} 
-                        alt={article.title} 
-                        className="w-full h-full object-cover"
+                    <Image
+                        src={article.image}
+                        alt={article.title}
+                        fill
+                        className="object-cover"
                     />
                 </div>
             </div>
@@ -158,7 +160,7 @@ export default function NewsDetailPage() {
             {/* --- CONTENT AREA --- */}
             <div className="max-w-[1400px] mx-auto px-6 pb-24">
                 <div className="flex flex-col lg:flex-row gap-16">
-                    
+
                     {/* LEFT: Article Body (65%) */}
                     <div className="lg:w-[65%]">
                         <article className="prose prose-lg prose-slate max-w-none 
@@ -177,8 +179,8 @@ export default function NewsDetailPage() {
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     {article.gallery.map((img: string, i: number) => (
-                                        <div key={i} className={`rounded-xl overflow-hidden shadow-sm ${i === 0 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'}`}>
-                                            <img src={img} alt="Gallery" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                                        <div key={i} className={`rounded-xl overflow-hidden shadow-sm relative ${i === 0 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'}`}>
+                                            <Image src={img} alt="Gallery" fill className="object-cover hover:scale-105 transition-transform duration-700" />
                                         </div>
                                     ))}
                                 </div>
@@ -198,7 +200,7 @@ export default function NewsDetailPage() {
                     {/* RIGHT: Sidebar (35%) */}
                     <div className="lg:w-[35%] space-y-8">
                         <div className="sticky top-24 space-y-8">
-                            
+
                             {/* Author Card */}
                             <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 flex items-center gap-4">
                                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-titan-navy font-black text-lg border border-gray-200 shadow-sm">
@@ -239,8 +241,8 @@ export default function NewsDetailPage() {
                                 <div className="space-y-6">
                                     {currentRelated.map((news) => (
                                         <Link href={`/design-x/news/${news.id}`} key={news.id} className="group flex gap-4 items-start">
-                                            <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-100">
-                                                <img src={news.image} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                            <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-100 relative">
+                                                <Image src={news.image} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                                             </div>
                                             <div>
                                                 <span className="text-[10px] font-bold text-titan-navy-subtle uppercase tracking-widest mb-1 block">

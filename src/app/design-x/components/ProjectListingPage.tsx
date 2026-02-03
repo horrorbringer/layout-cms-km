@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, ArrowRight, Building, CheckCircle, Clock, Droplets, Mountain, Filter } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { projects } from '../data/projectData';
 
@@ -62,14 +63,15 @@ export default function ProjectListingPage({
 
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy relative overflow-hidden">
-            
+
             {/* --- HERO SECTION --- */}
             <section className="relative h-[60vh] bg-titan-navy flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <img 
-                        src={heroImage} 
-                        alt="Projects Hero" 
-                        className="w-full h-full object-cover opacity-30 scale-105 animate-slow-pan"
+                    <Image
+                        src={heroImage}
+                        alt="Projects Hero"
+                        fill
+                        className="object-cover opacity-30 scale-105 animate-slow-pan"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-titan-navy/90"></div>
                 </div>
@@ -83,7 +85,7 @@ export default function ProjectListingPage({
                         {heroIcon}
                         {heroTag}
                     </motion.div>
-                    
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -93,7 +95,7 @@ export default function ProjectListingPage({
                         {title}
                     </motion.div>
 
-                    <motion.p 
+                    <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
@@ -142,7 +144,7 @@ export default function ProjectListingPage({
             {/* --- GRID --- */}
             <section className="px-6 pb-32 max-w-[1400px] mx-auto">
                 <AnimatePresence mode='wait'>
-                    <motion.div 
+                    <motion.div
                         layout
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                     >
@@ -159,10 +161,12 @@ export default function ProjectListingPage({
                                     {/* Thumbnail */}
                                     <div className="aspect-[4/3] overflow-hidden relative">
                                         <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-titan-navy/0 transition-colors z-10"></div>
-                                        <img
+                                        <Image
                                             src={project.image}
                                             alt={project.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         />
                                         {/* Status Badge */}
                                         <div className={`absolute top-4 left-4 z-20 px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 shadow-sm ${badgeConfig.className}`}>
@@ -199,7 +203,7 @@ export default function ProjectListingPage({
                 </AnimatePresence>
 
                 {filteredProjects.length === 0 && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         className="text-center py-20 bg-titan-bg rounded-2xl border border-dashed border-gray-300"

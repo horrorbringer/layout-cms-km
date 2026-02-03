@@ -2,11 +2,12 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    ArrowLeft, FileText, Download, Calendar, User, Eye, Share2, 
-    Printer, ChevronRight, Shield, CheckCircle, Clock, Database, ArrowRight 
+import {
+    ArrowLeft, FileText, Download, Calendar, User, Eye, Share2,
+    Printer, ChevronRight, Shield, CheckCircle, Clock, Database, ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 
 // Mock Data (Enhanced for detail view)
@@ -65,7 +66,7 @@ export default function DocumentDetailPage() {
             {/* --- PDF MODAL --- */}
             <AnimatePresence>
                 {isPdfOpen && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -82,15 +83,15 @@ export default function DocumentDetailPage() {
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <a 
-                                    href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" 
-                                    download 
+                                <a
+                                    href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+                                    download
                                     className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold uppercase tracking-widest transition-colors"
                                 >
                                     <Download size={16} /> Download
                                 </a>
-                                <button 
-                                    onClick={() => setIsPdfOpen(false)} 
+                                <button
+                                    onClick={() => setIsPdfOpen(false)}
                                     className="p-2 hover:bg-white/10 rounded-full transition-colors"
                                 >
                                     <div className="bg-white text-titan-navy rounded-full p-1">
@@ -121,10 +122,11 @@ export default function DocumentDetailPage() {
                 {/* Background Effects */}
                 <div className="absolute inset-0 z-0">
                     {/* Hero Image */}
-                    <img 
-                        src={doc.image} 
-                        alt={doc.title} 
-                        className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
+                    <Image
+                        src={doc.image}
+                        alt={doc.title}
+                        fill
+                        className="object-cover opacity-40 mix-blend-overlay"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/90 to-titan-navy/60"></div>
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10 mix-blend-multiply"></div>
@@ -223,13 +225,13 @@ export default function DocumentDetailPage() {
                                 <span className="text-[10px] font-mono text-titan-navy/40 uppercase">Page 1 of {doc.pages}</span>
                             </div>
                             <div className="p-8 bg-titan-bg-alt">
-                                <div 
-                                    className="aspect-[4/3] md:aspect-video bg-white shadow-2xl mx-auto max-w-3xl overflow-hidden relative group cursor-pointer rounded-sm border border-gray-200" 
+                                <div
+                                    className="aspect-[4/3] md:aspect-video bg-white shadow-2xl mx-auto max-w-3xl overflow-hidden relative group cursor-pointer rounded-sm border border-gray-200"
                                     onClick={() => setIsPdfOpen(true)}
                                 >
-                                    <img src={doc.image} className="w-full h-full object-cover opacity-90 blur-[1px] group-hover:blur-[2px] group-hover:scale-105 transition-all duration-700" alt="preview" />
+                                    <Image src={doc.image} className="object-cover opacity-90 blur-[1px] group-hover:blur-[2px] group-hover:scale-105 transition-all duration-700" alt="preview" fill />
                                     <div className="absolute inset-0 bg-titan-navy/20 group-hover:bg-titan-navy/40 transition-colors"></div>
-                                    
+
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <div className="transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 opacity-0 group-hover:opacity-100">
                                             <button className="bg-titan-red text-white px-8 py-3 rounded-lg font-bold uppercase tracking-widest flex items-center gap-3 shadow-2xl hover:bg-titan-navy transition-colors">
@@ -267,14 +269,14 @@ export default function DocumentDetailPage() {
                                 </div>
 
                                 <div className="space-y-3 mb-6">
-                                    <a 
-                                        href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" 
-                                        download 
+                                    <a
+                                        href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+                                        download
                                         className="w-full bg-titan-navy text-white py-4 rounded-lg font-bold uppercase tracking-widest text-sm hover:bg-titan-red transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group"
                                     >
                                         <Download size={18} className="group-hover:-translate-y-1 transition-transform" /> Download File
                                     </a>
-                                    <button 
+                                    <button
                                         onClick={() => setIsPdfOpen(true)}
                                         className="w-full bg-white text-titan-navy border-2 border-titan-navy/10 py-3 rounded-lg font-bold uppercase tracking-widest text-xs hover:border-titan-navy hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
                                     >
@@ -283,7 +285,7 @@ export default function DocumentDetailPage() {
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-3">
-                                    <button 
+                                    <button
                                         onClick={handleShare}
                                         className="flex items-center justify-center gap-2 py-2.5 bg-gray-50 rounded-lg text-xs font-bold text-titan-navy hover:bg-gray-100 transition-colors relative overflow-hidden"
                                     >
@@ -355,7 +357,7 @@ export default function DocumentDetailPage() {
                             View All <ArrowRight size={14} />
                         </Link>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {documents.slice(0, 3).map((item) => (
                             <Link href={`/design-x/documents/${item.id}`} key={item.id} className="group bg-gray-50 rounded-xl p-1 shadow-sm hover:shadow-xl transition-all duration-300">

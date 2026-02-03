@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Send, Facebook, Linkedin, Instagram, ArrowRight, MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ContactPage() {
     return (
@@ -10,10 +11,11 @@ export default function ContactPage() {
             {/* --- HERO --- */}
             <section className="relative h-[60vh] bg-titan-navy flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <img 
-                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop" 
-                        alt="Contact Hero" 
-                        className="w-full h-full object-cover opacity-20"
+                    <Image
+                        src="/images/projects/Thumbnail-3.jpg"
+                        alt="Contact Hero"
+                        fill
+                        className="object-cover opacity-20"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-titan-navy/90"></div>
                 </div>
@@ -27,7 +29,7 @@ export default function ContactPage() {
                         <MessageSquare size={14} className="text-titan-red" />
                         Let's Talk
                     </motion.div>
-                    <motion.h1 
+                    <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
@@ -35,7 +37,7 @@ export default function ContactPage() {
                     >
                         GET IN <span className="text-titan-red">TOUCH</span>
                     </motion.h1>
-                    <motion.p 
+                    <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
@@ -51,7 +53,7 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
                     {/* LEFT COLUMN: INFO & LOCATIONS */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
@@ -61,9 +63,9 @@ export default function ContactPage() {
                         {/* Contact Info Card */}
                         <div className="bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 overflow-hidden relative">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-titan-red/5 rounded-full blur-3xl -mr-10 -mt-10"></div>
-                            
+
                             <h3 className="text-2xl font-black text-titan-navy mb-8">Headquarters</h3>
-                            
+
                             <div className="space-y-8 relative z-10">
                                 <div className="flex items-start gap-5 group">
                                     <div className="w-12 h-12 bg-titan-bg rounded-xl flex items-center justify-center text-titan-red shrink-0 group-hover:bg-titan-red group-hover:text-white transition-colors duration-300">
@@ -120,10 +122,11 @@ export default function ContactPage() {
 
                         {/* Interactive Map Card */}
                         <div className="bg-white p-2 rounded-2xl shadow-lg border border-gray-100 h-64 relative group cursor-pointer overflow-hidden">
-                             <img
-                                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop"
+                            <Image
+                                src="/images/projects/Thumbnail-1.jpg"
                                 alt="Map Location"
-                                className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-700 opacity-90"
+                                fill
+                                className="object-cover rounded-xl group-hover:scale-105 transition-transform duration-700 opacity-90"
                             />
                             <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors rounded-xl">
                                 <div className="bg-white text-titan-navy px-6 py-3 rounded-full font-bold text-xs uppercase tracking-widest shadow-lg flex items-center gap-2 transform group-hover:-translate-y-1 transition-transform duration-300">
@@ -134,7 +137,7 @@ export default function ContactPage() {
                     </motion.div>
 
                     {/* RIGHT COLUMN: CONTACT FORM */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
@@ -161,7 +164,7 @@ export default function ContactPage() {
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                     <div className="space-y-2">
+                                    <div className="space-y-2">
                                         <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Phone Number</label>
                                         <input type="tel" className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm" placeholder="+855 ..." />
                                     </div>
@@ -176,7 +179,7 @@ export default function ContactPage() {
                                                 <option>Other</option>
                                             </select>
                                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                                             </div>
                                         </div>
                                     </div>

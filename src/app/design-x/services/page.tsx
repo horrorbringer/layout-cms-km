@@ -9,6 +9,7 @@ import {
     Settings, ShieldCheck, Clock, Zap
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Animation wrapper
 function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -44,7 +45,7 @@ export default function ServicesPage() {
             desc: 'A seamless integration of architectural creativity and engineering precision. We handle the entire lifecycle from concept to completion.',
             icon: PenTool,
             features: ['Architectural Design', 'Structural Engineering', 'Permit Acquisition', 'Turnkey Construction'],
-            image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-6.jpg'
         },
         {
             id: 'renovation',
@@ -52,7 +53,7 @@ export default function ServicesPage() {
             desc: 'Revitalizing existing structures to meet modern standards. We breathe new life into aged buildings while ensuring structural integrity.',
             icon: Hammer,
             features: ['Interior Fit-outs', 'Facade Upgrades', 'Structural Strengthening', 'MEP Retrofitting'],
-            image: 'https://images.unsplash.com/photo-1581094794329-c8112c4e5190?q=80&w=800&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-4.jpg'
         },
         {
             id: 'project-management',
@@ -60,7 +61,7 @@ export default function ServicesPage() {
             desc: 'Rigorous oversight ensuring on-time, on-budget delivery. We represent your interests on the field, managing contractors and risks.',
             icon: Briefcase,
             features: ['Cost Control', 'Quality Assurance', 'Schedule Management', 'Safety Compliance'],
-            image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-5.jpg'
         },
         {
             id: 'consultants',
@@ -68,7 +69,7 @@ export default function ServicesPage() {
             desc: 'Strategic expertise to validate and optimize your investment. We provide technical and financial insights before you build.',
             icon: Lightbulb,
             features: ['Feasibility Studies', 'Value Engineering', 'Technical Audits', 'Regulatory Advice'],
-            image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-2.jpg'
         }
     ];
 
@@ -81,27 +82,29 @@ export default function ServicesPage() {
     ];
 
     const sectors = [
-        { title: 'Government', icon: Landmark, image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop' },
-        { title: 'Education', icon: GraduationCap, image: 'https://images.unsplash.com/photo-1599687267104-d510688a4e32?q=80&w=800&auto=format&fit=crop' },
-        { title: 'Commercial', icon: Building, image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop' },
-        { title: 'Infrastructure', icon: Truck, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=800&auto=format&fit=crop' },
+        { title: 'Government', icon: Landmark, image: '/images/projects/Thumbnail-1.jpg' },
+        { title: 'Education', icon: GraduationCap, image: '/images/projects/Thumbnail-9.jpg' },
+        { title: 'Commercial', icon: Building, image: '/images/projects/Thumbnail-2.jpg' },
+        { title: 'Infrastructure', icon: Truck, image: '/images/projects/Thumbnail-7.jpg' },
     ];
 
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy">
-            
+
             {/* === HERO SECTION === */}
             <section ref={heroRef} className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-titan-navy">
                 {/* Parallax & Zoom Background */}
-                <motion.div 
-                    style={{ y: heroY, scale: 1.1 }} 
+                <motion.div
+                    style={{ y: heroY, scale: 1.1 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 10, ease: "easeOut" }}
                     className="absolute inset-0"
                 >
-                    <img
-                        src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop"
+                    <Image
+                        src="/images/projects/Thumbnail-1.jpg"
                         alt="Kimmex Services"
+                        width={1920}
+                        height={1200}
                         className="w-full h-[120%] object-cover opacity-60 mix-blend-overlay"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/80 via-titan-navy/50 to-titan-navy"></div>
@@ -112,7 +115,7 @@ export default function ServicesPage() {
                 <div className="absolute bottom-1/4 right-10 w-32 h-32 border border-titan-red/20 rounded-full hidden lg:block"></div>
 
                 {/* Hero Content */}
-                <motion.div 
+                <motion.div
                     style={{ opacity: heroOpacity }}
                     className="relative z-10 text-center max-w-5xl px-6"
                 >
@@ -181,14 +184,15 @@ export default function ServicesPage() {
                         <FadeInWhenVisible key={i} delay={i * 0.1}>
                             <Link href={`/design-x/services/${service.id}`} className="group block">
                                 <div className={`flex flex-col lg:flex-row gap-0 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 bg-white border border-gray-100 group-hover:border-titan-red/20`}>
-                                    
+
                                     {/* Image Side */}
                                     <div className={`lg:w-2/5 relative overflow-hidden h-64 lg:h-auto ${i % 2 === 1 ? 'lg:order-last' : ''}`}>
                                         <div className="absolute inset-0 bg-titan-navy/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                                        <img 
-                                            src={service.image} 
-                                            alt={service.title} 
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                        <Image
+                                            src={service.image}
+                                            alt={service.title}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-700"
                                         />
                                     </div>
 
@@ -211,7 +215,7 @@ export default function ServicesPage() {
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
                                             {service.features.map((feature, idx) => (
                                                 <div key={idx} className="flex items-center gap-3 text-titan-navy/80 font-medium group-hover:text-titan-navy transition-colors">
-                                                    <CheckCircle2 size={18} className="text-titan-red shrink-0" /> 
+                                                    <CheckCircle2 size={18} className="text-titan-red shrink-0" />
                                                     {feature}
                                                 </div>
                                             ))}
@@ -298,16 +302,22 @@ export default function ServicesPage() {
                         <FadeInWhenVisible delay={0.2}>
                             <div className="relative">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1590644365607-1c5a38fc43e0?q=80&w=800&auto=format&fit=crop"
-                                        alt="Blueprint"
-                                        className="rounded-2xl shadow-lg h-64 w-full object-cover translate-y-8"
-                                    />
-                                    <img
-                                        src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=800&auto=format&fit=crop"
-                                        alt="Meeting"
-                                        className="rounded-2xl shadow-lg h-64 w-full object-cover"
-                                    />
+                                    <div className="relative h-64 w-full rounded-2xl shadow-lg overflow-hidden translate-y-8">
+                                        <Image
+                                            src="/images/projects/Thumbnail-3.jpg"
+                                            alt="Blueprint"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div className="relative h-64 w-full rounded-2xl shadow-lg overflow-hidden">
+                                        <Image
+                                            src="/images/projects/Thumbnail-5.jpg"
+                                            alt="Meeting"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
                                 </div>
                                 {/* Center Badge */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-titan-navy text-white p-6 rounded-full shadow-2xl border-4 border-white">
@@ -333,14 +343,15 @@ export default function ServicesPage() {
                         <FadeInWhenVisible key={i} delay={i * 0.1}>
                             <div className="group relative h-[400px] overflow-hidden rounded-2xl cursor-pointer">
                                 {/* Bg Image */}
-                                <img
+                                <Image
                                     src={sector.image}
-                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    fill
+                                    className="object-cover group-hover:scale-110 transition-transform duration-700"
                                     alt={sector.title}
                                 />
                                 {/* Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-300"></div>
-                                
+
                                 {/* Content */}
                                 <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                                     <div className="w-12 h-12 bg-titan-red rounded-lg flex items-center justify-center text-white mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Download, Bell, ArrowRight, Calendar, Tag, ChevronRight, Search, Filter, FolderOpen, Database } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Detailed Mock Data for Knowledge/Documents
 const documents = [
@@ -15,7 +16,7 @@ const documents = [
         size: '15.4 MB',
         type: 'PDF',
         description: 'Comprehensive guidelines and technical specifications for structural steel and concrete reinforcement in high-rise developments greater than 40 floors.',
-        image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop'
+        image: '/images/projects/Thumbnail-1.jpg'
     },
     {
         id: 2,
@@ -25,7 +26,7 @@ const documents = [
         size: '4.2 MB',
         type: 'PDF',
         description: 'Internal research findings on the cost-benefit analysis and long-term durability of recycled aggregate concrete in tropical climates.',
-        image: 'https://images.unsplash.com/photo-1518135714426-c18f5ffb6f4d?q=80&w=800&auto=format&fit=crop'
+        image: '/images/projects/Thumbnail-8.jpg'
     },
     {
         id: 3,
@@ -35,7 +36,7 @@ const documents = [
         size: '12.8 MB',
         type: 'PDF',
         description: 'Mandatory safety protocols for crane and excavator operators, including pre-start checks and emergency shutdown procedures.',
-        image: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800&auto=format&fit=crop'
+        image: '/images/projects/Thumbnail-6.jpg'
     },
     {
         id: 4,
@@ -45,7 +46,7 @@ const documents = [
         size: '25 MB',
         type: 'PDF',
         description: 'A forward-looking analysis of infrastructure needs for the expanding metropolitan area, prepared by Kimmex Strategy Division.',
-        image: 'https://images.unsplash.com/photo-1486325212027-8081648c82ee?q=80&w=800&auto=format&fit=crop'
+        image: '/images/projects/Thumbnail-2.jpg'
     },
     {
         id: 5,
@@ -55,7 +56,7 @@ const documents = [
         size: '3.5 MB',
         type: 'PDF',
         description: 'Official documentation of our quality assurance processes, utilized across all project lifecycles.',
-        image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=800&auto=format&fit=crop'
+        image: '/images/projects/Thumbnail-5.jpg'
     },
     {
         id: 6,
@@ -65,7 +66,7 @@ const documents = [
         size: '8.1 MB',
         type: 'PDF',
         description: 'Technical drawings and electrical specifications for integrating BIPV (Building Integrated Photovoltaics) into glass facades.',
-        image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop'
+        image: '/images/projects/Thumbnail-9.jpg'
     }
 ];
 
@@ -74,15 +75,15 @@ const categories = ['All Types', 'Engineering', 'Safety', 'Research', 'Corporate
 export default function DocCollectionPage() {
     const [activeCategory, setActiveCategory] = useState('All Types');
 
-    const filteredDocs = activeCategory === 'All Types' 
-        ? documents 
+    const filteredDocs = activeCategory === 'All Types'
+        ? documents
         : documents.filter(doc => doc.category === activeCategory);
 
     return (
         <div className="bg-gray-50 min-h-screen font-sans text-titan-navy">
             {/* --- HERO --- */}
             <section className="bg-titan-navy pt-40 pb-32 px-6 relative overflow-hidden">
-                 <div className="absolute inset-0">
+                <div className="absolute inset-0">
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10"></div>
                     <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent"></div>
                 </div>
@@ -106,7 +107,7 @@ export default function DocCollectionPage() {
                     </motion.div>
 
                     {/* Quick Stats or Action */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
@@ -134,11 +135,10 @@ export default function DocCollectionPage() {
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`whitespace-nowrap px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${
-                                        activeCategory === cat 
-                                        ? 'bg-titan-navy text-white shadow-md' 
+                                    className={`whitespace-nowrap px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${activeCategory === cat
+                                        ? 'bg-titan-navy text-white shadow-md'
                                         : 'bg-gray-50 text-titan-navy-subtle hover:bg-gray-100 hover:text-titan-navy'
-                                    }`}
+                                        }`}
                                 >
                                     {cat}
                                 </button>
@@ -159,7 +159,7 @@ export default function DocCollectionPage() {
 
                 {/* --- LATEST RELEASE (FEATURED) --- */}
                 {activeCategory === 'All Types' && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="mb-16"
@@ -168,14 +168,15 @@ export default function DocCollectionPage() {
                             <span className="w-2 h-2 rounded-full bg-titan-red"></span>
                             <span className="text-xs font-bold uppercase tracking-widest text-titan-navy-subtle">Latest Release</span>
                         </div>
-                        
+
                         <Link href={`/design-x/documents/${documents[0].id}`} className="group bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 grid grid-cols-1 lg:grid-cols-5 hover:shadow-2xl transition-all duration-300">
                             <div className="lg:col-span-3 relative overflow-hidden aspect-video lg:aspect-auto">
                                 <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-titan-navy/0 transition-colors z-10"></div>
-                                <img
+                                <Image
                                     src={documents[0].image}
                                     alt={documents[0].title}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
                                 <div className="absolute top-6 left-6 z-20">
                                     <span className="bg-titan-red text-white px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-widest shadow-lg">
@@ -220,13 +221,14 @@ export default function DocCollectionPage() {
                         >
                             <Link href={`/design-x/documents/${doc.id}`} className="group flex flex-col h-full bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1">
                                 <div className="aspect-[4/3] relative overflow-hidden bg-titan-bg">
-                                    <img
+                                    <Image
                                         src={doc.image}
                                         alt={doc.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/60 to-transparent opacity-60"></div>
-                                    
+
                                     <div className="absolute top-4 left-4">
                                         <span className="bg-white/95 backdrop-blur-sm text-titan-navy px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md shadow-sm">
                                             {doc.category}
@@ -256,7 +258,7 @@ export default function DocCollectionPage() {
                                     <h3 className="text-lg font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors leading-snug line-clamp-2">
                                         {doc.title}
                                     </h3>
-                                    
+
                                     <p className="text-sm text-titan-navy-subtle mb-6 line-clamp-2">
                                         {doc.description}
                                     </p>

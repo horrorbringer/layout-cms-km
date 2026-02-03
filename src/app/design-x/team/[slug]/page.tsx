@@ -4,6 +4,7 @@ import React, { use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { ChevronLeft, Mail, Phone, Linkedin, Award, Building2, Calendar, MapPin } from 'lucide-react';
 
 // Shared Types
@@ -131,7 +132,7 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
     // In a real app, we would fetch data here. For now, we find it in our static list.
     // Note: In Next.js App Router, params are accessed directly or via props.
     // We need to unwrap params if strictly following newest Next.js, but standard props access usually works for static generation constraints.
-    
+
     // For simple client-side match (since this is 'use client'):
     const member = teamMembers.find(m => slugify(m.name) === slug);
 
@@ -155,13 +156,13 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                 {/* Background Elements */}
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-                
+
                 <div className="max-w-7xl mx-auto px-6 w-full relative z-10 py-20 pb-40">
                     <Link href="/design-x/about" className="inline-flex items-center text-white/40 hover:text-white transition-colors font-bold text-xs uppercase tracking-[0.2em] mb-12 group">
                         <span className="w-8 h-[1px] bg-white/20 mr-4 group-hover:w-12 group-hover:bg-titan-red transition-all"></span>
                         Back to Team
                     </Link>
-                    
+
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -180,9 +181,9 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[0.9] tracking-tight">
                             {member.name}
                         </h1>
-                        
+
                         <div className="h-1 w-24 bg-titan-red mb-8"></div>
-                        
+
                         <p className="text-xl md:text-3xl text-white/80 font-light max-w-2xl leading-relaxed">
                             {member.role}
                         </p>
@@ -193,10 +194,10 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
             {/* === MAIN CONTENT === */}
             <main className="max-w-7xl mx-auto px-6 pb-24 relative z-20 -mt-32">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                    
+
                     {/* Left Column: Image Card (Floating) */}
                     <div className="lg:col-span-4">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
@@ -204,15 +205,16 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                             <div className="bg-white p-3 rounded-3xl shadow-2xl">
                                 <div className="rounded-2xl overflow-hidden aspect-[3/4] relative group">
                                     <div className="absolute inset-0 bg-titan-navy/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                                    <img 
-                                        src={member.image} 
-                                        alt={member.name} 
-                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    <Image
+                                        src={member.image || '/images/projects/Thumbnail-5.jpg'}
+                                        alt={member.name}
+                                        fill
+                                        className="object-cover transform group-hover:scale-105 transition-transform duration-700"
                                     />
-                                    
+
                                     {/* Overlay Gradient */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/80 via-transparent to-transparent opacity-60"></div>
-                                    
+
                                     {/* Floating Contact Bar */}
                                     <div className="absolute bottom-6 left-6 right-6 flex gap-3 z-20 justify-center">
                                         <a href={`mailto:${member.email}`} className="flex-1 h-12 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-titan-red hover:border-titan-red transition-all group/icon">
@@ -245,10 +247,10 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                     {/* Right Column: Bio Content */}
                     <div className="lg:col-span-8 lg:pt-40">
                         <motion.div
-                             initial={{ opacity: 0 }}
-                             animate={{ opacity: 1 }}
-                             transition={{ duration: 0.8, delay: 0.4 }}
-                             className="prose prose-lg prose-slate max-w-none"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                            className="prose prose-lg prose-slate max-w-none"
                         >
                             <h3 className="text-titan-navy font-bold text-2xl mb-6 flex items-center gap-3">
                                 <span className="w-2 h-8 bg-titan-red rounded-full"></span>

@@ -3,13 +3,14 @@
 import React from 'react';
 import { Phone, Facebook, Linkedin, Youtube, Search, ArrowRight, ChevronDown, Menu, X, Mail, MapPin, Globe } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import FooterX from './components/FooterX';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
     const { t, language, setLanguage, fontClassName } = useLanguage();
-    
+
     // Adjust sizes for Khmer to match legibility of English
     const isKh = language === 'kh';
     // Top bar: smaller text
@@ -18,7 +19,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     const textMainNav = isKh ? 'text-base' : 'text-[13px]';
     // Dropdown items: Standard is sm (14px)
     const textDropdown = isKh ? 'text-base' : 'text-sm';
-    
+
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [hoveredNav, setHoveredNav] = React.useState<number | null>(null);
     const [isSearchOpen, setIsSearchOpen] = React.useState(false);
@@ -47,9 +48,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         {
             label: t('Projects'), href: '/design-x/projects',
             children: [
-                { 
-                    label: t('Done Projects'), 
-                    href: '/design-x/projects/completed', 
+                {
+                    label: t('Done Projects'),
+                    href: '/design-x/projects/completed',
                     desc: t('View our portfolio'),
                     children: [
                         { label: t('Government'), href: '/design-x/projects/completed?type=Government Office Building' },
@@ -59,9 +60,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                         { label: t('Slope'), href: '/design-x/projects/completed?type=Slope Construction' }
                     ]
                 },
-                { 
-                    label: t('Implement Projects'), 
-                    href: '/design-x/projects/implementation', 
+                {
+                    label: t('Implement Projects'),
+                    href: '/design-x/projects/implementation',
                     desc: t('Current developments'),
                     children: [
                         { label: t('Government'), href: '/design-x/projects/implementation?type=Government Office Building' },
@@ -113,11 +114,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                     <div className="max-w-[1600px] mx-auto px-6 h-full flex justify-between items-center">
                         <div className="flex gap-6 items-center">
                             <span className="flex items-center gap-2 hover:text-accent-orange cursor-pointer transition">
-                                <Phone size={12} className="text-accent-orange" /> 
+                                <Phone size={12} className="text-accent-orange" />
                                 +855 23 999 999
                             </span>
                             <span className="hidden md:flex items-center gap-2 hover:text-accent-orange cursor-pointer transition">
-                                <Mail size={12} className="text-accent-orange" /> 
+                                <Mail size={12} className="text-accent-orange" />
                                 info@kimmex.com.kh
                             </span>
                         </div>
@@ -142,13 +143,13 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             {/* LANGUAGE SWITCHER */}
                             <div className="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
                             <div className="flex items-center gap-1 bg-white/10 rounded px-1 py-0.5">
-                                <button 
+                                <button
                                     onClick={() => setLanguage('en')}
                                     className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-all ${language === 'en' ? 'bg-accent-orange text-white' : 'text-white/60 hover:text-white'}`}
                                 >
                                     EN
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => setLanguage('kh')}
                                     className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-all ${language === 'kh' ? 'bg-accent-orange text-white' : 'text-white/60 hover:text-white'}`}
                                 >
@@ -166,9 +167,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             {/* Logo Area */}
                             <Link href="/design-x" className="flex items-center gap-3 group cursor-pointer">
                                 <div className="relative">
-                                    <img
+                                    <Image
                                         src="/logo.png"
                                         alt="Kimmex Logo"
+                                        width={48}
+                                        height={48}
                                         className="h-12 w-auto transition-all duration-300"
                                     />
                                 </div>
@@ -211,7 +214,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                                 <div className="bg-white shadow-2xl rounded-b-lg border border-gray-100 border-t-0 min-w-[280px]">
                                                     {/* Orange top line */}
                                                     <div className="h-1 bg-accent-orange"></div>
-                                                    
+
                                                     {/* Standard Dropdown / Nested Flyout */}
                                                     <div className="py-2 bg-white rounded-b-lg">
                                                         {item.children.map((child, idx) => (
@@ -241,7 +244,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                                                         <div className="bg-white shadow-2xl rounded-lg overflow-hidden border border-gray-100 min-w-[240px]">
                                                                             {/* Accent Line matching parent */}
                                                                             <div className="h-1 bg-accent-orange"></div>
-                                                                            
+
                                                                             <div className="py-2">
                                                                                 {(child as any).children.map((sub: any, subIdx: number) => (
                                                                                     <Link
@@ -278,7 +281,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 </button>
 
                                 {/* CTA Button - Desktop */}
-                                <Link 
+                                <Link
                                     href="/design-x/contact"
                                     className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm uppercase tracking-wide transition-all duration-300 bg-accent-orange text-white hover:bg-titan-navy"
                                 >
@@ -314,7 +317,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 <div className="p-4 space-y-1">
                                     {navItems.map((item, i) => (
                                         <div key={i}>
-                                            <div 
+                                            <div
                                                 className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                                                 onClick={() => {
                                                     if (item.children) {
@@ -322,7 +325,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                                     }
                                                 }}
                                             >
-                                                <Link 
+                                                <Link
                                                     href={item.href}
                                                     className="font-bold text-titan-navy"
                                                     onClick={() => !item.children && setIsMobileMenuOpen(false)}
@@ -330,13 +333,13 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                                     {item.label}
                                                 </Link>
                                                 {item.children && (
-                                                    <ChevronDown 
-                                                        size={16} 
-                                                        className={`text-titan-navy/50 transition-transform duration-300 ${expandedMobileItem === i ? 'rotate-180' : ''}`} 
+                                                    <ChevronDown
+                                                        size={16}
+                                                        className={`text-titan-navy/50 transition-transform duration-300 ${expandedMobileItem === i ? 'rotate-180' : ''}`}
                                                     />
                                                 )}
                                             </div>
-                                            
+
                                             {/* Mobile Submenu */}
                                             <AnimatePresence>
                                                 {item.children && expandedMobileItem === i && (
@@ -356,7 +359,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                                                     <div className="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
                                                                     <span className="text-sm font-medium">{child.label}</span>
                                                                 </Link>
-                                                                
+
                                                                 {/* 3rd Level for Mobile */}
                                                                 {(child as any).children && (
                                                                     <div className="ml-8 border-l border-gray-100 pl-2 space-y-1 my-1">
@@ -383,7 +386,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
                                 {/* Mobile CTA */}
                                 <div className="p-4 border-t border-gray-100">
-                                    <Link 
+                                    <Link
                                         href="/design-x/contact"
                                         onClick={() => setIsMobileMenuOpen(false)}
                                         className="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-lg font-bold text-sm uppercase tracking-wide bg-accent-orange text-white"
@@ -407,13 +410,13 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                     </div>
                                     {/* Mobile Language Switcher */}
                                     <div className="mt-4 flex gap-2">
-                                        <button 
+                                        <button
                                             onClick={() => setLanguage('en')}
                                             className={`flex-1 py-2 rounded text-xs font-bold transition-all border ${language === 'en' ? 'bg-accent-orange text-white border-accent-orange' : 'bg-white text-titan-navy border-gray-200'}`}
                                         >
                                             English
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => setLanguage('kh')}
                                             className={`flex-1 py-2 rounded text-xs font-bold transition-all border ${language === 'kh' ? 'bg-accent-orange text-white border-accent-orange' : 'bg-white text-titan-navy border-gray-200'}`}
                                         >
@@ -478,10 +481,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                         { label: t('About Us'), href: '/design-x/about', icon: '🏢' },
                                         { label: t('Contact'), href: '/design-x/contact', icon: '📞' },
                                     ].map((link, i) => (
-                                        <Link 
-                                            key={i} 
-                                            href={link.href} 
-                                            onClick={() => setIsSearchOpen(false)} 
+                                        <Link
+                                            key={i}
+                                            href={link.href}
+                                            onClick={() => setIsSearchOpen(false)}
                                             className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-accent-orange hover:text-white text-titan-navy font-medium transition-all group"
                                         >
                                             <span className="text-lg">{link.icon}</span>

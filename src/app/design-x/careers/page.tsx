@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, MapPin, Briefcase, Clock, Search, Filter, ChevronDown, Users, Globe, Award, Upload, Send, Check } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Mock Jobs Data
 const allJobs = [
@@ -120,10 +121,11 @@ export default function CareersPage() {
             {/* --- HERO SECTION --- */}
             <section className="relative h-[80vh] bg-titan-navy flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <img 
-                        src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2670&auto=format&fit=crop" 
-                        alt="Careers Hero" 
-                        className="w-full h-full object-cover opacity-40 scale-105 animate-slow-pan"
+                    <Image
+                        src="/images/projects/Thumbnail-5.jpg"
+                        alt="Careers Hero"
+                        fill
+                        className="object-cover opacity-40 scale-105 animate-slow-pan"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/50 to-transparent"></div>
                     <div className="absolute inset-0 bg-gradient-to-t from-titan-navy to-transparent opacity-80"></div>
@@ -140,20 +142,20 @@ export default function CareersPage() {
                             We are Hiring
                         </div>
                         <h1 className="text-6xl md:text-8xl font-black text-white mb-8 tracking-tight leading-[0.9]">
-                            BUILD <br/>
+                            BUILD <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">YOUR LEGACY</span>
                         </h1>
                         <p className="text-xl text-white/70 font-light max-w-xl leading-relaxed mb-10 border-l-4 border-titan-red pl-6">
                             Join a team of visionaries. At Kimmex, we don't just construct buildings; we shape the skyline and engineering future of Cambodia.
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <button 
+                            <button
                                 onClick={() => document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })}
                                 className="bg-titan-red text-white px-8 py-4 rounded-lg font-bold uppercase tracking-widest hover:bg-white hover:text-titan-red transition-all shadow-lg hover:shadow-titan-red/20"
                             >
                                 View Openings
                             </button>
-                            <button 
+                            <button
                                 onClick={() => setIsApplyOpen(true)}
                                 className="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-lg font-bold uppercase tracking-widest hover:bg-white hover:text-titan-navy transition-all backdrop-blur-sm"
                             >
@@ -163,7 +165,7 @@ export default function CareersPage() {
                     </motion.div>
 
                     {/* Hero Stats/Visuals - Hidden on mobile */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.3, duration: 0.8 }}
@@ -191,12 +193,12 @@ export default function CareersPage() {
             {/* --- WHY JOIN US --- */}
             <section className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
                 <div className="text-center mb-16">
-                     <h2 className="text-4xl font-black text-titan-navy mb-4">Why Choose Kimmex?</h2>
-                     <p className="text-titan-navy-subtle max-w-2xl mx-auto">More than just a job, we offer a pathway to professional excellence.</p>
+                    <h2 className="text-4xl font-black text-titan-navy mb-4">Why Choose Kimmex?</h2>
+                    <p className="text-titan-navy-subtle max-w-2xl mx-auto">More than just a job, we offer a pathway to professional excellence.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -211,7 +213,7 @@ export default function CareersPage() {
                         </p>
                     </motion.div>
 
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -227,7 +229,7 @@ export default function CareersPage() {
                         </p>
                     </motion.div>
 
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -257,9 +259,9 @@ export default function CareersPage() {
                         {/* Search Input */}
                         <div className="relative flex-grow md:flex-grow-0 md:w-64">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                            <input 
-                                type="text" 
-                                placeholder="Search roles..." 
+                            <input
+                                type="text"
+                                placeholder="Search roles..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 text-sm font-bold text-titan-navy focus:outline-none focus:ring-2 focus:ring-titan-red/20 shadow-sm"
@@ -295,7 +297,7 @@ export default function CareersPage() {
                                     className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-xl hover:border-titan-red/30 transition-all duration-300 group flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden"
                                 >
                                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-titan-navy group-hover:bg-titan-red transition-colors"></div>
-                                    
+
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">
                                             <h3 className="text-xl font-bold text-titan-navy group-hover:text-titan-red transition-colors">{job.title}</h3>
@@ -325,7 +327,7 @@ export default function CareersPage() {
                                 </motion.div>
                             ))
                         ) : (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-200"

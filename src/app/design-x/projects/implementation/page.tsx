@@ -14,7 +14,7 @@ export default function ImplementationProjectsPage() {
                 subtitle="Witness our ongoing commitment to building the future. These projects are currently under construction and shaping the skyline."
                 heroTag="Currently Active"
                 heroIcon={<HardHat size={12} className="text-titan-red" />}
-                heroImage="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop"
+                heroImage="/images/projects/Thumbnail-6.jpg"
                 filterStatus="Under Construction"
                 badgeConfig={{
                     className: "bg-titan-navy text-white",

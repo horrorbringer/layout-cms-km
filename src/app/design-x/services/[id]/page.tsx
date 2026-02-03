@@ -8,6 +8,7 @@ import {
     Clock, ShieldCheck, TrendingUp, Star, MapPin
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 
 // Animation wrapper
@@ -202,11 +203,11 @@ export default function ServiceDetailPage() {
 
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy">
-            
+
             {/* === 1. PARALLAX HERO === */}
             <section ref={heroRef} className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">
                 <motion.div style={{ y: heroY, scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }} className="absolute inset-0">
-                    <img src={service.heroImage} alt={service.title} className="w-full h-[120%] object-cover opacity-50 mix-blend-overlay" />
+                    <Image src={service.heroImage} alt={service.title} width={1920} height={1200} className="w-full h-[120%] object-cover opacity-50 mix-blend-overlay" />
                     <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/80 via-titan-navy/40 to-titan-navy"></div>
                 </motion.div>
 
@@ -235,7 +236,7 @@ export default function ServiceDetailPage() {
                     >
                         {service.title}
                     </motion.h1>
-                    
+
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -262,7 +263,7 @@ export default function ServiceDetailPage() {
                         <div className="bg-gray-50 p-8 rounded-2xl border-l-4 border-titan-red shadow-sm">
                             <h3 className="text-xl font-bold text-titan-navy mb-3 flex items-center gap-3">
                                 <div className="p-2 bg-titan-red/10 rounded-lg">
-                                    <Users size={20} className="text-titan-red" /> 
+                                    <Users size={20} className="text-titan-red" />
                                 </div>
                                 Ideal For
                             </h3>
@@ -276,7 +277,7 @@ export default function ServiceDetailPage() {
                         <div className="relative group">
                             <div className="absolute -inset-4 bg-titan-red/5 rounded-[2rem] rotate-2 group-hover:rotate-1 transition-transform duration-500"></div>
                             <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative z-10">
-                                <img src={service.heroImage} alt="Service Overview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                <Image src={service.heroImage} alt="Service Overview" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                                 <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500"></div>
                             </div>
                         </div>
@@ -287,7 +288,7 @@ export default function ServiceDetailPage() {
             {/* === 3. SCOPE OF WORK === */}
             <section className="py-24 bg-titan-navy text-white relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-titan-red/5 rounded-full blur-[120px] pointer-events-none"></div>
-                
+
                 <div className="max-w-[1400px] mx-auto px-6 relative z-10">
                     <FadeInWhenVisible>
                         <div className="text-center mb-16">
@@ -391,9 +392,9 @@ export default function ServiceDetailPage() {
                             {service.relatedProjects.map((project, i) => (
                                 <FadeInWhenVisible key={i} delay={i * 0.1}>
                                     <Link href={`/design-x/projects/${project.id}`} className="group relative aspect-[16/9] overflow-hidden rounded-2xl cursor-pointer block shadow-2xl">
-                                        <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                        <Image src={project.image} alt={project.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
-                                        
+
                                         <div className="absolute bottom-0 left-0 p-8 w-full">
                                             <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                                                 <span className="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{project.category}</span>
@@ -420,7 +421,7 @@ export default function ServiceDetailPage() {
                 <div className="max-w-3xl mx-auto bg-titan-red rounded-3xl p-12 md:p-16 shadow-2xl shadow-titan-red/30 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[50px] translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[50px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
-                    
+
                     <FadeInWhenVisible>
                         <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Ready to start?</h2>
                         <p className="text-white/90 text-xl mb-10 font-medium">

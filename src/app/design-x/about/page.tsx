@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Building2, HardHat, Quote } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Animation wrapper component
 function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -78,18 +79,18 @@ function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boo
             <FadeInWhenVisible>
                 <Link href={`/design-x/team/${node.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}>
                     <div className={`relative z-10 bg-white rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 group flex items-center lg:flex-col border-l-4 lg:border-l-0 lg:border-t-4 border-titan-red cursor-pointer
-                        ${isRoot 
-                            ? 'p-6 lg:p-6 min-w-[280px] lg:w-72 flex-col text-center shadow-2xl ring-1 ring-black/5' 
+                        ${isRoot
+                            ? 'p-6 lg:p-6 min-w-[280px] lg:w-72 flex-col text-center shadow-2xl ring-1 ring-black/5'
                             : 'p-3 lg:p-4 w-full max-w-md lg:w-52 lg:min-w-[180px] border border-gray-100 hover:border-titan-red/20 hover:shadow-lg'}
                     `}>
                         {/* Image Circle */}
                         <div className={`rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center bg-gray-50 flex-shrink-0 relative mr-4 lg:mr-0 lg:mb-4 group-hover:scale-105 transition-transform duration-500
-                            ${isRoot 
-                                ? 'w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-titan-navy to-titan-navy-light ring-4 ring-titan-red/10' 
+                            ${isRoot
+                                ? 'w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-titan-navy to-titan-navy-light ring-4 ring-titan-red/10'
                                 : 'w-16 h-16 lg:w-20 lg:h-20 ring-2 ring-gray-100'}
                         `}>
                             {node.image ? (
-                                <img src={node.image} alt={node.name} className="w-full h-full object-cover" />
+                                <Image src={node.image} alt={node.name} fill className="object-cover" />
                             ) : (
                                 <span className={`font-black ${isRoot ? 'text-3xl lg:text-5xl text-white/20' : 'text-xl lg:text-2xl text-titan-navy/20'}`}>
                                     {node.name.split(' ').pop()?.charAt(0)}
@@ -136,27 +137,27 @@ function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boo
 
                         {node.children!.map((child, index) => (
                             <div key={index} className="flex flex-col lg:items-center relative lg:px-2 w-full lg:w-auto">
-                                
+
                                 {/* MOBILE: Horizontal dash from vertical line to child */}
                                 <div className="lg:hidden absolute top-6 -left-6 w-6 h-0.5 bg-gray-200"></div>
 
                                 {/* DESKTOP: Vertical Line to Child */}
                                 {node.children!.length > 1 && (
-                                     <div className={`hidden lg:block absolute top-[-1.5rem] w-px h-6 bg-gray-300 left-1/2 -translate-x-1/2
+                                    <div className={`hidden lg:block absolute top-[-1.5rem] w-px h-6 bg-gray-300 left-1/2 -translate-x-1/2
                                         ${index === 0 ? 'rounded-tl-lg' : ''} 
                                         ${index === node.children!.length - 1 ? 'rounded-tr-lg' : ''}
                                      `}></div>
                                 )}
-                                
+
                                 <div className="relative w-full lg:w-auto">
-                                     {/* DESKTOP: Connector upwards if multiple children */}
-                                     {node.children!.length > 1 && (
-                                         <div className="hidden lg:block absolute -top-6 left-1/2 -translate-x-1/2 w-px h-6 bg-gray-300"></div>
-                                     )}
-                                     
-                                     {/* DESKTOP: Horizontal Line Segment for this child */}
-                                     {node.children!.length > 1 && (
-                                         <>
+                                    {/* DESKTOP: Connector upwards if multiple children */}
+                                    {node.children!.length > 1 && (
+                                        <div className="hidden lg:block absolute -top-6 left-1/2 -translate-x-1/2 w-px h-6 bg-gray-300"></div>
+                                    )}
+
+                                    {/* DESKTOP: Horizontal Line Segment for this child */}
+                                    {node.children!.length > 1 && (
+                                        <>
                                             {/* Left half line */}
                                             {index > 0 && (
                                                 <div className="hidden lg:block absolute -top-6 right-1/2 w-[calc(50%+0.5rem)] h-px bg-gray-300"></div>
@@ -165,10 +166,10 @@ function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boo
                                             {index < node.children!.length - 1 && (
                                                 <div className="hidden lg:block absolute -top-6 left-1/2 w-[calc(50%+0.5rem)] h-px bg-gray-300"></div>
                                             )}
-                                         </>
-                                     )}
+                                        </>
+                                    )}
 
-                                     <OrgTreeNode node={child} />
+                                    <OrgTreeNode node={child} />
                                 </div>
                             </div>
                         ))}
@@ -202,31 +203,31 @@ export default function AboutPage() {
             year: '1999',
             title: 'Foundation',
             desc: 'KIM MEX Construction was established with a vision to redefine Cambodia\'s skyline. Starting with a humble team of 10 engineers, we laid the first stone of our legacy.',
-            image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-1.jpg'
         },
         {
             year: '2005',
             title: 'First Major Project',
             desc: 'Completed our first government infrastructure project, establishing our reputation for quality and reliability in the public sector.',
-            image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-2.jpg'
         },
         {
             year: '2012',
             title: 'Major Expansion',
             desc: 'Following successful commercial projects in Phnom Penh, we expanded operations to Siem Reap and Sihanoukville, securing contracts for major hotel resorts.',
-            image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=600&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-3.jpg'
         },
         {
             year: '2018',
             title: 'ISO Certification',
             desc: 'Our commitment to excellence was recognized with ISO 9001:2015 accreditation, validating our rigorous Quality Management Systems and safety protocols.',
-            image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-5.jpg'
         },
         {
             year: '2023',
             title: 'National Recognition',
             desc: 'Awarded "Top Infrastructure Partner" by the Ministry of Public Works for our contribution to national road development projects.',
-            image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=600&auto=format&fit=crop'
+            image: '/images/projects/Thumbnail-8.jpg'
         }
     ];
 
@@ -275,9 +276,11 @@ export default function AboutPage() {
             <section ref={heroRef} className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">
                 {/* Parallax Background */}
                 <motion.div style={{ y: heroY }} className="absolute inset-0">
-                    <img
-                        src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2000&auto=format&fit=crop"
+                    <Image
+                        src="/images/projects/Thumbnail-6.jpg"
                         alt="Construction Site"
+                        width={1920}
+                        height={1200}
                         className="w-full h-[120%] object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/80 via-titan-navy/70 to-titan-navy"></div>
@@ -363,28 +366,40 @@ export default function AboutPage() {
                             <div className="relative">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-4">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop"
-                                            alt="Construction"
-                                            className="rounded-2xl shadow-lg h-48 w-full object-cover"
-                                        />
-                                        <img
-                                            src="https://images.unsplash.com/photo-1581094794329-c8112c4e5190?q=80&w=600&auto=format&fit=crop"
-                                            alt="Team"
-                                            className="rounded-2xl shadow-lg h-64 w-full object-cover"
-                                        />
+                                        <div className="relative h-48 w-full rounded-2xl shadow-lg overflow-hidden">
+                                            <Image
+                                                src="/images/projects/Thumbnail-4.jpg"
+                                                alt="Construction"
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                        <div className="relative h-64 w-full rounded-2xl shadow-lg overflow-hidden">
+                                            <Image
+                                                src="/images/projects/Thumbnail-5.jpg"
+                                                alt="Team"
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
                                     </div>
                                     <div className="space-y-4 pt-8">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=600&auto=format&fit=crop"
-                                            alt="Architecture"
-                                            className="rounded-2xl shadow-lg h-64 w-full object-cover"
-                                        />
-                                        <img
-                                            src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop"
-                                            alt="Building"
-                                            className="rounded-2xl shadow-lg h-48 w-full object-cover"
-                                        />
+                                        <div className="relative h-64 w-full rounded-2xl shadow-lg overflow-hidden">
+                                            <Image
+                                                src="/images/projects/Thumbnail-6.jpg"
+                                                alt="Architecture"
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                        <div className="relative h-48 w-full rounded-2xl shadow-lg overflow-hidden">
+                                            <Image
+                                                src="/images/projects/Thumbnail-7.jpg"
+                                                alt="Building"
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -438,10 +453,11 @@ export default function AboutPage() {
                             <div className="grid grid-cols-1 lg:grid-cols-2">
                                 {/* Left: Image */}
                                 <div className="relative min-h-[400px] lg:min-h-[500px]">
-                                    <img
+                                    <Image
                                         src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop"
                                         alt="CEO"
-                                        className="absolute inset-0 w-full h-full object-cover"
+                                        fill
+                                        className="object-cover"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-titan-navy/50 lg:to-titan-navy"></div>
                                 </div>
@@ -534,8 +550,8 @@ export default function AboutPage() {
 
                                         {/* Image */}
                                         <div className={`w-full md:w-5/12 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:pl-12' : 'md:pr-12'}`}>
-                                            <div className="aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-100">
-                                                <img src={item.image} alt={item.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                                            <div className="aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-100 relative">
+                                                <Image src={item.image} alt={item.title} fill className="object-cover hover:scale-105 transition-transform duration-700" />
                                             </div>
                                         </div>
                                     </div>
@@ -605,10 +621,12 @@ export default function AboutPage() {
 
                         <FadeInWhenVisible delay={0.2}>
                             <div className="relative">
-                                <img
-                                    src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop"
+                                <Image
+                                    src="/images/projects/Thumbnail-6.jpg"
                                     alt="Safety Inspection"
-                                    className="rounded-2xl shadow-2xl"
+                                    width={800}
+                                    height={600}
+                                    className="rounded-2xl shadow-2xl w-full h-auto"
                                 />
                                 {/* Floating Card */}
                                 <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl hidden md:block">
