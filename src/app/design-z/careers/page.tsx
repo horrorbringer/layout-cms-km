@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, MapPin, Briefcase, Clock, Search, Filter, ChevronDown, Users, Globe, Award, Upload, Send, Check } from 'lucide-react';
+import { ArrowRight, MapPin, Briefcase, Clock, Search, Filter, ChevronDown, Users, Globe, Award, Upload, Send, Check, DollarSign, Zap, BookOpen, Coffee, Smile, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-// Mock Jobs Data
+// Mock Jobs Data (Enhanced with Transparent Info)
 const allJobs = [
     {
         id: 1,
@@ -14,7 +14,10 @@ const allJobs = [
         dept: 'Engineering',
         loc: 'Phnom Penh',
         type: 'Full-time',
-        tags: ['Construction', 'Planning']
+        tags: ['Construction', 'Planning'],
+        salary: '$2,500 - $3,500',
+        experience: '5+ Years',
+        postedDate: '2 days ago'
     },
     {
         id: 2,
@@ -22,7 +25,10 @@ const allJobs = [
         dept: 'Operations',
         loc: 'Sihanoukville',
         type: 'Contract',
-        tags: ['Management', 'On-site']
+        tags: ['Management', 'On-site'],
+        salary: '$1,800 - $2,500',
+        experience: '3-5 Years',
+        postedDate: '5 days ago'
     },
     {
         id: 3,
@@ -30,7 +36,10 @@ const allJobs = [
         dept: 'Design',
         loc: 'Phnom Penh',
         type: 'Full-time',
-        tags: ['Creativity', 'CAD']
+        tags: ['Creativity', 'CAD'],
+        salary: '$1,200 - $1,800',
+        experience: '2+ Years',
+        postedDate: '1 week ago'
     },
     {
         id: 4,
@@ -38,7 +47,10 @@ const allJobs = [
         dept: 'Supply Chain',
         loc: 'Phnom Penh',
         type: 'Full-time',
-        tags: ['Logistics', 'Finance']
+        tags: ['Logistics', 'Finance'],
+        salary: '$800 - $1,200',
+        experience: '1-3 Years',
+        postedDate: '1 week ago'
     },
     {
         id: 5,
@@ -46,7 +58,10 @@ const allJobs = [
         dept: 'Quality & Safety',
         loc: 'Kampot',
         type: 'Full-time',
-        tags: ['Safety', 'Inspection']
+        tags: ['Safety', 'Inspection'],
+        salary: '$1,000 - $1,500',
+        experience: '3+ Years',
+        postedDate: '2 weeks ago'
     },
     {
         id: 6,
@@ -54,7 +69,10 @@ const allJobs = [
         dept: 'Engineering',
         loc: 'Siem Reap',
         type: 'Full-time',
-        tags: ['Electrical', 'Mechanical']
+        tags: ['Electrical', 'Mechanical'],
+        salary: '$1,500 - $2,200',
+        experience: '4+ Years',
+        postedDate: '2 weeks ago'
     }
 ];
 
@@ -247,15 +265,81 @@ export default function CareersPage() {
                 </div>
             </section>
 
-            {/* --- JOB LISTINGS & FILTERS --- */}
-            <section id="openings" className="px-6 max-w-[1200px] mx-auto pb-32 pt-10 border-t border-gray-200">
-                <div className="flex flex-col xl:flex-row justify-between items-end mb-12 gap-8 relative z-30 pt-20">
-                    <div>
-                        <h2 className="text-3xl font-black text-titan-navy mb-2">Current Openings</h2>
-                        <p className="text-titan-navy-subtle">Find the perfect role for your skills and passion.</p>
+            {/* --- TRANSPARENT BENEFITS --- */}
+            <section className="py-24 px-6 max-w-[1400px] mx-auto">
+                <div className="text-center mb-16">
+                    <h2 className="text-xs font-black text-titan-red uppercase tracking-widest mb-3">What We Offer</h2>
+                    <h3 className="text-4xl font-black text-titan-navy mb-6">More Than Just a Paycheck</h3>
+                    <p className="text-titan-navy-subtle max-w-2xl mx-auto text-lg">
+                        We believe in transparent compensation and comprehensive care for our team.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    {[
+                        { icon: DollarSign, title: 'Competitive Salary', desc: 'Above-market rates based on experience.' },
+                        { icon: Zap, title: 'Performance Bonus', desc: 'Project-based bonuses and 13th month salary.' },
+                        { icon: Coffee, title: 'Modern Office', desc: 'Free coffee, snacks, and ergonomic workspace.' },
+                        { icon: BookOpen, title: 'Training Budget', desc: '$500/year for courses and certifications.' },
+                        { icon: Smile, title: 'Health Insurance', desc: 'Full medical coverage for you and family.' },
+                        { icon: Users, title: 'Team Retreats', desc: 'Annual company trips and monthly socials.' },
+                        { icon: Clock, title: 'Flexible Hours', desc: 'Outcome-focused work schedule.' },
+                        { icon: Globe, title: 'Global Exposure', desc: 'Work on international standard projects.' }
+                    ].map((benefit, i) => (
+                        <div key={i} className="bg-white p-6 rounded-2xl border border-gray-100 hover:border-titan-red/30 hover:shadow-lg transition-all group">
+                            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-titan-navy mb-4 group-hover:bg-titan-red group-hover:text-white transition-colors">
+                                <benefit.icon size={24} />
+                            </div>
+                            <h4 className="font-bold text-titan-navy mb-2">{benefit.title}</h4>
+                            <p className="text-xs text-titan-navy-subtle leading-relaxed">{benefit.desc}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* --- HIRING PROCESS TIMELINE --- */}
+            <section className="py-20 bg-titan-navy text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red rounded-full blur-[200px] opacity-10"></div>
+                <div className="max-w-[1400px] mx-auto px-6 relative z-10">
+                    <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
+                        <div>
+                            <h2 className="text-3xl font-black mb-4">Our Hiring Process</h2>
+                            <p className="text-white/60 max-w-lg">We value your time. Here is exactly what to expect when you apply.</p>
+                        </div>
+                        <Link href="#openings" className="text-xs font-bold uppercase tracking-widest text-titan-red hover:text-white transition-colors flex items-center gap-2">
+                            Start Application <ArrowRight size={14} />
+                        </Link>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-4 w-full xl:w-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        {[
+                            { step: '01', title: 'Apply', desc: 'Submit CV & Portfolio' },
+                            { step: '02', title: 'Screening', desc: 'Initial call with HR' },
+                            { step: '03', title: 'Technical', desc: 'Skill assessment test' },
+                            { step: '04', title: 'Interview', desc: 'Meet the Manager' },
+                            { step: '05', title: 'Offer', desc: 'Welcome to Titan!' },
+                        ].map((item, i) => (
+                            <div key={i} className="relative group">
+                                <div className="text-6xl font-black text-white/5 mb-4 group-hover:text-titan-red/20 transition-colors">{item.step}</div>
+                                <div className="absolute top-8 left-0 w-full h-[2px] bg-white/10 -z-10 hidden md:block"></div>
+                                <div className="w-4 h-4 rounded-full bg-titan-red border-4 border-titan-navy mb-4 relative z-10"></div>
+                                <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+                                <p className="text-sm text-white/50">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* --- JOB LISTINGS & FILTERS --- */}
+            <section id="openings" className="px-6 max-w-[1400px] mx-auto pb-32 pt-10 border-t border-gray-200">
+                <div className="flex flex-col xl:flex-row justify-between items-end mb-12 gap-8 relative z-30 pt-20">
+                    <div>
+                        <h2 className="text-4xl font-black text-titan-navy mb-3">Current Openings</h2>
+                        <p className="text-titan-navy-subtle text-lg font-medium">Find the perfect role for your skills and passion.</p>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row gap-4 w-full xl:w-auto bg-white p-2 rounded-2xl shadow-lg border border-gray-100">
                         {/* Search Input */}
                         <div className="relative flex-grow md:flex-grow-0 md:w-64">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -264,7 +348,7 @@ export default function CareersPage() {
                                 placeholder="Search roles..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 text-sm font-bold text-titan-navy focus:outline-none focus:ring-2 focus:ring-titan-red/20 shadow-sm"
+                                className="w-full pl-10 pr-4 py-3 rounded-xl border-none bg-gray-50 text-sm font-bold text-titan-navy focus:outline-none focus:ring-2 focus:ring-titan-red/20 transition-all placeholder:text-gray-400"
                             />
                         </div>
 
@@ -283,8 +367,8 @@ export default function CareersPage() {
                     </div>
                 </div>
 
-                {/* Job Cards */}
-                <div className="grid grid-cols-1 gap-4">
+                {/* Job Cards Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <AnimatePresence>
                         {filteredJobs.length > 0 ? (
                             filteredJobs.map((job, index) => (
@@ -294,34 +378,65 @@ export default function CareersPage() {
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     transition={{ delay: index * 0.05 }}
                                     key={job.id}
-                                    className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-xl hover:border-titan-red/30 transition-all duration-300 group flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden"
+                                    className="bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-2xl hover:border-titan-red/20 transition-all duration-300 group relative overflow-hidden flex flex-col justify-between min-h-[220px]"
                                 >
-                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-titan-navy group-hover:bg-titan-red transition-colors"></div>
+                                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+                                        <Briefcase size={80} className="text-titan-navy" />
+                                    </div>
 
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <h3 className="text-xl font-bold text-titan-navy group-hover:text-titan-red transition-colors">{job.title}</h3>
-                                            {index < 2 && (
-                                                <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide">New</span>
-                                            )}
+                                    <div>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div className="flex gap-2 items-center mb-2">
+                                                {job.tags.map(tag => (
+                                                    <span key={tag} className="px-3 py-1 bg-gray-50 text-[10px] font-black uppercase tracking-widest text-titan-navy-subtle rounded-md border border-gray-100">
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                                {/* Posted Date */}
+                                                <span className="text-[10px] text-gray-400 font-medium ml-2">{job.postedDate}</span>
+                                            </div>
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-titan-navy/40 bg-gray-50 px-2 py-1 rounded">
+                                                {job.type}
+                                            </span>
                                         </div>
-                                        <div className="flex flex-wrap gap-4 md:gap-8 text-sm font-medium text-titan-navy-subtle">
-                                            <span className="flex items-center gap-2"><Briefcase size={14} className="text-gray-400" /> {job.dept}</span>
-                                            <span className="flex items-center gap-2"><MapPin size={14} className="text-gray-400" /> {job.loc}</span>
-                                            <span className="flex items-center gap-2"><Clock size={14} className="text-gray-400" /> {job.type}</span>
+
+                                        <h3 className="text-2xl font-black text-titan-navy group-hover:text-titan-red transition-colors mb-2 pr-12 line-clamp-2">
+                                            {job.title}
+                                        </h3>
+
+                                        {/* Transparent Info Grid */}
+                                        <div className="grid grid-cols-2 gap-4 mb-8 bg-gray-50 rounded-xl p-4 border border-gray-100">
+                                            <div>
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">Salary Range</span>
+                                                <div className="flex items-center gap-2 text-green-600 font-bold text-sm">
+                                                    <DollarSign size={14} /> {job.salary}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">Experience</span>
+                                                <div className="flex items-center gap-2 text-titan-navy font-bold text-sm">
+                                                    <Award size={14} className="text-titan-red" /> {job.experience}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">Location</span>
+                                                <div className="flex items-center gap-2 text-titan-navy-subtle text-xs font-bold">
+                                                    <MapPin size={12} /> {job.loc}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">Department</span>
+                                                <div className="flex items-center gap-2 text-titan-navy-subtle text-xs font-bold">
+                                                    <Briefcase size={12} /> {job.dept}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-4 w-full md:w-auto">
-                                        <div className="hidden md:flex gap-2">
-                                            {job.tags.map(tag => (
-                                                <span key={tag} className="px-3 py-1 bg-gray-50 text-xs font-bold text-titan-navy-subtle rounded-full border border-gray-100">
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-                                        <Link href={`/design-z/careers/${job.id}`} className="ml-auto md:ml-0 inline-flex items-center gap-2 bg-titan-navy text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-all shadow-md group-hover:shadow-lg">
-                                            Apply Now <ArrowRight size={14} />
+                                    <div className="flex items-center justify-between mt-auto">
+                                        <Link href={`/design-z/careers/${job.id}`} className="w-full group/btn flex items-center justify-between bg-titan-navy text-white px-6 py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-all shadow-md">
+                                            View Full Description
+                                            <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                                         </Link>
                                     </div>
                                 </motion.div>
@@ -330,14 +445,14 @@ export default function CareersPage() {
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-200"
+                                className="col-span-full text-center py-24 bg-white rounded-2xl border border-dashed border-gray-200"
                             >
-                                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Search className="text-gray-300" size={24} />
+                                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <Search className="text-gray-300" size={32} />
                                 </div>
-                                <h3 className="text-lg font-bold text-titan-navy mb-2">No positions found</h3>
-                                <p className="text-titan-navy-subtle text-sm mb-6">Try adjusting your search or filters to find what you're looking for.</p>
-                                <button onClick={() => { setFilterDept('All Departments'); setFilterLoc('All Locations'); setSearchQuery(''); }} className="text-titan-red font-bold text-sm uppercase tracking-wide hover:underline">
+                                <h3 className="text-xl font-black text-titan-navy mb-2">No positions found</h3>
+                                <p className="text-titan-navy-subtle text-sm mb-8 font-medium">Try adjusting your search criteria or view all openings.</p>
+                                <button onClick={() => { setFilterDept('All Departments'); setFilterLoc('All Locations'); setSearchQuery(''); }} className="bg-titan-navy text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors shadow-lg">
                                     Clear All Filters
                                 </button>
                             </motion.div>

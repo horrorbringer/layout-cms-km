@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Building2, HardHat, Quote, ArrowRight } from 'lucide-react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Quote, ChevronDown, ChevronUp, Plus, Minus } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -69,117 +69,147 @@ type OrgNodeData = {
     children?: OrgNodeData[];
 };
 
-// Recursive Org Chart Node Component
-function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boolean }) {
+// Org Chart Node Component (Premium Hybrid Design - Compact Mode)
+function OrgTreeNode({ node, level = 0 }: { node: OrgNodeData; level?: number }) {
+    const isVertical = level >= 1;
+    const [isOpen, setIsOpen] = React.useState(true);
     const hasChildren = node.children && node.children.length > 0;
 
     return (
-        <div className={`flex flex-col ${isRoot ? 'items-center' : 'items-start lg:items-center'} w-full lg:w-auto`}>
+        <div className="flex flex-col items-center">
+            {/* Node Card */}
             <FadeInWhenVisible>
-                <Link href={`/design-z/team/${node.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}>
-                    <div className={`relative z-10 transition-all duration-300 hover:-translate-y-1 group flex items-center lg:flex-col cursor-pointer border
-                        ${isRoot
-                            ? 'rounded-none border-b-4 border-titan-red bg-titan-navy text-white p-8 min-w-[280px] lg:w-80 flex-col text-center shadow-2xl'
-                            : 'rounded-none border-l-4 border-titan-navy bg-white text-titan-navy p-5 w-full max-w-md lg:w-60 lg:min-w-[220px] hover:border-titan-red shadow-lg'
-                        }
+                <motion.div
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`
+                        relative z-10 bg-white rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] 
+                        border border-white/50 ring-1 ring-gray-100
+                        transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(10,10,20,0.2)]
+                        group cursor-pointer flex flex-col overflow-hidden
+                        ${level === 0 ? 'w-72' : 'w-52'} 
+                    `}
+                    onClick={() => hasChildren && setIsOpen(!isOpen)}
+                >
+                    {/* Premium Header */}
+                    <div className={`
+                        p-6 text-center relative overflow-hidden flex flex-col items-center justify-center
+                        ${level === 0
+                            ? 'bg-gradient-to-br from-titan-navy via-[#0f172a] to-titan-navy border-b border-white/10 min-h-[100px]'
+                            : 'bg-white border-b border-gray-100 min-h-[80px]'}
                     `}>
-                        {/* Status/Dept Badge (Mockup) */}
-                        {!isRoot && (
-                            <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-green-500 animate-pulse lg:hidden"></div>
-                        )}
-
-                        {/* Image Circle */}
-                        <div className={`rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 relative mr-5 lg:mr-0 lg:mb-5 group-hover:scale-105 transition-transform duration-500 border-4
-                            ${isRoot
-                                ? 'w-24 h-24 lg:w-32 lg:h-32 border-titan-navy group-hover:scale-105'
-                                : 'w-16 h-16 lg:w-20 lg:h-20 border-gray-200 group-hover:border-titan-red'
-                            }
+                        {/* Avatar (Larger & Floating) */}
+                        <div className={`
+                            relative rounded-full overflow-hidden shadow-2xl z-10
+                            transition-transform duration-500 group-hover:scale-105
+                            ${level === 0
+                                ? 'w-36 h-36 border-4 border-white/10 ring-4 ring-transparent group-hover:ring-white/20'
+                                : 'w-24 h-24 border-4 border-white shadow-lg mb-2'}
                         `}>
                             {node.image ? (
                                 <Image src={node.image} alt={node.name} fill className="object-cover" />
                             ) : (
-                                <span className={`font-black ${isRoot ? 'text-4xl text-white/20' : 'text-xl text-titan-navy/20'}`}>
-                                    {node.name.split(' ').pop()?.charAt(0)}
-                                </span>
+                                <div className={`w-full h-full flex items-center justify-center font-black text-2xl
+                                    ${level === 0 ? 'bg-white/10 text-white backdrop-blur-md' : 'bg-gray-50 text-titan-navy/30'}`}>
+                                    {node.name.charAt(0)}
+                                </div>
                             )}
                         </div>
 
-                        <div className={`${isRoot ? 'text-center' : 'text-left lg:text-center'}`}>
-                            {isRoot && <div className="text-titan-red font-bold uppercase tracking-[0.2em] text-xs mb-2">Leadership</div>}
+                        {/* Role Background Shine (Level 0 only) */}
+                        {level === 0 && (
+                            <div className="absolute inset-0 opacity-30 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:0_0,0_0] group-hover:bg-[position:100%_100%,0_0] transition-[background-position] duration-[1500ms]"></div>
+                        )}
+                    </div>
 
-                            <h3 className={`font-black uppercase leading-tight lg:mb-2 ${isRoot ? 'text-xl lg:text-2xl text-white' : 'text-sm lg:text-base text-titan-navy group-hover:text-titan-red transition-colors'}`}>
-                                {node.name}
-                            </h3>
-                            <p className={`font-bold uppercase tracking-widest ${isRoot ? 'text-sm text-white/60' : 'text-[10px] text-titan-navy/50'}`}>
-                                {node.role}
-                            </p>
+                    {/* Body - Content */}
+                    <div className={`flex flex-col items-center gap-1 relative ${level === 0 ? 'p-6 pt-4 bg-white' : 'p-4 bg-gray-50/50'}`}>
+                        {/* Name */}
+                        <h3 className={`font-black uppercase leading-tight text-center 
+                            ${level === 0 ? 'text-lg text-titan-navy' : 'text-sm text-gray-800'}`}>
+                            {node.name}
+                        </h3>
+
+                        {/* Role */}
+                        <div className={`font-bold uppercase tracking-widest text-center mt-1
+                            ${level === 0 ? 'text-[10px] text-titan-red' : 'text-[9px] text-titan-navy/60'}`}>
+                            {node.role}
                         </div>
 
-                        {/* Decorative effects removed for flat design */}
+                        {/* Toggle Indicator */}
+                        {hasChildren && (
+                            <div className={`
+                                mt-3 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300
+                                ${isOpen ? 'bg-gray-100 text-gray-400 rotate-180' : 'bg-titan-red text-white shadow-lg hover:bg-titan-navy'}
+                            `}>
+                                <ChevronDown size={12} strokeWidth={3} />
+                            </div>
+                        )}
                     </div>
-                </Link>
+                </motion.div>
             </FadeInWhenVisible>
 
-            {/* Recursive Children & Connectors */}
-            {hasChildren && (
-                <div className="flex flex-col lg:items-center w-full lg:w-auto">
-                    {/* DESKTOP: Vertical Line from Parent */}
-                    <div className="hidden lg:block w-px h-10 bg-gray-300"></div>
+            {/* Children Rendering Logic */}
+            <AnimatePresence>
+                {hasChildren && isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }} // Spring-like feel
+                        className="flex flex-col items-center"
+                    >
+                        {/* Connector Line from Parent */}
+                        <div className="w-px h-8 bg-gradient-to-b from-gray-200 to-gray-300"></div>
 
-                    {/* CHILDREN CONTAINER */}
-                    <div className={`
-                        relative flex 
-                        flex-col lg:flex-row 
-                        
-                        /* Mobile: Indented vertical list */
-                        ml-8 pl-8 pt-8 border-l border-gray-300 space-y-6
-                        
-                        /* Desktop: Horizontal row (Reset Mobile) */
-                        lg:ml-0 lg:pl-0 lg:pt-10 lg:border-l-0 lg:space-y-0 lg:gap-10
-                    `}>
-                        {/* DESKTOP: Horizontal Connector Line */}
-                        {node.children!.length > 1 && (
-                            <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 h-px bg-gray-300 w-[calc(100%-2rem)]"></div>
-                        )}
-
-                        {node.children!.map((child, index) => (
-                            <div key={index} className="flex flex-col lg:items-center relative w-full lg:w-auto">
-
-                                {/* MOBILE: Horizontal dash from vertical line to child */}
-                                <div className="lg:hidden absolute top-8 -left-8 w-8 h-px bg-gray-300"></div>
-
-                                {/* DESKTOP: Vertical Line to Child */}
-                                {node.children!.length > 1 && (
-                                    <div className={`hidden lg:block absolute top-[-2.5rem] w-px h-10 bg-gray-300 left-1/2 -translate-x-1/2`}></div>
-                                )}
-
-                                <div className="relative w-full lg:w-auto">
-                                    {/* DESKTOP: Connector upwards if multiple children */}
-                                    {node.children!.length > 1 && (
-                                        <div className="hidden lg:block absolute -top-10 left-1/2 -translate-x-1/2 w-px h-10 bg-gray-300"></div>
-                                    )}
-
-                                    {/* DESKTOP: Horizontal Line Segment for this child */}
-                                    {node.children!.length > 1 && (
-                                        <>
-                                            {/* Left half line */}
-                                            {index > 0 && (
-                                                <div className="hidden lg:block absolute -top-10 right-1/2 w-[calc(50%+4px)] h-px bg-gray-300"></div>
-                                            )}
-                                            {/* Right half line */}
-                                            {index < node.children!.length - 1 && (
-                                                <div className="hidden lg:block absolute -top-10 left-1/2 w-[calc(50%+4px)] h-px bg-gray-300"></div>
-                                            )}
-                                        </>
-                                    )}
-
-                                    <OrgTreeNode node={child} />
+                        {/* HYBRID LOGIC */}
+                        {isVertical ? (
+                            /* VERTICAL LIST */
+                            <div className="flex flex-col w-full items-center relative gap-4 pt-0">
+                                <div className="flex flex-col gap-4 relative p-3 bg-gray-50/50 rounded-2xl border border-gray-100">
+                                    {node.children!.map((child, index) => (
+                                        <div key={index} className="relative flex flex-col items-center">
+                                            {/* No vertical lines needed inside the container bubble, keeps it clean */}
+                                            <OrgTreeNode node={child} level={level + 1} />
+                                            {/* Separator if not last */}
+                                            {index < node.children!.length - 1 && <div className="w-8 h-px bg-gray-200 my-2"></div>}
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            )}
+                        ) : (
+                            /* HORIZONTAL ROW */
+                            <div className="flex relative pt-4 gap-4 lg:gap-6">
+                                {/* Horizontal Bar */}
+                                {node.children!.length > 1 && (
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[calc(100%-10rem)] h-px bg-gray-300"></div>
+                                )}
+
+                                {node.children!.map((child, index) => (
+                                    <div key={index} className="flex flex-col items-center relative">
+                                        {/* Connector from Bar */}
+                                        <div className="w-px h-8 bg-gray-300 absolute -top-4"></div>
+
+                                        {/* Horizontal Segments for First/Last */}
+                                        {node.children!.length > 1 && (
+                                            <>
+                                                {index === 0 && <div className="absolute -top-4 right-1/2 w-[50%] h-px bg-gray-300"></div>}
+                                                {index === node.children!.length - 1 && <div className="absolute -top-4 left-1/2 w-[50%] h-px bg-gray-300"></div>}
+                                                {index > 0 && index < node.children!.length - 1 && <div className="absolute -top-4 w-full h-px bg-gray-300"></div>}
+                                            </>
+                                        )}
+
+                                        <div className="mt-4">
+                                            <OrgTreeNode node={child} level={level + 1} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
@@ -241,6 +271,14 @@ export default function AboutPage() {
         image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400&h=400',
         children: [
             {
+                name: 'Mr. LENG VANNARITH',
+                role: 'Finance Director',
+                image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=400',
+                children: [
+                    { name: 'Finance Team', role: 'Accounting', image: '' }, // Placeholder for vertical list visual
+                ]
+            },
+            {
                 name: 'Mr. PAUCH BUNPHEAKDEY',
                 role: 'Deputy General Manager',
                 image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400&h=400',
@@ -248,12 +286,6 @@ export default function AboutPage() {
                     { name: 'Mr. KRAI KEAK', role: 'MEP Operations Manager', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400' },
                     { name: 'Mr. CHHUNDY RYTA', role: 'Deputy Architect Manager', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400&h=400' },
                 ]
-            },
-            {
-                name: 'Mr. LENG VANNARITH',
-                role: 'Finance Director',
-                image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=400',
-                children: []
             },
             {
                 name: 'Mr. OUNG CHAKNORA',
@@ -268,7 +300,9 @@ export default function AboutPage() {
                 name: 'Mr. SUM ROTANA',
                 role: 'Project Manager',
                 image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=400',
-                children: []
+                children: [
+                    { name: 'Project Team A', role: 'Site Supervision', image: '' },
+                ]
             }
         ]
     };
@@ -283,11 +317,10 @@ export default function AboutPage() {
                     <Image
                         src="/images/projects/Thumbnail-6.jpg"
                         alt="Construction Site"
-                        width={1920}
-                        height={1200}
-                        className="w-full h-[120%] object-cover"
+                        fill
+                        className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-titan-navy/40 to-titan-navy"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/80 via-titan-navy/70 to-titan-navy"></div>
                 </motion.div>
 
                 {/* Decorative Elements */}
@@ -361,91 +394,84 @@ export default function AboutPage() {
             </section>
 
             {/* === WHO WE ARE === */}
-            <section className="py-32 px-6 bg-white relative overflow-hidden">
-                {/* Decorative background accent */}
-                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-titan-bg rounded-full -translate-y-1/2 translate-x-1/2 -z-10 opacity-30"></div>
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-titan-red/5 rounded-full translate-y-1/2 -translate-x-1/2 -z-10"></div>
-
+            <section className="py-24 px-6 bg-white">
                 <div className="max-w-[1400px] mx-auto">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                        {/* Left: Asymmetrical Image Grid */}
+                        {/* Left: Image Grid */}
                         <FadeInWhenVisible>
                             <div className="relative">
-                                <div className="grid grid-cols-12 gap-4">
-                                    <div className="col-span-7 pt-12">
-                                        <div className="relative h-[250px] lg:h-[350px] w-full rounded-2xl shadow-2xl overflow-hidden group">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-4">
+                                        <div className="relative h-48 w-full rounded-2xl shadow-lg overflow-hidden">
                                             <Image
                                                 src="/images/projects/Thumbnail-4.jpg"
                                                 alt="Construction"
                                                 fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                className="object-cover"
                                             />
                                         </div>
-                                    </div>
-                                    <div className="col-span-5">
-                                        <div className="relative h-[200px] lg:h-[280px] w-full rounded-2xl shadow-2xl overflow-hidden group">
+                                        <div className="relative h-64 w-full rounded-2xl shadow-lg overflow-hidden">
                                             <Image
                                                 src="/images/projects/Thumbnail-5.jpg"
                                                 alt="Team"
                                                 fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                className="object-cover"
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-span-5 -mt-20 z-10">
-                                        <div className="relative h-[180px] lg:h-[240px] w-full rounded-2xl shadow-2xl overflow-hidden group border-4 border-white">
+                                    <div className="space-y-4 pt-8">
+                                        <div className="relative h-64 w-full rounded-2xl shadow-lg overflow-hidden">
                                             <Image
                                                 src="/images/projects/Thumbnail-6.jpg"
                                                 alt="Architecture"
                                                 fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                className="object-cover"
                                             />
                                         </div>
-                                    </div>
-                                    <div className="col-span-7">
-                                        <div className="relative h-[220px] lg:h-[300px] w-full rounded-2xl shadow-2xl overflow-hidden group border-4 border-white">
+                                        <div className="relative h-48 w-full rounded-2xl shadow-lg overflow-hidden">
                                             <Image
-                                                src="/images/projects/Thumbnail-1.jpg"
+                                                src="/images/projects/Thumbnail-7.jpg"
                                                 alt="Building"
                                                 fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                className="object-cover"
                                             />
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Floating Badge */}
-                                <div className="absolute -bottom-6 -right-6 bg-titan-red text-white p-10 rounded-2xl shadow-[0_30px_60px_-12px_rgba(209,26,42,0.4)] hidden md:block z-20">
-                                    <div className="text-5xl font-black mb-1">25+</div>
-                                    <div className="text-xs uppercase tracking-[0.3em] font-bold text-white/90">Years of<br />Excellence</div>
+                                <div className="absolute -bottom-6 -right-6 bg-titan-red text-white p-6 rounded-2xl shadow-xl hidden md:block">
+                                    <div className="text-4xl font-black">25+</div>
+                                    <div className="text-sm uppercase tracking-widest">Years</div>
                                 </div>
                             </div>
                         </FadeInWhenVisible>
 
                         {/* Right: Content */}
                         <FadeInWhenVisible delay={0.2}>
-                            <div className="lg:pl-10">
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-6 block">Our Heritage</span>
-                                <h2 className="text-4xl md:text-5xl lg:text-5xl font-black text-titan-navy mb-8 leading-tight">
-                                    Engineering a <span className="text-titan-red">Bolder Tomorrow</span> for Cambodia
+                            <div>
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Who We Are</span>
+                                <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6 leading-tight">
+                                    Cambodia&apos;s Premier <span className="text-titan-red">Construction Partner</span>
                                 </h2>
-                                <p className="text-titan-navy/70 text-lg leading-relaxed mb-10">
-                                    Founded in 1999, KIM MEX Construction & Investment has evolved from a local contractor into a national leader. We combine traditional Cambodian craftsmanship with modern global engineering standards to build structures that inspire and endure.
+                                <p className="text-titan-navy/60 text-lg leading-relaxed mb-8">
+                                    Since 1999, KIM MEX Construction has been a cornerstone of Cambodia&apos;s infrastructure development. We are more than builders; we are partners in national progress, dedicated to delivering excellence in every beam, brick, and blueprint.
                                 </p>
 
-                                <div className="grid grid-cols-1 gap-8">
+                                <div className="space-y-6">
                                     {[
-                                        { icon: Flag, title: 'Our Mission', desc: 'To provide superior construction services through innovative solutions, safety, and sustainable practices.', color: 'titan-red' },
-                                        { icon: Eye, title: 'Our Vision', desc: 'To be Cambodia\'s most respected construction firm, recognized for quality and integrity.', color: 'titan-navy' },
+                                        { icon: Flag, title: 'Our Mission', desc: 'To bridge the gap between concept and reality through exceptional engineering, rigorous safety standards, and a commitment to client satisfaction.' },
+                                        { icon: Eye, title: 'Our Vision', desc: 'To be the most trusted and innovative construction partner in Cambodia, setting new standards for quality, safety, and sustainable development.' },
+                                        { icon: Target, title: 'Our Goal', desc: 'To complete every project on time and within budget while maintaining zero-accident safety records.' },
                                     ].map((item, i) => (
-                                        <div key={i} className="flex gap-6 items-start">
-                                            <div className="w-16 h-16 bg-titan-bg rounded-2xl flex items-center justify-center text-titan-navy shadow-sm shrink-0 border border-gray-100 group-hover:border-titan-red transition-colors">
-                                                <item.icon size={26} />
+                                        <div key={i} className="flex gap-5 group">
+                                            <div className="w-14 h-14 bg-titan-red/10 rounded-xl flex items-center justify-center text-titan-red shrink-0 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
+                                                <item.icon size={24} />
                                             </div>
                                             <div>
-                                                <h3 className="text-xl font-bold text-titan-navy mb-2">{item.title}</h3>
-                                                <p className="text-titan-navy/60 text-base leading-relaxed">{item.desc}</p>
+                                                <h3 className="text-lg font-bold text-titan-navy mb-1 group-hover:text-titan-red transition-colors">{item.title}</h3>
+                                                <p className="text-titan-navy/50 text-sm leading-relaxed">{item.desc}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -457,58 +483,41 @@ export default function AboutPage() {
             </section>
 
             {/* === CEO MESSAGE === */}
-            {/* === CEO MESSAGE === */}
-            <section className="py-32 px-6 bg-[#0a0f1d] relative overflow-hidden">
-                {/* Immersive Background */}
-                <div className="absolute inset-0">
-                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3"></div>
-                    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px] -translate-x-1/2 translate-y-1/2"></div>
-                    {/* Subtle grid pattern */}
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-                </div>
-
-                <div className="max-w-[1400px] mx-auto relative z-10">
+            <section className="py-24 px-6 bg-gray-50">
+                <div className="max-w-[1400px] mx-auto">
                     <FadeInWhenVisible>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                            {/* Left: Immersive Image */}
-                            <div className="relative group">
-                                <div className="absolute -inset-4 bg-titan-red/20 rounded-2xl blur-2xl group-hover:bg-titan-red/30 transition-all duration-700 opacity-50"></div>
-                                <div className="relative h-[550px] lg:h-[700px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                        <div className="bg-titan-navy rounded-3xl overflow-hidden shadow-2xl">
+                            <div className="grid grid-cols-1 lg:grid-cols-2">
+                                {/* Left: Image */}
+                                <div className="relative min-h-[400px] lg:min-h-[500px]">
                                     <Image
-                                        src="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=800&h=1000"
+                                        src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop"
                                         alt="CEO"
                                         fill
-                                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                                        className="object-cover"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent opacity-80"></div>
-
-                                    <div className="absolute bottom-10 left-10">
-                                        <div className="text-white font-black text-3xl mb-1">Okhna. TOUCH KIM</div>
-                                        <div className="text-titan-red font-bold uppercase tracking-widest text-sm">Founder & Chairman</div>
-                                    </div>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-titan-navy/50 lg:to-titan-navy"></div>
                                 </div>
-                            </div>
 
-                            {/* Right: The Message */}
-                            <div className="relative py-10">
-                                <Quote className="text-titan-red/20 absolute -top-10 -left-10" size={160} />
+                                {/* Right: Message */}
+                                <div className="p-10 lg:p-16 flex flex-col justify-center relative">
+                                    <Quote className="text-titan-red/20 absolute top-8 right-8" size={80} />
 
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-6 block relative z-10">Leadership Philosophy</span>
-                                <h2 className="text-4xl md:text-5xl font-black text-white mb-10 leading-tight relative z-10">
-                                    Building more than just <span className="text-titan-red">Structures</span>
-                                </h2>
+                                    <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Message from CEO</span>
 
-                                <blockquote className="text-xl md:text-2xl text-white/80 font-light leading-relaxed mb-12 italic relative z-10">
-                                    &ldquo;For over two decades, our mission has remained unchanged: to serve Cambodia with integrity and excellence. We see every project as an opportunity to strengthen the foundation of our nation and leave a legacy of quality for future generations.&rdquo;
-                                </blockquote>
+                                    <blockquote className="text-xl md:text-2xl text-white/90 font-light italic leading-relaxed mb-8 relative z-10">
+                                        &ldquo;Construction is not just about concrete and steel. It&apos;s about building trust, fostering communities, and leaving a legacy that stands the test of time. At KIM MEX, we pour our heart into every foundation we lay.&rdquo;
+                                    </blockquote>
 
-                                <div className="space-y-6 relative z-10">
-                                    <p className="text-white/60 text-lg leading-relaxed">
-                                        At KIM MEX, we don&apos;t just follow blueprints; we realize dreams. Our team of dedicated professionals works tirelessly to ensure that every structure we build is a testament to our commitment to safety, innovation, and sustainable development.
-                                    </p>
-                                    <Link href="/design-z/contact" className="inline-flex items-center gap-2 text-titan-red font-bold uppercase tracking-widest text-sm hover:gap-4 transition-all group">
-                                        Partner with us <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                                    </Link>
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-16 h-16 rounded-full bg-titan-red/20 flex items-center justify-center text-titan-red text-2xl font-black">
+                                            TK
+                                        </div>
+                                        <div>
+                                            <div className="text-white font-bold text-lg">Okhna. TOUCH KIM</div>
+                                            <div className="text-titan-red text-sm uppercase tracking-widest font-bold">Founder & CEO</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -517,47 +526,33 @@ export default function AboutPage() {
             </section>
 
             {/* === CORE VALUES === */}
-            <section className="py-32 px-6 bg-white relative overflow-hidden">
+            <section className="py-24 px-6 bg-white">
                 <div className="max-w-[1400px] mx-auto">
                     <FadeInWhenVisible>
-                        <div className="text-center mb-24">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">The KIM MEX Spirit</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy leading-tight">
-                                Our <span className="text-titan-red">Core Values</span>
-                            </h2>
-                            <p className="text-titan-navy/50 text-lg max-w-2xl mx-auto mt-6">
-                                These principles are the mortar that holds our projects and people together, ensuring excellence in everything we do.
-                            </p>
+                        <div className="text-center mb-16">
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">What Drives Us</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">Our Core Values</h2>
                         </div>
                     </FadeInWhenVisible>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {coreValues.map((value, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
-                                <div className="bg-white p-10 rounded-3xl hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] hover:-translate-y-3 border border-gray-100 group transition-all duration-500 h-full relative overflow-hidden">
-                                    {/* Decorative numbering */}
-                                    <div className="absolute top-8 right-8 text-7xl font-black text-titan-bg group-hover:text-titan-red/5 transition-colors duration-500">
-                                        0{i + 1}
+                                <div className="bg-gray-50 p-8 rounded-2xl hover:bg-titan-navy group transition-all duration-500 h-full">
+                                    <div className="w-16 h-16 bg-titan-red/10 rounded-2xl flex items-center justify-center text-titan-red mb-6 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
+                                        <value.icon size={28} />
                                     </div>
-
-                                    <div className="w-20 h-20 bg-titan-bg rounded-2xl flex items-center justify-center text-titan-navy mb-10 group-hover:bg-titan-red group-hover:text-white group-hover:rotate-6 transition-all duration-500 relative z-10">
-                                        <value.icon size={32} />
-                                    </div>
-
-                                    <h3 className="text-2xl font-bold text-titan-navy mb-4 group-hover:text-titan-red transition-colors relative z-10">{value.title}</h3>
-                                    <p className="text-titan-navy/60 text-lg leading-relaxed relative z-10">{value.desc}</p>
-
-                                    {/* Bottom accent line */}
-                                    <div className="absolute bottom-0 left-0 w-0 h-1 bg-titan-red group-hover:w-full transition-all duration-700"></div>
+                                    <h3 className="text-xl font-bold text-titan-navy mb-3 group-hover:text-white transition-colors">{value.title}</h3>
+                                    <p className="text-titan-navy/50 leading-relaxed group-hover:text-white/70 transition-colors">{value.desc}</p>
                                 </div>
                             </FadeInWhenVisible>
                         ))}
                     </div>
                 </div>
-            </section >
+            </section>
 
             {/* === MILESTONES TIMELINE === */}
-            < section className="py-24 px-6 bg-gray-50" >
+            <section className="py-24 px-6 bg-gray-50">
                 <div className="max-w-[1200px] mx-auto">
                     <FadeInWhenVisible>
                         <div className="text-center mb-16">
@@ -588,9 +583,7 @@ export default function AboutPage() {
                                         </div>
 
                                         {/* Center Dot */}
-                                        <div className="absolute left-6 md:left-1/2 w-6 h-6 bg-white border-2 border-titan-red rounded-full -translate-x-1/2 shadow-lg z-10 flex items-center justify-center">
-                                            <div className="w-2 h-2 bg-titan-red rounded-full"></div>
-                                        </div>
+                                        <div className="absolute left-6 md:left-1/2 w-4 h-4 bg-white border-4 border-titan-red rounded-full -translate-x-1/2 shadow-lg z-10"></div>
 
                                         {/* Image */}
                                         <div className={`w-full md:w-5/12 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:pl-12' : 'md:pr-12'}`}>
@@ -606,84 +599,8 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* === SUSTAINABILITY SECTION === */}
-            <section className="py-32 px-6 bg-white relative overflow-hidden">
-                <div className="absolute top-1/2 left-0 w-96 h-96 bg-green-500/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2"></div>
-
-                <div className="max-w-[1400px] mx-auto">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                        <FadeInWhenVisible className="order-2 lg:order-1">
-                            <div className="relative">
-                                <span className="text-green-600 font-bold uppercase tracking-widest text-sm mb-6 block">Building for the Future</span>
-                                <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-8 leading-tight">
-                                    Our Commitment to <span className="text-green-600">Sustainability</span>
-                                </h2>
-                                <p className="text-titan-navy/60 text-lg leading-relaxed mb-10">
-                                    We believe that construction shouldn&apos;t come at the cost of our environment. KIM MEX is dedicated to eco-friendly building practices, sustainable material sourcing, and energy-efficient designs that minimize our carbon footprint.
-                                </p>
-
-                                <div className="space-y-6">
-                                    {[
-                                        { title: 'Eco-Friendly Materials', desc: 'Sourcing renewable and low-impact construction materials.' },
-                                        { title: 'Energy Efficiency', desc: 'Implementing smart building tech to reduce energy waste.' },
-                                        { title: 'Waste Reduction', desc: 'Rigorous on-site recycling and waste management protocols.' },
-                                    ].map((item, i) => (
-                                        <div key={i} className="flex gap-5 group">
-                                            <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 mt-1 shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
-                                                <CheckCircle2 size={14} />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-bold text-titan-navy mb-1">{item.title}</h4>
-                                                <p className="text-titan-navy/50 text-sm">{item.desc}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </FadeInWhenVisible>
-
-                        <FadeInWhenVisible delay={0.2} className="order-1 lg:order-2">
-                            <div className="relative h-[450px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl">
-                                <Image
-                                    src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=800&auto=format&fit=crop"
-                                    alt="Sustainable Building"
-                                    fill
-                                    className="object-cover"
-                                />
-                                <div className="absolute inset-0 bg-green-900/10 backdrop-blur-[2px]"></div>
-                                {/* Floating Stat */}
-                                <div className="absolute top-10 right-10 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/20">
-                                    <div className="text-3xl font-black text-green-600">30%</div>
-                                    <div className="text-xs uppercase tracking-widest font-bold text-titan-navy/60">Waste Reduction Goal</div>
-                                </div>
-                            </div>
-                        </FadeInWhenVisible>
-                    </div>
-                </div>
-            </section>
-
-            {/* === STRATEGIC PARTNERSHIPS === */}
-            <section className="py-20 bg-titan-bg border-y border-gray-100 overflow-hidden">
-                <div className="max-w-[1400px] mx-auto px-6">
-                    <FadeInWhenVisible>
-                        <div className="text-center mb-12">
-                            <span className="text-titan-navy/40 font-bold uppercase tracking-[0.3em] text-xs">Trusted By Industry Leaders</span>
-                        </div>
-                    </FadeInWhenVisible>
-
-                    <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-700">
-                        {['Concrete Solutions', 'Steel Experts', 'EcoBuild', 'Urban Planning Co', 'SafeTech', 'Logistics Global'].map((partner, i) => (
-                            <div key={partner} className="text-xl md:text-2xl font-black text-titan-navy tracking-tighter">
-                                {partner.toUpperCase()}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             {/* === LEADERSHIP TEAM (Org Chart) === */}
-            <section className="py-24 px-6 bg-white overflow-hidden relative">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            <section className="py-24 px-6 bg-white overflow-hidden">
                 <div className="max-w-[1400px] mx-auto">
                     <FadeInWhenVisible>
                         <div className="text-center mb-20">
@@ -696,43 +613,41 @@ export default function AboutPage() {
                     </FadeInWhenVisible>
 
                     {/* ORG CHART VISUALIZATION */}
-                    <div className="relative overflow-x-auto pb-12 custom-scrollbar">
-                        <div className="min-w-max px-4 flex justify-center">
-                            <OrgTreeNode node={orgData} isRoot={true} />
+                    <div className="relative w-full overflow-x-auto pb-12 custom-scrollbar">
+                        <div className="min-w-fit mx-auto px-4 flex justify-center">
+                            <OrgTreeNode node={orgData} level={0} />
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* === CERTIFICATIONS & QUALITY === */}
-            <section className="py-32 px-6 bg-[#0a0f1d] relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
-
-                <div className="max-w-[1400px] mx-auto relative z-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+            <section className="py-24 px-6 bg-titan-navy">
+                <div className="max-w-[1400px] mx-auto">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <FadeInWhenVisible>
                             <div>
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-6 block">Our Rigorous Standards</span>
-                                <h2 className="text-4xl md:text-5xl font-black text-white mb-8 leading-tight">
-                                    Quality Assurance <br /><span className="text-titan-red">& Zero-Harm</span> Culture
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our Standards</span>
+                                <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+                                    Quality & Safety <span className="text-titan-red">First</span>
                                 </h2>
-                                <p className="text-white/60 text-lg leading-relaxed mb-12">
-                                    Our commitment to quality isn&apos;t just a certification—it&apos;s a daily practice. From the first shovel in the ground to the final inspection, we maintain the highest international standards of safety and engineering excellence.
+                                <p className="text-white/60 text-lg leading-relaxed mb-10">
+                                    We implement rigorous Quality Assurance (QA) and Quality Control (QC) protocols on every site. Our safety record is a testament to our commitment to our workforce and our clients.
                                 </p>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     {[
-                                        { icon: Shield, title: 'ISO 9001:2015', desc: 'Certified Quality Management' },
-                                        { icon: Award, title: 'Health & Safety', desc: 'Zero-Harm site protocols' },
-                                        { icon: CheckCircle2, title: 'Compliance', desc: '100% building code adherence' },
-                                        { icon: HardHat, title: 'Expert Team', desc: 'Licensed professional engineers' },
+                                        { icon: Shield, title: 'ISO 9001:2015', desc: 'Quality Management Certified' },
+                                        { icon: Award, title: 'Zero Accidents', desc: 'Safety record policy' },
+                                        { icon: CheckCircle2, title: '100% Compliance', desc: 'Building code adherence' },
+                                        { icon: Clock, title: 'On-Time Delivery', desc: '98% completion rate' },
                                     ].map((item, i) => (
-                                        <div key={i} className="flex items-center gap-5 p-6 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 hover:border-titan-red/30 transition-all duration-500 group">
-                                            <div className="w-14 h-14 bg-titan-red/10 rounded-xl flex items-center justify-center text-titan-red shrink-0 group-hover:scale-110 group-hover:bg-titan-red group-hover:text-white transition-all duration-500">
-                                                <item.icon size={26} />
+                                        <div key={i} className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                                            <div className="w-12 h-12 bg-titan-red/20 rounded-lg flex items-center justify-center text-titan-red shrink-0">
+                                                <item.icon size={22} />
                                             </div>
                                             <div>
-                                                <div className="text-white font-bold text-lg mb-1">{item.title}</div>
+                                                <div className="text-white font-bold">{item.title}</div>
                                                 <div className="text-white/40 text-sm">{item.desc}</div>
                                             </div>
                                         </div>
@@ -743,27 +658,23 @@ export default function AboutPage() {
 
                         <FadeInWhenVisible delay={0.2}>
                             <div className="relative">
-                                <div className="absolute -inset-4 bg-titan-red/20 rounded-3xl blur-3xl opacity-30 animate-pulse"></div>
-                                <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-3xl">
-                                    <Image
-                                        src="/images/projects/Thumbnail-6.jpg"
-                                        alt="Quality Inspection"
-                                        width={800}
-                                        height={600}
-                                        className="w-full h-auto object-cover"
-                                    />
-                                    {/* Overlay Gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent opacity-60"></div>
-                                </div>
-
-                                {/* Floating Achievement Card */}
-                                <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-2xl shadow-2xl hidden md:flex items-center gap-6 border border-gray-100">
-                                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 shadow-inner">
-                                        <Award size={32} />
-                                    </div>
-                                    <div>
-                                        <div className="text-3xl font-black text-titan-navy line-height-1">98%</div>
-                                        <div className="text-xs uppercase tracking-widest font-bold text-titan-navy/40">Safety Excellence Score</div>
+                                <Image
+                                    src="/images/projects/Thumbnail-6.jpg"
+                                    alt="Safety Inspection"
+                                    width={800}
+                                    height={600}
+                                    className="rounded-2xl shadow-2xl w-full h-auto"
+                                />
+                                {/* Floating Card */}
+                                <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl hidden md:block">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center">
+                                            <CheckCircle2 className="text-green-600" size={28} />
+                                        </div>
+                                        <div>
+                                            <div className="text-2xl font-black text-titan-navy">ISO</div>
+                                            <div className="text-sm text-titan-navy/50">9001:2015 Certified</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -773,8 +684,7 @@ export default function AboutPage() {
             </section>
 
             {/* === CTA SECTION === */}
-            <section className="py-20 px-6 bg-titan-red relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+            <section className="py-20 px-6 bg-titan-red">
                 <div className="max-w-[1200px] mx-auto text-center">
                     <FadeInWhenVisible>
                         <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Ready to Build Together?</h2>
@@ -792,6 +702,7 @@ export default function AboutPage() {
                     </FadeInWhenVisible>
                 </div>
             </section>
+
         </div>
     );
 }

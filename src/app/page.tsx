@@ -12,7 +12,7 @@ export default function Home() {
           <p className="text-xl text-slate-500 max-w-2xl mx-auto">Select a design direction below to launch the interactive prototype.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Option A */}
           <Link href="/design-a" className="group block bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-slate-100 ring-2 ring-transparent hover:ring-titan-navy">
             <div className="h-2 bg-titan-navy w-full"></div>
@@ -51,7 +51,7 @@ export default function Home() {
             <div className="h-2 bg-gradient-to-r from-titan-navy via-titan-gold to-titan-navy w-full"></div>
             <div className="p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-3 bg-titan-gold text-white text-xs font-bold uppercase tracking-widest rounded-bl-xl shadow-md">New</div>
-
+ 
               <div className="mb-6 bg-titan-bg w-14 h-14 rounded-lg flex items-center justify-center text-titan-gold group-hover:bg-titan-gold group-hover:text-white transition-colors">
                 <Image size={28} />
               </div>
@@ -60,6 +60,24 @@ export default function Home() {
 
               <div className="flex items-center text-titan-gold font-bold text-sm uppercase tracking-wide">
                 View Y <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Option Z - The Future */}
+          <Link href="/design-z" className="group block bg-[#0a0a0f] rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-slate-800 ring-2 ring-transparent hover:ring-[#FF5500]">
+            <div className="h-2 bg-gradient-to-r from-[#FF5500] via-[#00D4FF] to-[#FF5500] w-full"></div>
+            <div className="p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-3 bg-[#FF5500] text-white text-xs font-bold uppercase tracking-widest rounded-bl-xl shadow-md">Future</div>
+
+              <div className="mb-6 bg-white/10 w-14 h-14 rounded-lg flex items-center justify-center text-[#FF5500] group-hover:bg-[#FF5500] group-hover:text-white transition-colors backdrop-blur-sm">
+                <Monitor size={28} />
+              </div>
+              <h2 className="text-2xl font-black mb-2 text-white">Z. The Future</h2>
+              <p className="text-slate-400 text-sm mb-6 h-10">Dark mode, glassmorphism, and neon aesthetics for a next-gen experience.</p>
+
+              <div className="flex items-center text-[#FF5500] font-bold text-sm uppercase tracking-wide">
+                View Z <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
           </Link>
