@@ -133,7 +133,7 @@ export default function ServicesPage() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.3 }}
-                        className="text-6xl md:text-9xl font-black text-white mb-8 leading-[0.8] tracking-tighter"
+                        className="text-5xl md:text-9xl font-black text-white mb-8 leading-[0.8] tracking-tighter"
                     >
                         OUR <span className="text-titan-red">EXPERTISE</span>
                     </motion.h1>
@@ -316,8 +316,8 @@ export default function ServicesPage() {
                                     </div>
                                 </div>
                                 {/* Center Badge */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-titan-navy text-white p-6 rounded-full shadow-2xl border-4 border-white">
-                                    <CheckCircle2 size={48} className="text-titan-red" />
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-titan-navy text-white p-4 md:p-6 rounded-full shadow-2xl border-4 border-white">
+                                    <CheckCircle2 size={32} className="md:w-12 md:h-12 text-titan-red" />
                                 </div>
                             </div>
                         </FadeInWhenVisible>

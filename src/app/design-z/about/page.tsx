@@ -70,8 +70,8 @@ type OrgNodeData = {
 };
 
 // Org Chart Node Component (Premium Hybrid Design - Compact Mode)
-function OrgTreeNode({ node, level = 0 }: { node: OrgNodeData; level?: number }) {
-    const isVertical = level >= 1;
+function OrgTreeNode({ node, level = 0, isMobile = false }: { node: OrgNodeData; level?: number; isMobile?: boolean }) {
+    const isVertical = isMobile || level >= 1;
     const [isOpen, setIsOpen] = React.useState(true);
     const hasChildren = node.children && node.children.length > 0;
 
@@ -88,7 +88,7 @@ function OrgTreeNode({ node, level = 0 }: { node: OrgNodeData; level?: number })
                         border border-white/50 ring-1 ring-gray-100
                         transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(10,10,20,0.2)]
                         group cursor-pointer flex flex-col overflow-hidden
-                        ${level === 0 ? 'w-72' : 'w-52'} 
+                        ${level === 0 ? 'w-72 max-w-[90vw]' : 'w-52 max-w-[85vw]'}  
                     `}
                     onClick={() => hasChildren && setIsOpen(!isOpen)}
                 >
@@ -171,7 +171,7 @@ function OrgTreeNode({ node, level = 0 }: { node: OrgNodeData; level?: number })
                                     {node.children!.map((child, index) => (
                                         <div key={index} className="relative flex flex-col items-center">
                                             {/* No vertical lines needed inside the container bubble, keeps it clean */}
-                                            <OrgTreeNode node={child} level={level + 1} />
+                                            <OrgTreeNode node={child} level={level + 1} isMobile={isMobile} />
                                             {/* Separator if not last */}
                                             {index < node.children!.length - 1 && <div className="w-8 h-px bg-gray-200 my-2"></div>}
                                         </div>
@@ -201,7 +201,7 @@ function OrgTreeNode({ node, level = 0 }: { node: OrgNodeData; level?: number })
                                         )}
 
                                         <div className="mt-4">
-                                            <OrgTreeNode node={child} level={level + 1} />
+                                            <OrgTreeNode node={child} level={level + 1} isMobile={isMobile} />
                                         </div>
                                     </div>
                                 ))}
@@ -222,6 +222,15 @@ export default function AboutPage() {
     });
     const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
     const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+    // Responsive Logic
+    const [isMobile, setIsMobile] = React.useState(false);
+    React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     const coreValues = [
         { icon: Shield, title: 'Integrity', desc: 'We uphold the highest ethical standards in every project and relationship.' },
@@ -615,7 +624,7 @@ export default function AboutPage() {
                     {/* ORG CHART VISUALIZATION */}
                     <div className="relative w-full overflow-x-auto pb-12 custom-scrollbar">
                         <div className="min-w-fit mx-auto px-4 flex justify-center">
-                            <OrgTreeNode node={orgData} level={0} />
+                            <OrgTreeNode node={orgData} level={0} isMobile={isMobile} />
                         </div>
                     </div>
                 </div>

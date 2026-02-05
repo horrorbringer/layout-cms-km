@@ -8,7 +8,7 @@ export default function CompletedProjectsPage() {
     return (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-100">Loading...</div>}>
             <ProjectListingPage
-                title={<h1 className="text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter">
+                title={<h1 className="text-4xl md:text-8xl font-black text-white mb-6 tracking-tighter">
                     DONE <span className="text-titan-red">PROJECTS</span>
                 </h1>}
                 subtitle="A portfolio of successfully delivered landmarks, infrastructure, and commercial developments across Cambodia."

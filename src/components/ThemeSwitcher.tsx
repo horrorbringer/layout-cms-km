@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Palette, Check } from 'lucide-react';
+import { Palette, Check, Layout, ArrowRight } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
 
 // Theme definitions - 5 attractive options
 const themes = [
@@ -85,9 +86,21 @@ const themes = [
     }
 ];
 
+// Layout definitions
+const layouts = [
+    { id: 'main', name: 'Main System', path: '/', description: 'Standard Corporate Layout' },
+    { id: 'design-a', name: 'Design A', path: '/design-a', description: 'Clean & Modern Approach' },
+    { id: 'design-x', name: 'Design X', path: '/design-x', description: 'Bold & Experimental' },
+    { id: 'design-y', name: 'Design Y', path: '/design-y', description: 'Minimalist & Grid-Based' },
+    { id: 'design-z', name: 'Design Z', path: '/design-z', description: 'High Contrast & Editorial' },
+];
+
 export default function ThemeSwitcher() {
+    const router = useRouter();
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [activeTheme, setActiveTheme] = useState('corporate');
+    const [activeTab, setActiveTab] = useState<'themes' | 'layouts'>('themes');
 
     // Load saved theme on mount
     useEffect(() => {
@@ -117,76 +130,153 @@ export default function ThemeSwitcher() {
         localStorage.setItem('kimmex-theme', themeId);
     };
 
+    const handleLayoutChange = (path: string) => {
+        router.push(path);
+        // Optional: Close switcher after navigation if desired
+        // setIsOpen(false); 
+    };
+
+    // Determine current active layout based on pathname
+    const getActiveLayout = () => {
+        if (pathname === '/') return 'main';
+        if (pathname?.startsWith('/design-a')) return 'design-a';
+        if (pathname?.startsWith('/design-x')) return 'design-x';
+        if (pathname?.startsWith('/design-y')) return 'design-y';
+        if (pathname?.startsWith('/design-z')) return 'design-z';
+        return 'main';
+    };
+
+    const activeLayout = getActiveLayout();
+
     return (
         <div className="fixed bottom-6 right-6 z-[200] font-sans">
             {/* Theme Panel */}
             <div
-                className={`absolute bottom-16 right-0 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 ${
-                    isOpen
+                className={`absolute bottom-16 right-0 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 ${isOpen
                         ? 'opacity-100 translate-y-0 pointer-events-auto'
                         : 'opacity-0 translate-y-4 pointer-events-none'
-                }`}
-                style={{ width: '300px' }}
+                    }`}
+                style={{ width: '320px' }}
             >
-                {/* Header */}
-                <div className="px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-100">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">
-                        Choose Theme
-                    </h3>
+                {/* Header / Tabs */}
+                <div className="flex border-b border-gray-100 bg-gray-50/50">
+                    <button
+                        onClick={() => setActiveTab('themes')}
+                        className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-colors ${activeTab === 'themes' ? 'bg-white text-titan-navy border-b-2 border-titan-red' : 'text-gray-400 hover:text-gray-600'}`}
+                    >
+                        Themes
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('layouts')}
+                        className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-colors ${activeTab === 'layouts' ? 'bg-white text-titan-navy border-b-2 border-titan-red' : 'text-gray-400 hover:text-gray-600'}`}
+                    >
+                        Layouts
+                    </button>
                 </div>
 
-                {/* Theme Options */}
-                <div className="p-2 max-h-[400px] overflow-y-auto">
-                    {themes.map((theme) => (
-                        <button
-                            key={theme.id}
-                            onClick={() => handleThemeChange(theme.id)}
-                            className={`flex items-center gap-3 w-full p-3 rounded-lg transition-all text-left group ${
-                                activeTheme === theme.id
-                                    ? 'bg-gray-100'
-                                    : 'hover:bg-gray-50'
-                            }`}
-                            style={
-                                activeTheme === theme.id 
-                                    ? { boxShadow: `0 0 0 2px ${theme.colors.red}` } 
-                                    : undefined
-                            }
-                        >
-                            {/* Color Preview - Gradient Style */}
-                            <div 
-                                className="w-10 h-10 rounded-lg shadow-md border border-black/10 flex-shrink-0"
-                                style={{ 
-                                    background: `linear-gradient(135deg, ${theme.colors.navy} 50%, ${theme.colors.red} 50%)` 
-                                }}
-                            />
+                {/* Content Area */}
+                <div className="p-2 max-h-[400px] overflow-y-auto min-h-[300px] bg-white">
 
-                            {/* Theme Info */}
-                            <div className="flex-1 min-w-0">
-                                <div className="font-bold text-sm text-gray-800">
-                                    {theme.name}
-                                </div>
-                                <div className="text-xs text-gray-500 truncate">
-                                    {theme.description}
+                    {/* THEMES TAB */}
+                    {activeTab === 'themes' && (
+                        <div className="space-y-1">
+                            {themes.map((theme) => (
+                                <button
+                                    key={theme.id}
+                                    onClick={() => handleThemeChange(theme.id)}
+                                    className={`flex items-center gap-3 w-full p-3 rounded-lg transition-all text-left group ${activeTheme === theme.id
+                                            ? 'bg-gray-100'
+                                            : 'hover:bg-gray-50'
+                                        }`}
+                                    style={
+                                        activeTheme === theme.id
+                                            ? { boxShadow: `0 0 0 2px ${theme.colors.red}` }
+                                            : undefined
+                                    }
+                                >
+                                    {/* Color Preview */}
+                                    <div
+                                        className="w-10 h-10 rounded-lg shadow-md border border-black/10 flex-shrink-0"
+                                        style={{
+                                            background: `linear-gradient(135deg, ${theme.colors.navy} 50%, ${theme.colors.red} 50%)`
+                                        }}
+                                    />
+
+                                    {/* Theme Info */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="font-bold text-sm text-gray-800">
+                                            {theme.name}
+                                        </div>
+                                        <div className="text-xs text-gray-500 truncate">
+                                            {theme.description}
+                                        </div>
+                                    </div>
+
+                                    {/* Active Indicator */}
+                                    {activeTheme === theme.id && (
+                                        <div
+                                            className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
+                                            style={{ background: theme.colors.red }}
+                                        >
+                                            <Check size={14} className="text-white" />
+                                        </div>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* LAYOUTS TAB */}
+                    {activeTab === 'layouts' && (
+                        <div className="space-y-1">
+                            {layouts.map((layout) => (
+                                <button
+                                    key={layout.id}
+                                    onClick={() => handleLayoutChange(layout.path)}
+                                    className={`flex items-center gap-3 w-full p-3 rounded-lg transition-all text-left group ${activeLayout === layout.id
+                                            ? 'bg-gray-100'
+                                            : 'hover:bg-gray-50'
+                                        }`}
+                                >
+                                    {/* Icon Placeholder */}
+                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center border ${activeLayout === layout.id ? 'bg-white border-gray-200' : 'bg-gray-50 border-gray-100'}`}>
+                                        <Layout size={20} className={activeLayout === layout.id ? 'text-titan-red' : 'text-gray-400'} />
+                                    </div>
+
+                                    {/* Layout Info */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="font-bold text-sm text-gray-800">
+                                            {layout.name}
+                                        </div>
+                                        <div className="text-xs text-gray-500 truncate">
+                                            {layout.description}
+                                        </div>
+                                    </div>
+
+                                    {/* Active/Go Indicator */}
+                                    {activeLayout === layout.id ? (
+                                        <div className="px-2 py-1 bg-titan-navy text-white text-[10px] font-bold uppercase rounded-md">
+                                            Current
+                                        </div>
+                                    ) : (
+                                        <ArrowRight size={16} className="text-gray-300 group-hover:text-titan-red transition-colors" />
+                                    )}
+                                </button>
+                            ))}
+
+                            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100 items-start gap-2 hidden">
+                                <div className="text-xs text-blue-800 leading-relaxed">
+                                    <strong>Tip:</strong> Each design system explores a different architectural style for the CMS.
                                 </div>
                             </div>
-
-                            {/* Active Indicator */}
-                            {activeTheme === theme.id && (
-                                <div
-                                    className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
-                                    style={{ background: theme.colors.red }}
-                                >
-                                    <Check size={14} className="text-white" />
-                                </div>
-                            )}
-                        </button>
-                    ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Footer */}
                 <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
                     <p className="text-[10px] text-gray-400 text-center">
-                        Theme preference is saved automatically
+                        {activeTab === 'themes' ? 'Theme preference is saved locally' : 'Switching layouts updates URL'}
                     </p>
                 </div>
             </div>
@@ -194,11 +284,10 @@ export default function ThemeSwitcher() {
             {/* Toggle Button - Animated */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`p-4 rounded-full shadow-xl transition-all duration-300 border-2 ${
-                    isOpen
+                className={`p-4 rounded-full shadow-xl transition-all duration-300 border-2 ${isOpen
                         ? 'bg-gray-800 text-white border-gray-700 rotate-180 scale-90'
                         : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:scale-110 hover:shadow-2xl'
-                }`}
+                    }`}
                 aria-label="Toggle theme switcher"
             >
                 <Palette size={22} />

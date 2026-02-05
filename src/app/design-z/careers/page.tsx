@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, MapPin, Briefcase, Clock, Search, Filter, ChevronDown, Users, Globe, Award, Upload, Send, Check, DollarSign, Zap, BookOpen, Coffee, Smile, ChevronRight } from 'lucide-react';
+import { ArrowRight, MapPin, Briefcase, Clock, Search, Filter, ChevronDown, Users, Globe, Award, Upload, Send, Check, DollarSign, Zap, BookOpen, Coffee, Smile, ChevronRight, Target } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -239,94 +239,125 @@ export default function CareersPage() {
                         className="bg-white p-10 rounded-2xl shadow-xl border-b-4 border-titan-navy text-center group hover:-translate-y-2 transition-transform duration-300"
                     >
                         <div className="w-16 h-16 bg-titan-bg rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-titan-navy group-hover:text-white transition-colors">
-                            <Globe size={28} />
+                            <Target size={28} />
                         </div>
-                        <h3 className="text-xl font-black text-titan-navy mb-4">National Impact</h3>
+                        <h3 className="text-xl font-black text-titan-navy mb-4">Impactful Work</h3>
                         <p className="text-titan-navy-subtle leading-relaxed">
-                            Contribute to infrastructure that drives national development and improves lives across the country.
+                            Contribute to projects that matter and leave a lasting legacy for the community.
                         </p>
                     </motion.div>
+                </div>
+            </section>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-white p-10 rounded-2xl shadow-xl border-b-4 border-titan-red text-center group hover:-translate-y-2 transition-transform duration-300"
-                    >
-                        <div className="w-16 h-16 bg-titan-bg rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-titan-red group-hover:text-white transition-colors">
-                            <Users size={28} />
-                        </div>
-                        <h3 className="text-xl font-black text-titan-navy mb-4">Growth Culture</h3>
-                        <p className="text-titan-navy-subtle leading-relaxed">
-                            Thrive in a collaborative environment with mentorship, training, and clear career progression.
-                        </p>
-                    </motion.div>
+            <section className="py-24 px-6 bg-white">
+                <div className="max-w-[1400px] mx-auto">
+                    <div className="text-center mb-16">
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">Our Culture</span>
+                        <h2 className="text-4xl text-titan-navy font-black">Why Kimmex?</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {[
+                            { icon: Target, title: 'Purpose-Driven Work', desc: 'Contribute to landmark projects that shape the nation\'s infrastructure.' },
+                            { icon: Users, title: 'Mentorship Culture', desc: 'Learn directly from industry veterans and grow your expertise.' },
+                            { icon: Zap, title: 'Fast-Track Growth', desc: 'Clear career pathways and performance-based promotion opportunities.' }
+                        ].map((item, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                className="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:border-titan-red/20 hover:shadow-xl transition-all group text-center"
+                            >
+                                <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-titan-red mb-6 shadow-sm group-hover:scale-110 transition-transform">
+                                    <item.icon size={32} />
+                                </div>
+                                <h3 className="text-xl font-black text-titan-navy mb-4">{item.title}</h3>
+                                <p className="text-titan-navy/60 leading-relaxed">{item.desc}</p>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
             {/* --- TRANSPARENT BENEFITS --- */}
-            <section className="py-24 px-6 max-w-[1400px] mx-auto">
-                <div className="text-center mb-16">
-                    <h2 className="text-xs font-black text-titan-red uppercase tracking-widest mb-3">What We Offer</h2>
-                    <h3 className="text-4xl font-black text-titan-navy mb-6">More Than Just a Paycheck</h3>
-                    <p className="text-titan-navy-subtle max-w-2xl mx-auto text-lg">
-                        We believe in transparent compensation and comprehensive care for our team.
-                    </p>
-                </div>
+            <section className="py-24 px-6 bg-titan-navy relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none"></div>
+                <div className="max-w-[1400px] mx-auto relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Total Rewards</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-white mb-8">More Than Just A Salary.</h2>
+                            <p className="text-white/60 text-lg mb-12 leading-relaxed">
+                                We believe in taking care of our people. Our comprehensive benefits package is designed to support your health, wealth, and professional growth.
+                            </p>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {[
-                        { icon: DollarSign, title: 'Competitive Salary', desc: 'Above-market rates based on experience.' },
-                        { icon: Zap, title: 'Performance Bonus', desc: 'Project-based bonuses and 13th month salary.' },
-                        { icon: Coffee, title: 'Modern Office', desc: 'Free coffee, snacks, and ergonomic workspace.' },
-                        { icon: BookOpen, title: 'Training Budget', desc: '$500/year for courses and certifications.' },
-                        { icon: Smile, title: 'Health Insurance', desc: 'Full medical coverage for you and family.' },
-                        { icon: Users, title: 'Team Retreats', desc: 'Annual company trips and monthly socials.' },
-                        { icon: Clock, title: 'Flexible Hours', desc: 'Outcome-focused work schedule.' },
-                        { icon: Globe, title: 'Global Exposure', desc: 'Work on international standard projects.' }
-                    ].map((benefit, i) => (
-                        <div key={i} className="bg-white p-6 rounded-2xl border border-gray-100 hover:border-titan-red/30 hover:shadow-lg transition-all group">
-                            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-titan-navy mb-4 group-hover:bg-titan-red group-hover:text-white transition-colors">
-                                <benefit.icon size={24} />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {[
+                                    { icon: Briefcase, label: "Performance Bonuses" },
+                                    { icon: Globe, label: "Health Insurance" },
+                                    { icon: Users, label: "Paid Time Off" },
+                                    { icon: Check, label: "Training Budget" },
+                                    { icon: Zap, label: "Career Development" },
+                                    { icon: Target, label: "Team Retreats" },
+                                ].map((benefit, i) => (
+                                    <div key={i} className="flex items-center gap-4 bg-white/5 p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
+                                        <benefit.icon size={20} className="text-titan-red" />
+                                        <span className="text-white font-bold text-sm uppercase tracking-wide">{benefit.label}</span>
+                                    </div>
+                                ))}
                             </div>
-                            <h4 className="font-bold text-titan-navy mb-2">{benefit.title}</h4>
-                            <p className="text-xs text-titan-navy-subtle leading-relaxed">{benefit.desc}</p>
                         </div>
-                    ))}
+                        <div className="relative">
+                            <div className="w-full h-[600px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80"
+                                    alt="Team Collaboration"
+                                    fill
+                                    className="object-cover"
+                                />
+                                <div className="absolute inset-0 bg-titan-navy/20"></div>
+                            </div>
+                            {/* Floating Stats */}
+                            <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-xl shadow-xl hidden md:block">
+                                <span className="block text-4xl font-black text-titan-navy mb-1">98%</span>
+                                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Employee Retention</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* --- HIRING PROCESS TIMELINE --- */}
-            <section className="py-20 bg-titan-navy text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red rounded-full blur-[200px] opacity-10"></div>
-                <div className="max-w-[1400px] mx-auto px-6 relative z-10">
-                    <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
-                        <div>
-                            <h2 className="text-3xl font-black mb-4">Our Hiring Process</h2>
-                            <p className="text-white/60 max-w-lg">We value your time. Here is exactly what to expect when you apply.</p>
-                        </div>
-                        <Link href="#openings" className="text-xs font-bold uppercase tracking-widest text-titan-red hover:text-white transition-colors flex items-center gap-2">
-                            Start Application <ArrowRight size={14} />
-                        </Link>
+            {/* --- HIRING PROCESS --- */}
+            <section className="py-24 px-6 bg-gray-50">
+                <div className="max-w-[1400px] mx-auto">
+                    <div className="text-center mb-20">
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">What To Expect</span>
+                        <h2 className="text-4xl text-titan-navy font-black">Our Hiring Process</h2>
+                        <p className="text-titan-navy/50 mt-4 max-w-2xl mx-auto">Transparent, fair, and fast. We respect your time and effort.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                        {[
-                            { step: '01', title: 'Apply', desc: 'Submit CV & Portfolio' },
-                            { step: '02', title: 'Screening', desc: 'Initial call with HR' },
-                            { step: '03', title: 'Technical', desc: 'Skill assessment test' },
-                            { step: '04', title: 'Interview', desc: 'Meet the Manager' },
-                            { step: '05', title: 'Offer', desc: 'Welcome to Titan!' },
-                        ].map((item, i) => (
-                            <div key={i} className="relative group">
-                                <div className="text-6xl font-black text-white/5 mb-4 group-hover:text-titan-red/20 transition-colors">{item.step}</div>
-                                <div className="absolute top-8 left-0 w-full h-[2px] bg-white/10 -z-10 hidden md:block"></div>
-                                <div className="w-4 h-4 rounded-full bg-titan-red border-4 border-titan-navy mb-4 relative z-10"></div>
-                                <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                                <p className="text-sm text-white/50">{item.desc}</p>
-                            </div>
-                        ))}
+                    <div className="relative">
+                        {/* Connecting Line */}
+                        <div className="hidden md:block absolute top-[40px] left-0 right-0 h-[2px] bg-gray-200 z-0"></div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+                            {[
+                                { step: "01", title: "Application", desc: "Submit your CV & Portfolio via our portal." },
+                                { step: "02", title: "Screening", desc: "Initial call with HR to discuss fit & basics." },
+                                { step: "03", title: "Technical", desc: "Deep-dive interview with the department led." },
+                                { step: "04", title: "Offer", desc: "Establish terms and welcome you aboard!" },
+                            ].map((s, i) => (
+                                <div key={i} className="flex flex-col items-center text-center group">
+                                    <div className="w-20 h-20 bg-white border-4 border-gray-100 rounded-full flex items-center justify-center text-2xl font-black text-titan-navy shadow-sm mb-6 group-hover:border-titan-red group-hover:text-titan-red transition-all relative z-10">
+                                        {s.step}
+                                    </div>
+                                    <h3 className="text-lg font-black text-titan-navy mb-2">{s.title}</h3>
+                                    <p className="text-sm text-titan-navy/60 px-4">{s.desc}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
@@ -385,8 +416,8 @@ export default function CareersPage() {
                                     </div>
 
                                     <div>
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div className="flex gap-2 items-center mb-2">
+                                        <div className="flex flex-wrap justify-between items-start mb-4">
+                                            <div className="flex flex-wrap gap-2 items-center mb-2">
                                                 {job.tags.map(tag => (
                                                     <span key={tag} className="px-3 py-1 bg-gray-50 text-[10px] font-black uppercase tracking-widest text-titan-navy-subtle rounded-md border border-gray-100">
                                                         {tag}

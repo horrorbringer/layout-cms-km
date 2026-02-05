@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Menu, X, Facebook, Linkedin, Youtube, Phone, Mail, MapPin, ChevronDown, ChevronRight, Globe, Shield, Zap, MousePointer2 } from 'lucide-react';
 import Link from 'next/link';
 
+import Image from 'next/image';
+
 // --- COMPONENTS ---
 
 const FeatureCard = ({ title, desc, icon: Icon, index }: { title: string, desc: string, icon: any, index: number }) => (
@@ -30,15 +32,19 @@ const FeatureCard = ({ title, desc, icon: Icon, index }: { title: string, desc: 
     </motion.div>
 );
 
+const MImage = motion(Image);
+
 const ImageReveal = ({ src, alt }: { src: string, alt: string }) => (
     <div className="overflow-hidden rounded-[2rem] relative h-[400px] md:h-[500px] w-full group">
-        <motion.img 
+        <MImage
             initial={{ scale: 1.2 }}
             whileInView={{ scale: 1 }}
             transition={{ duration: 1.5 }}
-            src={src} 
-            alt={alt} 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
             <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">View Case Study</span>
@@ -54,7 +60,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
     return (
         <AnimatePresence>
             {isOpen && (
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -67,23 +73,23 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                             <div className="w-8 h-8 bg-titan-red rounded-full flex items-center justify-center font-bold text-white">K</div>
                             <span className="font-bold text-xl tracking-tight">KIMMEX</span>
                         </div>
-                        <button 
-                            onClick={onClose} 
+                        <button
+                            onClick={onClose}
                             className="p-4 hover:bg-white/10 rounded-full transition-colors group flex items-center gap-2 text-sm font-bold uppercase tracking-widest"
                         >
                             Close <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
                         </button>
                     </div>
-                    
+
                     {/* Main Content Area */}
                     <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-                        
+
                         {/* Left: Main Navigation List */}
                         <div className="w-full md:w-1/2 lg:w-5/12 p-8 md:p-12 overflow-y-auto border-r border-white/10 flex flex-col justify-center">
                             <nav className="flex flex-col gap-2">
                                 {navItems.map((item, i) => (
                                     <div key={i}>
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ x: -20, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: i * 0.05 }}
@@ -98,7 +104,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             }}
                                         >
                                             {item.children ? (
-                                                <button 
+                                                <button
                                                     onClick={() => setActiveCategory(activeCategory === i ? null : i)}
                                                     className={`text-4xl md:text-6xl font-bold tracking-tight transition-all duration-300 w-full text-left flex items-center justify-between py-2 ${activeCategory === i ? 'text-titan-red translate-x-4' : 'text-white/40 hover:text-white'}`}
                                                 >
@@ -108,18 +114,18 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                     <ArrowRight size={32} className={`hidden md:block transition-all duration-300 ${activeCategory === i ? 'opacity-100 translate-x-0 text-titan-red' : 'opacity-0 -translate-x-4'}`} />
                                                 </button>
                                             ) : (
-                                                <Link 
+                                                <Link
                                                     href={item.href}
                                                     className="text-4xl md:text-6xl font-bold tracking-tight transition-all duration-300 w-full text-left block py-2 text-white/40 hover:text-white hover:translate-x-4"
                                                 >
                                                     {item.label}
                                                 </Link>
                                             )}
-                                            
+
                                             {/* Mobile Accordion */}
                                             <AnimatePresence>
                                                 {activeCategory === i && (
-                                                    <motion.div 
+                                                    <motion.div
                                                         initial={{ height: 0, opacity: 0 }}
                                                         animate={{ height: 'auto', opacity: 1 }}
                                                         exit={{ height: 0, opacity: 0 }}
@@ -154,8 +160,8 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                         {/* Right: Sub-navigation & Details (Desktop Only) */}
                         <div className="hidden md:flex w-1/2 lg:w-7/12 p-12 flex-col bg-white/5 relative overflow-hidden">
                             {/* Dynamic Background Blob based on Index */}
-                            <motion.div 
-                                animate={{ 
+                            <motion.div
+                                animate={{
                                     background: activeCategory !== null ? `radial-gradient(circle at ${activeCategory * 10}% 50%, rgba(255, 107, 0, 0.15), transparent 60%)` : 'none'
                                 }}
                                 className="absolute inset-0 pointer-events-none transition-all duration-700"
@@ -175,11 +181,11 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-12 border-b border-white/10 pb-4">
                                                 Explore {navItems[activeCategory].label}
                                             </h3>
-                                            
+
                                             <div className="grid grid-cols-2 gap-x-12 gap-y-10">
                                                 {navItems[activeCategory].children.map((child: any, idx: number) => (
-                                                    <div 
-                                                        key={idx} 
+                                                    <div
+                                                        key={idx}
                                                         className="group/item relative"
                                                         onMouseEnter={() => child.children && setActiveSubCategory(idx)}
                                                         onMouseLeave={() => child.children && setActiveSubCategory(null)}
@@ -187,7 +193,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                         <Link href={child.href} className="block relative">
                                                             <div className="absolute -left-4 top-1 w-0.5 h-0 bg-titan-red transition-all duration-300 group-hover/item:h-full"></div>
                                                             <h4 className="text-2xl font-bold mb-2 text-white group-hover/item:text-titan-red transition-colors flex items-center gap-3">
-                                                                {child.label} 
+                                                                {child.label}
                                                                 <ArrowRight size={18} className="opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-titan-red" />
                                                             </h4>
                                                             <p className="text-white/40 text-sm leading-relaxed max-w-xs group-hover/item:text-white/60 transition-colors">
@@ -199,7 +205,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                         {child.children && (
                                                             <motion.div
                                                                 initial={{ opacity: 0, height: 0 }}
-                                                                animate={{ 
+                                                                animate={{
                                                                     opacity: activeSubCategory === idx ? 1 : 0,
                                                                     height: activeSubCategory === idx ? 'auto' : 0,
                                                                     marginTop: activeSubCategory === idx ? 16 : 0
@@ -207,8 +213,8 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                                 className="overflow-hidden pl-4 border-l border-white/10"
                                                             >
                                                                 {child.children.map((sub: any, subIdx: number) => (
-                                                                    <Link 
-                                                                        key={subIdx} 
+                                                                    <Link
+                                                                        key={subIdx}
                                                                         href={sub.href}
                                                                         className="block py-2 text-sm text-white/50 hover:text-titan-red hover:translate-x-1 transition-all"
                                                                     >
@@ -222,9 +228,9 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             </div>
                                         </motion.div>
                                     ) : (
-                                        <motion.div 
+                                        <motion.div
                                             key="empty"
-                                            initial={{ opacity: 0 }} 
+                                            initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             className="h-full flex flex-col justify-center items-center text-white/20"
                                         >
@@ -256,9 +262,9 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                     {/* Bottom Bar */}
                     <div className="p-8 md:px-12 md:py-6 border-t border-white/10 flex justify-between items-center text-sm font-bold text-white/40 uppercase tracking-widest shrink-0 bg-[#151525]">
                         <div className="flex gap-6">
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16}/> <span className="hidden md:inline">Facebook</span></a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Linkedin size={16}/> <span className="hidden md:inline">LinkedIn</span></a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Youtube size={16}/> <span className="hidden md:inline">Youtube</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16} /> <span className="hidden md:inline">Facebook</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Linkedin size={16} /> <span className="hidden md:inline">LinkedIn</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Youtube size={16} /> <span className="hidden md:inline">Youtube</span></a>
                         </div>
                         <div>© 2026 Kimmex</div>
                     </div>
@@ -302,9 +308,9 @@ export default function DesignA_ContainerNav() {
         {
             label: 'Projects', href: '/design-a/projects/completed',
             children: [
-                { 
-                    label: 'Done Projects', 
-                    href: '/design-a/projects/completed', 
+                {
+                    label: 'Done Projects',
+                    href: '/design-a/projects/completed',
                     desc: 'View our portfolio',
                     children: [
                         { label: 'Government', href: '/design-a/projects/completed?type=Government', desc: 'Public sector works' },
@@ -314,9 +320,9 @@ export default function DesignA_ContainerNav() {
                         { label: 'Slope', href: '/design-a/projects/completed?type=Slope', desc: 'Specialized engineering' }
                     ]
                 },
-                { 
-                    label: 'Implement Projects', 
-                    href: '/design-a/projects/implementation', 
+                {
+                    label: 'Implement Projects',
+                    href: '/design-a/projects/implementation',
                     desc: 'Current developments',
                     children: [
                         { label: 'Government', href: '/design-a/projects/implementation?type=Government', desc: 'Ongoing public works' },
@@ -341,14 +347,14 @@ export default function DesignA_ContainerNav() {
 
     return (
         <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 font-sans text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
-            
+
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
-                
+
                 {/* --- NAVIGATION (Minimal / Hidden Concept) --- */}
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
-                        
+
                         {/* Logo (Top Left) */}
                         <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
                             <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
@@ -356,7 +362,7 @@ export default function DesignA_ContainerNav() {
                         </div>
 
                         {/* Menu Trigger (Top Right) */}
-                        <button 
+                        <button
                             onClick={() => setIsMenuOpen(true)}
                             className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
                         >
@@ -375,23 +381,23 @@ export default function DesignA_ContainerNav() {
                 {/* --- HERO SECTION --- */}
                 <header className="pt-32 md:pt-40 pb-12 md:pb-20 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center min-h-[85vh]">
                     <div className="max-w-2xl order-2 lg:order-1">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8"
                         >
                             Est. 1999 • Phnom Penh
                         </motion.div>
-                        <motion.h1 
+                        <motion.h1
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1, duration: 0.8 }}
                             className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-8 md:mb-10"
                         >
-                            Constructing <br/>
+                            Constructing <br />
                             <span className="text-gray-300">Excellence.</span>
                         </motion.h1>
-                        <motion.p 
+                        <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.3, duration: 0.8 }}
@@ -399,14 +405,14 @@ export default function DesignA_ContainerNav() {
                         >
                             We are Cambodia's leading construction firm, merging technical precision with sustainable innovation.
                         </motion.p>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.5 }}
                             className="flex gap-4"
                         >
                             <button className="flex items-center gap-3 text-lg font-bold hover:gap-6 transition-all group">
-                                View Projects 
+                                View Projects
                                 <div className="w-10 h-10 bg-[#F5F5F7] rounded-full flex items-center justify-center group-hover:bg-titan-navy group-hover:text-white transition-colors shadow-sm">
                                     <ArrowRight size={18} />
                                 </div>
@@ -415,17 +421,20 @@ export default function DesignA_ContainerNav() {
                     </div>
 
                     <div className="relative h-[400px] md:h-[600px] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden group order-1 lg:order-2 shadow-2xl">
-                        <motion.img
+                        <MImage
                             initial={{ scale: 1.1 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 1.5, ease: "easeOut" }}
-                            src="https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=2800"
+                            src="/images/projects/Thumbnail-1.jpg"
                             alt="Hero Architecture"
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            priority
                         />
                         <div className="absolute inset-0 bg-black/10"></div>
-                        
-                        <motion.div 
+
+                        <motion.div
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.8 }}
@@ -452,34 +461,34 @@ export default function DesignA_ContainerNav() {
                 {/* --- SERVICES --- */}
                 <section className="py-20 md:py-32 px-6 md:px-12">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight max-w-md leading-tight">Capabilities & <br/>Expertise</h2>
+                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight max-w-md leading-tight">Capabilities & <br />Expertise</h2>
                         <a href="#" className="font-bold border-b border-titan-navy pb-1 hover:text-titan-red hover:border-titan-red transition-colors">View All Capabilities</a>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <FeatureCard 
+                        <FeatureCard
                             index={0}
-                            title="Design & Build" 
-                            desc="Comprehensive delivery from initial concept to final handover." 
-                            icon={MousePointer2} 
+                            title="Design & Build"
+                            desc="Comprehensive delivery from initial concept to final handover."
+                            icon={MousePointer2}
                         />
-                        <FeatureCard 
+                        <FeatureCard
                             index={1}
-                            title="Infrastructure" 
-                            desc="Roads, bridges, and public utility networks connecting the nation." 
-                            icon={Globe} 
+                            title="Infrastructure"
+                            desc="Roads, bridges, and public utility networks connecting the nation."
+                            icon={Globe}
                         />
-                        <FeatureCard 
+                        <FeatureCard
                             index={2}
-                            title="Renovation" 
-                            desc="Modernizing existing structures with structural integrity." 
-                            icon={Zap} 
+                            title="Renovation"
+                            desc="Modernizing existing structures with structural integrity."
+                            icon={Zap}
                         />
-                        <FeatureCard 
+                        <FeatureCard
                             index={3}
-                            title="Management" 
-                            desc="Rigorous project oversight and quality assurance." 
-                            icon={Shield} 
+                            title="Management"
+                            desc="Rigorous project oversight and quality assurance."
+                            icon={Shield}
                         />
                     </div>
                 </section>
@@ -497,7 +506,7 @@ export default function DesignA_ContainerNav() {
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
                             <div className="space-y-8 mt-0 lg:mt-24">
-                                <ImageReveal src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670" alt="Ministry of Economy" />
+                                <ImageReveal src="/images/projects/Thumbnail-2.jpg" alt="Ministry of Economy" />
                                 <div className="px-2 md:px-8">
                                     <h3 className="text-2xl font-bold mb-2">Government Projects</h3>
                                     <p className="text-gray-500">Trusted partner for national infrastructure.</p>
@@ -508,7 +517,7 @@ export default function DesignA_ContainerNav() {
                                     <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
                                     <p className="text-gray-500">High-rise engineering excellence.</p>
                                 </div>
-                                <ImageReveal src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2670" alt="Vattanac Extension" />
+                                <ImageReveal src="/images/projects/Thumbnail-3.jpg" alt="Vattanac Extension" />
                                 <div className="px-2 md:px-8 lg:hidden">
                                     <h3 className="text-2xl font-bold mb-2">Commercial Towers</h3>
                                     <p className="text-gray-500">High-rise engineering excellence.</p>

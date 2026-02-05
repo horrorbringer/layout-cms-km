@@ -127,7 +127,7 @@ export default function NewsPage() {
                     <span className="inline-block px-3 py-1 rounded-full border border-white/20 text-[10px] font-black uppercase tracking-widest text-white/80 mb-4 backdrop-blur-sm bg-white/5">
                         Insights & Updates
                     </span>
-                    <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-6 drop-shadow-lg">
+                    <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight mb-6 drop-shadow-lg">
                         TITAN <span className="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-orange-400">NEWSROOM</span>
                     </h1>
                     <p className="max-w-xl text-white/80 text-lg font-light leading-relaxed drop-shadow-md">
@@ -193,7 +193,7 @@ export default function NewsPage() {
 
                     {/* Featured Article (Left - Large) */}
                     <div className="lg:col-span-8 h-full relative group cursor-pointer overflow-hidden rounded-2xl shadow-sm border border-gray-100">
-                        <Link href={`/design-z/news/${featuredNews.id}`} className="block h-[500px] lg:h-full relative">
+                        <Link href={`/design-z/news/${featuredNews.id}`} className="block h-[400px] md:h-[500px] lg:h-full relative">
                             <Image src={featuredNews.image} alt={featuredNews.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
                             <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
                             <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full max-w-3xl">
@@ -205,13 +205,13 @@ export default function NewsPage() {
                                     <span className="inline-flex items-center gap-2 bg-titan-red/90 backdrop-blur text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 mb-4 rounded-sm shadow-lg">
                                         <TrendingUp size={12} /> Featured Story
                                     </span>
-                                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-[0.9] tracking-tight group-hover:underline decoration-4 underline-offset-8 decoration-titan-red/50">
+                                    <h1 className="text-2xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-[0.9] tracking-tight group-hover:underline decoration-4 underline-offset-8 decoration-titan-red/50">
                                         {featuredNews.title}
                                     </h1>
-                                    <p className="text-white/80 text-lg mb-6 line-clamp-2 max-w-xl font-medium leading-relaxed">
+                                    <p className="text-white/80 text-sm md:text-lg mb-6 line-clamp-2 max-w-xl font-medium leading-relaxed">
                                         {featuredNews.excerpt}
                                     </p>
-                                    <div className="flex items-center gap-6 text-white/60 text-xs font-bold uppercase tracking-widest border-t border-white/10 pt-6">
+                                    <div className="flex items-center gap-4 md:gap-6 text-white/60 text-[10px] md:text-xs font-bold uppercase tracking-widest border-t border-white/10 pt-6">
                                         <span className="flex items-center gap-2 text-white"><User size={14} className="text-titan-red" /> {featuredNews.author}</span>
                                         <span className="flex items-center gap-2"><Calendar size={14} /> {featuredNews.date}</span>
                                         <span className="flex items-center gap-2"><Clock size={14} /> {featuredNews.readTime}</span>
@@ -257,7 +257,7 @@ export default function NewsPage() {
                     <div className="flex items-end justify-between mb-10 pb-4 border-b border-gray-100">
                         <div>
                             <span className="text-titan-red font-black text-sm uppercase tracking-widest mb-2 block">The Archives</span>
-                            <h2 className="text-4xl font-black text-titan-navy">LATEST <span className="text-titan-navy/30">STORIES</span></h2>
+                            <h2 className="text-3xl md:text-4xl font-black text-titan-navy">LATEST <span className="text-titan-navy/30">STORIES</span></h2>
                         </div>
                         {activeCategory !== 'All' && (
                             <button onClick={() => setActiveCategory('All')} className="text-xs text-titan-red font-black uppercase tracking-widest hover:underline">Clear Filter</button>
@@ -314,11 +314,11 @@ export default function NewsPage() {
                 </div>
 
                 {/* --- NEWSLETTER CTA --- */}
-                <div className="bg-titan-navy rounded-3xl p-12 lg:p-24 relative overflow-hidden text-center lg:text-left mb-20 shadow-2xl">
+                <div className="bg-titan-navy rounded-3xl p-8 lg:p-24 relative overflow-hidden text-center lg:text-left mb-20 shadow-2xl">
                     <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-titan-red rounded-full blur-[200px] opacity-15 -mr-48 -mt-48 pointer-events-none"></div>
                     <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                         <div className="lg:col-span-7 space-y-6">
-                            <h2 className="text-4xl lg:text-6xl font-black text-white leading-tight tracking-tight">
+                            <h2 className="text-3xl lg:text-6xl font-black text-white leading-tight tracking-tight">
                                 STAY AHEAD OF <br /><span className="text-white/30">THE CURVE.</span>
                             </h2>
                             <p className="text-white/60 text-lg max-w-xl font-light leading-relaxed">

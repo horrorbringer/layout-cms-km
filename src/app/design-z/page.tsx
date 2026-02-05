@@ -137,7 +137,7 @@ export default function DesignGenX() {
 
                         <FadeInWhenVisible delay={0.2}>
                             <div className="relative">
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg">
                                         <Image
                                             src="/images/projects/Thumbnail-4.jpg"
@@ -147,7 +147,7 @@ export default function DesignGenX() {
                                             sizes="(max-width: 768px) 100vw, 25vw"
                                         />
                                     </div>
-                                    <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg mt-8">
+                                    <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg mt-8 md:mt-0">
                                         <Image
                                             src="/images/projects/Thumbnail-5.jpg"
                                             alt="Team Meeting"
@@ -156,7 +156,7 @@ export default function DesignGenX() {
                                             sizes="(max-width: 768px) 100vw, 25vw"
                                         />
                                     </div>
-                                    <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg -mt-8">
+                                    <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg -mt-8 md:mt-0">
                                         <Image
                                             src="/images/projects/Thumbnail-6.jpg"
                                             alt="Architecture"
@@ -177,9 +177,9 @@ export default function DesignGenX() {
                                 </div>
 
                                 {/* Experience Badge */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent-orange text-white p-6 rounded-2xl shadow-xl text-center z-10">
-                                    <div className="text-5xl font-black">25+</div>
-                                    <div className="text-sm uppercase tracking-widest mt-1">Years of Excellence</div>
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent-orange text-white p-6 rounded-2xl shadow-xl text-center z-10 w-32 h-32 flex flex-col items-center justify-center">
+                                    <div className="text-4xl font-black">25+</div>
+                                    <div className="text-xs uppercase tracking-widest mt-1">Years of Excellence</div>
                                 </div>
                             </div>
                         </FadeInWhenVisible>
