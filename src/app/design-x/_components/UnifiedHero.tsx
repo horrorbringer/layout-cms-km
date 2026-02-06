@@ -13,64 +13,65 @@ interface UnifiedHeroProps {
     onToggle?: (mode: HeroMode) => void;
 }
 
-/**
- * UnifiedHero Component
- * 
- * This component serves as a switch between the Video Hero and the Carousel Hero.
- * It features a premium interactive toggle switch.
- */
 export default function UnifiedHero({ mode = 'carousel', onToggle }: UnifiedHeroProps) {
     return (
         <div className="relative">
-            {/* Premium Mode Switcher (Sliding Pill) */}
-            <div className="absolute top-36 left-12 z-[60] hidden lg:block">
-                <div className="relative bg-titan-navy/40 backdrop-blur-xl border border-white/10 p-1 rounded-full flex gap-1 shadow-2xl">
-                    {/* Animated Pill Background */}
+            {/* Premium Mode Switcher (Sliding Pill) - Right Aligned like Design Z */}
+            <div className="absolute top-[130px] right-12 z-[60] hidden lg:block">
+                <div className="relative bg-titan-navy/40 backdrop-blur-xl border border-white/10 p-1.5 rounded-full flex items-center shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+                    {/* Sliding Background Pill */}
                     <motion.div
-                        className="absolute inset-y-1 bg-titan-red rounded-full"
+                        className="absolute h-[calc(100%-12px)] rounded-full bg-accent-orange shadow-lg shadow-accent-orange/20"
                         initial={false}
                         animate={{
-                            x: mode === 'video' ? 0 : 124,
-                            width: mode === 'video' ? 120 : 100
+                            left: mode === 'video' ? '6px' : '50%',
+                            width: mode === 'video' ? '120px' : '120px'
                         }}
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
 
-                    {/* Video Mode Button */}
                     <button
                         onClick={() => onToggle?.('video')}
-                        className={`
-                            relative z-10 flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest transition-colors duration-300
-                            ${mode === 'video' ? 'text-white' : 'text-white/60 hover:text-white'}
-                        `}
+                        className={`relative z-10 flex items-center justify-center gap-2 w-[120px] py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500 ${mode === 'video' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
                     >
-                        <Play size={14} fill={mode === 'video' ? 'currentColor' : 'none'} />
+                        <Play size={12} fill={mode === 'video' ? 'currentColor' : 'none'} className="mb-0.5" />
                         Cinematic
                     </button>
 
-                    {/* Carousel Mode Button */}
                     <button
                         onClick={() => onToggle?.('carousel')}
-                        className={`
-                            relative z-10 flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest transition-colors duration-300
-                            ${mode === 'carousel' ? 'text-white' : 'text-white/60 hover:text-white'}
-                        `}
+                        className={`relative z-10 flex items-center justify-center gap-2 w-[120px] py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500 ${mode === 'carousel' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
                     >
-                        <ImageIcon size={14} />
+                        <ImageIcon size={12} className="mb-0.5" />
                         Gallery
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Switcher (Simplified) */}
-            <div className="absolute top-28 left-6 z-[60] lg:hidden">
-                <button
-                    onClick={() => onToggle?.(mode === 'video' ? 'carousel' : 'video')}
-                    className="bg-titan-navy/60 backdrop-blur-lg border border-white/20 px-4 py-2 rounded-full text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2"
-                >
-                    {mode === 'video' ? <ImageIcon size={12} /> : <Play size={12} fill="white" />}
-                    {mode === 'video' ? 'Switch to Gallery' : 'Switch to Video'}
-                </button>
+            {/* Mobile Mode Switcher - Right Corner */}
+            <div className="absolute top-[100px] right-6 z-[60] lg:hidden">
+                <div className="relative bg-titan-navy/60 backdrop-blur-lg border border-white/20 p-1 rounded-full flex items-center shadow-2xl scale-90 origin-right">
+                    <motion.div
+                        className="absolute h-[calc(100%-8px)] rounded-full bg-accent-orange"
+                        initial={false}
+                        animate={{
+                            left: mode === 'video' ? '4px' : 'calc(50% + 2px)',
+                            width: 'calc(50% - 6px)'
+                        }}
+                    />
+                    <button
+                        onClick={() => onToggle?.('video')}
+                        className={`relative z-10 p-2.5 px-4 rounded-full transition-all duration-500 ${mode === 'video' ? 'text-white' : 'text-white/40'}`}
+                    >
+                        <Play size={14} fill={mode === 'video' ? 'currentColor' : 'none'} />
+                    </button>
+                    <button
+                        onClick={() => onToggle?.('carousel')}
+                        className={`relative z-10 p-2.5 px-4 rounded-full transition-all duration-500 ${mode === 'carousel' ? 'text-white' : 'text-white/40'}`}
+                    >
+                        <ImageIcon size={14} />
+                    </button>
+                </div>
             </div>
 
             {/* Render Selected Hero with Smooth Transition */}
