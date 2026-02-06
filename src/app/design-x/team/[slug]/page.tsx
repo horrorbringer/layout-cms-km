@@ -158,9 +158,9 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
 
                 <div className="max-w-7xl mx-auto px-6 w-full relative z-10 py-20 pb-40">
-                    <Link href="/design-x/about" className="inline-flex items-center text-white/40 hover:text-white transition-colors font-bold text-xs uppercase tracking-[0.2em] mb-12 group">
+                    <Link href="/design-x/about#leadership" className="inline-flex items-center text-white/40 hover:text-white transition-colors font-bold text-xs uppercase tracking-[0.2em] mb-12 group">
                         <span className="w-8 h-[1px] bg-white/20 mr-4 group-hover:w-12 group-hover:bg-titan-red transition-all"></span>
-                        Back to Team
+                        Back to Organization Chart
                     </Link>
 
                     <motion.div

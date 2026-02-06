@@ -14,7 +14,6 @@ type TeamMember = {
     image?: string;
     bio: string;
     email: string;
-    phone: string;
     experience: string;
     location: string;
     specialization: string;
@@ -28,7 +27,7 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/touch_kim.jpg',
         bio: 'Okhna. Touch Kim founded KIM MEX Construction in 1999 with a vision to revolutionize the Cambodian construction industry. With over 30 years of experience in civil engineering and infrastructure development, he has led the company from a small local contractor to a national leader. His leadership philosophy centers on integrity, quality, and community building.',
         email: 'ceo@kimmex.com',
-        phone: '+855 12 000 000',
+
         experience: '30+ Years',
         location: 'Phnom Penh HQ',
         specialization: 'Strategic Leadership, Civil Engineering'
@@ -39,7 +38,7 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/pauch_bunpheakdey.jpg',
         bio: 'As Deputy General Manager, Mr. Pauch Bunpheakdey oversees the daily operations of KIM MEX Construction. He ensures that all departments work in synergy to deliver projects on time and within budget. His background in project management and operational efficiency has been instrumental in the company\'s rapid growth.',
         email: 'deputy.gm@kimmex.com',
-        phone: '+855 12 000 001',
+
         experience: '20+ Years',
         location: 'Phnom Penh HQ',
         specialization: 'Operations Management, Project Planning'
@@ -50,7 +49,7 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/leng_vannarith.jpg',
         bio: 'Mr. Leng Vannarith manages the financial health of the organization. With a keen eye for detail and strategic financial planning, he ensures sustainable growth and fiscal responsibility across all projects.',
         email: 'finance@kimmex.com',
-        phone: '+855 12 000 002',
+
         experience: '18+ Years',
         location: 'Phnom Penh HQ',
         specialization: 'Corporate Finance, Risk Management'
@@ -61,7 +60,7 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/oung_chaknora.jpg',
         bio: 'Mr. Oung Chaknora leads our most complex construction projects. His expertise in structural engineering and on-site management ensures that every build meets our rigorous safety and quality standards.',
         email: 'spm@kimmex.com',
-        phone: '+855 12 000 003',
+
         experience: '15+ Years',
         location: 'Site Operations',
         specialization: 'Construction Management, Structural Engineering'
@@ -72,7 +71,7 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/sum_rotana.jpg',
         bio: 'Mr. Sum Rotana is dedicated to delivering excellence in project execution. He works closely with clients and site teams to ensure clear communication and successful project outcomes.',
         email: 'pm@kimmex.com',
-        phone: '+855 12 000 004',
+
         experience: '12+ Years',
         location: 'Site Operations',
         specialization: 'Project Coordination, Client Relations'
@@ -83,7 +82,7 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/krai_keak.jpg',
         bio: 'Specializing in Mechanical, Electrical, and Plumbing (MEP) systems, Mr. Krai Keak ensures the functional heartbeat of every building we construct operates flawlessly.',
         email: 'mep.ops@kimmex.com',
-        phone: '+855 12 000 005',
+
         experience: '14+ Years',
         location: 'MEP Division',
         specialization: 'MEP Systems, Operational Maintenance'
@@ -94,7 +93,7 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/chhundy_ryta.jpg',
         bio: 'Mr. Chhundy Ryta brings creative vision to our technical excellence. He oversees architectural design integrity, ensuring that aesthetics and functionality coexist in perfect harmony.',
         email: 'architect@kimmex.com',
-        phone: '+855 12 000 006',
+
         experience: '10+ Years',
         location: 'Design Studio',
         specialization: 'Architectural Design, BIM'
@@ -105,7 +104,7 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/touch_putheany.jpg',
         bio: 'Mr. Touch Putheany leads the design of complex MEP systems. His innovative approach to energy efficiency and system integration sets our projects apart.',
         email: 'mep.design@kimmex.com',
-        phone: '+855 12 000 007',
+
         experience: '11+ Years',
         location: 'MEP Division',
         specialization: 'MEP Design, Sustainability'
@@ -116,10 +115,21 @@ const teamMembers: TeamMember[] = [
         image: '/images/team-leadership-professional/ry_ken.jpg',
         bio: 'Mr. Ry Ken manages Quantity Surveying, ensuring precise cost estimation and contract management. His diligence protects our clients\' investments and ensures project viability.',
         email: 'qs@kimmex.com',
-        phone: '+855 12 000 008',
+
         experience: '9+ Years',
         location: 'Phnom Penh HQ',
         specialization: 'Cost Estimation, Contract Management'
+    },
+    {
+        name: 'Mr. HONG BUNNA',
+        role: 'Warehouse Manager',
+        image: '/images/team-leadership-professional/hong_bunna.jpg',
+        bio: 'Mr. Hong manages logistics and inventory, ensuring that materials are available on-site exactly when needed to maintain project timelines. His coordination is key to project efficiency.',
+        email: 'logistics@kimmex.com',
+
+        experience: '15+ Years',
+        location: 'Phnom Penh HQ',
+        specialization: 'Logistics, Inventory Management'
     }
 ];
 
@@ -158,9 +168,14 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
 
                 <div className="max-w-7xl mx-auto px-6 w-full relative z-10 py-24 pb-48">
-                    <Link href="/design-z/about" className="inline-flex items-center text-titan-red font-bold text-xs uppercase tracking-[0.3em] mb-12 group">
-                        <ChevronLeft size={20} className="mr-2 group-hover:-translate-x-2 transition-transform" />
-                        Back to Corporate Structure
+                    <Link
+                        href="/design-z/about#leadership"
+                        className="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-titan-red hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-md mb-12 mt-12 group"
+                    >
+                        <div className="w-8 h-8 rounded-lg bg-titan-red/10 flex items-center justify-center text-titan-red group-hover:bg-titan-red group-hover:text-white transition-all">
+                            <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Back to Org Chart</span>
                     </Link>
 
                     <motion.div
@@ -223,11 +238,8 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                                     <Mail size={18} /> Send Message
                                 </a>
                                 <div className="flex gap-2">
-                                    <a href={`tel:${member.phone}`} className="flex-1 h-14 bg-titan-bg text-titan-navy flex items-center justify-center hover:bg-titan-navy hover:text-white transition-colors border border-gray-100">
-                                        <Phone size={18} />
-                                    </a>
-                                    <a href="#" className="flex-1 h-14 bg-titan-bg text-titan-navy flex items-center justify-center hover:bg-titan-navy hover:text-white transition-colors border border-gray-100">
-                                        <Linkedin size={18} />
+                                    <a href="#" className="flex-1 h-14 bg-titan-bg text-titan-navy flex items-center justify-center hover:bg-titan-navy hover:text-white transition-colors border border-gray-100 font-bold uppercase tracking-widest text-[10px] gap-2">
+                                        <Linkedin size={18} /> LinkedIn Profile
                                     </a>
                                 </div>
                             </div>
