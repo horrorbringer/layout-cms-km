@@ -267,7 +267,7 @@ export default function AboutPage() {
     const ceo = {
         name: 'Okhna. TOUCH KIM',
         role: 'Chief Executive Officer',
-        image: '/images/team-leadership/touch_kim.png',
+        image: '/images/team-leadership-professional/touch_kim.jpg',
         bio: 'Okhna Touch Kim founded KIM MEX Construction in 1999 with a vision to revolutionize the Cambodian construction landscape. With over 25 years of leadership, he has steered the company from a small team of engineers to a premier national contractor. His philosophy of "Integrity in every build" continues to drive the company\'s success.'
     };
 
@@ -275,31 +275,31 @@ export default function AboutPage() {
         {
             name: 'Mr. PAUCH BUNPHEAKDEY',
             role: 'Deputy General Manager',
-            image: '/images/team-leadership/pauch_bunpheakdey.jpeg',
+            image: '/images/team-leadership-professional/pauch_bunpheakdey.jpg',
             bio: 'As Deputy General Manager, Mr. Pauch ensures operational excellence across all departments. He brings over 18 years of experience in construction management and strategic planning.'
         },
         {
             name: 'Mr. LENG VANNARITH',
             role: 'Finance Director',
-            image: '/images/team-leadership/leng_vannarith.jpeg',
+            image: '/images/team-leadership-professional/leng_vannarith.jpg',
             bio: 'Mr. Leng overlooks the financial health of KIM MEX, ensuring sustainable growth and robust fiscal policies that allow for ambitious project undertakings.'
         },
         {
             name: 'Mr. OUNG CHAKNORA',
             role: 'Senior Project Manager',
-            image: '/images/team-leadership/oung_chaknora.jpeg',
+            image: '/images/team-leadership-professional/oung_chaknora.jpg',
             bio: 'Leading our largest developments, Mr. Oung is known for his rigorous attention to detail and ability to deliver complex high-rise projects ahead of schedule.'
         },
         {
             name: 'Mr. SUM ROTANA',
             role: 'Project Manager',
-            image: '/images/team-leadership/sum_rotana.jpeg',
+            image: '/images/team-leadership-professional/sum_rotana.jpg',
             bio: 'Mr. Sum specializes in commercial and industrial projects, coordinating diverse teams to ensure safety and quality standards are met at every stage.'
         },
         {
             name: 'Mr. KRAI KEAK',
             role: 'MEP Operation Manager',
-            image: '/images/team-leadership/krai_keak.jpeg',
+            image: '/images/team-leadership-professional/krai_keak.jpg',
             bio: 'Overseeing Mechanical, Electrical, and Plumbing operations, Mr. Krai ensures that the vital systems of our buildings function perfectly and efficiently.'
         },
     ];
@@ -308,25 +308,25 @@ export default function AboutPage() {
         {
             name: 'Mr. CHHUNDY RYTA',
             role: 'Deputy Architect Manager',
-            image: '/images/team-leadership/chhundy_ryta.jpeg',
+            image: '/images/team-leadership-professional/chhundy_ryta.jpg',
             bio: 'Mr. Chhundy brings creative vision to life, working closely with clients to translate their dreams into structural reality while strictly adhering to codes.'
         },
         {
             name: 'Mr. TOUCH PUTHEANY',
             role: 'MEP Design Manager',
-            image: '/images/team-leadership/touch_putheany.jpeg',
+            image: '/images/team-leadership-professional/touch_putheany.jpg',
             bio: 'Leading the MEP design team, Mr. Touch focuses on sustainable and energy-efficient system designs for modern infrastructure.'
         },
         {
             name: 'Mr. RY KEN',
             role: 'Deputy QS Manager',
-            image: '/images/team-leadership/ry_ken.jpeg',
+            image: '/images/team-leadership-professional/ry_ken.jpg',
             bio: 'With precision and expertise, Mr. Ry manages quantity surveying, ensuring accurate cost estimation and resource management for all projects.'
         },
         {
             name: 'Mr. HONG BUNNA',
             role: 'Warehouse Manager',
-            image: '/images/team-leadership/hong_bunna.jpeg',
+            image: '/images/team-leadership-professional/hong_bunna.jpg',
             bio: 'Mr. Hong manages logistics and inventory, ensuring that materials are available on-site exactly when needed to maintain project timelines.'
         },
     ];
@@ -521,7 +521,7 @@ export default function AboutPage() {
                                 {/* Image Container */}
                                 <div className="relative aspect-[4/5] w-full bg-white p-2 shadow-2xl rounded-lg overflow-hidden border border-gray-100">
                                     <Image
-                                        src="/images/team-leadership/touch_kim.png"
+                                        src="/images/team-leadership-professional/touch_kim.jpg"
                                         alt="Okhna. TOUCH KIM"
                                         fill
                                         className="object-contain object-bottom bg-gray-50"

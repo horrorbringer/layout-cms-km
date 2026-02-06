@@ -25,7 +25,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Okhna. TOUCH KIM',
         role: 'Chief Executive Officer',
-        image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/touch_kim.jpg',
         bio: 'Okhna. Touch Kim founded KIM MEX Construction in 1999 with a vision to revolutionize the Cambodian construction industry. With over 30 years of experience in civil engineering and infrastructure development, he has led the company from a small local contractor to a national leader. His leadership philosophy centers on integrity, quality, and community building.',
         email: 'ceo@kimmex.com',
         phone: '+855 12 000 000',
@@ -36,7 +36,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Mr. PAUCH BUNPHEAKDEY',
         role: 'Deputy General Manager',
-        image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/pauch_bunpheakdey.jpg',
         bio: 'As Deputy General Manager, Mr. Pauch Bunpheakdey oversees the daily operations of KIM MEX Construction. He ensures that all departments work in synergy to deliver projects on time and within budget. His background in project management and operational efficiency has been instrumental in the company\'s rapid growth.',
         email: 'deputy.gm@kimmex.com',
         phone: '+855 12 000 001',
@@ -47,7 +47,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Mr. LENG VANNARITH',
         role: 'Finance Director',
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/leng_vannarith.jpg',
         bio: 'Mr. Leng Vannarith manages the financial health of the organization. With a keen eye for detail and strategic financial planning, he ensures sustainable growth and fiscal responsibility across all projects.',
         email: 'finance@kimmex.com',
         phone: '+855 12 000 002',
@@ -58,7 +58,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Mr. OUNG CHAKNORA',
         role: 'Senior Project Manager',
-        image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/oung_chaknora.jpg',
         bio: 'Mr. Oung Chaknora leads our most complex construction projects. His expertise in structural engineering and on-site management ensures that every build meets our rigorous safety and quality standards.',
         email: 'spm@kimmex.com',
         phone: '+855 12 000 003',
@@ -69,7 +69,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Mr. SUM ROTANA',
         role: 'Project Manager',
-        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/sum_rotana.jpg',
         bio: 'Mr. Sum Rotana is dedicated to delivering excellence in project execution. He works closely with clients and site teams to ensure clear communication and successful project outcomes.',
         email: 'pm@kimmex.com',
         phone: '+855 12 000 004',
@@ -80,7 +80,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Mr. KRAI KEAK',
         role: 'MEP Operations Manager',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/krai_keak.jpg',
         bio: 'Specializing in Mechanical, Electrical, and Plumbing (MEP) systems, Mr. Krai Keak ensures the functional heartbeat of every building we construct operates flawlessly.',
         email: 'mep.ops@kimmex.com',
         phone: '+855 12 000 005',
@@ -91,7 +91,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Mr. CHHUNDY RYTA',
         role: 'Deputy Architect Manager',
-        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/chhundy_ryta.jpg',
         bio: 'Mr. Chhundy Ryta brings creative vision to our technical excellence. He oversees architectural design integrity, ensuring that aesthetics and functionality coexist in perfect harmony.',
         email: 'architect@kimmex.com',
         phone: '+855 12 000 006',
@@ -102,7 +102,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Mr. TOUCH PUTHEANY',
         role: 'MEP Design Manager',
-        image: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/touch_putheany.jpg',
         bio: 'Mr. Touch Putheany leads the design of complex MEP systems. His innovative approach to energy efficiency and system integration sets our projects apart.',
         email: 'mep.design@kimmex.com',
         phone: '+855 12 000 007',
@@ -113,7 +113,7 @@ const teamMembers: TeamMember[] = [
     {
         name: 'Mr. RY KEN',
         role: 'Deputy QS Manager',
-        image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=400&h=400',
+        image: '/images/team-leadership-professional/ry_ken.jpg',
         bio: 'Mr. Ry Ken manages Quantity Surveying, ensuring precise cost estimation and contract management. His diligence protects our clients\' investments and ensures project viability.',
         email: 'qs@kimmex.com',
         phone: '+855 12 000 008',
