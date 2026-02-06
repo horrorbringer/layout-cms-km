@@ -2,9 +2,154 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Quote, ChevronDown, ChevronUp, Plus, Minus } from 'lucide-react';
+import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Quote, ChevronDown, ChevronUp, Plus, Minus, X, Mail, Linkedin, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage } from '../context/LanguageContext';
+
+// Modal Component for Member Details
+function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: boolean; onClose: () => void }) {
+    if (!isOpen || !member) return null;
+
+    return (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-titan-navy/95 backdrop-blur-md"
+                onClick={onClose}
+            ></motion.div>
+
+            {/* Modal Content */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="relative bg-white rounded-3xl overflow-hidden max-w-4xl w-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col md:flex-row min-h-[500px]"
+                onClick={(e) => e.stopPropagation()}
+            >
+                {/* Close Button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-6 right-6 z-20 w-10 h-10 bg-white shadow-lg text-titan-navy hover:bg-titan-red hover:text-white rounded-full transition-all duration-300 flex items-center justify-center group"
+                >
+                    <X size={20} className="transition-transform group-hover:rotate-90" />
+                </button>
+
+                {/* Left: Image Side */}
+                <div className="w-full md:w-1/2 relative min-h-[400px] md:min-h-full">
+                    <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        className="object-cover object-top"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/40 to-transparent"></div>
+
+                    {/* Floating Info on Image */}
+                    <div className="absolute bottom-6 left-6 right-6">
+                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-widest mb-2">
+                            <Shield size={10} className="text-titan-red" />
+                            Verified Leadership
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right: Info Side */}
+                <div className="w-full md:w-1/2 p-10 md:p-14 flex flex-col relative">
+                    {/* Background Decorative Text */}
+                    <div className="absolute top-10 right-10 text-[100px] font-black text-gray-50 -z-10 select-none pb-0 leading-none">
+                        KM
+                    </div>
+
+                    <div className="mb-10 relative">
+                        <span className="text-titan-red font-black uppercase tracking-[0.2em] text-xs block mb-3">{member.role}</span>
+                        <h3 className="text-4xl font-black text-titan-navy uppercase leading-[1.1] tracking-tight">{member.name}</h3>
+                        <div className="w-20 h-1.5 bg-titan-red mt-6 rounded-full"></div>
+                    </div>
+
+                    <div className="flex-grow">
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-titan-navy/30 mb-4 italic">Executive Biography</h4>
+                        <div className="space-y-6 text-titan-navy/70 leading-relaxed font-medium">
+                            {member.bio ? (
+                                <p className="text-lg leading-relaxed">{member.bio}</p>
+                            ) : (
+                                <>
+                                    <p className="text-lg leading-relaxed">
+                                        An integral part of KIM MEX Construction, {member.name.split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {member.role.toLowerCase()} division.
+                                    </p>
+                                    <p>
+                                        Focused on operational efficiency and upholding our core values of excellence and safety, they play a vital role in delivering landmark projects across the Kingdom.
+                                    </p>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="mt-12 pt-8 border-t border-gray-100 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-titan-navy/5 flex items-center justify-center text-titan-navy">
+                                <Users size={18} />
+                            </div>
+                            <div className="text-[11px] leading-tight">
+                                <div className="font-bold text-titan-navy uppercase">Member Since</div>
+                                <div className="text-titan-navy/50">Core Leadership Team</div>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                            <div className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-titan-navy/30 hover:border-titan-red hover:text-titan-red transition-all cursor-pointer">
+                                <Mail size={16} />
+                            </div>
+                            <div className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-titan-navy/30 hover:border-titan-red hover:text-titan-red transition-all cursor-pointer">
+                                <Linkedin size={16} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
+// Team Member Card Component
+function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO?: boolean; onClick?: (member: any) => void }) {
+    return (
+        <div
+            className="flex flex-col items-center group relative z-10 w-full cursor-pointer"
+            onClick={() => onClick && onClick(member)}
+        >
+            <div className={`relative rounded-xl overflow-hidden bg-white shadow-md border-2 border-white transition-all duration-500 group-hover:shadow-2xl group-hover:-translate-y-2
+                ${isCEO ? 'w-56 h-56 mb-8' : 'w-36 h-36 lg:w-48 lg:h-48 mb-5'}
+            `}>
+                <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                />
+
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-titan-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30">
+                        <ArrowRight size={20} />
+                    </div>
+                </div>
+            </div>
+            <div className="text-center px-2">
+                <h3 className={`font-bold text-titan-navy uppercase tracking-tight transition-colors duration-300 group-hover:text-titan-red ${isCEO ? 'text-2xl mb-1' : 'text-sm lg:text-base mb-1'}`}>
+                    {member.name}
+                </h3>
+                <p className={`text-accent-orange font-bold uppercase tracking-[0.1em] ${isCEO ? 'text-sm' : 'text-[10px] lg:text-[11px]'}`}>
+                    {member.role}
+                </p>
+            </div>
+        </div>
+    );
+}
 
 // Animation wrapper component
 function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -61,161 +206,9 @@ function AnimatedCounter({ value, suffix = '', label }: { value: number; suffix?
     );
 }
 
-// Org Chart Node Type
-type OrgNodeData = {
-    name: string;
-    role: string;
-    image?: string;
-    children?: OrgNodeData[];
-};
-
-// Org Chart Node Component (Premium Hybrid Design - Compact Mode)
-function OrgTreeNode({ node, level = 0, isMobile = false }: { node: OrgNodeData; level?: number; isMobile?: boolean }) {
-    const isVertical = isMobile || level >= 1;
-    const [isOpen, setIsOpen] = React.useState(true);
-    const hasChildren = node.children && node.children.length > 0;
-
-    return (
-        <div className="flex flex-col items-center">
-            {/* Node Card */}
-            <FadeInWhenVisible>
-                <motion.div
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`
-                        relative z-10 bg-white rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] 
-                        border border-white/50 ring-1 ring-gray-100
-                        transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(10,10,20,0.2)]
-                        group cursor-pointer flex flex-col overflow-hidden
-                        ${level === 0 ? 'w-72 max-w-[90vw]' : 'w-52 max-w-[85vw]'}  
-                    `}
-                    onClick={() => hasChildren && setIsOpen(!isOpen)}
-                >
-                    {/* Premium Header */}
-                    <div className={`
-                        p-6 text-center relative overflow-hidden flex flex-col items-center justify-center
-                        ${level === 0
-                            ? 'bg-gradient-to-br from-titan-navy via-[#0f172a] to-titan-navy border-b border-white/10 min-h-[100px]'
-                            : 'bg-white border-b border-gray-100 min-h-[80px]'}
-                    `}>
-                        {/* Avatar (Larger & Floating) */}
-                        <div className={`
-                            relative rounded-full overflow-hidden shadow-2xl z-10
-                            transition-transform duration-500 group-hover:scale-105
-                            ${level === 0
-                                ? 'w-36 h-36 border-4 border-white/10 ring-4 ring-transparent group-hover:ring-white/20'
-                                : 'w-24 h-24 border-4 border-white shadow-lg mb-2'}
-                        `}>
-                            {node.image ? (
-                                <Image src={node.image} alt={node.name} fill className="object-cover" />
-                            ) : (
-                                <div className={`w-full h-full flex items-center justify-center font-black text-2xl
-                                    ${level === 0 ? 'bg-white/10 text-white backdrop-blur-md' : 'bg-gray-50 text-titan-navy/30'}`}>
-                                    {node.name.charAt(0)}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Role Background Shine (Level 0 only) */}
-                        {level === 0 && (
-                            <div className="absolute inset-0 opacity-30 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:0_0,0_0] group-hover:bg-[position:100%_100%,0_0] transition-[background-position] duration-[1500ms]"></div>
-                        )}
-                    </div>
-
-                    {/* Body - Content */}
-                    <div className={`flex flex-col items-center gap-1 relative ${level === 0 ? 'p-6 pt-4 bg-white' : 'p-4 bg-gray-50/50'}`}>
-                        {/* Name */}
-                        <h3 className={`font-black uppercase leading-tight text-center 
-                            ${level === 0 ? 'text-lg text-titan-navy' : 'text-sm text-gray-800'}`}>
-                            {node.name}
-                        </h3>
-
-                        {/* Role */}
-                        <div className={`font-bold uppercase tracking-widest text-center mt-1
-                            ${level === 0 ? 'text-[10px] text-titan-red' : 'text-[9px] text-titan-navy/60'}`}>
-                            {node.role}
-                        </div>
-
-                        {/* Toggle Indicator */}
-                        {hasChildren && (
-                            <div className={`
-                                mt-3 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300
-                                ${isOpen ? 'bg-gray-100 text-gray-400 rotate-180' : 'bg-titan-red text-white shadow-lg hover:bg-titan-navy'}
-                            `}>
-                                <ChevronDown size={12} strokeWidth={3} />
-                            </div>
-                        )}
-                    </div>
-                </motion.div>
-            </FadeInWhenVisible>
-
-            {/* Children Rendering Logic */}
-            <AnimatePresence>
-                {hasChildren && isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }} // Spring-like feel
-                        className="flex flex-col items-center"
-                    >
-                        {/* Connector Line from Parent */}
-                        <div className="w-px h-8 bg-gradient-to-b from-gray-200 to-gray-300"></div>
-
-                        {/* HYBRID LOGIC */}
-                        {isVertical ? (
-                            /* VERTICAL LIST */
-                            <div className="flex flex-col w-full items-center relative gap-4 pt-0">
-                                <div className="flex flex-col gap-4 relative p-3 bg-gray-50/50 rounded-2xl border border-gray-100">
-                                    {node.children!.map((child, index) => (
-                                        <div key={index} className="relative flex flex-col items-center">
-                                            {/* No vertical lines needed inside the container bubble, keeps it clean */}
-                                            <OrgTreeNode node={child} level={level + 1} isMobile={isMobile} />
-                                            {/* Separator if not last */}
-                                            {index < node.children!.length - 1 && <div className="w-8 h-px bg-gray-200 my-2"></div>}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ) : (
-                            /* HORIZONTAL ROW */
-                            <div className="flex relative pt-4 gap-4 lg:gap-6">
-                                {/* Horizontal Bar */}
-                                {node.children!.length > 1 && (
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[calc(100%-10rem)] h-px bg-gray-300"></div>
-                                )}
-
-                                {node.children!.map((child, index) => (
-                                    <div key={index} className="flex flex-col items-center relative">
-                                        {/* Connector from Bar */}
-                                        <div className="w-px h-8 bg-gray-300 absolute -top-4"></div>
-
-                                        {/* Horizontal Segments for First/Last */}
-                                        {node.children!.length > 1 && (
-                                            <>
-                                                {index === 0 && <div className="absolute -top-4 right-1/2 w-[50%] h-px bg-gray-300"></div>}
-                                                {index === node.children!.length - 1 && <div className="absolute -top-4 left-1/2 w-[50%] h-px bg-gray-300"></div>}
-                                                {index > 0 && index < node.children!.length - 1 && <div className="absolute -top-4 w-full h-px bg-gray-300"></div>}
-                                            </>
-                                        )}
-
-                                        <div className="mt-4">
-                                            <OrgTreeNode node={child} level={level + 1} isMobile={isMobile} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-    );
-}
-
 export default function AboutPage() {
     const heroRef = useRef(null);
+    const { t } = useLanguage();
     const { scrollYProgress } = useScroll({
         target: heroRef,
         offset: ["start start", "end start"]
@@ -223,22 +216,19 @@ export default function AboutPage() {
     const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
     const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-    // Responsive Logic
-    const [isMobile, setIsMobile] = React.useState(false);
-    React.useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
+    const [selectedMember, setSelectedMember] = React.useState<any>(null);
+
+    const handleMemberClick = (member: any) => {
+        setSelectedMember(member);
+    };
 
     const coreValues = [
-        { icon: Shield, title: 'Integrity', desc: 'We uphold the highest ethical standards in every project and relationship.' },
-        { icon: Award, title: 'Excellence', desc: 'We strive for perfection in every beam, brick, and blueprint we deliver.' },
-        { icon: Handshake, title: 'Partnership', desc: 'We build lasting relationships with clients, partners, and communities.' },
-        { icon: Lightbulb, title: 'Innovation', desc: 'We embrace new technologies and methods to deliver better solutions.' },
-        { icon: Heart, title: 'Safety First', desc: 'We prioritize the wellbeing of our team and everyone on our sites.' },
-        { icon: TrendingUp, title: 'Growth', desc: 'We continuously improve and invest in our people and capabilities.' },
+        { icon: Shield, title: t('Integrity'), desc: t('Integrity Desc') },
+        { icon: Award, title: t('Excellence'), desc: t('Excellence Desc') },
+        { icon: Handshake, title: t('Partnership'), desc: t('Partnership Desc') },
+        { icon: Lightbulb, title: t('Innovation'), desc: t('Innovation Desc') },
+        { icon: Heart, title: t('Safety First'), desc: t('Safety Desc') },
+        { icon: TrendingUp, title: t('Growth'), desc: t('Growth Desc') },
     ];
 
     const milestones = [
@@ -274,53 +264,88 @@ export default function AboutPage() {
         }
     ];
 
-    const orgData: OrgNodeData = {
+    const ceo = {
         name: 'Okhna. TOUCH KIM',
         role: 'Chief Executive Officer',
-        image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400&h=400',
-        children: [
-            {
-                name: 'Mr. LENG VANNARITH',
-                role: 'Finance Director',
-                image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=400',
-                children: [
-                    { name: 'Finance Team', role: 'Accounting', image: '' }, // Placeholder for vertical list visual
-                ]
-            },
-            {
-                name: 'Mr. PAUCH BUNPHEAKDEY',
-                role: 'Deputy General Manager',
-                image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400&h=400',
-                children: [
-                    { name: 'Mr. KRAI KEAK', role: 'MEP Operations Manager', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400' },
-                    { name: 'Mr. CHHUNDY RYTA', role: 'Deputy Architect Manager', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400&h=400' },
-                ]
-            },
-            {
-                name: 'Mr. OUNG CHAKNORA',
-                role: 'Senior Project Manager',
-                image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400&h=400',
-                children: [
-                    { name: 'Mr. TOUCH PUTHEANY', role: 'MEP Design Manager', image: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&q=80&w=400&h=400' },
-                    { name: 'Mr. RY KEN', role: 'Deputy QS Manager', image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=400&h=400' },
-                ]
-            },
-            {
-                name: 'Mr. SUM ROTANA',
-                role: 'Project Manager',
-                image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=400',
-                children: [
-                    { name: 'Project Team A', role: 'Site Supervision', image: '' },
-                ]
-            }
-        ]
+        image: '/images/team-leadership/touch_kim.png',
+        bio: 'Okhna Touch Kim founded KIM MEX Construction in 1999 with a vision to revolutionize the Cambodian construction landscape. With over 25 years of leadership, he has steered the company from a small team of engineers to a premier national contractor. His philosophy of "Integrity in every build" continues to drive the company\'s success.'
     };
 
+    const managersL2 = [
+        {
+            name: 'Mr. PAUCH BUNPHEAKDEY',
+            role: 'Deputy General Manager',
+            image: '/images/team-leadership/pauch_bunpheakdey.jpeg',
+            bio: 'As Deputy General Manager, Mr. Pauch ensures operational excellence across all departments. He brings over 18 years of experience in construction management and strategic planning.'
+        },
+        {
+            name: 'Mr. LENG VANNARITH',
+            role: 'Finance Director',
+            image: '/images/team-leadership/leng_vannarith.jpeg',
+            bio: 'Mr. Leng overlooks the financial health of KIM MEX, ensuring sustainable growth and robust fiscal policies that allow for ambitious project undertakings.'
+        },
+        {
+            name: 'Mr. OUNG CHAKNORA',
+            role: 'Senior Project Manager',
+            image: '/images/team-leadership/oung_chaknora.jpeg',
+            bio: 'Leading our largest developments, Mr. Oung is known for his rigorous attention to detail and ability to deliver complex high-rise projects ahead of schedule.'
+        },
+        {
+            name: 'Mr. SUM ROTANA',
+            role: 'Project Manager',
+            image: '/images/team-leadership/sum_rotana.jpeg',
+            bio: 'Mr. Sum specializes in commercial and industrial projects, coordinating diverse teams to ensure safety and quality standards are met at every stage.'
+        },
+        {
+            name: 'Mr. KRAI KEAK',
+            role: 'MEP Operation Manager',
+            image: '/images/team-leadership/krai_keak.jpeg',
+            bio: 'Overseeing Mechanical, Electrical, and Plumbing operations, Mr. Krai ensures that the vital systems of our buildings function perfectly and efficiently.'
+        },
+    ];
+
+    const managersL3 = [
+        {
+            name: 'Mr. CHHUNDY RYTA',
+            role: 'Deputy Architect Manager',
+            image: '/images/team-leadership/chhundy_ryta.jpeg',
+            bio: 'Mr. Chhundy brings creative vision to life, working closely with clients to translate their dreams into structural reality while strictly adhering to codes.'
+        },
+        {
+            name: 'Mr. TOUCH PUTHEANY',
+            role: 'MEP Design Manager',
+            image: '/images/team-leadership/touch_putheany.jpeg',
+            bio: 'Leading the MEP design team, Mr. Touch focuses on sustainable and energy-efficient system designs for modern infrastructure.'
+        },
+        {
+            name: 'Mr. RY KEN',
+            role: 'Deputy QS Manager',
+            image: '/images/team-leadership/ry_ken.jpeg',
+            bio: 'With precision and expertise, Mr. Ry manages quantity surveying, ensuring accurate cost estimation and resource management for all projects.'
+        },
+        {
+            name: 'Mr. HONG BUNNA',
+            role: 'Warehouse Manager',
+            image: '/images/team-leadership/hong_bunna.jpeg',
+            bio: 'Mr. Hong manages logistics and inventory, ensuring that materials are available on-site exactly when needed to maintain project timelines.'
+        },
+    ];
+
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen font-sans text-titan-navy overflow-x-hidden">
+
+            <AnimatePresence>
+                {selectedMember && (
+                    <MemberDetailModal
+                        member={selectedMember}
+                        isOpen={!!selectedMember}
+                        onClose={() => setSelectedMember(null)}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* === HERO SECTION === */}
-            <section ref={heroRef} className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">
+            <section ref={heroRef} id="profile" className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">
                 {/* Parallax Background */}
                 <motion.div style={{ y: heroY }} className="absolute inset-0">
                     <Image
@@ -331,10 +356,6 @@ export default function AboutPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/80 via-titan-navy/70 to-titan-navy"></div>
                 </motion.div>
-
-                {/* Decorative Elements */}
-                <div className="absolute top-20 right-20 w-72 h-72 border border-titan-red/20 rounded-full hidden lg:block"></div>
-                <div className="absolute bottom-40 left-20 w-48 h-48 border border-white/10 rounded-full hidden lg:block"></div>
 
                 {/* Hero Content */}
                 <motion.div
@@ -371,22 +392,6 @@ export default function AboutPage() {
                     >
                         For over 25 years, KIM MEX Construction has been at the forefront of Cambodia&apos;s infrastructure development, transforming visions into landmarks.
                     </motion.p>
-                </motion.div>
-
-                {/* Scroll Indicator */}
-                <motion.div
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white flex flex-col items-center gap-2"
-                >
-                    <span className="text-[10px] uppercase tracking-widest font-bold text-white/40">Scroll</span>
-                    <div className="w-5 h-8 border-2 border-white/30 rounded-full flex justify-center pt-2">
-                        <motion.div
-                            animate={{ y: [0, 6, 0] }}
-                            transition={{ repeat: Infinity, duration: 1.5 }}
-                            className="w-1 h-1 bg-titan-red rounded-full"
-                        />
-                    </div>
                 </motion.div>
             </section>
 
@@ -500,10 +505,10 @@ export default function AboutPage() {
                                 {/* Left: Image */}
                                 <div className="relative min-h-[400px] lg:min-h-[500px]">
                                     <Image
-                                        src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop"
+                                        src="/images/team-leadership/touch_kim.png"
                                         alt="CEO"
                                         fill
-                                        className="object-cover"
+                                        className="object-cover object-top"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-titan-navy/50 lg:to-titan-navy"></div>
                                 </div>
@@ -519,8 +524,8 @@ export default function AboutPage() {
                                     </blockquote>
 
                                     <div className="flex items-center gap-4">
-                                        <div className="w-16 h-16 rounded-full bg-titan-red/20 flex items-center justify-center text-titan-red text-2xl font-black">
-                                            TK
+                                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-titan-red">
+                                            <Image src="/images/team-leadership/touch_kim.png" alt="Touch Kim" width={64} height={64} className="object-cover" />
                                         </div>
                                         <div>
                                             <div className="text-white font-bold text-lg">Okhna. TOUCH KIM</div>
@@ -573,16 +578,12 @@ export default function AboutPage() {
                     <div className="relative">
                         {/* Timeline Line */}
                         <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-titan-red via-titan-navy/20 to-titan-red -translate-x-1/2"></div>
-
-                        {/* Mobile Line */}
                         <div className="md:hidden absolute left-6 top-0 bottom-0 w-[2px] bg-gradient-to-b from-titan-red via-titan-navy/20 to-titan-red"></div>
 
                         <div className="space-y-16 md:space-y-24">
                             {milestones.map((item, i) => (
                                 <FadeInWhenVisible key={i} delay={0.1}>
                                     <div className={`flex flex-col md:flex-row items-start md:items-center gap-8 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-
-                                        {/* Content */}
                                         <div className={`w-full md:w-5/12 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:text-right md:pr-12' : 'md:text-left md:pl-12'}`}>
                                             <div className={`inline-block bg-titan-red text-white text-sm font-bold px-4 py-2 rounded-full mb-4`}>
                                                 {item.year}
@@ -590,11 +591,7 @@ export default function AboutPage() {
                                             <h3 className="text-2xl font-bold text-titan-navy mb-3">{item.title}</h3>
                                             <p className="text-titan-navy/50 leading-relaxed">{item.desc}</p>
                                         </div>
-
-                                        {/* Center Dot */}
                                         <div className="absolute left-6 md:left-1/2 w-4 h-4 bg-white border-4 border-titan-red rounded-full -translate-x-1/2 shadow-lg z-10"></div>
-
-                                        {/* Image */}
                                         <div className={`w-full md:w-5/12 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:pl-12' : 'md:pr-12'}`}>
                                             <div className="aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-100 relative">
                                                 <Image src={item.image} alt={item.title} fill className="object-cover hover:scale-105 transition-transform duration-700" />
@@ -609,29 +606,56 @@ export default function AboutPage() {
             </section>
 
             {/* === LEADERSHIP TEAM (Org Chart) === */}
-            <section className="py-24 px-6 bg-white overflow-hidden">
+            <section id="leadership" className="py-24 px-6 bg-white overflow-hidden">
                 <div className="max-w-[1400px] mx-auto">
                     <FadeInWhenVisible>
                         <div className="text-center mb-20">
                             <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our People</span>
                             <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-4">Organizational Structure</h2>
-                            <p className="text-titan-navy/50 text-lg max-w-2xl mx-auto">
-                                Led by industry veterans with a shared vision for excellence and sustainable growth.
-                            </p>
                         </div>
                     </FadeInWhenVisible>
 
-                    {/* ORG CHART VISUALIZATION */}
-                    <div className="relative w-full overflow-x-auto pb-12 custom-scrollbar">
-                        <div className="min-w-fit mx-auto px-4 flex justify-center">
-                            <OrgTreeNode node={orgData} level={0} isMobile={isMobile} />
+                    <div className="flex flex-col items-center">
+                        {/* LEVEL 1: CEO */}
+                        <div className="relative mb-16">
+                            <TeamMemberCard member={ceo} isCEO onClick={handleMemberClick} />
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
+                        </div>
+
+                        {/* LEVEL 2 */}
+                        <div className="relative w-full mb-16 px-[5%]">
+                            <div className="absolute top-[-2rem] left-[10%] right-[10%] h-px bg-gray-200"></div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                {managersL2.map((member, i) => (
+                                    <div key={i} className="flex justify-center relative">
+                                        <div className="absolute top-[-2rem] left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
+                                        <TeamMemberCard member={member} onClick={handleMemberClick} />
+                                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* LEVEL 3 */}
+                        <div className="relative w-full px-[12%]">
+                            <div className="absolute top-[-2rem] left-[12.5%] right-[12.5%] h-px bg-gray-200"></div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {managersL3.map((member, i) => (
+                                    <div key={i} className="flex justify-center relative">
+                                        <div className="absolute top-[-2rem] left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
+                                        <TeamMemberCard member={member} onClick={handleMemberClick} />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* === CERTIFICATIONS & QUALITY === */}
-            <section className="py-24 px-6 bg-titan-navy">
+            <section id="safety" className="py-24 px-6 bg-titan-navy">
                 <div className="max-w-[1400px] mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <FadeInWhenVisible>
@@ -674,7 +698,6 @@ export default function AboutPage() {
                                     height={600}
                                     className="rounded-2xl shadow-2xl w-full h-auto"
                                 />
-                                {/* Floating Card */}
                                 <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl hidden md:block">
                                     <div className="flex items-center gap-4">
                                         <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center">

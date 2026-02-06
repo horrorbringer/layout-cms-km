@@ -27,16 +27,16 @@ export default function FooterX() {
                             {t('Footer Desc')}
                         </p>
                         <div className="flex gap-3 pt-2">
-                            <a href="#" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <a href="https://facebook.com/kimmex" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                                 <Facebook size={16} />
                             </a>
-                            <a href="#" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <a href="https://linkedin.com/company/kimmex" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                                 <Linkedin size={16} />
                             </a>
-                            <a href="#" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <a href="https://youtube.com/@kimmex" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                                 <Youtube size={16} />
                             </a>
-                            <a href="#" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <a href="https://instagram.com/kimmex" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                                 <Instagram size={16} />
                             </a>
                         </div>
@@ -69,20 +69,22 @@ export default function FooterX() {
                     <div>
                         <h4 className="font-bold text-sm uppercase tracking-widest mb-8 text-accent-orange flex items-center gap-2">
                             <HardHat size={14} />
-                            {t('Capabilities')}
+                            {t('Services')}
                         </h4>
                         <ul className="space-y-4 text-sm text-white/50">
                             {[
-                                t('General Construction'),
-                                t('Design & Build'),
-                                t('MEP Engineering'),
-                                t('Steel Structure'),
-                                t('Renovation'),
-                                t('Project Management')
+                                { label: t('General Construction'), href: '/design-z/services/general-construction' },
+                                { label: t('Design & Build'), href: '/design-z/services/design-build' },
+                                { label: t('MEP Engineering'), href: '/design-z/services/mep' },
+                                { label: t('Steel Structure'), href: '/design-z/services/steel' },
+                                { label: t('Renovation'), href: '/design-z/services/renovation' },
+                                { label: t('Project Management'), href: '/design-z/services/project-management' }
                             ].map((item, i) => (
-                                <li key={i} className="flex items-center gap-2 hover:text-accent-orange transition-colors cursor-default">
-                                    <span className="w-1.5 h-1.5 bg-accent-orange rounded-full"></span>
-                                    {item}
+                                <li key={i}>
+                                    <Link href={item.href} className="flex items-center gap-2 hover:text-accent-orange transition-all group">
+                                        <span className="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-125 transition-transform"></span>
+                                        {item.label}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
@@ -97,18 +99,18 @@ export default function FooterX() {
                         <ul className="space-y-6 text-sm text-white/50">
                             <li className="flex gap-4">
                                 <MapPin size={20} className="text-accent-orange shrink-0" />
-                                <span>
+                                <a href="https://maps.google.com/?q=KIMMEX+MONIVONG" target="_blank" rel="noopener noreferrer" className="hover:text-accent-orange transition-colors">
                                     #123 Monivong Blvd, Boeung Keng Kang 1,<br />
                                     {t('Phnom Penh, Cambodia')}
-                                </span>
+                                </a>
                             </li>
                             <li className="flex gap-4 items-center">
                                 <Phone size={20} className="text-accent-orange shrink-0" />
-                                <span className="hover:text-accent-orange cursor-pointer transition-colors">+855 23 999 888</span>
+                                <a href="tel:+85523999888" className="hover:text-accent-orange transition-colors">+855 23 999 888</a>
                             </li>
                             <li className="flex gap-4 items-center">
                                 <Mail size={20} className="text-accent-orange shrink-0" />
-                                <span className="hover:text-accent-orange cursor-pointer transition-colors">info@kimmex.com.kh</span>
+                                <a href="mailto:info@kimmex.com.kh" className="hover:text-accent-orange transition-colors">info@kimmex.com.kh</a>
                             </li>
                         </ul>
                     </div>

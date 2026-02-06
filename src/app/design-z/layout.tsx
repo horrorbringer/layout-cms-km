@@ -65,11 +65,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                     href: '/design-z/projects/implementation',
                     desc: t('Current developments'),
                     children: [
-                        { label: t('Government'), href: '/design-z/projects/implementation?type=Government Office Building' },
                         { label: t('Public Service'), href: '/design-z/projects/implementation?type=Public Service Building' },
-                        { label: t('Private'), href: '/design-z/projects/implementation?type=Private Building' },
-                        { label: t('Water Treatment'), href: '/design-z/projects/implementation?type=Water Treatment Plant' },
-                        { label: t('Slope'), href: '/design-z/projects/implementation?type=Slope Construction' }
+                        { label: t('Water Treatment'), href: '/design-z/projects/implementation?type=Water Treatment Plant' }
                     ]
                 }
             ]
@@ -276,14 +273,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                     <Search size={18} />
                                 </button>
 
-                                {/* CTA Button - Desktop */}
-                                <Link
-                                    href="/design-z/contact"
-                                    className={`hidden md:flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm uppercase tracking-wide transition-all duration-300 hover:scale-105 ${isScrolled ? 'bg-accent-orange text-white hover:bg-titan-navy' : 'bg-white text-titan-navy hover:bg-accent-orange hover:text-white'}`}
-                                >
-                                    {t('Get Quote')}
-                                    <ArrowRight size={16} />
-                                </Link>
+
 
                                 {/* Mobile Menu Button */}
                                 <button
@@ -380,17 +370,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                     ))}
                                 </div>
 
-                                {/* Mobile CTA */}
-                                <div className="p-4 border-t border-gray-100">
-                                    <Link
-                                        href="/design-z/contact"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-lg font-bold text-sm uppercase tracking-wide bg-accent-orange text-white"
-                                    >
-                                        {t('Get a Free Quote')}
-                                        <ArrowRight size={16} />
-                                    </Link>
-                                </div>
+
 
                                 {/* Mobile Contact Info */}
                                 <div className="p-4 bg-gray-50 border-t border-gray-100">

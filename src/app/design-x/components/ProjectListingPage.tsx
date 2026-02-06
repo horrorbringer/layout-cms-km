@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, ArrowRight, Building, CheckCircle, Clock, Droplets, Mountain, Filter } from 'lucide-react';
 import Link from 'next/link';
@@ -54,6 +54,16 @@ export default function ProjectListingPage({
 
     const [filterLoc, setFilterLoc] = useState('All');
     const [filterType, setFilterType] = useState(validInitialType);
+
+    // Sync state with URL query params
+    useEffect(() => {
+        const type = searchParams.get('type');
+        if (type && types.includes(type)) {
+            setFilterType(type);
+        } else if (!type) {
+            setFilterType('All');
+        }
+    }, [searchParams]);
 
     const filteredProjects = projects.filter(p => {
         return (filterLoc === 'All' || p.location === filterLoc) &&

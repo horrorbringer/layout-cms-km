@@ -31,9 +31,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         {
             label: t('About Us'), href: '/design-x/about',
             children: [
-                { label: t('Company Profile'), href: '/design-x/about#profile', desc: t('Learn about our history') },
+                { label: t('Company Profile'), href: '/design-x/about', desc: t('Learn about our history') },
                 { label: t('Leadership'), href: '/design-x/about#leadership', desc: t('Meet our team') },
-                { label: t('Quality & Safety'), href: '/design-x/about#safety', desc: t('Our standards') }
+                { label: t('Quality & Safety'), href: '/design-x/about#quality', desc: t('Our standards') }
             ]
         },
         {
@@ -65,11 +65,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                     href: '/design-x/projects/implementation',
                     desc: t('Current developments'),
                     children: [
-                        { label: t('Government'), href: '/design-x/projects/implementation?type=Government Office Building' },
                         { label: t('Public Service'), href: '/design-x/projects/implementation?type=Public Service Building' },
-                        { label: t('Private'), href: '/design-x/projects/implementation?type=Private Building' },
-                        { label: t('Water Treatment'), href: '/design-x/projects/implementation?type=Water Treatment Plant' },
-                        { label: t('Slope'), href: '/design-x/projects/implementation?type=Slope Construction' }
+                        { label: t('Water Treatment'), href: '/design-x/projects/implementation?type=Water Treatment Plant' }
                     ]
                 }
             ]
@@ -280,14 +277,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                     <Search size={18} />
                                 </button>
 
-                                {/* CTA Button - Desktop */}
-                                <Link
-                                    href="/design-x/contact"
-                                    className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm uppercase tracking-wide transition-all duration-300 bg-accent-orange text-white hover:bg-titan-navy"
-                                >
-                                    {t('Get Quote')}
-                                    <ArrowRight size={16} />
-                                </Link>
+
 
                                 {/* Mobile Menu Button */}
                                 <button
@@ -384,17 +374,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                     ))}
                                 </div>
 
-                                {/* Mobile CTA */}
-                                <div className="p-4 border-t border-gray-100">
-                                    <Link
-                                        href="/design-x/contact"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-lg font-bold text-sm uppercase tracking-wide bg-accent-orange text-white"
-                                    >
-                                        {t('Get a Free Quote')}
-                                        <ArrowRight size={16} />
-                                    </Link>
-                                </div>
+
 
                                 {/* Mobile Contact Info */}
                                 <div className="p-4 bg-gray-50 border-t border-gray-100">

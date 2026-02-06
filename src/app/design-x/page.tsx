@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ArrowRight, ShieldCheck, Trophy, PenTool, Layout, Ruler, Users, Hammer, CheckCircle2, Phone, Clock, Award, Target, Quote, Star, MapPin, Calendar } from 'lucide-react';
 import Link from 'next/link';
@@ -5,11 +7,9 @@ import Image from 'next/image';
 import { FadeInWhenVisible } from './_components/Animations';
 import UnifiedHero, { HeroMode } from './_components/UnifiedHero';
 
-// --- CONFIGURATION ---
-// Change this to 'video' or 'carousel' to switch the hero style
-const HERO_STYLE: HeroMode = 'video';
-
 export default function DesignGenX() {
+    const [heroMode, setHeroMode] = React.useState<HeroMode>('video');
+
     const services = [
         {
             title: 'Design & Build',
@@ -43,16 +43,16 @@ export default function DesignGenX() {
 
     const projects = [
         {
-            id: 1,
+            id: 'mef',
             name: 'Ministry of Economy',
             loc: 'Phnom Penh',
-            img: '/images/projects/Thumbnail-1.jpg',
+            img: '/images/projects/Thumbnail-2.jpg',
             cat: 'Government',
-            year: '2024',
+            year: '2023',
             size: '45,000 sqm'
         },
         {
-            id: 2,
+            id: 'vattanac',
             name: 'Vattanac Capital Extension',
             loc: 'Phnom Penh',
             img: '/images/projects/Thumbnail-2.jpg',
@@ -61,10 +61,10 @@ export default function DesignGenX() {
             size: '32,000 sqm'
         },
         {
-            id: 3,
-            name: 'Sihanoukville Port',
-            loc: 'Sihanoukville',
-            img: '/images/projects/Thumbnail-3.jpg',
+            id: 'kt-wtp',
+            name: 'Khleang Toeuk WTP',
+            loc: 'Phnom Penh',
+            img: '/images/projects/Thumbnail-1.jpg',
             cat: 'Infrastructure',
             year: '2024',
             size: '120,000 sqm'
@@ -94,7 +94,7 @@ export default function DesignGenX() {
 
     return (
         <>
-            <UnifiedHero mode={HERO_STYLE} />
+            <UnifiedHero mode={heroMode} onToggle={(mode) => setHeroMode(mode)} />
 
             {/* === WHY CHOOSE US === */}
             <section className="py-24 bg-gray-50">

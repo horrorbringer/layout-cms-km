@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Building2, HardHat, Quote } from 'lucide-react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Building2, HardHat, Quote, X, Mail, Linkedin, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -61,124 +61,152 @@ function AnimatedCounter({ value, suffix = '', label }: { value: number; suffix?
     );
 }
 
-// Org Chart Node Type
-type OrgNodeData = {
-    name: string;
-    role: string;
-    image?: string;
-    children?: OrgNodeData[];
-};
-
-// Recursive Org Chart Node Component
-function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boolean }) {
-    const hasChildren = node.children && node.children.length > 0;
+// Modal Component for Member Details
+function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: boolean; onClose: () => void }) {
+    if (!isOpen || !member) return null;
 
     return (
-        <div className={`flex flex-col ${isRoot ? 'items-center' : 'items-start lg:items-center'} w-full lg:w-auto`}>
-            {/* Node Card */}
-            <FadeInWhenVisible>
-                <Link href={`/design-x/team/${node.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}>
-                    <div className={`relative z-10 bg-white rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 group flex items-center lg:flex-col border-l-4 lg:border-l-0 lg:border-t-4 border-titan-red cursor-pointer
-                        ${isRoot
-                            ? 'p-6 lg:p-6 min-w-[280px] lg:w-72 flex-col text-center shadow-2xl ring-1 ring-black/5'
-                            : 'p-3 lg:p-4 w-full max-w-md lg:w-52 lg:min-w-[180px] border border-gray-100 hover:border-titan-red/20 hover:shadow-lg'}
-                    `}>
-                        {/* Image Circle */}
-                        <div className={`rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center bg-gray-50 flex-shrink-0 relative mr-4 lg:mr-0 lg:mb-4 group-hover:scale-105 transition-transform duration-500
-                            ${isRoot
-                                ? 'w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-titan-navy to-titan-navy-light ring-4 ring-titan-red/10'
-                                : 'w-16 h-16 lg:w-20 lg:h-20 ring-2 ring-gray-100'}
-                        `}>
-                            {node.image ? (
-                                <Image src={node.image} alt={node.name} fill className="object-cover" />
-                            ) : (
-                                <span className={`font-black ${isRoot ? 'text-3xl lg:text-5xl text-white/20' : 'text-xl lg:text-2xl text-titan-navy/20'}`}>
-                                    {node.name.split(' ').pop()?.charAt(0)}
-                                </span>
-                            )}
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-titan-navy/95 backdrop-blur-md"
+                onClick={onClose}
+            ></motion.div>
+
+            {/* Modal Content */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="relative bg-white rounded-3xl overflow-hidden max-w-4xl w-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col md:flex-row min-h-[500px]"
+                onClick={(e) => e.stopPropagation()}
+            >
+                {/* Close Button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-6 right-6 z-20 w-10 h-10 bg-white shadow-lg text-titan-navy hover:bg-titan-red hover:text-white rounded-full transition-all duration-300 flex items-center justify-center group"
+                >
+                    <X size={20} className="transition-transform group-hover:rotate-90" />
+                </button>
+
+                {/* Left: Image Side */}
+                <div className="w-full md:w-1/2 relative min-h-[400px] md:min-h-full">
+                    <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        className="object-cover object-top"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/40 to-transparent"></div>
+
+                    {/* Floating Info on Image */}
+                    <div className="absolute bottom-6 left-6 right-6">
+                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-widest mb-2">
+                            <Shield size={10} className="text-titan-red" />
+                            Verified Leadership
                         </div>
-
-                        <div className={`${isRoot ? 'text-center' : 'text-left lg:text-center'}`}>
-                            <h3 className={`font-black text-titan-navy uppercase leading-tight lg:mb-1 ${isRoot ? 'text-lg lg:text-xl' : 'text-sm lg:text-sm'}`}>
-                                {node.name}
-                            </h3>
-                            <p className={`text-titan-red font-bold uppercase tracking-widest ${isRoot ? 'text-xs lg:text-sm' : 'text-[10px] text-titan-navy/60'}`}>
-                                {node.role}
-                            </p>
-                        </div>
-
-                        {/* Decorative glowing effect for Root */}
-                        {isRoot && <div className="absolute inset-0 bg-titan-red/5 blur-3xl -z-10 rounded-full transform scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>}
-                    </div>
-                </Link>
-            </FadeInWhenVisible>
-
-            {/* Recursive Children & Connectors */}
-            {hasChildren && (
-                <div className="flex flex-col lg:items-center w-full lg:w-auto">
-                    {/* DESKTOP: Vertical Line from Parent */}
-                    <div className="hidden lg:block w-px h-6 bg-gray-300"></div>
-
-                    {/* CHILDREN CONTAINER */}
-                    <div className={`
-                        relative flex 
-                        flex-col lg:flex-row 
-                        
-                        /* Mobile: Indented vertical list */
-                        ml-6 pl-6 pt-6 border-l-2 border-dashed border-gray-200 space-y-6
-                        
-                        /* Desktop: Horizontal row (Reset Mobile) */
-                        lg:ml-0 lg:pl-0 lg:pt-6 lg:border-l-0 lg:space-y-0
-                    `}>
-                        {/* DESKTOP: Horizontal Connector Line */}
-                        {node.children!.length > 1 && (
-                            <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 h-px bg-gray-300 w-[calc(100%-2rem)]"></div>
-                        )}
-
-                        {node.children!.map((child, index) => (
-                            <div key={index} className="flex flex-col lg:items-center relative lg:px-2 w-full lg:w-auto">
-
-                                {/* MOBILE: Horizontal dash from vertical line to child */}
-                                <div className="lg:hidden absolute top-6 -left-6 w-6 h-0.5 bg-gray-200"></div>
-
-                                {/* DESKTOP: Vertical Line to Child */}
-                                {node.children!.length > 1 && (
-                                    <div className={`hidden lg:block absolute top-[-1.5rem] w-px h-6 bg-gray-300 left-1/2 -translate-x-1/2
-                                        ${index === 0 ? 'rounded-tl-lg' : ''} 
-                                        ${index === node.children!.length - 1 ? 'rounded-tr-lg' : ''}
-                                     `}></div>
-                                )}
-
-                                <div className="relative w-full lg:w-auto">
-                                    {/* DESKTOP: Connector upwards if multiple children */}
-                                    {node.children!.length > 1 && (
-                                        <div className="hidden lg:block absolute -top-6 left-1/2 -translate-x-1/2 w-px h-6 bg-gray-300"></div>
-                                    )}
-
-                                    {/* DESKTOP: Horizontal Line Segment for this child */}
-                                    {node.children!.length > 1 && (
-                                        <>
-                                            {/* Left half line */}
-                                            {index > 0 && (
-                                                <div className="hidden lg:block absolute -top-6 right-1/2 w-[calc(50%+0.5rem)] h-px bg-gray-300"></div>
-                                            )}
-                                            {/* Right half line */}
-                                            {index < node.children!.length - 1 && (
-                                                <div className="hidden lg:block absolute -top-6 left-1/2 w-[calc(50%+0.5rem)] h-px bg-gray-300"></div>
-                                            )}
-                                        </>
-                                    )}
-
-                                    <OrgTreeNode node={child} />
-                                </div>
-                            </div>
-                        ))}
                     </div>
                 </div>
-            )}
+
+                {/* Right: Info Side */}
+                <div className="w-full md:w-1/2 p-10 md:p-14 flex flex-col relative">
+                    {/* Background Decorative Text */}
+                    <div className="absolute top-10 right-10 text-[100px] font-black text-gray-50 -z-10 select-none pb-0 leading-none">
+                        KM
+                    </div>
+
+                    <div className="mb-10 relative">
+                        <span className="text-titan-red font-black uppercase tracking-[0.2em] text-xs block mb-3">{member.role}</span>
+                        <h3 className="text-4xl font-black text-titan-navy uppercase leading-[1.1] tracking-tight">{member.name}</h3>
+                        <div className="w-20 h-1.5 bg-titan-red mt-6 rounded-full"></div>
+                    </div>
+
+                    <div className="flex-grow">
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-titan-navy/30 mb-4 italic">Executive Biography</h4>
+                        <div className="space-y-6 text-titan-navy/70 leading-relaxed font-medium">
+                            {member.bio ? (
+                                <p className="text-lg leading-relaxed">{member.bio}</p>
+                            ) : (
+                                <>
+                                    <p className="text-lg leading-relaxed">
+                                        An integral part of KIM MEX Construction, {member.name.split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {member.role.toLowerCase()} division.
+                                    </p>
+                                    <p>
+                                        Focused on operational efficiency and upholding our core values of excellence and safety, they play a vital role in delivering landmark projects across the Kingdom.
+                                    </p>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="mt-12 pt-8 border-t border-gray-100 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-titan-navy/5 flex items-center justify-center text-titan-navy">
+                                <Users size={18} />
+                            </div>
+                            <div className="text-[11px] leading-tight">
+                                <div className="font-bold text-titan-navy uppercase">Member Since</div>
+                                <div className="text-titan-navy/50">Core Leadership Team</div>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                            <div className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-titan-navy/30 hover:border-titan-red hover:text-titan-red transition-all cursor-pointer">
+                                <Mail size={16} />
+                            </div>
+                            <div className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-titan-navy/30 hover:border-titan-red hover:text-titan-red transition-all cursor-pointer">
+                                <Linkedin size={16} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
         </div>
     );
 }
+
+// Team Member Card Component
+function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO?: boolean; onClick?: (member: any) => void }) {
+    return (
+        <div
+            className="flex flex-col items-center group relative z-10 w-full cursor-pointer"
+            onClick={() => onClick && onClick(member)}
+        >
+            <div className={`relative rounded-xl overflow-hidden bg-white shadow-md border-2 border-white transition-all duration-500 group-hover:shadow-2xl group-hover:-translate-y-2
+                ${isCEO ? 'w-56 h-56 mb-8' : 'w-36 h-36 lg:w-48 lg:h-48 mb-5'}
+            `}>
+                <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                />
+
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-titan-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30">
+                        <ArrowRight size={20} />
+                    </div>
+                </div>
+            </div>
+            <div className="text-center px-2">
+                <h3 className={`font-bold text-titan-navy uppercase tracking-tight transition-colors duration-300 group-hover:text-titan-red ${isCEO ? 'text-2xl mb-1' : 'text-sm lg:text-base mb-1'}`}>
+                    {member.name}
+                </h3>
+                <p className={`text-accent-orange font-bold uppercase tracking-[0.1em] ${isCEO ? 'text-sm' : 'text-[10px] lg:text-[11px]'}`}>
+                    {member.role}
+                </p>
+            </div>
+        </div>
+    );
+}
+
+// Language context hook (placeholder for export found in layout, assuming direct import or use)
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AboutPage() {
     const heroRef = useRef(null);
@@ -188,6 +216,11 @@ export default function AboutPage() {
     });
     const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
     const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+    const [selectedMember, setSelectedMember] = React.useState<any>(null);
+
+    const handleMemberClick = (member: any) => {
+        setSelectedMember(member);
+    };
 
     const coreValues = [
         { icon: Shield, title: 'Integrity', desc: 'We uphold the highest ethical standards in every project and relationship.' },
@@ -231,43 +264,72 @@ export default function AboutPage() {
         }
     ];
 
-    const orgData: OrgNodeData = {
+    const ceo = {
         name: 'Okhna. TOUCH KIM',
         role: 'Chief Executive Officer',
-        image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400&h=400',
-        children: [
-            {
-                name: 'Mr. PAUCH BUNPHEAKDEY',
-                role: 'Deputy General Manager',
-                image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400&h=400',
-                children: [
-                    { name: 'Mr. KRAI KEAK', role: 'MEP Operations Manager', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400' },
-                    { name: 'Mr. CHHUNDY RYTA', role: 'Deputy Architect Manager', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400&h=400' },
-                ]
-            },
-            {
-                name: 'Mr. LENG VANNARITH',
-                role: 'Finance Director',
-                image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=400',
-                children: []
-            },
-            {
-                name: 'Mr. OUNG CHAKNORA',
-                role: 'Senior Project Manager',
-                image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400&h=400',
-                children: [
-                    { name: 'Mr. TOUCH PUTHEANY', role: 'MEP Design Manager', image: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&q=80&w=400&h=400' },
-                    { name: 'Mr. RY KEN', role: 'Deputy QS Manager', image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=400&h=400' },
-                ]
-            },
-            {
-                name: 'Mr. SUM ROTANA',
-                role: 'Project Manager',
-                image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=400',
-                children: []
-            }
-        ]
+        image: '/images/team-leadership/touch_kim.png',
+        bio: 'Okhna Touch Kim founded KIM MEX Construction in 1999 with a vision to revolutionize the Cambodian construction landscape. With over 25 years of leadership, he has steered the company from a small team of engineers to a premier national contractor. His philosophy of "Integrity in every build" continues to drive the company\'s success.'
     };
+
+    const managersL2 = [
+        {
+            name: 'Mr. PAUCH BUNPHEAKDEY',
+            role: 'Deputy General Manager',
+            image: '/images/team-leadership/pauch_bunpheakdey.jpeg',
+            bio: 'As Deputy General Manager, Mr. Pauch ensures operational excellence across all departments. He brings over 18 years of experience in construction management and strategic planning.'
+        },
+        {
+            name: 'Mr. LENG VANNARITH',
+            role: 'Finance Director',
+            image: '/images/team-leadership/leng_vannarith.jpeg',
+            bio: 'Mr. Leng overlooks the financial health of KIM MEX, ensuring sustainable growth and robust fiscal policies that allow for ambitious project undertakings.'
+        },
+        {
+            name: 'Mr. OUNG CHAKNORA',
+            role: 'Senior Project Manager',
+            image: '/images/team-leadership/oung_chaknora.jpeg',
+            bio: 'Leading our largest developments, Mr. Oung is known for his rigorous attention to detail and ability to deliver complex high-rise projects ahead of schedule.'
+        },
+        {
+            name: 'Mr. SUM ROTANA',
+            role: 'Project Manager',
+            image: '/images/team-leadership/sum_rotana.jpeg',
+            bio: 'Mr. Sum specializes in commercial and industrial projects, coordinating diverse teams to ensure safety and quality standards are met at every stage.'
+        },
+        {
+            name: 'Mr. KRAI KEAK',
+            role: 'MEP Operation Manager',
+            image: '/images/team-leadership/krai_keak.jpeg',
+            bio: 'Overseeing Mechanical, Electrical, and Plumbing operations, Mr. Krai ensures that the vital systems of our buildings function perfectly and efficiently.'
+        },
+    ];
+
+    const managersL3 = [
+        {
+            name: 'Mr. CHHUNDY RYTA',
+            role: 'Deputy Architect Manager',
+            image: '/images/team-leadership/chhundy_ryta.jpeg',
+            bio: 'Mr. Chhundy brings creative vision to life, working closely with clients to translate their dreams into structural reality while strictly adhering to codes.'
+        },
+        {
+            name: 'Mr. TOUCH PUTHEANY',
+            role: 'MEP Design Manager',
+            image: '/images/team-leadership/touch_putheany.jpeg',
+            bio: 'Leading the MEP design team, Mr. Touch focuses on sustainable and energy-efficient system designs for modern infrastructure.'
+        },
+        {
+            name: 'Mr. RY KEN',
+            role: 'Deputy QS Manager',
+            image: '/images/team-leadership/ry_ken.jpeg',
+            bio: 'With precision and expertise, Mr. Ry manages quantity surveying, ensuring accurate cost estimation and resource management for all projects.'
+        },
+        {
+            name: 'Mr. HONG BUNNA',
+            role: 'Warehouse Manager',
+            image: '/images/team-leadership/hong_bunna.jpeg',
+            bio: 'Mr. Hong manages logistics and inventory, ensuring that materials are available on-site exactly when needed to maintain project timelines.'
+        },
+    ];
 
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy">
@@ -446,43 +508,43 @@ export default function AboutPage() {
             </section>
 
             {/* === CEO MESSAGE === */}
-            <section className="py-24 px-6 bg-gray-50">
-                <div className="max-w-[1400px] mx-auto">
+            <section className="py-24 px-6 bg-white">
+                <div className="max-w-[1200px] mx-auto">
                     <FadeInWhenVisible>
-                        <div className="bg-titan-navy rounded-3xl overflow-hidden shadow-2xl">
-                            <div className="grid grid-cols-1 lg:grid-cols-2">
-                                {/* Left: Image */}
-                                <div className="relative min-h-[400px] lg:min-h-[500px]">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+
+                            {/* Left: Image with Offset Frame */}
+                            <div className="lg:col-span-5 relative pl-4 pb-4">
+                                {/* Dark Offset Background */}
+                                <div className="absolute top-4 left-4 right-0 bottom-0 bg-titan-navy rounded-lg -z-10 transform translate-x-2 translate-y-2"></div>
+
+                                {/* Image Container */}
+                                <div className="relative aspect-[4/5] w-full bg-white p-2 shadow-2xl rounded-lg overflow-hidden border border-gray-100">
                                     <Image
-                                        src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop"
-                                        alt="CEO"
+                                        src="/images/team-leadership/touch_kim.png"
+                                        alt="Okhna. TOUCH KIM"
                                         fill
-                                        className="object-cover"
+                                        className="object-contain object-bottom bg-gray-50"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-titan-navy/50 lg:to-titan-navy"></div>
-                                </div>
-
-                                {/* Right: Message */}
-                                <div className="p-10 lg:p-16 flex flex-col justify-center relative">
-                                    <Quote className="text-titan-red/20 absolute top-8 right-8" size={80} />
-
-                                    <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Message from CEO</span>
-
-                                    <blockquote className="text-xl md:text-2xl text-white/90 font-light italic leading-relaxed mb-8 relative z-10">
-                                        &ldquo;Construction is not just about concrete and steel. It&apos;s about building trust, fostering communities, and leaving a legacy that stands the test of time. At KIM MEX, we pour our heart into every foundation we lay.&rdquo;
-                                    </blockquote>
-
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-16 h-16 rounded-full bg-titan-red/20 flex items-center justify-center text-titan-red text-2xl font-black">
-                                            TK
-                                        </div>
-                                        <div>
-                                            <div className="text-white font-bold text-lg">Okhna. TOUCH KIM</div>
-                                            <div className="text-titan-red text-sm uppercase tracking-widest font-bold">Founder & CEO</div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
+
+                            {/* Right: Message Content */}
+                            <div className="lg:col-span-7 bg-gray-50 p-8 md:p-12 rounded-2xl relative">
+                                <Quote className="text-titan-navy mb-6" size={48} strokeWidth={1.5} />
+
+                                <h3 className="text-xl md:text-2xl font-bold text-titan-navy mb-6">Message From CEO</h3>
+
+                                <blockquote className="text-lg md:text-xl text-titan-navy/80 italic leading-loose mb-10 font-serif">
+                                    &ldquo;At KIM MEX, we believe that construction is not just about concrete and steel, but about building current and future dreams. Our commitment to integrity and quality has been the cornerstone of our success for over 20 years. We look forward to continuing to build the foundations of Cambodia&apos;s growth.&rdquo;
+                                </blockquote>
+
+                                <div>
+                                    <div className="text-titan-navy font-black text-xl uppercase mb-1">Okhna. TOUCH KIM</div>
+                                    <div className="text-titan-navy/60 text-xs font-bold uppercase tracking-widest">Chief Executive Officer</div>
+                                </div>
+                            </div>
+
                         </div>
                     </FadeInWhenVisible>
                 </div>
@@ -563,29 +625,69 @@ export default function AboutPage() {
             </section>
 
             {/* === LEADERSHIP TEAM (Org Chart) === */}
-            <section className="py-24 px-6 bg-white overflow-hidden">
-                <div className="max-w-[1400px] mx-auto">
+            <section className="py-24 px-4 bg-white overflow-hidden" id='leadership'>
+                <div className="max-w-[1400px] mx-auto text-center">
                     <FadeInWhenVisible>
-                        <div className="text-center mb-20">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our People</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-4">Organizational Structure</h2>
-                            <p className="text-titan-navy/50 text-lg max-w-2xl mx-auto">
-                                Led by industry veterans with a shared vision for excellence and sustainable growth.
-                            </p>
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl font-black text-titan-navy uppercase mb-16 tracking-tight">Organization Structure</h2>
                         </div>
                     </FadeInWhenVisible>
 
-                    {/* ORG CHART VISUALIZATION */}
-                    <div className="relative overflow-x-auto pb-12 custom-scrollbar">
-                        <div className="min-w-max px-4 flex justify-center">
-                            <OrgTreeNode node={orgData} isRoot={true} />
+                    <div className="overflow-x-auto pb-12">
+                        <div className="min-w-[1000px] flex flex-col items-center">
+
+                            {/* LEVEL 1: CEO */}
+                            <div className="relative mb-16">
+                                <TeamMemberCard member={ceo} isCEO onClick={handleMemberClick} />
+                                {/* Connector Down (halfway to row 2) */}
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
+                            </div>
+
+                            {/* LEVEL 2 */}
+                            <div className="relative w-full mb-16 px-[5%]">
+                                {/* Horizontal Line 1 (at 50% of gap above L2) */}
+                                <div className="absolute top-[-2rem] left-[10%] right-[10%] h-px bg-gray-200"></div>
+
+                                <div className="grid grid-cols-5 gap-4">
+                                    {managersL2.map((member, i) => (
+                                        <div key={i} className="flex justify-center relative">
+                                            {/* Vertical Tick Up to Horizontal Line */}
+                                            <div className="absolute top-[-2rem] left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
+
+                                            <TeamMemberCard member={member} onClick={handleMemberClick} />
+
+                                            {/* Vertical Tick Down to Horizontal Line below */}
+                                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* LEVEL 3 */}
+                            <div className="relative w-full px-[12%]">
+                                {/* Horizontal Line 2 (at 50% of gap above L3) */}
+                                <div className="absolute top-[-2rem] left-[12.5%] right-[12.5%] h-px bg-gray-200"></div>
+
+                                <div className="grid grid-cols-4 gap-4">
+                                    {managersL3.map((member, i) => (
+                                        <div key={i} className="flex justify-center relative">
+                                            {/* Vertical Tick Up to Horizontal Line */}
+                                            <div className="absolute top-[-2rem] left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
+
+                                            <TeamMemberCard member={member} onClick={handleMemberClick} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* === CERTIFICATIONS & QUALITY === */}
-            <section className="py-24 px-6 bg-titan-navy">
+            <section className="py-24 px-6 bg-titan-navy" id='quality'>
+                {/* ... existing content ... */}
                 <div className="max-w-[1400px] mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <FadeInWhenVisible>
@@ -666,6 +768,15 @@ export default function AboutPage() {
                 </div>
             </section>
 
+            {/* MODAL */}
+            <AnimatePresence>
+                <MemberDetailModal
+                    member={selectedMember}
+                    isOpen={!!selectedMember}
+                    onClose={() => setSelectedMember(null)}
+                />
+            </AnimatePresence>
         </div>
     );
 }
+
