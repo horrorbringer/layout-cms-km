@@ -105,18 +105,10 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                         <div className="flex items-center gap-3 w-full sm:w-auto">
                             <Link
                                 href={`/design-z/team/${member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}
-                                className="flex-grow sm:flex-grow-0 px-6 py-3.5 bg-titan-navy text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-titan-red transition-all text-center shadow-lg shadow-titan-navy/10 active:scale-95"
+                                className="w-full sm:w-auto px-10 py-3.5 bg-titan-navy text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-titan-red transition-all text-center shadow-lg shadow-titan-navy/10 active:scale-95"
                             >
-                                Full Profile
+                                Full Biography
                             </Link>
-                            <div className="flex gap-2">
-                                <div className="w-11 h-11 rounded-xl border border-gray-100 flex items-center justify-center text-titan-navy/30 hover:border-titan-red hover:text-titan-red transition-all cursor-pointer bg-gray-50/50">
-                                    <Mail size={16} />
-                                </div>
-                                <div className="w-11 h-11 rounded-xl border border-gray-100 flex items-center justify-center text-titan-navy/30 hover:border-titan-red hover:text-titan-red transition-all cursor-pointer bg-gray-50/50">
-                                    <Linkedin size={16} />
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

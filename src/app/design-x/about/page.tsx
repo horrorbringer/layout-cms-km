@@ -82,60 +82,62 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 30 }}
                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                className="relative bg-white rounded-3xl overflow-hidden max-w-4xl w-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col md:flex-row min-h-[500px]"
+                className="relative bg-white rounded-[2rem] overflow-hidden max-w-4xl w-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col md:flex-row max-h-[90vh] md:min-h-[500px] overflow-y-auto md:overflow-visible"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-6 right-6 z-20 w-10 h-10 bg-white shadow-lg text-titan-navy hover:bg-titan-red hover:text-white rounded-full transition-all duration-300 flex items-center justify-center group"
+                    className="absolute top-4 right-4 md:top-6 md:right-6 z-30 w-10 h-10 bg-white/90 backdrop-blur-sm shadow-xl text-titan-navy hover:bg-titan-red hover:text-white rounded-full transition-all duration-300 flex items-center justify-center group"
                 >
                     <X size={20} className="transition-transform group-hover:rotate-90" />
                 </button>
 
                 {/* Left: Image Side */}
-                <div className="w-full md:w-1/2 relative min-h-[400px] md:min-h-full">
+                <div className="w-full md:w-1/2 relative h-[300px] sm:h-[400px] md:h-auto shrink-0 overflow-hidden">
                     <Image
                         src={member.image}
                         alt={member.name}
                         fill
-                        className="object-cover object-top"
+                        className="object-cover object-top hover:scale-105 transition-transform duration-1000"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/40 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
 
                     {/* Floating Info on Image */}
                     <div className="absolute bottom-6 left-6 right-6">
-                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-widest mb-2">
-                            <Shield size={10} className="text-titan-red" />
+                        <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1.5 rounded-full text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">
+                            <Shield size={10} className="text-titan-red animate-pulse" />
                             Verified Leadership
                         </div>
                     </div>
                 </div>
 
                 {/* Right: Info Side */}
-                <div className="w-full md:w-1/2 p-10 md:p-14 flex flex-col relative">
+                <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col relative bg-white">
                     {/* Background Decorative Text */}
-                    <div className="absolute top-10 right-10 text-[100px] font-black text-gray-50 -z-10 select-none pb-0 leading-none">
+                    <div className="absolute top-10 right-10 text-[80px] md:text-[120px] font-black text-gray-50 -z-10 select-none leading-none opacity-50 md:opacity-100">
                         KM
                     </div>
 
-                    <div className="mb-10 relative">
-                        <span className="text-titan-red font-black uppercase tracking-[0.2em] text-xs block mb-3">{member.role}</span>
-                        <h3 className="text-4xl font-black text-titan-navy uppercase leading-[1.1] tracking-tight">{member.name}</h3>
-                        <div className="w-20 h-1.5 bg-titan-red mt-6 rounded-full"></div>
+                    <div className="mb-8 md:mb-12 relative">
+                        <span className="text-titan-red font-black uppercase tracking-[0.3em] text-[10px] block mb-3">{member.role}</span>
+                        <h3 className="text-3xl md:text-5xl font-black text-titan-navy uppercase leading-[1.1] tracking-tighter">
+                            {member.name}
+                        </h3>
+                        <div className="w-16 md:w-20 h-1.5 bg-titan-red mt-6 rounded-full"></div>
                     </div>
 
                     <div className="flex-grow">
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-titan-navy/30 mb-4 italic">Executive Biography</h4>
-                        <div className="space-y-6 text-titan-navy/70 leading-relaxed font-medium">
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-4 italic">Executive Biography</h4>
+                        <div className="space-y-4 md:space-y-6 text-titan-navy/80 leading-relaxed font-medium">
                             {member.bio ? (
-                                <p className="text-lg leading-relaxed">{member.bio}</p>
+                                <p className="text-base md:text-lg leading-relaxed">{member.bio}</p>
                             ) : (
                                 <>
-                                    <p className="text-lg leading-relaxed">
+                                    <p className="text-base md:text-lg leading-relaxed">
                                         An integral part of KIM MEX Construction, {member.name.split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {member.role.toLowerCase()} division.
                                     </p>
-                                    <p>
+                                    <p className="text-sm md:text-base">
                                         Focused on operational efficiency and upholding our core values of excellence and safety, they play a vital role in delivering landmark projects across the Kingdom.
                                     </p>
                                 </>
@@ -143,24 +145,24 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                         </div>
                     </div>
 
-                    <div className="mt-12 pt-8 border-t border-gray-100 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                    <div className="mt-10 md:mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-3 self-start sm:self-auto">
                             <div className="w-10 h-10 rounded-full bg-titan-navy/5 flex items-center justify-center text-titan-navy">
                                 <Users size={18} />
                             </div>
-                            <div className="text-[11px] leading-tight">
-                                <div className="font-bold text-titan-navy uppercase">Member Since</div>
-                                <div className="text-titan-navy/50">Core Leadership Team</div>
+                            <div className="text-[10px] md:text-[11px] leading-tight">
+                                <div className="font-bold text-titan-navy uppercase">Directorate</div>
+                                <div className="text-titan-navy/40 font-bold">KIMMEX GROUP</div>
                             </div>
                         </div>
 
-                        <div className="flex gap-2">
-                            <div className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-titan-navy/30 hover:border-titan-red hover:text-titan-red transition-all cursor-pointer">
-                                <Mail size={16} />
-                            </div>
-                            <div className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-titan-navy/30 hover:border-titan-red hover:text-titan-red transition-all cursor-pointer">
-                                <Linkedin size={16} />
-                            </div>
+                        <div className="flex items-center gap-3 w-full sm:w-auto">
+                            <Link
+                                href={`/design-x/team/${member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}
+                                className="w-full sm:w-auto px-10 py-3.5 bg-titan-navy text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-titan-red transition-all text-center shadow-lg shadow-titan-navy/10 active:scale-95"
+                            >
+                                Full Biography
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -200,6 +202,32 @@ function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO
                 <p className={`text-accent-orange font-bold uppercase tracking-[0.1em] ${isCEO ? 'text-sm' : 'text-[10px] lg:text-[11px]'}`}>
                     {member.role}
                 </p>
+            </div>
+        </div>
+    );
+}
+
+// Team Member Row Card (Mobile View - Horizontal / Vertical Tree)
+function TeamMemberRowCard({ member, onClick }: { member: any; onClick?: (member: any) => void }) {
+    return (
+        <div
+            className="flex items-center gap-4 bg-white p-3 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group w-full"
+            onClick={() => onClick && onClick(member)}
+        >
+            <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border-2 border-gray-50">
+                <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover transition-transform group-hover:scale-110"
+                />
+            </div>
+            <div className="flex-grow">
+                <h4 className="text-[13px] font-bold text-titan-navy uppercase tracking-tight leading-tight group-hover:text-titan-red transition-colors">{member.name}</h4>
+                <p className="text-[9px] text-accent-orange font-bold uppercase tracking-wider mt-1">{member.role}</p>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-titan-red/10 group-hover:text-titan-red transition-all">
+                <ArrowRight size={14} />
             </div>
         </div>
     );
@@ -633,30 +661,24 @@ export default function AboutPage() {
                         </div>
                     </FadeInWhenVisible>
 
-                    <div className="overflow-x-auto pb-12">
-                        <div className="min-w-[1000px] flex flex-col items-center">
-
+                    {/* --- DESKTOP VIEW: Tree Structure --- */}
+                    <div className="hidden md:block relative">
+                        <div className="min-w-full flex flex-col items-center px-4">
                             {/* LEVEL 1: CEO */}
                             <div className="relative mb-16">
                                 <TeamMemberCard member={ceo} isCEO onClick={handleMemberClick} />
-                                {/* Connector Down (halfway to row 2) */}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
                             </div>
 
                             {/* LEVEL 2 */}
-                            <div className="relative w-full mb-16 px-[5%]">
-                                {/* Horizontal Line 1 (at 50% of gap above L2) */}
+                            <div className="relative w-full mb-16 px-[2%]">
                                 <div className="absolute top-[-2rem] left-[10%] right-[10%] h-px bg-gray-200"></div>
 
                                 <div className="grid grid-cols-5 gap-4">
                                     {managersL2.map((member, i) => (
                                         <div key={i} className="flex justify-center relative">
-                                            {/* Vertical Tick Up to Horizontal Line */}
                                             <div className="absolute top-[-2rem] left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
-
                                             <TeamMemberCard member={member} onClick={handleMemberClick} />
-
-                                            {/* Vertical Tick Down to Horizontal Line below */}
                                             <div className="absolute top-full left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
                                         </div>
                                     ))}
@@ -664,22 +686,45 @@ export default function AboutPage() {
                             </div>
 
                             {/* LEVEL 3 */}
-                            <div className="relative w-full px-[12%]">
-                                {/* Horizontal Line 2 (at 50% of gap above L3) */}
+                            <div className="relative w-full px-[8%]">
                                 <div className="absolute top-[-2rem] left-[12.5%] right-[12.5%] h-px bg-gray-200"></div>
 
                                 <div className="grid grid-cols-4 gap-4">
                                     {managersL3.map((member, i) => (
                                         <div key={i} className="flex justify-center relative">
-                                            {/* Vertical Tick Up to Horizontal Line */}
                                             <div className="absolute top-[-2rem] left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200"></div>
-
                                             <TeamMemberCard member={member} onClick={handleMemberClick} />
                                         </div>
                                     ))}
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
+                    {/* --- MOBILE VIEW: Vertical Tree (Matching Sketch) --- */}
+                    <div className="md:hidden flex flex-col items-center max-w-[340px] mx-auto">
+                        {/* CEO Card */}
+                        <div className="relative mb-12 w-full flex justify-center">
+                            <TeamMemberCard member={ceo} isCEO onClick={handleMemberClick} />
+                            {/* Connector down to spine */}
+                            <div className="absolute top-[85%] left-1/2 -translate-x-1/2 w-px h-12 bg-gray-200 z-0"></div>
+                        </div>
+
+                        {/* Managers List with Spine */}
+                        <div className="relative w-full pl-10">
+                            {/* Vertical Spine */}
+                            <div className="absolute left-0 top-[-1rem] bottom-10 w-px bg-gray-200"></div>
+
+                            <div className="space-y-6">
+                                {[...managersL2, ...managersL3].map((member, i) => (
+                                    <div key={i} className="relative">
+                                        {/* Horizontal Connection Line */}
+                                        <div className="absolute -left-10 top-1/2 -translate-y-1/2 w-10 h-px bg-gray-200"></div>
+
+                                        <TeamMemberRowCard member={member} onClick={handleMemberClick} />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
