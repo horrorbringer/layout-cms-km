@@ -12,6 +12,7 @@ import {
     ArrowLeft, Star, MapPin
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from "next/image";
 import { useParams } from 'next/navigation';
 
 // --- SHARED COMPONENTS (Reused for consistency) ---
@@ -33,7 +34,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                     {/* Header */}
                     <div className="flex justify-between items-center p-8 md:p-12 shrink-0">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-titan-red rounded-full flex items-center justify-center font-bold text-white">K</div>
+                            <Image src="/logo.png" alt="Kimmex Logo" width={32} height={32} className="object-contain" />
                             <span className="font-bold text-xl tracking-tight">KIMMEX</span>
                         </div>
                         <button 
@@ -495,8 +496,8 @@ export default function ServiceDetailDesignAPage() {
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
                         {/* Logo */}
-                        <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
-                            <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
+                        <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-2.5 rounded-full flex items-center gap-3 pointer-events-auto">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={28} height={28} className="object-contain" />
                             <span className="font-bold text-lg tracking-tight">KIMMEX</span>
                         </div>
 

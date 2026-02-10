@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    ArrowRight, MapPin, Briefcase, Clock, Search, Filter, 
-    ChevronDown, Users, Globe, Award, Upload, Send, Check, 
+import {
+    ArrowRight, MapPin, Briefcase, Clock, Search, Filter,
+    ChevronDown, Users, Globe, Award, Upload, Send, Check,
     Menu, X, Facebook, Linkedin, Youtube
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from "next/image";
 
 // --- SHARED COMPONENTS ---
 
@@ -18,7 +19,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
     return (
         <AnimatePresence>
             {isOpen && (
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -27,18 +28,21 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                 >
                     {/* Header */}
                     <div className="flex justify-between items-center p-8 md:p-12 shrink-0">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-titan-red rounded-full flex items-center justify-center font-bold text-white">K</div>
-                            <span className="font-bold text-xl tracking-tight">KIMMEX</span>
+                        <div className="flex items-center gap-4">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={48} height={48} className="object-contain" />
+                            <div className="flex flex-col">
+                                <span className="font-bold text-xl tracking-tight leading-none text-white">KIMMEX</span>
+                                <span className="text-[10px] font-bold text-white/40 tracking-wider uppercase">Construction & Investment CO., LTD.</span>
+                            </div>
                         </div>
-                        <button 
-                            onClick={onClose} 
+                        <button
+                            onClick={onClose}
                             className="p-4 hover:bg-white/10 rounded-full transition-colors group flex items-center gap-2 text-sm font-bold uppercase tracking-widest"
                         >
                             Close <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
                         </button>
                     </div>
-                    
+
                     {/* Main Content Area */}
                     <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
                         {/* Left: Main Navigation List */}
@@ -46,7 +50,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                             <nav className="flex flex-col gap-2">
                                 {navItems.map((item, i) => (
                                     <div key={i}>
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ x: -20, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: i * 0.05 }}
@@ -61,7 +65,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             }}
                                         >
                                             {item.children ? (
-                                                <button 
+                                                <button
                                                     onClick={() => setActiveCategory(activeCategory === i ? null : i)}
                                                     className={`text-4xl md:text-6xl font-bold tracking-tight transition-all duration-300 w-full text-left flex items-center justify-between py-2 ${activeCategory === i ? 'text-titan-red translate-x-4' : 'text-white/40 hover:text-white'}`}
                                                 >
@@ -72,7 +76,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                     <ArrowRight size={32} className={`hidden md:block transition-all duration-300 ${activeCategory === i ? 'opacity-100 translate-x-0 text-titan-red' : 'opacity-0 -translate-x-4'}`} />
                                                 </button>
                                             ) : (
-                                                <Link 
+                                                <Link
                                                     href={item.href}
                                                     className="text-4xl md:text-6xl font-bold tracking-tight transition-all duration-300 w-full text-left block py-2 text-white/40 hover:text-white hover:translate-x-4"
                                                 >
@@ -87,8 +91,8 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
 
                         {/* Right: Sub-navigation & Details (Desktop Only) */}
                         <div className="hidden md:flex w-1/2 lg:w-7/12 p-12 flex-col bg-white/5 relative overflow-hidden">
-                            <motion.div 
-                                animate={{ 
+                            <motion.div
+                                animate={{
                                     background: activeCategory !== null ? `radial-gradient(circle at ${activeCategory * 10}% 50%, rgba(255, 107, 0, 0.15), transparent 60%)` : 'none'
                                 }}
                                 className="absolute inset-0 pointer-events-none transition-all duration-700"
@@ -108,11 +112,11 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-12 border-b border-white/10 pb-4">
                                                 Explore {navItems[activeCategory].label}
                                             </h3>
-                                            
+
                                             <div className="grid grid-cols-2 gap-x-12 gap-y-10">
                                                 {navItems[activeCategory].children.map((child: any, idx: number) => (
-                                                    <div 
-                                                        key={idx} 
+                                                    <div
+                                                        key={idx}
                                                         className="group/item relative"
                                                         onMouseEnter={() => child.children && setActiveSubCategory(idx)}
                                                         onMouseLeave={() => child.children && setActiveSubCategory(null)}
@@ -120,7 +124,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                         <Link href={child.href} className="block relative">
                                                             <div className="absolute -left-4 top-1 w-0.5 h-0 bg-titan-red transition-all duration-300 group-hover/item:h-full"></div>
                                                             <h4 className="text-2xl font-bold mb-2 text-white group-hover/item:text-titan-red transition-colors flex items-center gap-3">
-                                                                {child.label} 
+                                                                {child.label}
                                                                 <ArrowRight size={18} className="opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-titan-red" />
                                                             </h4>
                                                             <p className="text-white/40 text-sm leading-relaxed max-w-xs group-hover/item:text-white/60 transition-colors">
@@ -159,9 +163,9 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
 
                     <div className="p-8 md:px-12 md:py-6 border-t border-white/10 flex justify-between items-center text-sm font-bold text-white/40 uppercase tracking-widest shrink-0 bg-[#151525]">
                         <div className="flex gap-6">
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16}/> <span className="hidden md:inline">Facebook</span></a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Linkedin size={16}/> <span className="hidden md:inline">LinkedIn</span></a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Youtube size={16}/> <span className="hidden md:inline">Youtube</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16} /> <span className="hidden md:inline">Facebook</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Linkedin size={16} /> <span className="hidden md:inline">LinkedIn</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Youtube size={16} /> <span className="hidden md:inline">Youtube</span></a>
                         </div>
                         <div>© 2026 Kimmex</div>
                     </div>
@@ -309,9 +313,9 @@ export default function CareersPageDesignA() {
         {
             label: 'Projects', href: '/design-a/projects/completed',
             children: [
-                { 
-                    label: 'Done Projects', 
-                    href: '/design-a/projects/completed', 
+                {
+                    label: 'Done Projects',
+                    href: '/design-a/projects/completed',
                     desc: 'View our portfolio',
                     children: [
                         { label: 'Government', href: '/design-a/projects/completed?type=Government', desc: 'Public sector works' },
@@ -321,9 +325,9 @@ export default function CareersPageDesignA() {
                         { label: 'Slope', href: '/design-a/projects/completed?type=Slope', desc: 'Specialized engineering' }
                     ]
                 },
-                { 
-                    label: 'Implement Projects', 
-                    href: '/design-a/projects/implementation', 
+                {
+                    label: 'Implement Projects',
+                    href: '/design-a/projects/implementation',
                     desc: 'Current developments',
                     children: [
                         { label: 'Government', href: '/design-a/projects/implementation?type=Government', desc: 'Ongoing public works' },
@@ -348,28 +352,31 @@ export default function CareersPageDesignA() {
 
     return (
         <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 font-sans text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
-            
+
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
-                
+
                 {/* --- NAVIGATION --- */}
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
                         {/* Logo */}
-                        <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
-                            <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
-                            <span className="font-bold text-lg tracking-tight">KIMMEX</span>
+                        <div className="bg-white/95 backdrop-blur-md shadow-xl px-8 py-5 rounded-full flex items-center gap-5 pointer-events-auto border border-black/5">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={44} height={44} className="object-contain" />
+                            <div className="flex flex-col">
+                                <span className="font-black text-2xl tracking-tighter text-titan-navy leading-none">KIMMEX</span>
+                                <span className="text-[10px] font-bold text-titan-navy/40 tracking-[0.1em] uppercase whitespace-nowrap">Construction & Investment CO., LTD.</span>
+                            </div>
                         </div>
 
                         {/* Menu Trigger */}
-                        <button 
+                        <button
                             onClick={() => setIsMenuOpen(true)}
-                            className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
+                            className="bg-titan-navy text-white px-10 py-6 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-titan-red transition-all shadow-2xl flex items-center gap-5 pointer-events-auto group"
                         >
                             <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">Menu</span>
-                            <div className="flex flex-col gap-1.5 items-end">
-                                <span className="w-6 h-0.5 bg-white group-hover:w-4 transition-all"></span>
-                                <span className="w-4 h-0.5 bg-white group-hover:w-6 transition-all"></span>
+                            <div className="flex flex-col gap-2 items-end">
+                                <span className="w-8 h-1 bg-white group-hover:w-5 transition-all rounded-full"></span>
+                                <span className="w-5 h-1 bg-white group-hover:w-8 transition-all rounded-full"></span>
                             </div>
                         </button>
                     </div>
@@ -380,9 +387,9 @@ export default function CareersPageDesignA() {
                 {/* --- HERO --- */}
                 <header className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy rounded-b-[4rem]">
                     <div className="absolute inset-0">
-                        <img 
-                            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2670&auto=format&fit=crop" 
-                            alt="Careers Hero" 
+                        <img
+                            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2670&auto=format&fit=crop"
+                            alt="Careers Hero"
                             className="w-full h-full object-cover opacity-30 scale-105 animate-slow-pan"
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/50 to-transparent"></div>
@@ -400,20 +407,20 @@ export default function CareersPageDesignA() {
                                 We are Hiring
                             </div>
                             <h1 className="text-6xl md:text-8xl font-black text-white mb-8 tracking-tight leading-[0.9]">
-                                Build <br/>
+                                Build <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">Your Legacy.</span>
                             </h1>
                             <p className="text-xl text-white/70 font-light max-w-xl leading-relaxed mb-10 border-l-4 border-titan-red pl-6">
                                 Join a team of visionaries. At Kimmex, we don't just construct buildings; we shape the skyline and engineering future of Cambodia.
                             </p>
                             <div className="flex flex-wrap gap-4">
-                                <button 
+                                <button
                                     onClick={() => document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="bg-titan-red text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-white hover:text-titan-red transition-all shadow-lg hover:shadow-titan-red/20"
                                 >
                                     View Openings
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => setIsApplyOpen(true)}
                                     className="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-white hover:text-titan-navy transition-all backdrop-blur-sm"
                                 >
@@ -423,7 +430,7 @@ export default function CareersPageDesignA() {
                         </motion.div>
 
                         {/* Hero Stats/Visuals */}
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.3, duration: 0.8 }}
@@ -451,12 +458,12 @@ export default function CareersPageDesignA() {
                 {/* --- WHY JOIN US --- */}
                 <section className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
                     <div className="text-center mb-16">
-                         <h2 className="text-4xl font-black text-titan-navy mb-4">Why Choose Kimmex?</h2>
-                         <p className="text-titan-navy/50 max-w-2xl mx-auto text-lg">More than just a job, we offer a pathway to professional excellence.</p>
+                        <h2 className="text-4xl font-black text-titan-navy mb-4">Why Choose Kimmex?</h2>
+                        <p className="text-titan-navy/50 max-w-2xl mx-auto text-lg">More than just a job, we offer a pathway to professional excellence.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -471,7 +478,7 @@ export default function CareersPageDesignA() {
                             </p>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -487,7 +494,7 @@ export default function CareersPageDesignA() {
                             </p>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -516,9 +523,9 @@ export default function CareersPageDesignA() {
                         <div className="flex flex-col md:flex-row gap-4 w-full xl:w-auto">
                             <div className="relative flex-grow md:flex-grow-0 md:w-64">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                                <input 
-                                    type="text" 
-                                    placeholder="Search roles..." 
+                                <input
+                                    type="text"
+                                    placeholder="Search roles..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     className="w-full pl-10 pr-4 py-4 rounded-xl border-none bg-[#F5F5F7] text-sm font-bold text-titan-navy focus:outline-none focus:ring-2 focus:ring-titan-red/20 hover:bg-white transition-all shadow-sm"
@@ -574,7 +581,7 @@ export default function CareersPageDesignA() {
                                     </motion.div>
                                 ))
                             ) : (
-                                <motion.div 
+                                <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     className="text-center py-20 bg-[#F5F5F7] rounded-[2rem] border-2 border-dashed border-gray-200"

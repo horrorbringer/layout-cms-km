@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Building2, HardHat, Quote, X, Mail, Linkedin, ArrowRight } from 'lucide-react';
+import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Building2, HardHat, Quote, X, Mail, Linkedin, ArrowRight, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -245,6 +245,7 @@ export default function AboutPage() {
     const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
     const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
     const [selectedMember, setSelectedMember] = React.useState<any>(null);
+    const [activeMissionIndex, setActiveMissionIndex] = React.useState<number | null>(null);
 
     const handleMemberClick = (member: any) => {
         setSelectedMember(member);
@@ -512,19 +513,92 @@ export default function AboutPage() {
                                     Since 1999, KIM MEX Construction has been a cornerstone of Cambodia&apos;s infrastructure development. We are more than builders; we are partners in national progress, dedicated to delivering excellence in every beam, brick, and blueprint.
                                 </p>
 
-                                <div className="space-y-6">
+                                <div className="space-y-4">
                                     {[
-                                        { icon: Flag, title: 'Our Mission', desc: 'To bridge the gap between concept and reality through exceptional engineering, rigorous safety standards, and a commitment to client satisfaction.' },
-                                        { icon: Eye, title: 'Our Vision', desc: 'To be the most trusted and innovative construction partner in Cambodia, setting new standards for quality, safety, and sustainable development.' },
-                                        { icon: Target, title: 'Our Goal', desc: 'To complete every project on time and within budget while maintaining zero-accident safety records.' },
+                                        {
+                                            icon: Flag,
+                                            title: 'Our Mission',
+                                            desc: 'To bridge the gap between concept and reality through exceptional engineering and safety.',
+                                            detail: 'At KIM MEX, we are dedicated to transforming complex challenges into structural realities. Our mission goes beyond building; it\'s about creating value for our stakeholders and the nation.',
+                                            points: [
+                                                'Prioritizing safety in every structural phase.',
+                                                'Implementing sustainable building practices.',
+                                                'Delivering unmatched precision and quality.',
+                                                'Cultivating long-term client partnerships.'
+                                            ]
+                                        },
+                                        {
+                                            icon: Eye,
+                                            title: 'Our Vision',
+                                            desc: 'To be the most trusted and innovative construction partner in Cambodia.',
+                                            detail: 'We envision a skyline defined by innovation and architectural brilliance. Our vision is to set the benchmark for construction excellence in Southeast Asia, leading with technology.',
+                                            points: [
+                                                'Global recognition for engineering excellence.',
+                                                'Pioneering smart construction technologies.',
+                                                'Shaping the future of urban living.',
+                                                'Becoming the most trusted name in real estate.'
+                                            ]
+                                        },
+                                        {
+                                            icon: Target,
+                                            title: 'Our Goal',
+                                            desc: 'To complete every project on time and within budget with zero-accident safety.',
+                                            detail: 'Success for us is measured by the safety of our team and the satisfaction of our clients. We strive for excellence through meticulous planning and execution.',
+                                            points: [
+                                                'Achieving 100% on-time project completion.',
+                                                'Maintaining a strict zero-accident safety record.',
+                                                'Expanding our footprint into renewable infrastructure.',
+                                                'Investing in professional growth of our staff.'
+                                            ]
+                                        },
                                     ].map((item, i) => (
-                                        <div key={i} className="flex gap-5 group">
-                                            <div className="w-14 h-14 bg-titan-red/10 rounded-xl flex items-center justify-center text-titan-red shrink-0 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
-                                                <item.icon size={24} />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-lg font-bold text-titan-navy mb-1 group-hover:text-titan-red transition-colors">{item.title}</h3>
-                                                <p className="text-titan-navy/50 text-sm leading-relaxed">{item.desc}</p>
+                                        <div
+                                            key={i}
+                                            className={`p-6 rounded-2xl transition-all duration-300 cursor-pointer border ${activeMissionIndex === i ? 'bg-gray-50 border-titan-red/20 shadow-sm' : 'bg-white border-transparent hover:bg-gray-50'}`}
+                                            onClick={() => setActiveMissionIndex(activeMissionIndex === i ? null : i)}
+                                        >
+                                            <div className="flex gap-5 group">
+                                                <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${activeMissionIndex === i ? 'bg-titan-red text-white' : 'bg-titan-red/10 text-titan-red group-hover:bg-titan-red group-hover:text-white'}`}>
+                                                    <item.icon size={24} />
+                                                </div>
+                                                <div className="flex-grow">
+                                                    <div className="flex items-center justify-between mb-1">
+                                                        <h3 className={`text-lg font-bold transition-colors ${activeMissionIndex === i ? 'text-titan-red' : 'text-titan-navy group-hover:text-titan-red'}`}>{item.title}</h3>
+                                                        <motion.div
+                                                            animate={{ rotate: activeMissionIndex === i ? 90 : 0 }}
+                                                            className={`text-titan-red/30 transition-colors ${activeMissionIndex === i ? 'text-titan-red' : ''}`}
+                                                        >
+                                                            <ChevronRight size={18} />
+                                                        </motion.div>
+                                                    </div>
+                                                    <p className="text-titan-navy/50 text-sm leading-relaxed">{item.desc}</p>
+
+                                                    <AnimatePresence>
+                                                        {activeMissionIndex === i && (
+                                                            <motion.div
+                                                                initial={{ height: 0, opacity: 0 }}
+                                                                animate={{ height: 'auto', opacity: 1 }}
+                                                                exit={{ height: 0, opacity: 0 }}
+                                                                transition={{ duration: 0.3 }}
+                                                                className="overflow-hidden"
+                                                            >
+                                                                <div className="pt-6 mt-6 border-t border-gray-200">
+                                                                    <p className="text-titan-navy/70 text-sm leading-relaxed mb-4 italic">
+                                                                        {item.detail}
+                                                                    </p>
+                                                                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                                                                        {item.points.map((point, idx) => (
+                                                                            <li key={idx} className="flex items-start gap-2 text-xs font-bold text-titan-navy/60">
+                                                                                <div className="w-1.5 h-1.5 bg-titan-red rounded-full mt-1.5 shrink-0"></div>
+                                                                                {point}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </div>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}

@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
-import { 
-    ArrowRight, Menu, X, Facebook, Linkedin, Youtube, 
-    Shield, Award, Users, TrendingUp, Heart, Lightbulb, 
-    Handshake, Clock, CheckCircle2, Quote, ChevronRight
+import {
+    ArrowRight, Menu, X, Facebook, Linkedin, Youtube,
+    Shield, Award, Users, TrendingUp, Heart, Lightbulb,
+    Handshake, Clock, CheckCircle2, Quote, ChevronRight,
+    Flag, Eye, Target
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // --- SHARED COMPONENTS FROM DESIGN-A ---
 
@@ -18,7 +20,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
     return (
         <AnimatePresence>
             {isOpen && (
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -27,27 +29,30 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                 >
                     {/* Header */}
                     <div className="flex justify-between items-center p-8 md:p-12 shrink-0">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-titan-red rounded-full flex items-center justify-center font-bold text-white">K</div>
-                            <span className="font-bold text-xl tracking-tight">KIMMEX</span>
+                        <div className="flex items-center gap-4">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={48} height={48} className="object-contain" />
+                            <div className="flex flex-col">
+                                <span className="font-bold text-xl tracking-tight leading-none text-white">KIMMEX</span>
+                                <span className="text-[10px] font-bold text-white/40 tracking-wider uppercase">Construction & Investment CO., LTD.</span>
+                            </div>
                         </div>
-                        <button 
-                            onClick={onClose} 
+                        <button
+                            onClick={onClose}
                             className="p-4 hover:bg-white/10 rounded-full transition-colors group flex items-center gap-2 text-sm font-bold uppercase tracking-widest"
                         >
                             Close <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
                         </button>
                     </div>
-                    
+
                     {/* Main Content Area */}
                     <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-                        
+
                         {/* Left: Main Navigation List */}
                         <div className="w-full md:w-1/2 lg:w-5/12 p-8 md:p-12 overflow-y-auto border-r border-white/10 flex flex-col justify-center">
                             <nav className="flex flex-col gap-2">
                                 {navItems.map((item, i) => (
                                     <div key={i}>
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ x: -20, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: i * 0.05 }}
@@ -62,7 +67,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             }}
                                         >
                                             {item.children ? (
-                                                <button 
+                                                <button
                                                     onClick={() => setActiveCategory(activeCategory === i ? null : i)}
                                                     className={`text-4xl md:text-6xl font-bold tracking-tight transition-all duration-300 w-full text-left flex items-center justify-between py-2 ${activeCategory === i ? 'text-titan-red translate-x-4' : 'text-white/40 hover:text-white'}`}
                                                 >
@@ -72,18 +77,18 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                     <ArrowRight size={32} className={`hidden md:block transition-all duration-300 ${activeCategory === i ? 'opacity-100 translate-x-0 text-titan-red' : 'opacity-0 -translate-x-4'}`} />
                                                 </button>
                                             ) : (
-                                                <Link 
+                                                <Link
                                                     href={item.href}
                                                     className="text-4xl md:text-6xl font-bold tracking-tight transition-all duration-300 w-full text-left block py-2 text-white/40 hover:text-white hover:translate-x-4"
                                                 >
                                                     {item.label}
                                                 </Link>
                                             )}
-                                            
+
                                             {/* Mobile Accordion */}
                                             <AnimatePresence>
                                                 {activeCategory === i && (
-                                                    <motion.div 
+                                                    <motion.div
                                                         initial={{ height: 0, opacity: 0 }}
                                                         animate={{ height: 'auto', opacity: 1 }}
                                                         exit={{ height: 0, opacity: 0 }}
@@ -118,8 +123,8 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                         {/* Right: Sub-navigation & Details (Desktop Only) */}
                         <div className="hidden md:flex w-1/2 lg:w-7/12 p-12 flex-col bg-white/5 relative overflow-hidden">
                             {/* Dynamic Background Blob based on Index */}
-                            <motion.div 
-                                animate={{ 
+                            <motion.div
+                                animate={{
                                     background: activeCategory !== null ? `radial-gradient(circle at ${activeCategory * 10}% 50%, rgba(255, 107, 0, 0.15), transparent 60%)` : 'none'
                                 }}
                                 className="absolute inset-0 pointer-events-none transition-all duration-700"
@@ -139,11 +144,11 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-12 border-b border-white/10 pb-4">
                                                 Explore {navItems[activeCategory].label}
                                             </h3>
-                                            
+
                                             <div className="grid grid-cols-2 gap-x-12 gap-y-10">
                                                 {navItems[activeCategory].children.map((child: any, idx: number) => (
-                                                    <div 
-                                                        key={idx} 
+                                                    <div
+                                                        key={idx}
                                                         className="group/item relative"
                                                         onMouseEnter={() => child.children && setActiveSubCategory(idx)}
                                                         onMouseLeave={() => child.children && setActiveSubCategory(null)}
@@ -151,7 +156,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                         <Link href={child.href} className="block relative">
                                                             <div className="absolute -left-4 top-1 w-0.5 h-0 bg-titan-red transition-all duration-300 group-hover/item:h-full"></div>
                                                             <h4 className="text-2xl font-bold mb-2 text-white group-hover/item:text-titan-red transition-colors flex items-center gap-3">
-                                                                {child.label} 
+                                                                {child.label}
                                                                 <ArrowRight size={18} className="opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-titan-red" />
                                                             </h4>
                                                             <p className="text-white/40 text-sm leading-relaxed max-w-xs group-hover/item:text-white/60 transition-colors">
@@ -163,7 +168,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                         {child.children && (
                                                             <motion.div
                                                                 initial={{ opacity: 0, height: 0 }}
-                                                                animate={{ 
+                                                                animate={{
                                                                     opacity: activeSubCategory === idx ? 1 : 0,
                                                                     height: activeSubCategory === idx ? 'auto' : 0,
                                                                     marginTop: activeSubCategory === idx ? 16 : 0
@@ -171,8 +176,8 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                                 className="overflow-hidden pl-4 border-l border-white/10"
                                                             >
                                                                 {child.children.map((sub: any, subIdx: number) => (
-                                                                    <Link 
-                                                                        key={subIdx} 
+                                                                    <Link
+                                                                        key={subIdx}
                                                                         href={sub.href}
                                                                         className="block py-2 text-sm text-white/50 hover:text-titan-red hover:translate-x-1 transition-all"
                                                                     >
@@ -186,9 +191,9 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             </div>
                                         </motion.div>
                                     ) : (
-                                        <motion.div 
+                                        <motion.div
                                             key="empty"
-                                            initial={{ opacity: 0 }} 
+                                            initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             className="h-full flex flex-col justify-center items-center text-white/20"
                                         >
@@ -220,9 +225,9 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                     {/* Bottom Bar */}
                     <div className="p-8 md:px-12 md:py-6 border-t border-white/10 flex justify-between items-center text-sm font-bold text-white/40 uppercase tracking-widest shrink-0 bg-[#151525]">
                         <div className="flex gap-6">
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16}/> <span className="hidden md:inline">Facebook</span></a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Linkedin size={16}/> <span className="hidden md:inline">LinkedIn</span></a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Youtube size={16}/> <span className="hidden md:inline">Youtube</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16} /> <span className="hidden md:inline">Facebook</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Linkedin size={16} /> <span className="hidden md:inline">LinkedIn</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Youtube size={16} /> <span className="hidden md:inline">Youtube</span></a>
                         </div>
                         <div>© 2026 Kimmex</div>
                     </div>
@@ -305,14 +310,14 @@ function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boo
             <FadeInWhenVisible>
                 <Link href={`/design-a/team/${node.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}>
                     <div className={`relative z-10 bg-[#F5F5F7] hover:bg-titan-navy hover:text-white transition-all duration-300 group flex items-center lg:flex-col cursor-pointer
-                        ${isRoot 
-                            ? 'p-8 rounded-[2.5rem] min-w-[300px] lg:w-80 flex-col text-center shadow-lg' 
+                        ${isRoot
+                            ? 'p-8 rounded-[2.5rem] min-w-[300px] lg:w-80 flex-col text-center shadow-lg'
                             : 'p-4 rounded-[1.5rem] w-full max-w-md lg:w-60 lg:min-w-[200px]'}
                     `}>
                         {/* Image Circle */}
                         <div className={`rounded-full overflow-hidden flex items-center justify-center bg-white flex-shrink-0 relative mr-4 lg:mr-0 lg:mb-4 group-hover:scale-105 transition-transform duration-500
-                            ${isRoot 
-                                ? 'w-32 h-32 lg:w-40 lg:h-40 ring-4 ring-white' 
+                            ${isRoot
+                                ? 'w-32 h-32 lg:w-40 lg:h-40 ring-4 ring-white'
                                 : 'w-16 h-16 lg:w-24 lg:h-24'}
                         `}>
                             {node.image ? (
@@ -356,15 +361,15 @@ function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boo
 
                         {node.children!.map((child, index) => (
                             <div key={index} className="flex flex-col lg:items-center relative w-full lg:w-auto">
-                                
+
                                 {/* MOBILE: Horizontal dash */}
                                 <div className="lg:hidden absolute top-8 -left-6 w-6 h-0.5 bg-gray-200"></div>
 
                                 {/* DESKTOP: Vertical Line to Child */}
                                 {node.children!.length > 1 && (
-                                     <div className={`hidden lg:block absolute top-[-2rem] w-px h-8 bg-gray-300 left-1/2 -translate-x-1/2`}></div>
+                                    <div className={`hidden lg:block absolute top-[-2rem] w-px h-8 bg-gray-300 left-1/2 -translate-x-1/2`}></div>
                                 )}
-                                
+
                                 <OrgTreeNode node={child} />
                             </div>
                         ))}
@@ -378,6 +383,7 @@ function OrgTreeNode({ node, isRoot = false }: { node: OrgNodeData; isRoot?: boo
 export default function AboutPageDesignA() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [activeMissionIndex, setActiveMissionIndex] = useState<number | null>(null);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -406,9 +412,9 @@ export default function AboutPageDesignA() {
         {
             label: 'Projects', href: '/design-a/projects/completed',
             children: [
-                { 
-                    label: 'Done Projects', 
-                    href: '/design-a/projects/completed', 
+                {
+                    label: 'Done Projects',
+                    href: '/design-a/projects/completed',
                     desc: 'View our portfolio',
                     children: [
                         { label: 'Government', href: '/design-a/projects/completed?type=Government', desc: 'Public sector works' },
@@ -418,9 +424,9 @@ export default function AboutPageDesignA() {
                         { label: 'Slope', href: '/design-a/projects/completed?type=Slope', desc: 'Specialized engineering' }
                     ]
                 },
-                { 
-                    label: 'Implement Projects', 
-                    href: '/design-a/projects/implementation', 
+                {
+                    label: 'Implement Projects',
+                    href: '/design-a/projects/implementation',
                     desc: 'Current developments',
                     children: [
                         { label: 'Government', href: '/design-a/projects/implementation?type=Government', desc: 'Ongoing public works' },
@@ -525,28 +531,31 @@ export default function AboutPageDesignA() {
 
     return (
         <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 font-sans text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
-            
+
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
-                
+
                 {/* --- NAVIGATION --- */}
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
                         {/* Logo */}
-                        <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
-                            <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
-                            <span className="font-bold text-lg tracking-tight">KIMMEX</span>
+                        <div className="bg-white/95 backdrop-blur-md shadow-xl px-8 py-5 rounded-full flex items-center gap-5 pointer-events-auto border border-black/5">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={44} height={44} className="object-contain" />
+                            <div className="flex flex-col">
+                                <span className="font-black text-2xl tracking-tighter text-titan-navy leading-none">KIMMEX</span>
+                                <span className="text-[10px] font-bold text-titan-navy/40 tracking-[0.1em] uppercase whitespace-nowrap">Construction & Investment CO., LTD.</span>
+                            </div>
                         </div>
 
                         {/* Menu Trigger */}
-                        <button 
+                        <button
                             onClick={() => setIsMenuOpen(true)}
-                            className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
+                            className="bg-titan-navy text-white px-10 py-6 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-titan-red transition-all shadow-2xl flex items-center gap-5 pointer-events-auto group"
                         >
                             <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">Menu</span>
-                            <div className="flex flex-col gap-1.5 items-end">
-                                <span className="w-6 h-0.5 bg-white group-hover:w-4 transition-all"></span>
-                                <span className="w-4 h-0.5 bg-white group-hover:w-6 transition-all"></span>
+                            <div className="flex flex-col gap-2 items-end">
+                                <span className="w-8 h-1 bg-white group-hover:w-5 transition-all rounded-full"></span>
+                                <span className="w-5 h-1 bg-white group-hover:w-8 transition-all rounded-full"></span>
                             </div>
                         </button>
                     </div>
@@ -556,19 +565,19 @@ export default function AboutPageDesignA() {
 
                 {/* --- HEADER / HERO --- */}
                 <header className="pt-32 md:pt-40 pb-12 md:pb-20 px-6 md:px-12 min-h-[60vh] flex flex-col justify-end relative">
-                     <div className="absolute top-0 right-0 w-1/2 h-full bg-[#F5F5F7] -z-10 rounded-bl-[4rem] hidden lg:block"></div>
-                     
-                     <motion.div 
+                    <div className="absolute top-0 right-0 w-1/2 h-full bg-[#F5F5F7] -z-10 rounded-bl-[4rem] hidden lg:block"></div>
+
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                         className="max-w-4xl"
                     >
-                         <div className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8 border border-titan-navy/5">
+                        <div className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8 border border-titan-navy/5">
                             Est. 1999 • About Us
                         </div>
                         <h1 className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
-                            Building <br/>
+                            Building <br />
                             <span className="text-gray-300">Cambodia&apos;s Future.</span>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-500 max-w-2xl leading-relaxed">
@@ -608,19 +617,92 @@ export default function AboutPageDesignA() {
                                 Since 1999, KIM MEX Construction has been a cornerstone of Cambodia&apos;s infrastructure development. We are more than builders; we are partners in national progress, dedicated to delivering excellence in every beam, brick, and blueprint.
                             </p>
 
-                            <div className="space-y-8">
+                            <div className="space-y-4">
                                 {[
-                                    { icon: Shield, title: 'Our Mission', desc: 'To bridge the gap between concept and reality through exceptional engineering.' },
-                                    { icon: Lightbulb, title: 'Our Vision', desc: 'To be the most trusted and innovative construction partner in Cambodia.' },
-                                    { icon: CheckCircle2, title: 'Our Goal', desc: 'To complete every project on time and within budget.' },
-                                ].map((item, i) => ( // Note: Icons like User, Eye, Target need to be imported or substituted if not available. Used standard lucide imports.
-                                    <div key={i} className="flex gap-6 group">
-                                        <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-titan-navy group-hover:bg-titan-navy group-hover:text-white transition-all shadow-sm shrink-0">
-                                            <item.icon size={24} />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                                            <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                                    {
+                                        icon: Flag,
+                                        title: 'Our Mission',
+                                        desc: 'To bridge the gap between concept and reality through exceptional engineering.',
+                                        detail: 'At KIM MEX, we are dedicated to transforming complex challenges into structural realities. Our mission goes beyond building; it\'s about creating value for our stakeholders and the nation.',
+                                        points: [
+                                            'Prioritizing safety in every structural phase.',
+                                            'Implementing sustainable building practices.',
+                                            'Delivering unmatched precision and quality.',
+                                            'Cultivating long-term client partnerships.'
+                                        ]
+                                    },
+                                    {
+                                        icon: Eye,
+                                        title: 'Our Vision',
+                                        desc: 'To be the most trusted and innovative construction partner in Cambodia.',
+                                        detail: 'We envision a skyline defined by innovation and architectural brilliance. Our vision is to set the benchmark for construction excellence in Southeast Asia, leading with technology.',
+                                        points: [
+                                            'Global recognition for engineering excellence.',
+                                            'Pioneering smart construction technologies.',
+                                            'Shaping the future of urban living.',
+                                            'Becoming the most trusted name in real estate.'
+                                        ]
+                                    },
+                                    {
+                                        icon: Target,
+                                        title: 'Our Goal',
+                                        desc: 'To complete every project on time and within budget with zero-accident safety.',
+                                        detail: 'Success for us is measured by the safety of our team and the satisfaction of our clients. We strive for excellence through meticulous planning and execution.',
+                                        points: [
+                                            'Achieving 100% on-time project completion.',
+                                            'Maintaining a strict zero-accident safety record.',
+                                            'Expanding our footprint into renewable infrastructure.',
+                                            'Investing in professional growth of our staff.'
+                                        ]
+                                    },
+                                ].map((item, i) => (
+                                    <div
+                                        key={i}
+                                        className={`p-6 rounded-[2rem] transition-all duration-300 cursor-pointer border ${activeMissionIndex === i ? 'bg-white shadow-xl border-titan-navy/5' : 'bg-transparent border-transparent hover:bg-white/50'}`}
+                                        onClick={() => setActiveMissionIndex(activeMissionIndex === i ? null : i)}
+                                    >
+                                        <div className="flex gap-6 group">
+                                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 ${activeMissionIndex === i ? 'bg-titan-navy text-white' : 'bg-white text-titan-navy shadow-sm group-hover:bg-titan-navy group-hover:text-white'}`}>
+                                                <item.icon size={24} />
+                                            </div>
+                                            <div className="grow">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <h3 className={`text-xl font-bold transition-all ${activeMissionIndex === i ? 'text-titan-red translate-x-2' : ''}`}>{item.title}</h3>
+                                                    <motion.div
+                                                        animate={{ rotate: activeMissionIndex === i ? 90 : 0 }}
+                                                        className={`text-titan-navy/20 transition-colors ${activeMissionIndex === i ? 'text-titan-red' : ''}`}
+                                                    >
+                                                        <ChevronRight size={20} />
+                                                    </motion.div>
+                                                </div>
+                                                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+
+                                                <AnimatePresence>
+                                                    {activeMissionIndex === i && (
+                                                        <motion.div
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: 'auto', opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            transition={{ duration: 0.3 }}
+                                                            className="overflow-hidden"
+                                                        >
+                                                            <div className="pt-6 mt-6 border-t border-gray-100">
+                                                                <p className="text-gray-600 text-sm leading-relaxed mb-4 italic">
+                                                                    {item.detail}
+                                                                </p>
+                                                                <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                                                                    {item.points.map((point, idx) => (
+                                                                        <li key={idx} className="flex items-start gap-3 text-xs font-bold text-titan-navy/70">
+                                                                            <div className="w-1.5 h-1.5 bg-titan-red rounded-full mt-1.5 shrink-0"></div>
+                                                                            {point}
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -633,7 +715,7 @@ export default function AboutPageDesignA() {
                 <section className="px-6 md:px-12 py-20 mb-20">
                     <div className="bg-titan-navy rounded-[3rem] p-8 md:p-16 text-white relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-titan-red/20 blur-[150px] rounded-full pointer-events-none"></div>
-                        
+
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
                             <div className="order-2 lg:order-1">
                                 <Quote className="text-titan-red mb-8 opacity-50" size={64} />
@@ -718,14 +800,14 @@ export default function AboutPageDesignA() {
                         <h2 className="text-3xl md:text-5xl font-bold mb-6">Leadership Team</h2>
                         <p className="text-gray-500 max-w-2xl mx-auto">Guided by visionaries with decades of experience.</p>
                     </div>
-                    
+
                     <div className="overflow-x-auto pb-12 custom-scrollbar flex justify-center">
-                         <OrgTreeNode node={orgData} isRoot={true} />
+                        <OrgTreeNode node={orgData} isRoot={true} />
                     </div>
                 </section>
 
-                 {/* --- CERTIFICATIONS --- */}
-                 <section className="px-6 md:px-12 py-20 bg-titan-navy text-white rounded-[3rem] mx-0 md:mx-6 mb-20">
+                {/* --- CERTIFICATIONS --- */}
+                <section className="px-6 md:px-12 py-20 bg-titan-navy text-white rounded-[3rem] mx-0 md:mx-6 mb-20">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <div>
                             <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Our Standards</span>
@@ -757,9 +839,9 @@ export default function AboutPageDesignA() {
                             <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&fit=crop" className="rounded-[2.5rem] shadow-2xl" alt="Safety" />
                         </div>
                     </div>
-                 </section>
+                </section>
 
-                 {/* --- FOOTER --- */}
+                {/* --- FOOTER --- */}
                 <footer className="pt-20 pb-12 px-6 md:px-12 bg-white rounded-t-[3rem] mt-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 mb-20">
                         <div>

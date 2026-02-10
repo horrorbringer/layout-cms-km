@@ -69,9 +69,12 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                 >
                     {/* Header */}
                     <div className="flex justify-between items-center p-8 md:p-12 shrink-0">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-titan-red rounded-full flex items-center justify-center font-bold text-white">K</div>
-                            <span className="font-bold text-xl tracking-tight">KIMMEX</span>
+                        <div className="flex items-center gap-4">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={70} height={70} className="object-contain" />
+                            <div className="flex flex-col">
+                                <span className="font-bold text-xl tracking-tight leading-none text-white">KIMMEX</span>
+                                <span className="text-[10px] font-bold text-white/40 tracking-wider uppercase">Construction & Investment CO., LTD.</span>
+                            </div>
                         </div>
                         <button
                             onClick={onClose}
@@ -356,20 +359,23 @@ export default function DesignA_ContainerNav() {
                     <div className="px-6 md:px-12 flex justify-between items-start">
 
                         {/* Logo (Top Left) */}
-                        <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
-                            <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
-                            <span className="font-bold text-lg tracking-tight">KIMMEX</span>
+                        <div className="bg-white/95 backdrop-blur-md shadow-xl px-8 py-5 rounded-full flex items-center gap-5 pointer-events-auto border border-black/5">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={44} height={44} className="object-contain" />
+                            <div className="flex flex-col">
+                                <span className="font-black text-2xl tracking-tighter text-titan-navy leading-none">KIMMEX</span>
+                                <span className="text-[10px] font-bold text-titan-navy/40 tracking-[0.1em] uppercase whitespace-nowrap">Construction & Investment CO., LTD.</span>
+                            </div>
                         </div>
 
                         {/* Menu Trigger (Top Right) */}
                         <button
                             onClick={() => setIsMenuOpen(true)}
-                            className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
+                            className="bg-titan-navy text-white px-10 py-6 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-titan-red transition-all shadow-2xl flex items-center gap-5 pointer-events-auto group"
                         >
                             <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">Menu</span>
-                            <div className="flex flex-col gap-1.5 items-end">
-                                <span className="w-6 h-0.5 bg-white group-hover:w-4 transition-all"></span>
-                                <span className="w-4 h-0.5 bg-white group-hover:w-6 transition-all"></span>
+                            <div className="flex flex-col gap-2 items-end">
+                                <span className="w-8 h-1 bg-white group-hover:w-5 transition-all rounded-full"></span>
+                                <span className="w-5 h-1 bg-white group-hover:w-8 transition-all rounded-full"></span>
                             </div>
                         </button>
                     </div>

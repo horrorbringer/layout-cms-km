@@ -5,6 +5,7 @@ import { notFound, useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Building, CheckCircle, HardHat } from 'lucide-react';
 import Link from 'next/link';
+import Image from "next/image";
 import { projects } from '../../../design-x/data/projectData';
 import Footer from '@/components/design-a/Footer';
 import MenuOverlay from '@/components/design-a/MenuOverlay';
@@ -95,8 +96,8 @@ export default function ProjectDetailPage() {
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
                         {/* Logo Left - With Back Logic Integration? Or Standard Logo */}
-                        <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
-                            <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
+                        <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-2.5 rounded-full flex items-center gap-3 pointer-events-auto">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={28} height={28} className="object-contain" />
                             <span className="font-bold text-lg tracking-tight">KIMMEX</span>
                         </div>
 

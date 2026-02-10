@@ -2,15 +2,16 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
-import { 
-    ArrowRight, Menu, X, Facebook, Linkedin, Youtube, 
-    Shield, Award, Users, TrendingUp, Heart, Lightbulb, 
+import {
+    ArrowRight, Menu, X, Facebook, Linkedin, Youtube,
+    Shield, Award, Users, TrendingUp, Heart, Lightbulb,
     Handshake, Clock, CheckCircle2, Quote, ChevronRight,
-    Building, Ruler, Truck, DraftingCompass, HardHat, 
-    Hammer, Briefcase, LayoutTemplate, PenTool, GraduationCap, 
+    Building, Ruler, Truck, DraftingCompass, HardHat,
+    Hammer, Briefcase, LayoutTemplate, PenTool, GraduationCap,
     Landmark, Settings, ShieldCheck, Zap, Globe, MousePointer2
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from "next/image";
 
 // --- SHARED COMPONENTS (Reused for consistency) ---
 
@@ -21,7 +22,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
     return (
         <AnimatePresence>
             {isOpen && (
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -30,27 +31,30 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                 >
                     {/* Header */}
                     <div className="flex justify-between items-center p-8 md:p-12 shrink-0">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-titan-red rounded-full flex items-center justify-center font-bold text-white">K</div>
-                            <span className="font-bold text-xl tracking-tight">KIMMEX</span>
+                        <div className="flex items-center gap-4">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={48} height={48} className="object-contain" />
+                            <div className="flex flex-col">
+                                <span className="font-bold text-xl tracking-tight leading-none text-white">KIMMEX</span>
+                                <span className="text-[10px] font-bold text-white/40 tracking-wider uppercase">Construction & Investment CO., LTD.</span>
+                            </div>
                         </div>
-                        <button 
-                            onClick={onClose} 
+                        <button
+                            onClick={onClose}
                             className="p-4 hover:bg-white/10 rounded-full transition-colors group flex items-center gap-2 text-sm font-bold uppercase tracking-widest"
                         >
                             Close <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
                         </button>
                     </div>
-                    
+
                     {/* Main Content Area */}
                     <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-                        
+
                         {/* Left: Main Navigation List */}
                         <div className="w-full md:w-1/2 lg:w-5/12 p-8 md:p-12 overflow-y-auto border-r border-white/10 flex flex-col justify-center">
                             <nav className="flex flex-col gap-2">
                                 {navItems.map((item, i) => (
                                     <div key={i}>
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ x: -20, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: i * 0.05 }}
@@ -65,7 +69,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             }}
                                         >
                                             {item.children ? (
-                                                <button 
+                                                <button
                                                     onClick={() => setActiveCategory(activeCategory === i ? null : i)}
                                                     className={`text-4xl md:text-6xl font-bold tracking-tight transition-all duration-300 w-full text-left flex items-center justify-between py-2 ${activeCategory === i ? 'text-titan-red translate-x-4' : 'text-white/40 hover:text-white'}`}
                                                 >
@@ -75,18 +79,18 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                     <ArrowRight size={32} className={`hidden md:block transition-all duration-300 ${activeCategory === i ? 'opacity-100 translate-x-0 text-titan-red' : 'opacity-0 -translate-x-4'}`} />
                                                 </button>
                                             ) : (
-                                                <Link 
+                                                <Link
                                                     href={item.href}
                                                     className="text-4xl md:text-6xl font-bold tracking-tight transition-all duration-300 w-full text-left block py-2 text-white/40 hover:text-white hover:translate-x-4"
                                                 >
                                                     {item.label}
                                                 </Link>
                                             )}
-                                            
+
                                             {/* Mobile Accordion */}
                                             <AnimatePresence>
                                                 {activeCategory === i && (
-                                                    <motion.div 
+                                                    <motion.div
                                                         initial={{ height: 0, opacity: 0 }}
                                                         animate={{ height: 'auto', opacity: 1 }}
                                                         exit={{ height: 0, opacity: 0 }}
@@ -121,8 +125,8 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                         {/* Right: Sub-navigation & Details (Desktop Only) */}
                         <div className="hidden md:flex w-1/2 lg:w-7/12 p-12 flex-col bg-white/5 relative overflow-hidden">
                             {/* Dynamic Background Blob based on Index */}
-                            <motion.div 
-                                animate={{ 
+                            <motion.div
+                                animate={{
                                     background: activeCategory !== null ? `radial-gradient(circle at ${activeCategory * 10}% 50%, rgba(255, 107, 0, 0.15), transparent 60%)` : 'none'
                                 }}
                                 className="absolute inset-0 pointer-events-none transition-all duration-700"
@@ -142,11 +146,11 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-12 border-b border-white/10 pb-4">
                                                 Explore {navItems[activeCategory].label}
                                             </h3>
-                                            
+
                                             <div className="grid grid-cols-2 gap-x-12 gap-y-10">
                                                 {navItems[activeCategory].children.map((child: any, idx: number) => (
-                                                    <div 
-                                                        key={idx} 
+                                                    <div
+                                                        key={idx}
                                                         className="group/item relative"
                                                         onMouseEnter={() => child.children && setActiveSubCategory(idx)}
                                                         onMouseLeave={() => child.children && setActiveSubCategory(null)}
@@ -154,7 +158,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                         <Link href={child.href} className="block relative">
                                                             <div className="absolute -left-4 top-1 w-0.5 h-0 bg-titan-red transition-all duration-300 group-hover/item:h-full"></div>
                                                             <h4 className="text-2xl font-bold mb-2 text-white group-hover/item:text-titan-red transition-colors flex items-center gap-3">
-                                                                {child.label} 
+                                                                {child.label}
                                                                 <ArrowRight size={18} className="opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-titan-red" />
                                                             </h4>
                                                             <p className="text-white/40 text-sm leading-relaxed max-w-xs group-hover/item:text-white/60 transition-colors">
@@ -166,7 +170,7 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                         {child.children && (
                                                             <motion.div
                                                                 initial={{ opacity: 0, height: 0 }}
-                                                                animate={{ 
+                                                                animate={{
                                                                     opacity: activeSubCategory === idx ? 1 : 0,
                                                                     height: activeSubCategory === idx ? 'auto' : 0,
                                                                     marginTop: activeSubCategory === idx ? 16 : 0
@@ -174,8 +178,8 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                                                 className="overflow-hidden pl-4 border-l border-white/10"
                                                             >
                                                                 {child.children.map((sub: any, subIdx: number) => (
-                                                                    <Link 
-                                                                        key={subIdx} 
+                                                                    <Link
+                                                                        key={subIdx}
                                                                         href={sub.href}
                                                                         className="block py-2 text-sm text-white/50 hover:text-titan-red hover:translate-x-1 transition-all"
                                                                     >
@@ -189,9 +193,9 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                                             </div>
                                         </motion.div>
                                     ) : (
-                                        <motion.div 
+                                        <motion.div
                                             key="empty"
-                                            initial={{ opacity: 0 }} 
+                                            initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             className="h-full flex flex-col justify-center items-center text-white/20"
                                         >
@@ -223,9 +227,9 @@ const MenuOverlay = ({ isOpen, onClose, navItems }: { isOpen: boolean, onClose: 
                     {/* Bottom Bar */}
                     <div className="p-8 md:px-12 md:py-6 border-t border-white/10 flex justify-between items-center text-sm font-bold text-white/40 uppercase tracking-widest shrink-0 bg-[#151525]">
                         <div className="flex gap-6">
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16}/> <span className="hidden md:inline">Facebook</span></a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Linkedin size={16}/> <span className="hidden md:inline">LinkedIn</span></a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Youtube size={16}/> <span className="hidden md:inline">Youtube</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Facebook size={16} /> <span className="hidden md:inline">Facebook</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Linkedin size={16} /> <span className="hidden md:inline">LinkedIn</span></a>
+                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><Youtube size={16} /> <span className="hidden md:inline">Youtube</span></a>
                         </div>
                         <div>© 2026 Kimmex</div>
                     </div>
@@ -286,9 +290,9 @@ export default function ServicesPageDesignA() {
         {
             label: 'Projects', href: '/design-a/projects/completed',
             children: [
-                { 
-                    label: 'Done Projects', 
-                    href: '/design-a/projects/completed', 
+                {
+                    label: 'Done Projects',
+                    href: '/design-a/projects/completed',
                     desc: 'View our portfolio',
                     children: [
                         { label: 'Government', href: '/design-a/projects/completed?type=Government', desc: 'Public sector works' },
@@ -298,9 +302,9 @@ export default function ServicesPageDesignA() {
                         { label: 'Slope', href: '/design-a/projects/completed?type=Slope', desc: 'Specialized engineering' }
                     ]
                 },
-                { 
-                    label: 'Implement Projects', 
-                    href: '/design-a/projects/implementation', 
+                {
+                    label: 'Implement Projects',
+                    href: '/design-a/projects/implementation',
                     desc: 'Current developments',
                     children: [
                         { label: 'Government', href: '/design-a/projects/implementation?type=Government', desc: 'Ongoing public works' },
@@ -375,28 +379,31 @@ export default function ServicesPageDesignA() {
 
     return (
         <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 font-sans text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
-            
+
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
-                
+
                 {/* --- NAVIGATION --- */}
                 <div className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 pointer-events-none ${scrolled ? 'py-4' : 'py-6 md:py-8'}`}>
                     <div className="px-6 md:px-12 flex justify-between items-start">
                         {/* Logo */}
-                        <div className="bg-white/90 backdrop-blur shadow-sm px-5 py-3 rounded-full flex items-center gap-3 pointer-events-auto">
-                            <div className="w-3 h-3 bg-titan-red rounded-full animate-pulse"></div>
-                            <span className="font-bold text-lg tracking-tight">KIMMEX</span>
+                        <div className="bg-white/95 backdrop-blur-md shadow-xl px-8 py-5 rounded-full flex items-center gap-5 pointer-events-auto border border-black/5">
+                            <Image src="/logo.png" alt="Kimmex Logo" width={44} height={44} className="object-contain" />
+                            <div className="flex flex-col">
+                                <span className="font-black text-2xl tracking-tighter text-titan-navy leading-none">KIMMEX</span>
+                                <span className="text-[10px] font-bold text-titan-navy/40 tracking-[0.1em] uppercase whitespace-nowrap">Construction & Investment CO., LTD.</span>
+                            </div>
                         </div>
 
                         {/* Menu Trigger */}
-                        <button 
+                        <button
                             onClick={() => setIsMenuOpen(true)}
-                            className="bg-titan-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-titan-red transition-all shadow-lg flex items-center gap-3 pointer-events-auto group"
+                            className="bg-titan-navy text-white px-10 py-6 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-titan-red transition-all shadow-2xl flex items-center gap-5 pointer-events-auto group"
                         >
                             <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">Menu</span>
-                            <div className="flex flex-col gap-1.5 items-end">
-                                <span className="w-6 h-0.5 bg-white group-hover:w-4 transition-all"></span>
-                                <span className="w-4 h-0.5 bg-white group-hover:w-6 transition-all"></span>
+                            <div className="flex flex-col gap-2 items-end">
+                                <span className="w-8 h-1 bg-white group-hover:w-5 transition-all rounded-full"></span>
+                                <span className="w-5 h-1 bg-white group-hover:w-8 transition-all rounded-full"></span>
                             </div>
                         </button>
                     </div>
@@ -406,15 +413,15 @@ export default function ServicesPageDesignA() {
 
                 {/* --- HERO SECTION --- */}
                 <header className="pt-32 md:pt-40 pb-12 md:pb-20 px-6 md:px-12 min-h-[60vh] flex flex-col justify-end relative">
-                     <div className="absolute top-0 right-0 w-1/2 h-full bg-[#F5F5F7] -z-10 rounded-bl-[4rem] hidden lg:block"></div>
-                     
-                     <motion.div 
+                    <div className="absolute top-0 right-0 w-1/2 h-full bg-[#F5F5F7] -z-10 rounded-bl-[4rem] hidden lg:block"></div>
+
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                         className="max-w-4xl"
                     >
-                         <div className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8 border border-titan-navy/5">
+                        <div className="inline-block px-4 py-2 bg-[#F5F5F7] rounded-lg text-xs font-bold uppercase tracking-widest text-titan-navy mb-6 md:mb-8 border border-titan-navy/5">
                             Est. 1999 • Services
                         </div>
                         <h1 className="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
@@ -441,7 +448,7 @@ export default function ServicesPageDesignA() {
                                         <p className="text-gray-500 group-hover:text-white/60 text-lg leading-relaxed mb-10 transition-colors">
                                             {service.desc}
                                         </p>
-                                        
+
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             {service.features.map((feature, idx) => (
                                                 <div key={idx} className="flex items-center gap-3 font-medium text-titan-navy/70 group-hover:text-white/80 transition-colors">
@@ -460,10 +467,10 @@ export default function ServicesPageDesignA() {
 
                                     {/* Image */}
                                     <div className="lg:w-1/2 h-64 lg:h-auto relative overflow-hidden order-1 lg:order-2">
-                                        <img 
-                                            src={service.image} 
-                                            alt={service.title} 
-                                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                        <img
+                                            src={service.image}
+                                            alt={service.title}
+                                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
                                         <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-titan-navy/0 transition-colors"></div>
                                     </div>
@@ -476,9 +483,9 @@ export default function ServicesPageDesignA() {
                 {/* --- METHODOLOGY / PROCESS --- */}
                 <section className="px-6 md:px-12 py-20 bg-titan-navy text-white rounded-[3rem] mx-0 md:mx-6 mb-20 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/10 rounded-full blur-[100px] pointer-events-none"></div>
-                    
+
                     <div className="max-w-[1400px] mx-auto relative z-10">
-                         <div className="text-center mb-16">
+                        <div className="text-center mb-16">
                             <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">How We Work</span>
                             <h2 className="text-3xl md:text-5xl font-bold mb-6">Our Methodology</h2>
                             <p className="text-white/60 text-lg max-w-2xl mx-auto">
@@ -510,7 +517,7 @@ export default function ServicesPageDesignA() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                         {sectors.map((sector, i) => (
+                        {sectors.map((sector, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
                                 <div className="group relative h-[450px] overflow-hidden rounded-[2.5rem] cursor-pointer">
                                     <img
@@ -519,7 +526,7 @@ export default function ServicesPageDesignA() {
                                         alt={sector.title}
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-transparent"></div>
-                                    
+
                                     <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                                         <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center text-white mb-4 group-hover:bg-titan-red transition-colors">
                                             <sector.icon size={20} />
@@ -537,8 +544,8 @@ export default function ServicesPageDesignA() {
                     </div>
                 </section>
 
-                 {/* --- CTA --- */}
-                 <section className="px-6 md:px-12 mb-20">
+                {/* --- CTA --- */}
+                <section className="px-6 md:px-12 mb-20">
                     <div className="bg-[#F5F5F7] rounded-[3rem] p-12 md:p-20 text-center">
                         <h2 className="text-3xl md:text-5xl font-bold mb-6 text-titan-navy">Have a project in mind?</h2>
                         <p className="text-gray-500 text-lg mb-10 max-w-2xl mx-auto">
@@ -553,7 +560,7 @@ export default function ServicesPageDesignA() {
                             </Link>
                         </div>
                     </div>
-                 </section>
+                </section>
 
                 {/* --- FOOTER --- */}
                 <footer className="pt-20 pb-12 px-6 md:px-12 bg-white rounded-t-[3rem] mt-auto">
