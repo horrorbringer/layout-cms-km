@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Phone, Facebook, Linkedin, Youtube, Search, ArrowRight, ChevronDown, Menu, X, Mail, MapPin, Globe } from 'lucide-react';
+import { Phone, Facebook, Linkedin, Youtube, Search, ArrowRight, ChevronDown, Menu, X, Mail, MapPin, Globe, Shield } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -136,6 +136,13 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                     <Youtube size={12} />
                                 </a>
                             </div>
+
+                            {/* ADMIN DASHBOARD */}
+                            <div className="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
+                            <Link href="/admin" className="flex items-center gap-2 px-2 py-1 bg-white/10 hover:bg-accent-orange rounded transition-colors group">
+                                <Shield size={10} className="text-accent-orange group-hover:text-white" />
+                                <span className="text-[9px] font-bold">ADMIN</span>
+                            </Link>
 
                             {/* LANGUAGE SWITCHER */}
                             <div className="w-[1px] h-3 bg-white/20 hidden sm:block"></div>

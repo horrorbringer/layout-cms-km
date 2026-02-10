@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, MapPin, Building, Activity, Tag, HelpCircle, ArrowRight, Share2, Maximize, User, Calendar, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, MapPin, Building, Activity, Tag, HelpCircle, ArrowRight, Share2, Maximize, User, Calendar, CheckCircle2, AlertTriangle, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -118,8 +118,29 @@ export default function ProjectDetailPage() {
         ? 'Back to Done Projects'
         : 'Back to Implementation';
 
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const auth = localStorage.getItem('kimmex_admin_auth');
+        if (auth === 'true') setIsAdmin(true);
+    }, []);
+
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy relative">
+            {/* --- ADMIN QUICK EDIT --- */}
+            {isAdmin && (
+                <div className="fixed bottom-8 right-8 z-[100]">
+                    <Link
+                        href={`/admin/projects/${id}`}
+                        className="flex items-center gap-3 bg-titan-navy text-white px-6 py-4 rounded-full shadow-2xl hover:bg-titan-red transition-all group scale-100 hover:scale-105 active:scale-95"
+                    >
+                        <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                            <Shield size={16} className="text-titan-red group-hover:text-white" />
+                        </div>
+                        <span className="font-black text-sm uppercase tracking-widest">Edit Project</span>
+                    </Link>
+                </div>
+            )}
             {/* --- HERO SECTION --- */}
             <section className="relative h-[70vh] bg-titan-navy flex items-end">
                 <div className="absolute inset-0">
