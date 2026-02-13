@@ -6,6 +6,8 @@ import { ArrowLeft, MapPin, Building, Activity, Tag, HelpCircle, ArrowRight, Sha
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { projects } from '../../data/projectData';
+
 
 // --- MOCK DATA ---
 const projectDetails: any = {
@@ -54,7 +56,12 @@ const projectDetails: any = {
         },
         services: ['General Construction', 'MEP Works', 'External Infrastructures'],
         challenges: ['Deep basement construction in high water table area.', 'Complex data center cooling requirements.'],
-        gallery: ['/images/projects/Thumbnail-5.jpg']
+        gallery: [
+            '/images/projects/Thumbnail-5.jpg',
+            '/images/projects/Thumbnail-6.jpg',
+            '/images/projects/Thumbnail-7.jpg',
+            '/images/projects/Thumbnail-8.jpg'
+        ]
     },
 
     // Water Treatment
@@ -75,7 +82,11 @@ const projectDetails: any = {
         },
         services: ['Civil Works', 'Pipe Laying', 'Pumping Station Construction', 'Reservoir Building'],
         challenges: ['Soft soil conditions requiring extensive piling.', 'Coordination with existing underground utilities.'],
-        gallery: ['/images/projects/Thumbnail-6.jpg']
+        gallery: [
+            '/images/projects/Thumbnail-6.jpg',
+            '/images/projects/Thumbnail-7.jpg',
+            '/images/projects/Thumbnail-8.jpg'
+        ]
     },
 
     // Slope
@@ -96,7 +107,11 @@ const projectDetails: any = {
         },
         services: ['Geotechnical Survey', 'Slope Stabilization', 'Gabion Installation'],
         challenges: ['Working against strong river currents.', 'Accessibility for heavy machinery on soft ground.'],
-        gallery: ['/images/projects/Thumbnail-7.jpg']
+        gallery: [
+            '/images/projects/Thumbnail-7.jpg',
+            '/images/projects/Thumbnail-1.jpg',
+            '/images/projects/Thumbnail-4.jpg'
+        ]
     }
 };
 
@@ -282,13 +297,38 @@ export default function ProjectDetailPage() {
             <section className="bg-titan-navy py-24 px-6 text-white">
                 <div className="max-w-[1400px] mx-auto">
                     <h2 className="text-3xl font-black mb-12 border-l-4 border-titan-red pl-6">Project Gallery</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {project.gallery.map((img: string, i: number) => (
-                            <div key={i} className={`rounded-lg overflow-hidden group cursor-pointer relative ${i === 0 ? 'md:col-span-2 md:row-span-2 aspect-square md:aspect-auto' : 'aspect-[4/3]'}`}>
-                                <Image src={img} alt="Gallery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
-                            </div>
-                        ))}
+                    <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
+                        {project.gallery.map((img: string, i: number) => {
+                            // Fancy layout logic
+                            let gridClass = "md:col-span-2 aspect-[4/3]";
+                            if (project.gallery.length === 1) {
+                                gridClass = "md:col-span-6 aspect-video";
+                            } else if (project.gallery.length === 2) {
+                                gridClass = "md:col-span-3 aspect-[4/3]";
+                            } else if (project.gallery.length >= 3) {
+                                if (i === 0) gridClass = "md:col-span-4 md:row-span-2 aspect-square md:aspect-auto";
+                                else gridClass = "md:col-span-2 aspect-[4/3]";
+                            }
+
+                            return (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                                    className={`rounded-lg overflow-hidden group cursor-pointer relative ${gridClass}`}
+                                >
+                                    <Image src={img} alt={`Gallery ${i + 1}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="bg-white/20 backdrop-blur-md p-4 rounded-full">
+                                            <Maximize size={24} className="text-white" />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -303,20 +343,18 @@ export default function ProjectDetailPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Hardcoded related projects for demo */}
-                    {[
-                        { title: 'MEF Building', cat: 'Government', img: '/images/projects/Thumbnail-2.jpg' },
-                        { title: 'Bakheng WTP', cat: 'Infrastructure', img: '/images/projects/Thumbnail-8.jpg' },
-                        { title: 'Vattanac Capital', cat: 'Private', img: '/images/projects/Thumbnail-5.jpg' }
-                    ].map((p, idx) => (
-                        <Link href="#" key={idx} className="block group">
-                            <div className="aspect-[4/3] rounded-lg overflow-hidden mb-4 relative">
-                                <Image src={p.img} alt={p.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                                <div className="absolute top-4 left-4 bg-titan-navy text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">{p.cat}</div>
-                            </div>
-                            <h3 className="text-xl font-bold text-titan-navy group-hover:text-titan-red transition-colors">{p.title}</h3>
-                        </Link>
-                    ))}
+                    {projects
+                        .filter(p => p.id !== id)
+                        .slice(0, 3)
+                        .map((p, idx) => (
+                            <Link href={`/design-z/projects/${p.id}`} key={idx} className="block group">
+                                <div className="aspect-[4/3] rounded-lg overflow-hidden mb-4 relative">
+                                    <Image src={p.image} alt={p.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    <div className="absolute top-4 left-4 bg-titan-navy text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">{p.type}</div>
+                                </div>
+                                <h3 className="text-xl font-bold text-titan-navy group-hover:text-titan-red transition-colors line-clamp-1">{p.title}</h3>
+                            </Link>
+                        ))}
                 </div>
             </section>
         </div>
