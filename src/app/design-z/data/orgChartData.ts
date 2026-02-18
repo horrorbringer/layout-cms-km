@@ -111,7 +111,7 @@ export const orgChartData: OrgNode = {
                                         {
                                             name: 'Mr. SUM TO',
                                             role: 'HR & Admin Manager',
-                                            image: '/images/team-leadership-professional/staff_placeholder.png',
+                                            image: '/images/team-leadership-professional/sum_rotana.jpg',
                                             phone: '092 567 783',
                                             type: 'manager',
                                             memberCount: 121,
@@ -137,7 +137,7 @@ export const orgChartData: OrgNode = {
                                         {
                                             name: 'Ms. BREY SREYNA',
                                             role: 'Finance Manager',
-                                            image: '/images/team-leadership-professional/staff_placeholder.png',
+                                            image: '/images/team-leadership-professional/chhundy_ryta.jpg',
                                             phone: '095 616 911',
                                             type: 'manager',
                                             memberCount: 32,
@@ -151,15 +151,48 @@ export const orgChartData: OrgNode = {
                                     ]
                                 },
                                 {
-                                    name: 'KMS',
+                                    name: 'KMS & TECHNICAL',
                                     role: 'Column Head',
                                     type: 'department',
                                     children: [
                                         {
                                             name: 'Mr. LY HONGLEANG',
-                                            role: 'KMS Specialist',
-                                            image: '/images/team-leadership-professional/ly_hongleang.jpg', // Updated image
+                                            role: 'KMS',
+                                            image: '/images/team-leadership-professional/ly_hongleang.jpg',
                                             phone: '018 6 631 013',
+                                            memberCount: 24,
+                                            type: 'manager'
+                                        },
+                                        {
+                                            name: 'Mr. SAM RITHY',
+                                            role: 'LD',
+                                            image: '/images/team-leadership-professional/ry_ken.jpg',
+                                            phone: '012 484 144',
+                                            memberCount: 19,
+                                            type: 'manager'
+                                        },
+                                        {
+                                            name: 'Mr. KIM VENGHONG',
+                                            role: 'Decor',
+                                            image: '/images/team-leadership-professional/krai_keak.jpg',
+                                            phone: '010 633 743',
+                                            memberCount: 26,
+                                            type: 'manager'
+                                        },
+                                        {
+                                            name: 'Mr. MEAN SOCHEAT',
+                                            role: 'MVAC',
+                                            image: '/images/team-leadership-professional/oung_chaknora.jpg',
+                                            phone: '016 719 209',
+                                            memberCount: 9,
+                                            type: 'manager'
+                                        },
+                                        {
+                                            name: 'Mr. TOUCH PUTHEANY',
+                                            role: 'MEP',
+                                            image: '/images/team-leadership-professional/touch_putheany.jpg',
+                                            phone: '011 802 800',
+                                            memberCount: 13,
                                             type: 'manager'
                                         }
                                     ]

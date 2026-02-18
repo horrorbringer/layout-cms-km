@@ -49,27 +49,24 @@ export default function ServicesPage() {
         },
         {
             id: 'renovation',
-            title: 'Renovation',
-            desc: 'Revitalizing existing structures to meet modern standards. We breathe new life into aged buildings while ensuring structural integrity.',
+            title: 'Construction',
+            desc: 'World-class building and civil engineering solutions. We deliver robust structures tailored to residential, commercial, and industrial needs.',
             icon: Hammer,
-            features: ['Interior Fit-outs', 'Facade Upgrades', 'Structural Strengthening', 'MEP Retrofitting'],
+            features: ['Civil Engineering', 'Building Structure', 'MEP Systems', 'Industrial Plants'],
             image: '/images/projects/Thumbnail-4.jpg'
         },
         {
             id: 'project-management',
             title: 'Project Management',
-            desc: 'Rigorous oversight ensuring on-time, on-budget delivery. We represent your interests on the field, managing contractors and risks.',
+            desc: 'Comprehensive oversight and strategic advisory ensuring on-time, on-budget delivery. We combine rigorous on-field management with technical and financial insights.',
             icon: Briefcase,
-            features: ['Cost Control', 'Quality Assurance', 'Schedule Management', 'Safety Compliance'],
+            features: [
+                'Cost Control & Value Engineering',
+                'Feasibility Studies',
+                'Quality & Safety Compliance',
+                'Regulatory Advice'
+            ],
             image: '/images/projects/Thumbnail-5.jpg'
-        },
-        {
-            id: 'consultants',
-            title: 'Consultancy',
-            desc: 'Strategic expertise to validate and optimize your investment. We provide technical and financial insights before you build.',
-            icon: Lightbulb,
-            features: ['Feasibility Studies', 'Value Engineering', 'Technical Audits', 'Regulatory Advice'],
-            image: '/images/projects/Thumbnail-2.jpg'
         }
     ];
 

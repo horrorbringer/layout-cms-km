@@ -9,7 +9,7 @@ export default function ImplementationProjectsPage() {
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-100">Loading...</div>}>
             <ProjectListingPage
                 title={<h1 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter">
-                    IMPLEMENTATION <span className="text-titan-red">PROJECTS</span>
+                    PROJECTS <span className="text-titan-red">IN PROGRESS</span>
                 </h1>}
                 subtitle="Witness our ongoing commitment to building the future. These projects are currently under construction and shaping the skyline."
                 heroTag="Currently Active"
@@ -22,7 +22,7 @@ export default function ImplementationProjectsPage() {
                     label: "Under Construction"
                 }}
                 emptyState={{
-                    title: "No implementation projects found.",
+                    title: "No projects in progress found.",
                     message: "Check back soon for updates."
                 }}
             />

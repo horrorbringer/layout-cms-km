@@ -41,8 +41,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             children: [
                 { label: t('Design & Build'), href: '/design-z/services/design-build', desc: t('Full lifecycle solutions') },
                 { label: t('Building Renovation'), href: '/design-z/services/renovation', desc: t('Revitalize existing structures') },
-                { label: t('Project Management'), href: '/design-z/services/project-management', desc: t('Oversight & control') },
-                { label: t('Consultants'), href: '/design-z/services/consultants', desc: t('Expert advisory services') }
+                { label: t('Project Management'), href: '/design-z/services/project-management', desc: t('Oversight & control') }
             ]
         },
         {

@@ -447,6 +447,44 @@ export default function AboutPage() {
         setSelectedMember(member);
     };
 
+    // Helper to render org chart recursively for mobile
+    const renderMobileHierarchy = (node: any, depth: number = 0) => {
+        if (!node) return null;
+
+        return (
+            <div key={`${node.name}-${depth}`} className="w-full flex flex-col gap-4">
+                {/* Don't render "department" nodes as cards, they are just grouping labels */}
+                {node.type !== 'department' ? (
+                    <div className="relative mb-4">
+                        {/* Bullet on the spine */}
+                        <div className="absolute left-[-41px] top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-[#C8102E] rounded-full shadow-sm z-10" />
+
+                        {/* Horizontal path line to the card */}
+                        <div className="absolute left-[-35px] top-1/2 -translate-y-1/2 w-8 h-[1px] bg-gray-200" />
+
+                        <div style={{ marginLeft: depth > 1 ? `${(depth - 1) * 20}px` : '0px' }}>
+                            <TeamMemberRowCard member={node} onClick={handleMemberClick} />
+                        </div>
+                    </div>
+                ) : (
+                    /* For department, just show a label or skip to children */
+                    node.name !== 'Column Head' && (
+                        <div className="py-2 mb-2 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-100">
+                            {node.name}
+                        </div>
+                    )
+                )}
+
+                {/* Recursively render children */}
+                {node.children && node.children.length > 0 && (
+                    <div className="flex flex-col">
+                        {node.children.map((child: any) => renderMobileHierarchy(child, node.type !== 'department' ? depth + 1 : depth))}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     const coreValues = [
         { icon: Shield, title: t('Integrity'), desc: t('Integrity Desc') },
         { icon: Award, title: t('Excellence'), desc: t('Excellence Desc') },
@@ -460,32 +498,56 @@ export default function AboutPage() {
         {
             year: '1999',
             title: 'Foundation',
-            desc: 'KIM MEX Construction was established with a vision to redefine Cambodia\'s skyline. Starting with a humble team of 10 engineers, we laid the first stone of our legacy.',
+            desc: 'Kim Mex Construction & Investment Co.,Ltd. was established and registered in accordance with the regulations and laws of the Kingdom of Cambodia.',
             image: '/images/projects/Thumbnail-1.jpg'
         },
         {
-            year: '2005',
-            title: 'First Major Project',
-            desc: 'Completed our first government infrastructure project, establishing our reputation for quality and reliability in the public sector.',
+            year: '2001-2004',
+            title: 'Early Growth',
+            desc: 'Laying the groundwork for excellence in provincial infrastructure and building quality partnerships across the kingdom.',
             image: '/images/projects/Thumbnail-2.jpg'
         },
         {
-            year: '2012',
-            title: 'Major Expansion',
-            desc: 'Following successful commercial projects in Phnom Penh, we expanded operations to Siem Reap and Sihanoukville, securing contracts for major hotel resorts.',
+            year: '2005-2013',
+            title: 'Expanding Horizons',
+            desc: 'Significant expansion of services into specialized building construction and large-scale public utility projects.',
             image: '/images/projects/Thumbnail-3.jpg'
         },
         {
-            year: '2018',
-            title: 'ISO Certification',
-            desc: 'Our commitment to excellence was recognized with ISO 9001:2015 accreditation, validating our rigorous Quality Management Systems and safety protocols.',
+            year: '2014-2017',
+            title: 'Institutional Partnerships',
+            desc: 'Delivery of key institutional projects including:\n• Ministry of Economy and Finance\n• Ministry of Post and Telecommunication\n• Clean Water in Mondulkiri Province\n• Electricity of Cambodia Wat Phnom\n• Al Serkal Mosque',
+            image: '/images/projects/Thumbnail-4.jpg'
+        },
+        {
+            year: '2018-2020',
+            title: 'Scaling Innovation',
+            desc: 'Integration of modern systems and complex structural works:\n• Anti-Corruption Unit\n• Siem Reap Electricity\n• Ministry of Economy Underground Parking Lot\n• General Department of National Treasury',
             image: '/images/projects/Thumbnail-5.jpg'
         },
         {
+            year: '2021-2022',
+            title: 'Infrastructure Excellence',
+            desc: 'Securing major national landmarks and utility hubs:\n• Stung Treng Water Purification Station\n• General Department of Customs and Excise\n• Securities and Exchange Commission of Cambodia\n• Electricity of Cambodia (EDC)',
+            image: '/images/projects/Thumbnail-6.jpg'
+        },
+        {
             year: '2023',
-            title: 'National Recognition',
-            desc: 'Awarded "Top Infrastructure Partner" by the Ministry of Public Works for our contribution to national road development projects.',
+            title: 'Strategic Progress',
+            desc: 'Completion of high-profile government headquarters:\n• Ministry of Interior HQ\n• National Social Security Fund (NSSF)',
+            image: '/images/projects/Thumbnail-7.jpg'
+        },
+        {
+            year: '2024',
+            title: 'Future Foundations',
+            desc: 'Expanding into healthcare and regulatory sectors:\n• Commercial Gambling Management Commission\n• Chea Chumneas Hospital',
             image: '/images/projects/Thumbnail-8.jpg'
+        },
+        {
+            year: '2025',
+            title: 'Vision 2025',
+            desc: 'Ongoing and future flagship developments:\n• National Election Committee HQ',
+            image: '/images/projects/Thumbnail-9.jpg'
         }
     ];
 
@@ -518,7 +580,7 @@ export default function AboutPage() {
                 {/* Hero Content */}
                 <motion.div
                     style={{ opacity: heroOpacity }}
-                    className="relative z-10 text-center px-6 max-w-4xl mx-auto"
+                    className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-35"
                 >
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -628,7 +690,9 @@ export default function AboutPage() {
                                     Cambodia&apos;s Premier <span className="text-titan-red">Construction Partner</span>
                                 </h2>
                                 <p className="text-titan-navy/60 text-lg leading-relaxed mb-8">
-                                    Since 1999, KIM MEX Construction has been a cornerstone of Cambodia&apos;s infrastructure development. We are more than builders; we are partners in national progress, dedicated to delivering excellence in every beam, brick, and blueprint.
+                                    Kim Mex Construction & Investment Co.,Ltd. Company has formerly named Kim Mex
+                                    Construction & Investment Co.,Ltd, was established since 1999 and eligible to bid being a
+                                    company duly registered in accordance with regulation and law in the Kingdom of Cambodia.
                                 </p>
 
                                 <div className="space-y-4">
@@ -637,24 +701,22 @@ export default function AboutPage() {
                                             icon: Flag,
                                             title: 'Our Mission',
                                             desc: 'To bridge the gap between concept and reality through exceptional engineering and safety.',
-                                            detail: 'At KIM MEX, we are dedicated to transforming complex challenges into structural realities. Our mission goes beyond building; it\'s about creating value for our stakeholders and the nation.',
+                                            detail: '',
                                             points: [
-                                                'Prioritizing safety in every structural phase.',
-                                                'Implementing sustainable building practices.',
-                                                'Delivering unmatched precision and quality.',
-                                                'Cultivating long-term client partnerships.'
+                                                'WINNING THROUGH TALENT RESTRUCTURING & DEVELOPMENT.',
+                                                'INTEGRATED PROJECT MANAGEMENT.',
+                                                'BUILD WITH QUALITY AND CREATIVITY.',
+
                                             ]
                                         },
                                         {
                                             icon: Eye,
                                             title: 'Our Vision',
                                             desc: 'To be the most trusted and innovative construction partner in Cambodia.',
-                                            detail: 'We envision a skyline defined by innovation and architectural brilliance. Our vision is to set the benchmark for construction excellence in Southeast Asia, leading with technology.',
+                                            detail: '“ TO BE THE FIRST CHOICE OF TRUSTED PARTNER OF CONSTURCTION & ARCHITECTURE”',
                                             points: [
-                                                'Global recognition for engineering excellence.',
-                                                'Pioneering smart construction technologies.',
-                                                'Shaping the future of urban living.',
-                                                'Becoming the most trusted name in real estate.'
+
+
                                             ]
                                         },
                                         {
@@ -856,11 +918,11 @@ export default function AboutPage() {
                             </div>
 
                             {/* Khmer Title from Screenshot */}
-                            <h2 className="text-4xl font-black text-[#002B5B] tracking-tight mb-2 font-serif">
-                                រចនាសម្ព័ន្ធគ្រប់គ្រងផ្នែក KIM MEX
+                            <h2 className="text-4xl font-black text-[#002B5B] tracking-tight mb-2 uppercase">
+                                KIM MEX ORGANIZATION STRUCTURE
                             </h2>
                             <p className="font-mono text-xs uppercase tracking-[0.4em] text-titan-navy/40">
-                                Organization Management Structure
+                                Management & Operations Hierarchy
                             </p>
 
                             {/* Visual Divider */}
@@ -930,20 +992,10 @@ export default function AboutPage() {
                                             <div className="flex flex-wrap justify-center gap-16 w-full max-w-[1400px]">
                                                 {director.children?.map((dept, deptIdx) => (
                                                     <div key={deptIdx} className="flex flex-col items-center min-w-[200px]">
-                                                        {/* Column Header */}
-                                                        <div className="bg-[#002B5B] text-white px-4 py-1.5 rounded-sm text-[9px] font-black uppercase tracking-widest shadow-sm mb-8 flex items-center justify-between gap-3 w-full border-t-2 border-[#C8102E]">
-                                                            <span className="truncate">{dept.name}</span>
-                                                            {dept.children?.[0]?.memberCount && (
-                                                                <span className="bg-[#C8102E] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center border border-white/20 shrink-0">
-                                                                    {dept.children[0].memberCount}
-                                                                </span>
-                                                            )}
-                                                        </div>
-
                                                         {/* LIST OF MEMBERS IN COLUMN */}
                                                         <div className="relative pl-6 flex flex-col gap-6 w-full max-w-[200px]">
                                                             {/* Vertical Stem for the members */}
-                                                            <div className="absolute left-0 top-[-20px] bottom-10 w-[1px] bg-gray-100" />
+                                                            <div className="absolute left-0 top-0 bottom-10 w-[1px] bg-gray-100" />
                                                             {dept.children?.map((mgr, mgrIdx) => (
                                                                 <div key={mgrIdx} className="flex flex-col group">
                                                                     <div className="mb-2">
@@ -986,15 +1038,12 @@ export default function AboutPage() {
                         </div>
 
                         {/* --- TABLET/MOBILE VIEW --- */}
-                        <div className="xl:hidden flex flex-col items-center mt-12 pb-24">
-                            <div className="w-full max-w-md space-y-6 relative px-6 border-l-2 border-gray-100 ml-4 py-8">
-                                <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#C8102E] via-gray-100 to-[#002B5B]" />
-                                {[orgChartData, ...(orgChartData.children || [])].map((member, i) => (
-                                    <div key={i} className="relative z-10 pl-8 text-left w-full">
-                                        <div className="absolute left-[-41px] top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-[#C8102E] rounded-full shadow-sm"></div>
-                                        <TeamMemberRowCard member={member} onClick={handleMemberClick} />
-                                    </div>
-                                ))}
+                        <div className="xl:hidden flex flex-col items-start mt-12 pb-24 px-4 w-full max-w-2xl mx-auto">
+                            <div className="w-full relative pl-8 border-l-2 border-gray-100">
+                                {/* Vertical Spine Line */}
+                                <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#C8102E] via-gray-200 to-[#002B5B]" />
+
+                                {renderMobileHierarchy(orgChartData, 0)}
                             </div>
                         </div>
                     </div>

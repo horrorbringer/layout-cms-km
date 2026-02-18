@@ -72,10 +72,10 @@ export default function ProjectListingPage({
     });
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy relative overflow-hidden">
+        <div className="bg-white min-h-screen font-sans text-titan-navy relative overflow-hidden ">
 
             {/* --- HERO SECTION --- */}
-            <section className="relative h-[60vh] bg-titan-navy flex items-center justify-center overflow-hidden">
+            <section className="relative h-[60vh] bg-titan-navy flex items-center justify-center overflow-hidden ">
                 <div className="absolute inset-0">
                     <Image
                         src={heroImage}
@@ -86,7 +86,7 @@ export default function ProjectListingPage({
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-titan-navy/50"></div>
                 </div>
 
-                <div className="relative z-10 text-center max-w-4xl px-6 pt-20">
+                <div className="relative z-10 text-center max-w-4xl px-6 pt-20 mt-25">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -109,7 +109,7 @@ export default function ProjectListingPage({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
-                        className="text-xl text-white/70 font-light max-w-2xl mx-auto leading-relaxed"
+                        className="text-xl text-white/70 font-light max-w-2xl mx-auto leading-relaxed mb-5"
                     >
                         {subtitle}
                     </motion.p>
@@ -117,34 +117,63 @@ export default function ProjectListingPage({
             </section>
 
             {/* --- FILTERS --- */}
-            <section className="px-6 mb-16 border-b border-gray-100 py-6 sticky top-20 bg-white/95 backdrop-blur-md z-40 transition-all shadow-sm -mt-10 mx-6 rounded-xl relative">
-                <div className="max-w-[1400px] mx-auto flex flex-col items-center gap-6">
-                    <div className="flex flex-wrap gap-4 justify-center">
-                        {/* Location */}
-                        <div className="relative group">
-                            <select
-                                value={filterLoc}
-                                onChange={(e) => setFilterLoc(e.target.value)}
-                                className="appearance-none bg-titan-bg pl-10 pr-12 py-3 rounded-lg text-sm font-bold text-titan-navy cursor-pointer focus:outline-none focus:ring-2 focus:ring-titan-red/20 border border-transparent hover:border-gray-200 transition-all shadow-sm min-w-[180px]"
-                            >
-                                {locations.map(loc => <option key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</option>)}
-                            </select>
-                            <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-titan-red pointer-events-none" />
+            <section className="px-6 mb-24 sticky top-20 z-40 transform-gpu">
+                <div className="max-w-[1400px] mx-auto">
+                    <div className="bg-white/40 backdrop-blur-2xl border border-white/40 rounded-[2rem] p-3 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.03)] flex flex-col xl:flex-row items-center justify-between gap-4 ring-1 ring-black/[0.03]">
+
+                        {/* Type Filter - Left Side */}
+                        <div className="flex flex-wrap items-center justify-center gap-2 p-1">
+                            {types.filter(t => t !== 'All').map((type) => {
+                                const isActive = filterType === type;
+                                return (
+                                    <button
+                                        key={type}
+                                        onClick={() => setFilterType(type)}
+                                        className={`group relative px-6 py-2.5 rounded-full text-[13px] font-semibold tracking-tight transition-all duration-500 overflow-hidden ${isActive
+                                                ? 'text-white'
+                                                : 'text-titan-navy/50 hover:text-titan-navy'
+                                            }`}
+                                    >
+                                        <div className="relative z-10 flex items-center gap-3">
+                                            {type === 'Water Treatment Plant' && <Droplets size={14} strokeWidth={isActive ? 2.5 : 2} />}
+                                            {type === 'Slope Construction' && <Mountain size={14} strokeWidth={isActive ? 2.5 : 2} />}
+                                            {type.includes('Building') && <Building size={14} strokeWidth={isActive ? 2.5 : 2} />}
+                                            <span>{type}</span>
+                                        </div>
+
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="premiumActiveBg"
+                                                className="absolute inset-0 bg-titan-navy shadow-[0_10px_20px_-5px_rgba(0,43,91,0.3)]"
+                                                initial={false}
+                                                transition={{ type: "spring", bounce: 0.15, duration: 0.6 }}
+                                            />
+                                        )}
+                                        {!isActive && (
+                                            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/80 transition-colors duration-300 -z-10" />
+                                        )}
+                                    </button>
+                                );
+                            })}
                         </div>
 
-                        {/* Type */}
-                        <div className="relative group">
-                            <select
-                                value={filterType}
-                                onChange={(e) => setFilterType(e.target.value)}
-                                className="appearance-none bg-titan-bg pl-10 pr-12 py-3 rounded-lg text-sm font-bold text-titan-navy cursor-pointer focus:outline-none focus:ring-2 focus:ring-titan-red/20 border border-transparent hover:border-gray-200 transition-all shadow-sm min-w-[220px]"
-                            >
-                                {types.map(t => <option key={t} value={t}>{t === 'All' ? 'All Types' : t}</option>)}
-                            </select>
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-titan-red pointer-events-none">
-                                {filterType === 'Water Treatment Plant' ? <Droplets size={16} /> :
-                                    filterType === 'Slope Construction' ? <Mountain size={16} /> :
-                                        <Building size={16} />}
+                        {/* Location Filter - Right Side */}
+                        <div className="min-w-[260px] p-1">
+                            <div className="relative group">
+                                <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center gap-3 pointer-events-none z-10">
+                                    <MapPin size={16} className="text-titan-red animate-pulse" />
+                                    <div className="w-[1px] h-4 bg-gray-200" />
+                                </div>
+                                <select
+                                    value={filterLoc}
+                                    onChange={(e) => setFilterLoc(e.target.value)}
+                                    className="w-full appearance-none bg-white/60 pl-16 pr-12 py-3.5 rounded-full text-[13px] font-semibold text-titan-navy cursor-pointer focus:outline-none ring-1 ring-gray-100 focus:ring-2 focus:ring-titan-navy/10 border-none transition-all hover:bg-white hover:shadow-md"
+                                >
+                                    {locations.map(loc => <option key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</option>)}
+                                </select>
+                                <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-titan-navy/20 group-hover:text-titan-red transition-colors z-10">
+                                    <Filter size={14} />
+                                </div>
                             </div>
                         </div>
                     </div>

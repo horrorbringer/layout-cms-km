@@ -89,31 +89,31 @@ const services: ServiceData[] = [
     },
     {
         id: 'renovation',
-        title: 'Building Renovation',
-        subtitle: 'Restoring Value & Aesthetics',
+        title: 'Construction',
+        subtitle: 'Building the Future with Precision',
         icon: Hammer,
         heroImage: '/images/projects/Thumbnail-4.jpg',
-        description: 'We breathe new life into existing structures. Whether it is a heritage restoration or a modern office fit-out, our renovation team focuses on enhancing functionality, energy efficiency, and aesthetics while preserving the building\'s unique character.',
-        targetAudience: 'Owners of aging properties, offices needing modernization, and heritage building conservators.',
+        description: 'We specialize in high-quality construction of residential, commercial, and industrial structures. From ground-breaking to the final coat of paint, our expert team ensures structural integrity, modern aesthetics, and adherence to the strictest safety standards.',
+        targetAudience: 'Ideal for property developers, government agencies, and private investors seeking reliable construction excellence.',
         scopeOfWork: [
-            'Structural Strengthening & Retrofitting',
-            'Facade Upgrades & Cladding',
-            'MEP System Modernization',
-            'Interior Fit-outs for Office & Retail',
-            'Waterproofing & Insulation',
-            'Heritage Preservation'
+            'Structural Engineering & Foundations',
+            'Reinforced Concrete Works',
+            'Steel Structure Fabrication & Erection',
+            'Masonry & Structural Framing',
+            'MEP System Installation',
+            'Comprehensive Site Finishing'
         ],
         process: [
-            { step: '01', title: 'Assessment', desc: 'Thorough site inspection, structural analysis, and measurement.' },
-            { step: '02', title: 'Proposal', desc: 'Design concepts, material selection, and cost estimation.' },
-            { step: '03', title: 'Execution', desc: 'Renovation work managed to minimize operational disruption.' },
-            { step: '04', title: 'Reveal', desc: 'Showcasing the revitalized space ready for occupancy.' }
+            { step: '01', title: 'Survey', desc: 'Detailed site analysis, topographical survey, and soil testing.' },
+            { step: '02', title: 'Preparation', desc: 'Site clearing, mobilization of equipment, and foundation layout.' },
+            { step: '03', title: 'Execution', desc: 'Phased construction with expert supervision and QA/QC.' },
+            { step: '04', title: 'Finalization', desc: 'Structural certification, site cleanup, and project handover.' }
         ],
         benefits: [
-            { title: 'Increased Property Value', desc: 'Modern amenities boost market potential.', icon: TrendingUp },
-            { title: 'Energy Efficiency', desc: 'New systems reduce long-term operational costs.', icon: Lightbulb },
-            { title: 'Safety Upgrade', desc: 'Bringing old structures up to current safety codes.', icon: ShieldCheck },
-            { title: 'Aesthetic Appeal', desc: 'Fresh, modern looks that attract tenants/customers.', icon: Star }
+            { title: 'Structural Integrity', desc: 'Built to exceed standard building codes and regulations.', icon: ShieldCheck },
+            { title: 'Expert Craftsmanship', desc: 'Attention to detail in every brick and beam.', icon: Star },
+            { title: 'Safety Commitment', desc: 'Zero-incident policy on all construction sites.', icon: ShieldCheck },
+            { title: 'Value Engineering', desc: 'Optimizing materials for durability and cost-efficiency.', icon: TrendingUp }
         ],
         relatedProjects: [
             { id: '3', title: 'Colonial Villa Restoration', location: 'Kep', category: 'Heritage', image: '/images/projects/Thumbnail-9.jpg' },
@@ -123,64 +123,33 @@ const services: ServiceData[] = [
     {
         id: 'project-management',
         title: 'Project Management',
-        subtitle: 'On Time, On Budget, On Point',
+        subtitle: 'Strategic Oversight & Expert Advisory',
         icon: Briefcase,
         heroImage: '/images/projects/Thumbnail-5.jpg',
-        description: 'Rigorous oversight ensuring your project is delivered to the highest standards. We act as your representative, bringing professional discipline to manage contractors, schedules, costs, and risks effectively.',
-        targetAudience: 'Investors and owners who need expert representation and control over complex projects.',
+        description: 'Comprehensive oversight ensuring your project is delivered to the highest standards. We combine professional disciplined management of contractors, schedules, and costs with strategic technical insights and feasibility studies to optimize your investment value.',
+        targetAudience: 'Investors and owners who need expert representation, control over complex projects, and data-driven strategic advice.',
         scopeOfWork: [
-            'Project Planning & Scheduling',
-            'Cost Estimation & Budget Control',
-            'Contract Administration',
-            'Health, Safety & Environment (HSE) Oversight',
-            'Quality Assurance (QA/QC) Inspections',
-            'Risk Management & Mitigation'
-        ],
-        process: [
-            { step: '01', title: 'Planning', desc: 'Defining detailed project scope, schedule, and budget baselines.' },
-            { step: '02', title: 'Procurement', desc: 'Tendering, evaluating, and selecting the best vendors.' },
-            { step: '03', title: 'Supervision', desc: 'Daily on-site management, coordination, and reporting.' },
-            { step: '04', title: 'Closure', desc: 'Final accounting, documentation, and project close-out.' }
-        ],
-        benefits: [
-            { title: 'Risk Mitigation', desc: 'Proactive identification and resolution of issues.', icon: ShieldCheck },
-            { title: 'Budget Control', desc: 'Detailed tracking prevents cost overruns.', icon: TrendingUp },
-            { title: 'Timely Delivery', desc: 'Strict schedule enforcement avoids delays.', icon: Clock },
-            { title: 'Quality Standards', desc: 'Ensure final build meets all specifications.', icon: CheckCircle2 }
-        ],
-        relatedProjects: [
-            { id: '5', title: 'Logistics Center Ph-1', location: 'Sihanoukville', category: 'Industrial', image: '/images/projects/Thumbnail-7.jpg' }
-        ]
-    },
-    {
-        id: 'consultants',
-        title: 'Consultants',
-        subtitle: 'Strategic Expertise',
-        icon: Lightbulb,
-        heroImage: '/images/projects/Thumbnail-3.jpg',
-        description: 'Beyond construction, we provide the strategic insights needed to make informed investment decisions. Our consultants utilize market data and technical expertise to help you optimize value and ensure regulatory compliance before you build.',
-        targetAudience: 'Developers, land owners, and government bodies requiring technical and financial validation.',
-        scopeOfWork: [
+            'Project Planning, Scheduling & Budget Control',
             'Feasibility Studies & Market Analysis',
+            'Contract Administration & Risk Management',
+            'Quality Assurance (QA/QC) & HSE Oversight',
             'Value Engineering & Cost Optimization',
-            'Technical Due Diligence',
-            'Regulatory Compliance Advisory',
-            'Sustainability & Green Building Consulting',
-            'Master Planning'
+            'Regulatory Compliance Advisory'
         ],
         process: [
-            { step: '01', title: 'Analysis', desc: 'Deep dive into project requirements, site data, and goals.' },
-            { step: '02', title: 'Strategy', desc: 'Developing a comprehensive roadmap and technical solutions.' },
-            { step: '03', title: 'Advisory', desc: 'Ongoing expert guidance during decision-making phases.' },
-            { step: '04', title: 'Reporting', desc: 'Delivering detailed reports and actionable recommendations.' }
+            { step: '01', title: 'Consultation & Analysis', desc: 'Understanding requirements, performing site data deep dives, and feasibility analysis.' },
+            { step: '02', title: 'Planning & Procurement', desc: 'Defining project roadmap, budgets, baselines, and vendor selection.' },
+            { step: '03', title: 'Execution & Advisory', desc: 'On-site management, daily coordination, and ongoing strategic guidance.' },
+            { step: '04', title: 'Close-out & Reporting', desc: 'Final accounting, documentation, and delivering actionable recommendations.' }
         ],
         benefits: [
-            { title: 'Informed Decisions', desc: 'Data-driven insights reduce investment risk.', icon: Lightbulb },
-            { title: 'Cost Optimization', desc: 'Value engineering saves money without cutting quality.', icon: TrendingUp },
-            { title: 'Regulatory Ease', desc: 'Smooth navigation of complex local building codes.', icon: CheckCircle2 },
-            { title: 'Sustainability', desc: 'Expertise in green building standards (LEED, etc.).', icon: Star }
+            { title: 'Informed Decisions', desc: 'Data-driven insights to reduce investment risk effectively.', icon: Lightbulb },
+            { title: 'Budget & Cost Control', desc: 'Detailed tracking and value engineering prevent cost overruns.', icon: TrendingUp },
+            { title: 'Timely Quality Delivery', desc: 'Strict schedule enforcement and quality standards.', icon: Clock },
+            { title: 'Risk & Strategy', desc: 'Proactive issue resolution and smooth regulatory navigation.', icon: ShieldCheck }
         ],
         relatedProjects: [
+            { id: '5', title: 'Logistics Center Ph-1', location: 'Sihanoukville', category: 'Industrial', image: '/images/projects/Thumbnail-7.jpg' },
             { id: '6', title: 'Eco-Resort Masterplan', location: 'Koh Kong', category: 'Hospitality', image: '/images/projects/Thumbnail-8.jpg' }
         ]
     }
@@ -211,7 +180,7 @@ export default function ServiceDetailPage() {
                     <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/80 via-titan-navy/40 to-titan-navy"></div>
                 </motion.div>
 
-                <motion.div style={{ opacity: heroOpacity }} className="relative z-10 text-center max-w-5xl px-6 pt-20">
+                <motion.div style={{ opacity: heroOpacity }} className="relative z-10 text-center max-w-5xl px-6 pt-20 mt-10">
                     <Link href="/design-z/services" className="inline-flex items-center gap-2 text-white/60 hover:text-titan-red transition-all font-bold uppercase tracking-widest text-xs mb-8 group">
                         <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:border-titan-red group-hover:bg-titan-red group-hover:text-white transition-all">
                             <ArrowLeft size={12} />

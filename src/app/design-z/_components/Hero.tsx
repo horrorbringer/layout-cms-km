@@ -109,7 +109,7 @@ export default function Hero() {
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="hidden lg:block z-20"
                     >
-                        <div className="relative">
+                        <div className="relative mt-15">
                             <div className="relative overflow-hidden rounded-2xl shadow-2xl h-[500px]">
                                 <Image
                                     src="/images/projects/Thumbnail-1.jpg"
@@ -176,7 +176,7 @@ export default function Hero() {
                             { icon: Building2, label: 'Commercial', desc: 'High-rise & Office' },
                             { icon: HardHat, label: 'Industrial', desc: 'Factory & Warehouse' },
                             { icon: Layout, label: 'Infrastructure', desc: 'Roads & Bridges' },
-                            { icon: Wrench, label: 'Renovation', desc: 'Restore & Upgrade' },
+                            { icon: Wrench, label: 'Management', desc: 'Strategic Oversight' },
                         ].map((item, i) => (
                             <Link href="/design-z/services" key={i} className="group px-6 py-8 border-r border-gray-100 last:border-r-0 hover:bg-titan-navy transition-all cursor-pointer">
                                 <div className="flex items-center gap-4">

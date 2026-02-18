@@ -29,12 +29,11 @@ const dictionary: Translations = {
     'Quality & Safety': { en: 'Quality & Safety', kh: 'គុណភាព & សុវត្ថិភាព' },
     'Services': { en: 'Services', kh: 'សេវាកម្ម' },
     'Design & Build': { en: 'Design & Build', kh: 'រចនា & សាងសង់' },
-    'Building Renovation': { en: 'Building Renovation', kh: 'ជួសជុលអគារ' },
+    'Building Renovation': { en: 'Construction', kh: 'សំណង់អគារ' },
     'Project Management': { en: 'Project Management', kh: 'គ្រប់គ្រងគម្រោង' },
-    'Consultants': { en: 'Consultants', kh: 'ប្រឹក្សាយោបល់' },
     'Projects': { en: 'Projects', kh: 'គម្រោង' },
     'Done Projects': { en: 'Completed Projects', kh: 'គម្រោងបានបញ្ចប់' },
-    'Implement Projects': { en: 'Implement Projects', kh: 'គម្រោងកំពុងអនុវត្ត' },
+    'Implement Projects': { en: 'Project In Progress', kh: 'គម្រោងកំពុងអនុវត្ត' },
     'Government': { en: 'Government', kh: 'រដ្ឋាភិបាល' },
     'Public Service': { en: 'Public Service', kh: 'សេវាសាធារណៈ' },
     'Private': { en: 'Private Service', kh: 'សេវាឯកជន' },
@@ -45,7 +44,7 @@ const dictionary: Translations = {
     'Doc Collection': { en: 'Doc Collection', kh: 'ឯកសារ' },
     'Careers': { en: 'Careers', kh: 'ការងារ' },
     'Contact': { en: 'Contact', kh: 'ទំនាក់ទំនង' },
-    
+
     // UI Elements
     'Get Quote': { en: 'Get Quote', kh: 'ស្នើសុំតម្លៃ' },
     'Get a Free Quote': { en: 'Get a Free Quote', kh: 'ស្នើសុំតម្លៃឥតគិតថ្លៃ' },
@@ -56,20 +55,19 @@ const dictionary: Translations = {
     'Categories': { en: 'Categories', kh: 'ប្រភេទ' },
     'View Projects': { en: 'View Projects', kh: 'មើលគម្រោង' },
     'Contact Us': { en: 'Contact Us', kh: 'ទាក់ទងយើង' },
-    
+
     // Sub-menu descriptions (Optional: translate these or keep simple)
     'Learn about our history': { en: 'Learn about our history', kh: 'ស្វែងយល់អំពីប្រវត្តិរបស់យើង' },
     'Meet our team': { en: 'Meet our team', kh: 'ជួបជាមួយក្រុមការងារ' },
     'Our standards': { en: 'Our standards', kh: 'ស្តង់ដាររបស់យើង' },
     'Full lifecycle solutions': { en: 'Full lifecycle solutions', kh: 'ដំណោះស្រាយពេញលេញ' },
-    'Revitalize existing structures': { en: 'Revitalize existing structures', kh: 'កែលម្អអគារដែលមានស្រាប់' },
-    'Oversight & control': { en: 'Oversight & control', kh: 'ការត្រួតពិនិត្យ & គ្រប់គ្រង' },
-    'Expert advisory services': { en: 'Expert advisory services', kh: 'សេវាកម្មប្រឹក្សាយោបល់' },
+    'Revitalize existing structures': { en: 'Expert building & construction', kh: 'ការសាងសង់អគារដោយអ្នកជំនាញ' },
+    'Oversight & control': { en: 'Strategic oversight & control', kh: 'ការត្រួតពិនិត្យយុទ្ធសាស្ត្រ & ការគ្រប់គ្រង' },
     'View our portfolio': { en: 'View our portfolio', kh: 'មើលស្នាដៃរបស់យើង' },
     'Current developments': { en: 'Current developments', kh: 'ការអភិវឌ្ឍន៍បច្ចុប្បន្ន' },
     'Latest announcements': { en: 'Latest announcements', kh: 'សេចក្តីប្រកាសចុងក្រោយ' },
     'Resources & documents': { en: 'Resources & documents', kh: 'ធនធាន & ឯកសារ' },
-    
+
     // Footer
     'Explore': { en: 'Explore', kh: 'រុករក' },
     'Capabilities': { en: 'Capabilities', kh: 'សមត្ថភាព' },
@@ -81,9 +79,9 @@ const dictionary: Translations = {
     'Privacy Policy': { en: 'Privacy Policy', kh: 'គោលការណ៍ឯកជនភាព' },
     'Terms of Service': { en: 'Terms of Service', kh: 'លក្ខខណ្ឌប្រើប្រាស់' },
     'All rights reserved': { en: 'All rights reserved', kh: 'រក្សាសិទ្ធិគ្រប់យ៉ាង' },
-    'Footer Desc': { 
-        en: 'Engineering the future of Cambodia since 1999. Delivering excellence in high-rise, infrastructure, and industrial construction with unwavering commitment to quality and safety.', 
-        kh: 'កសាងអនាគតរបស់កម្ពុជាតាំងពីឆ្នាំ ១៩៩៩។ ផ្តល់ជូននូវឧត្តមភាពក្នុងការសាងសង់អគារខ្ពស់ ហេដ្ឋារចនាសម្ព័ន្ធ និងឧស្សាហកម្ម ដោយមានការប្តេជ្ញាចិត្តខ្ពស់ចំពោះគុណភាព និងសុវត្ថិភាព។' 
+    'Footer Desc': {
+        en: 'Engineering the future of Cambodia since 1999. Delivering excellence in high-rise, infrastructure, and industrial construction with unwavering commitment to quality and safety.',
+        kh: 'កសាងអនាគតរបស់កម្ពុជាតាំងពីឆ្នាំ ១៩៩៩។ ផ្តល់ជូននូវឧត្តមភាពក្នុងការសាងសង់អគារខ្ពស់ ហេដ្ឋារចនាសម្ព័ន្ធ និងឧស្សាហកម្ម ដោយមានការប្តេជ្ញាចិត្តខ្ពស់ចំពោះគុណភាព និងសុវត្ថិភាព។'
     },
 };
 

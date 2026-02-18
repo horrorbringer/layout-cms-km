@@ -6,9 +6,9 @@ import ProjectListingPage from '../../components/ProjectListingPage';
 
 export default function CompletedProjectsPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-100">Loading...</div>}>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-100 ">Loading...</div>}>
             <ProjectListingPage
-                title={<h1 className="text-4xl md:text-8xl font-black text-white mb-6 tracking-tighter">
+                title={<h1 className="text-4xl md:text-8xl font-black text-white mb-6 tracking-tighter ">
                     COMPLETED <span className="text-titan-red">PROJECTS</span>
                 </h1>}
                 subtitle="A portfolio of successfully delivered landmarks, infrastructure, and commercial developments across Cambodia."
@@ -17,7 +17,7 @@ export default function CompletedProjectsPage() {
                 heroImage="/images/projects/Thumbnail-1.jpg"
                 filterStatus="Completed"
                 badgeConfig={{
-                    className: "bg-white text-green-700",
+                    className: "bg-white text-green-700 ",
                     icon: <CheckCircle size={10} />,
                     label: "Completed"
                 }}
