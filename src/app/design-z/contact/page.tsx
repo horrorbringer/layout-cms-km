@@ -41,7 +41,7 @@ export default function ContactPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
-                        className="text-xl text-white/70 font-light max-w-2xl mx-auto"
+                        className="text-xl text-white/70 font-light max-w-2xl mx-auto mb-10"
                     >
                         Have a project in mind or want to learn more about our services? Our team is ready to assist you.
                     </motion.p>
