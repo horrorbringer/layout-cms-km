@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, UserCheck, Warehouse, PencilRuler, HardHat, FileBarChart, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, UserCheck, Warehouse, PencilRuler, HardHat, FileBarChart, CheckCircle2, ChevronLeft, ChevronRight, ArrowUpRight, Network } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AboutPage() {
@@ -267,98 +267,73 @@ export default function AboutPage() {
 
             {/* --- LEADERSHIP (PERSONNEL) --- */}
             <section className="py-32 max-w-[1600px] mx-auto px-6" id="leadership">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-24">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                     <div>
-                        <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Personnel</span>
-                        <h2 className="text-5xl md:text-7xl font-black text-titan-navy tracking-tight">COMMAND HIERARCHY</h2>
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">Command & Control</span>
+                        <h2 className="text-5xl md:text-7xl font-black text-titan-navy tracking-tight">ORGANIZATION STRUCTURE</h2>
                     </div>
-                    <Link href="/design-y/contact" className="hidden md:flex items-center gap-2 border-b border-titan-navy pb-1 hover:text-titan-red hover:border-titan-red transition-colors">
-                        <span className="uppercase tracking-widest text-xs font-bold">Join the Team</span>
+                    <Link href="/design-y/organization" className="flex items-center gap-3 group">
+                        <span className="uppercase tracking-widest text-xs font-bold border-b-2 border-titan-red pb-1 group-hover:text-titan-red transition-colors">View Full Hierarchy</span>
+                        <div className="w-8 h-8 rounded-full bg-titan-navy text-white flex items-center justify-center group-hover:bg-titan-red transition-colors">
+                            <ArrowUpRight size={14} />
+                        </div>
                     </Link>
                 </div>
 
-                <div className="relative">
-                    {/* Decorative Center Line for Org Chart */}
-                    <div className="absolute left-1/2 -top-12 bottom-0 w-px bg-titan-navy/10 hidden md:block -translate-x-1/2 z-0"></div>
+                <div className="relative bg-titan-bg p-12 border border-titan-navy/5 overflow-hidden group">
+                    {/* Background Technical Pattern */}
+                    <div className="absolute inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
 
-                    {/* Level 1: Executive Management (Deputy GM) */}
-                    <div className="relative z-10 flex justify-center mb-16">
-                        <div className="w-full max-w-sm">
-                            <Link href="/design-y/about/deputy-gm" className="group cursor-pointer block bg-white border border-titan-navy/10 hover:border-titan-red transition-all p-4 shadow-xl">
-                                <div className="aspect-[4/5] overflow-hidden mb-4 relative">
-                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800" alt="Deputy GM" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
-                                </div>
-                                <div className="text-center">
-                                    <h3 className="text-lg font-black text-titan-navy uppercase mb-1 group-hover:text-titan-red transition-colors">Mr. Pauch Bunpheakdey</h3>
-                                    <p className="font-mono text-xs uppercase tracking-widest text-titan-navy/50">Deputy General Manager</p>
-                                </div>
-                            </Link>
+                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+                        {/* CEO Preview */}
+                        <div className="md:col-span-1 bg-titan-navy p-6 text-white shadow-xl">
+                            <div className="aspect-square mb-4 overflow-hidden border border-white/10">
+                                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400" alt="CEO" className="w-full h-full object-cover grayscale" />
+                            </div>
+                            <h3 className="text-sm font-black uppercase mb-1">Okhna. TOUCH KIM</h3>
+                            <p className="text-[10px] font-mono text-titan-red uppercase tracking-widest">Chief Executive Officer</p>
                         </div>
-                    </div>
 
-                    {/* Level 2 Connector - Horizontal Line */}
-                    <div className="hidden md:block w-3/4 mx-auto border-t border-titan-navy/10 relative h-16">
-                        {/* Vertical line connecting up to Dep GM */}
-                        <div className="absolute left-1/2 -top-16 h-16 w-px bg-titan-navy/10 -translate-x-1/2"></div>
-                        {/* Vertical lines connecting down to Directors (will be handled by their boxes mostly, but main stems here) */}
-                        <div className="absolute left-1/6 top-0 h-8 w-px bg-titan-navy/10"></div>
-                        <div className="absolute right-1/6 top-0 h-8 w-px bg-titan-navy/10"></div>
-                        <div className="absolute left-1/2 top-0 h-8 w-px bg-titan-navy/10 -translate-x-1/2"></div>
-                    </div>
-
-                    {/* Level 2: Department Directors */}
-                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 -mt-8 md:-mt-0">
-                        {[
-                            { id: 'finance-dir', name: 'Mr. Leng Vannarith', role: 'Finance Director', img: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800' },
-                            { id: 'senior-pm', name: 'Mr. Oung Chaknora', role: 'Senior Project Manager', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800' },
-                            { id: 'chief-arch', name: 'Mr. Chhundy Ryta', role: 'Chief Architect', img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800' },
-                        ].map((person, i) => (
-                            <div key={i} className="flex flex-col items-center">
-                                {/* Connector line up */}
-                                <div className="h-8 w-px bg-titan-navy/10 hidden md:block mb-4"></div>
-                                <Link href={`/design-y/about/${person.id}`} className="w-full max-w-xs group cursor-pointer block bg-white border border-titan-navy/10 hover:border-titan-red transition-all p-3 shadow-sm">
-                                    <div className="aspect-square overflow-hidden mb-3 relative">
-                                        <img src={person.img} alt={person.name} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
-                                    </div>
-                                    <div className="text-center">
-                                        <h3 className="text-sm font-black text-titan-navy uppercase mb-1 group-hover:text-titan-red transition-colors line-clamp-1">{person.name}</h3>
-                                        <p className="font-mono text-[9px] uppercase tracking-widest text-titan-navy/50 line-clamp-1">{person.role}</p>
-                                    </div>
-                                </Link>
-                                {/* Connector line down */}
-                                <div className="h-8 w-px bg-titan-navy/10 hidden md:block mt-auto"></div>
+                        {/* Map / Layout Preview */}
+                        <div className="md:col-span-3 flex flex-col justify-center border-l border-titan-navy/10 pl-12">
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="p-3 bg-white border border-titan-navy/10 rounded-sm">
+                                    <Network size={24} className="text-titan-red" />
+                                </div>
+                                <div>
+                                    <h4 className="text-xl font-bold text-titan-navy">Interactive Command Map</h4>
+                                    <p className="text-sm text-titan-navy/50">Explore the full operational hierarchy of Kimmex Construction.</p>
+                                </div>
                             </div>
-                        ))}
-                    </div>
 
-                    {/* Level 3 Connector - Wide Horizontal Line */}
-                    <div className="hidden md:block w-5/6 mx-auto border-t border-titan-navy/10 relative h-8 mb-8"></div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                {[
+                                    { title: 'Executive Directorate', icon: Shield, desc: 'Strategic decision making body.' },
+                                    { title: 'Operational Units', icon: HardHat, desc: 'Site management and delivery.' },
+                                    { title: 'Technical Divisions', icon: PencilRuler, desc: 'Design, MEP, and Engineering.' }
+                                ].map((box, i) => (
+                                    <div key={i} className="p-4 bg-white/50 border border-titan-navy/5 hover:border-titan-red/30 transition-all">
+                                        <box.icon size={16} className="text-titan-navy/30 mb-3" />
+                                        <h5 className="text-[10px] font-black uppercase mb-1">{box.title}</h5>
+                                        <p className="text-[9px] text-titan-navy/40 leading-tight">{box.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
 
-                    {/* Level 3: Operational Managers */}
-                    <div className="relative z-10 grid grid-cols-2 md:grid-cols-5 gap-4">
-                        {[
-                            { id: 'pm', name: 'Mr. Sum Rotana', role: 'Project Manager', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800' },
-                            { id: 'mep-mgr', name: 'Mr. Krai Keak', role: 'MEP Manager', img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800' },
-                            { id: 'design-mgr', name: 'Mr. Touch Putheany', role: 'Design Manager', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800' },
-                            { id: 'qs-mgr', name: 'Mr. Ry Ken', role: 'QS Manager', img: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?q=80&w=800' },
-                            { id: 'logistics', name: 'Mr. Hong Bunna', role: 'Logistics Manager', img: 'https://images.unsplash.com/photo-1480429370139-e0132c086e2a?q=80&w=800' },
-                        ].map((person, i) => (
-                            <div key={i} className="flex flex-col items-center">
-                                <div className="h-8 w-px bg-titan-navy/10 hidden md:block -mt-8 mb-4"></div>
-                                <Link href={`/design-y/about/${person.id}`} className="w-full group cursor-pointer block bg-white border border-titan-navy/5 hover:border-titan-red transition-all p-2">
-                                    <div className="aspect-[3/4] overflow-hidden mb-2 relative">
-                                        <img src={person.img} alt={person.name} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
-                                    </div>
-                                    <div className="text-center">
-                                        <h3 className="text-[10px] font-black text-titan-navy uppercase mb-0.5 group-hover:text-titan-red transition-colors line-clamp-1">{person.name}</h3>
-                                        <p className="font-mono text-[8px] uppercase tracking-widest text-titan-navy/50 line-clamp-1">{person.role}</p>
-                                    </div>
+                            <div className="mt-12">
+                                <Link
+                                    href="/design-y/organization"
+                                    className="inline-flex items-center gap-6 px-10 py-5 bg-titan-navy text-white text-[11px] font-black uppercase tracking-[0.2em] hover:bg-titan-red transition-all shadow-lg active:scale-95"
+                                >
+                                    Launch Organizational Map
+                                    <ArrowUpRight size={14} />
                                 </Link>
                             </div>
-                        ))}
+                        </div>
                     </div>
                 </div>
             </section>
+
 
             {/* --- PROTOCOLS (CERTIFICATIONS) --- */}
             <section className="bg-titan-navy text-white py-32" id="safety">

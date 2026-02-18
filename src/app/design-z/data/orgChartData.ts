@@ -2,6 +2,8 @@ export interface OrgNode {
     name: string;
     role: string;
     image?: string;
+    phone?: string;
+    memberCount?: number; // Added memberCount property
     children?: OrgNode[];
     isGroup?: boolean;
     type?: 'director' | 'manager' | 'staff' | 'department';
@@ -40,7 +42,9 @@ export const orgChartData: OrgNode = {
                                             name: 'Mr. HONG BUNNA',
                                             role: 'Warehouse Manager',
                                             image: '/images/team-leadership-professional/hong_bunna.jpg',
+                                            phone: '016 423 236',
                                             type: 'manager',
+                                            memberCount: 9, // Added member count
                                             children: [
                                                 { name: 'KIM SREY', role: 'In-Outdoor Pur.', type: 'staff' },
                                                 { name: 'SOK VIPHET', role: 'Warehouse Sup.', type: 'staff' },
@@ -53,74 +57,110 @@ export const orgChartData: OrgNode = {
                                             name: 'TSR',
                                             role: 'Stock Manager',
                                             image: '/images/team-leadership-professional/staff_placeholder.png',
+                                            phone: 'TBR',
                                             type: 'manager',
                                             children: [
-                                                { name: 'HUNN SOKSOPHYRITH', role: 'Raw & Outer', type: 'staff' },
-                                                { name: 'CHHUM SREYSOR', role: 'Stock & Pur', type: 'staff' },
+                                                {
+                                                    name: 'PORK KEOSOPHANITH',
+                                                    role: 'Sap & Office Suppor',
+                                                    phone: '010 911 870',
+                                                    memberCount: 5,
+                                                    type: 'staff',
+                                                    image: '/images/team-leadership-professional/sap_office_suppor.png'
+                                                },
+                                                {
+                                                    name: 'HORN KIMHEANG',
+                                                    role: 'Stock by Project Site',
+                                                    phone: '069 758 577',
+                                                    memberCount: 26,
+                                                    type: 'staff',
+                                                    image: '/images/team-leadership-professional/stock_project_site_1.png'
+                                                },
+                                                {
+                                                    name: 'TY HOCH',
+                                                    role: 'Stock by Project Site',
+                                                    phone: '11 220 252',
+                                                    memberCount: 8,
+                                                    type: 'staff',
+                                                    image: '/images/team-leadership-professional/stock_project_site_2.png'
+                                                },
+                                                {
+                                                    name: 'TEAV VICHHAI',
+                                                    role: 'Stock by Project Site',
+                                                    phone: '066 698 757',
+                                                    memberCount: 8,
+                                                    type: 'staff',
+                                                    image: '/images/team-leadership-professional/stock_project_site_3.png'
+                                                },
+                                                {
+                                                    name: 'Tamork Warehouse',
+                                                    role: 'Stock Admin',
+                                                    memberCount: 5,
+                                                    type: 'staff',
+                                                    image: '/images/team-leadership-professional/staff_placeholder.png'
+                                                },
                                             ]
                                         }
                                     ]
                                 },
                                 {
-                                    name: 'HUMAN RESOURCES',
+                                    name: 'HUMAN RESOURCES & ADMIN',
                                     role: 'Column Head',
                                     type: 'department',
                                     children: [
                                         {
-                                            name: 'Ms. TOR CHANAKKESA',
-                                            role: 'HR Lead',
+                                            name: 'Mr. SUM TO',
+                                            role: 'HR & Admin Manager',
                                             image: '/images/team-leadership-professional/staff_placeholder.png',
+                                            phone: '092 567 783',
                                             type: 'manager',
+                                            memberCount: 121,
                                             children: [
-                                                { name: 'BORSOR LOTHIA', role: 'IT Support', type: 'staff' },
-                                                { name: 'POK SAMARA', role: 'Acct & HR', type: 'staff' },
+                                                { name: 'SOVANN VUTHY', role: 'IT', phone: '011 610 564', memberCount: 6, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'TEP TOUSOVANDARA', role: 'HR', phone: '096 522 4292', memberCount: 4, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'PHEN SOPHAL', role: 'Admin', phone: '093 394 222', memberCount: 9, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'MORN RINA', role: 'General Affair', phone: '078 870 069', memberCount: 4, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'ROM VANARA', role: 'Health & HSE', phone: '096 977 8852', memberCount: 9, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'PHON SOPHAL', role: 'Security', phone: '017 936 665', memberCount: 32, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'KHON CHAMROEUN', role: 'Heavy Equipment', phone: '081 500 307', memberCount: 21, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'SEAB SEUN', role: 'Tower Crane', phone: '096 243 7446', memberCount: 17, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'DETH VA', role: 'Survey', phone: '087 985 652', memberCount: 18, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
                                             ]
                                         }
                                     ]
                                 },
                                 {
-                                    name: 'ADMIN & SECURITY',
+                                    name: 'FINANCE',
                                     role: 'Column Head',
                                     type: 'department',
                                     children: [
                                         {
-                                            name: 'Mr. SAM TO',
-                                            role: 'Admin Manager',
-                                            image: '/images/team-leadership-professional/staff_placeholder.png',
-                                            type: 'manager',
-                                            children: [
-                                                { name: 'PHEN SOPHAL', role: 'Admin', type: 'staff' },
-                                                { name: 'BOPHA', role: 'General Affair', type: 'staff' },
-                                                { name: 'PHON SOPHEL', role: 'Security', type: 'staff' },
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: 'FINANCE & KMS',
-                                    role: 'Column Head',
-                                    type: 'department',
-                                    children: [
-                                        {
-                                            name: 'Ms. OREY BREYNA',
+                                            name: 'Ms. BREY SREYNA',
                                             role: 'Finance Manager',
                                             image: '/images/team-leadership-professional/staff_placeholder.png',
+                                            phone: '095 616 911',
                                             type: 'manager',
+                                            memberCount: 32,
                                             children: [
-                                                { name: 'YIM PHALLANY', role: 'Accounting', type: 'staff' },
-                                                { name: 'LO KOHOR', role: 'Treasury', type: 'staff' },
-                                                { name: 'KHEANG KHUNMATHOU', role: 'Taxation', type: 'staff' },
+                                                { name: 'YIM PHALLANY', role: 'Accounting', phone: '081 222 333', memberCount: 8, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'LO KOHOR', role: 'Treasury', phone: '012 999 888', memberCount: 6, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'KHEANG KHUNMATHOU', role: 'Taxation', phone: '096 444 555', memberCount: 12, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
+                                                { name: 'MEAS CHANSAK', role: 'Audit', phone: '010 777 666', memberCount: 6, type: 'staff', image: '/images/team-leadership-professional/staff_placeholder.png' },
                                             ]
-                                        },
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'KMS',
+                                    role: 'Column Head',
+                                    type: 'department',
+                                    children: [
                                         {
-                                            name: 'Mr. LE HOMELEANG',
+                                            name: 'Mr. LY HONGLEANG',
                                             role: 'KMS Specialist',
-                                            image: '/images/team-leadership-professional/staff_placeholder.png',
-                                            type: 'manager',
-                                            children: [
-                                                { name: 'SAM REYY', role: 'I.D.', type: 'staff' },
-                                                { name: 'KIM MENGHONG', role: 'Operations', type: 'staff' },
-                                            ]
+                                            image: '/images/team-leadership-professional/ly_hongleang.jpg', // Updated image
+                                            phone: '018 6 631 013',
+                                            type: 'manager'
                                         }
                                     ]
                                 }
@@ -159,20 +199,62 @@ export const orgChartData: OrgNode = {
                             type: 'director',
                             children: [
                                 {
-                                    name: 'ARCHITECTURE & MEP',
+                                    name: 'LD',
                                     role: 'Column Head',
                                     type: 'department',
                                     children: [
                                         {
-                                            name: 'Detail Design Dept.',
-                                            role: 'Department Head',
+                                            name: 'Mr. SAM RITHY',
+                                            role: 'LD Manager',
+                                            image: '/images/team-leadership-professional/sam_rithy.jpg',
+                                            phone: '012 484 144',
                                             type: 'manager',
-                                            children: [
-                                                { name: 'Mr. CHHUNDY RYTA', role: 'Architecture', type: 'staff' },
-                                                { name: 'Mr. SOTHEN SOPHEAKTH', role: 'Structural', type: 'staff' },
-                                                { name: 'Mr. LOU SITHAT', role: 'ID & Design', type: 'staff' },
-                                                { name: 'Mr. TOUCH PUTHEANY', role: 'MEP Design', type: 'staff' },
-                                            ]
+                                            memberCount: 19,
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'DECOR',
+                                    role: 'Column Head',
+                                    type: 'department',
+                                    children: [
+                                        {
+                                            name: 'Mr. KIM VENGHONG',
+                                            role: 'Decor Manager',
+                                            image: '/images/team-leadership-professional/kim_venghong.jpg',
+                                            phone: '010 633 743',
+                                            type: 'manager',
+                                            memberCount: 26,
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'MVAC',
+                                    role: 'Column Head',
+                                    type: 'department',
+                                    children: [
+                                        {
+                                            name: 'Mr. MEAN SOCHEAT',
+                                            role: 'MVAC Manager',
+                                            image: '/images/team-leadership-professional/mean_socheat.jpg',
+                                            phone: '016 719 209', // Corrected phone number
+                                            type: 'manager',
+                                            memberCount: 9,
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'MEP',
+                                    role: 'Column Head',
+                                    type: 'department',
+                                    children: [
+                                        {
+                                            name: 'Mr. TOUCH PUTHEANY',
+                                            role: 'MEP Manager',
+                                            image: '/images/team-leadership-professional/touch_putheany.jpg',
+                                            phone: '011 802 800',
+                                            type: 'manager',
+                                            memberCount: 13,
                                         }
                                     ]
                                 }

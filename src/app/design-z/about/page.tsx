@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Quote, ChevronDown, ChevronUp, Plus, Minus, X, Mail, Linkedin, ArrowRight } from 'lucide-react';
+import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Quote, ChevronDown, ChevronUp, Plus, Minus, X, Mail, Linkedin, ArrowRight, ArrowUpRight, Layers, Phone, Network } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
@@ -118,54 +118,86 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
     );
 }
 
-// Team Member Card Component with Blueprint Aesthetic
+// Director Level Card (Mid Hierarchy)
+function DirectorCard({ member, onClick }: { member: any; onClick?: (member: any) => void }) {
+    return (
+        <div
+            className="flex flex-col items-center group cursor-pointer"
+            onClick={() => onClick && onClick(member)}
+        >
+            <div className="bg-white border-2 border-gray-100 shadow-sm rounded-xl p-3 flex flex-col items-center w-44 hover:border-[#C8102E]/30 hover:shadow-md transition-all">
+                <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-sm mb-2">
+                    {member.image ? (
+                        <Image src={member.image} alt={member.name} fill className="object-cover" />
+                    ) : (
+                        <div className="absolute inset-0 bg-gray-50 flex items-center justify-center text-gray-300">
+                            <Users size={24} />
+                        </div>
+                    )}
+                </div>
+                <div className="bg-[#C8102E] text-white px-3 py-0.5 rounded-sm text-[8px] font-black uppercase tracking-wider mb-1.5">
+                    {member.role === 'Deputy General Manager' ? 'DGM' : member.role}
+                </div>
+                <h4 className="text-[10px] font-black text-titan-navy uppercase text-center leading-tight">
+                    {member.name}
+                </h4>
+            </div>
+        </div>
+    );
+}
+
+// Junction Point for Bus Architecture
+function BusJunction({ className = '', active = false }: { className?: string; active?: boolean }) {
+    return (
+        <div className={`w-3 h-3 rounded-full border-2 border-white shadow-sm -translate-x-1/2 -translate-y-1/2 absolute ${active ? 'bg-[#C8102E]' : 'bg-gray-300'} ${className}`} />
+    );
+}
+
+// Team Member Card Component (Top Level Hierarchy)
 function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO?: boolean; onClick?: (member: any) => void }) {
+    const roleColors: Record<string, string> = {
+        'CEO': 'bg-[#002B5B] text-white',
+        'DCEO': 'bg-[#C8102E] text-white',
+        'DGM': 'bg-[#002B5B] text-white',
+        'Finance Director': 'bg-[#C8102E] text-white',
+        'Supply Chain Director': 'bg-[#C8102E] text-white',
+        'DGM - DCEO': 'bg-[#002B5B] text-white',
+    };
+
+    const roleColor = roleColors[member.role] || 'bg-gray-100 text-titan-navy';
+
     return (
         <div
             className="flex flex-col items-center group relative z-10 w-full cursor-pointer"
             onClick={() => onClick && onClick(member)}
         >
-            <div className={`relative rounded-3xl overflow-hidden bg-white/90 backdrop-blur-xl shadow-[0_20px_60px_rgb(0,0,0,0.08)] border-[3px] border-white transition-all duration-700 group-hover:shadow-[0_30px_90px_rgb(0,0,0,0.12)] group-hover:-translate-y-4
-                ${isCEO ? 'w-64 h-64 mb-8' : 'w-52 h-52 mb-6'}
+            <div className={`relative rounded-full overflow-hidden border-[4px] border-white shadow-lg transition-all duration-700 group-hover:scale-110
+                ${isCEO ? 'w-32 h-32 mb-3' : 'w-28 h-28 mb-3'}
             `}>
                 {member.image ? (
                     <Image
                         src={member.image}
                         alt={member.name}
                         fill
-                        className="object-cover object-top transition-transform duration-1000 group-hover:scale-110"
+                        className="object-cover object-top"
                     />
                 ) : (
-                    <div className="absolute inset-0 bg-titan-navy/5 flex items-center justify-center text-titan-navy/10">
-                        <Users size={isCEO ? 80 : 60} />
+                    <div className="absolute inset-0 bg-gray-50 flex items-center justify-center text-gray-300">
+                        <Users size={isCEO ? 48 : 40} />
                     </div>
                 )}
-
-                {/* Blueprint Accent Overlay */}
-                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-titan-red/50 to-transparent" />
-
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-titan-navy/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
-                    <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        whileHover={{ scale: 1.1, opacity: 1 }}
-                        className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-titan-navy shadow-xl"
-                    >
-                        <ArrowRight size={28} className="text-titan-red" />
-                    </motion.div>
-                </div>
             </div>
 
-            <div className="text-center px-4 relative">
-                {/* Small indicator dot for technical feel */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-titan-red opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                <h3 className={`font-black text-titan-navy uppercase tracking-tight transition-colors duration-500 group-hover:text-titan-red ${isCEO ? 'text-2xl mb-1.5' : 'text-lg mb-1'}`}>
+            <div className="flex flex-col items-center">
+                <div className={`${roleColor} px-4 py-0.5 rounded-sm text-[10px] font-black uppercase tracking-widest mb-1.5 shadow-sm whitespace-nowrap`}>
+                    {member.role === 'Deputy General Manager' ? 'DGM' : member.role}
+                </div>
+                <h3 className="text-[11px] font-black text-titan-navy uppercase tracking-tight text-center max-w-[150px] leading-tight group-hover:text-[#C8102E] transition-colors">
                     {member.name}
                 </h3>
-                <p className={`text-titan-red font-extrabold uppercase tracking-[0.2em] opacity-80 ${isCEO ? 'text-xs' : 'text-[10px]'}`}>
-                    {member.role}
-                </p>
+                {member.phone && (
+                    <p className="text-[9px] font-mono text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">{member.phone}</p>
+                )}
             </div>
         </div>
     );
@@ -203,25 +235,32 @@ function TeamMemberRowCard({ member, onClick }: { member: any; onClick?: (member
     );
 }
 
-// Compact Org Card for deep levels
+// Compact Org Card for deep levels (matching the KIM SREY style)
 function CompactOrgCard({ node, onClick }: { node: OrgNode; onClick: (member: any) => void }) {
     return (
         <div
-            className="flex flex-col items-center group cursor-pointer w-28 md:w-32"
+            className="flex flex-col items-center group cursor-pointer w-24"
             onClick={() => onClick(node)}
         >
-            <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-white shadow-md group-hover:shadow-lg transition-all mb-2">
-                {node.image ? (
-                    <Image src={node.image} alt={node.name} fill className="object-cover" />
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-sm group-hover:shadow-md transition-all mb-2 bg-gray-50 flex items-center justify-center">
+                {node.image && node.image !== '/images/team-leadership-professional/staff_placeholder.png' ? (
+                    <Image src={node.image} alt={node.name} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
                 ) : (
-                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-300">
-                        <Users size={24} />
+                    <div className="flex items-center justify-center text-gray-200">
+                        <Users size={28} strokeWidth={1} />
+                    </div>
+                )}
+
+                {/* Member Count Badge (Navy Badge with white text) */}
+                {node.memberCount && (
+                    <div className="absolute top-0 right-0 z-10 bg-[#002B5B] text-white text-[7px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center border border-white shadow-sm translate-x-0.5 translate-y-0.5">
+                        {node.memberCount}
                     </div>
                 )}
             </div>
-            <div className="text-center">
-                <div className="text-[9px] font-black text-titan-navy uppercase truncate w-full px-1">{node.name}</div>
-                <div className="text-[7px] font-bold text-titan-red uppercase tracking-tighter truncate w-full px-1">{node.role}</div>
+            <div className="text-center flex flex-col items-center">
+                <div className="text-[9.5px] font-black text-[#002B5B] uppercase leading-tight tracking-tight mb-0.5 group-hover:text-[#C8102E] transition-colors">{node.name}</div>
+                <div className="text-[7.5px] font-bold text-[#FF5722] uppercase tracking-normal leading-tight">{node.role}</div>
             </div>
         </div>
     );
@@ -281,40 +320,36 @@ function JunctionDot({ className = '', delay = 0, active = false }: { className?
     );
 }
 
-// Member Column for the "Hanging branch" style from the sketch
+// Member Column for the Tree style (Compact row with circle on left)
 function OrgColumnItem({ node, onClick }: { node: OrgNode; onClick: (m: any) => void }) {
     return (
-        <div className="relative flex items-center group">
-            {/* Blueprint Junction Dot at Stem */}
-            <JunctionDot className="left-0 top-1/2" delay={1.2} />
-
-            {/* Horizontal line from the main vertical stem to the card */}
-            <OrgLine direction="horizontal" length="w-8" className="left-0 top-1/2 -translate-y-1/2" delay={1.3} />
+        <div className="relative flex flex-col items-center group">
+            {/* Horizontal branch line from parent stem */}
+            <div className="absolute left-[-24px] top-6 w-6 h-[1px] bg-gray-200 group-hover:bg-[#C8102E]" />
 
             <div
-                className="flex items-center gap-4 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_15px_45px_rgb(0,0,0,0.08)] transition-all duration-500 cursor-pointer hover:border-titan-red/30 w-72 group/card relative z-10 ml-8"
+                className="flex flex-col items-center bg-white p-2 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer hover:border-[#C8102E]/30 w-36"
                 onClick={() => onClick(node)}
             >
-                {/* Image container with Blueprint Accent */}
-                <div className="relative w-14 h-14 rounded-xl shadow-inner overflow-hidden shrink-0 border-2 border-white bg-titan-navy/5">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-gray-50 bg-gray-50 mb-2">
                     {node.image ? (
-                        <Image src={node.image} alt={node.name} fill className="object-cover group-hover/card:scale-110 transition-transform duration-700" />
+                        <Image src={node.image} alt={node.name} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
                     ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-titan-navy/10">
-                            <Users size={24} />
+                        <div className="absolute inset-0 flex items-center justify-center text-gray-200">
+                            <Users size={20} />
                         </div>
                     )}
-                    {/* Hover Glow */}
-                    <div className="absolute inset-0 bg-titan-red/0 group-hover/card:bg-titan-red/5 transition-colors" />
                 </div>
 
-                <div className="min-w-0 flex-grow">
-                    <div className="text-[12px] font-black text-titan-navy truncate uppercase leading-tight group-hover/card:text-titan-red transition-colors mb-0.5 tracking-tight">{node.name}</div>
-                    <div className="text-[9px] font-bold text-titan-red/70 truncate uppercase tracking-[0.1em]">{node.role}</div>
+                <div className="bg-[#C8102E] text-white px-2 py-0.5 rounded-sm text-[7px] font-black uppercase tracking-wider mb-1 shadow-sm">
+                    {node.role}
                 </div>
 
-                <div className="w-7 h-7 rounded-full bg-titan-red/5 flex items-center justify-center text-titan-red/30 group-hover/card:bg-titan-red group-hover/card:text-white transition-all transform group-hover/card:rotate-45">
-                    <ArrowRight size={12} />
+                <div className="text-center w-full">
+                    <div className="text-[9px] font-black text-titan-navy truncate uppercase leading-tight group-hover:text-[#C8102E] transition-colors mb-0.5">{node.name}</div>
+                    {node.phone && (
+                        <div className="text-[7.5px] font-mono text-gray-400 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">{node.phone}</div>
+                    )}
                 </div>
             </div>
         </div>
@@ -802,206 +837,162 @@ export default function AboutPage() {
             </section>
 
             {/* === LEADERSHIP TEAM (Org Chart) === */}
-            <section id="leadership" className="py-24 px-6 bg-white overflow-hidden">
-                <div className="max-w-[1400px] mx-auto">
+            <section id="leadership" className="py-32 px-6 bg-white overflow-hidden relative">
+                {/* Background Grid Pattern */}
+                <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
+                    style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
+                </div>
+
+                <div className="max-w-[1700px] mx-auto relative">
                     <FadeInWhenVisible>
-                        <div className="text-center mb-20">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our People</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-4">Organizational Structure</h2>
+                        <div className="text-center mb-16 relative">
+                            {/* Decorative Line with Icon */}
+                            <div className="flex items-center justify-center gap-6 mb-4">
+                                <div className="h-[1px] w-24 bg-gradient-to-r from-transparent to-titan-navy/20" />
+                                <div className="text-titan-red">
+                                    <Network size={32} strokeWidth={1.5} />
+                                </div>
+                                <div className="h-[1px] w-24 bg-gradient-to-l from-transparent to-titan-navy/20" />
+                            </div>
+
+                            {/* Khmer Title from Screenshot */}
+                            <h2 className="text-4xl font-black text-[#002B5B] tracking-tight mb-2 font-serif">
+                                រចនាសម្ព័ន្ធគ្រប់គ្រងផ្នែក KIM MEX
+                            </h2>
+                            <p className="font-mono text-xs uppercase tracking-[0.4em] text-titan-navy/40">
+                                Organization Management Structure
+                            </p>
+
+                            {/* Visual Divider */}
+                            <div className="mt-8 flex justify-center">
+                                <div className="w-12 h-1 bg-titan-red" />
+                            </div>
                         </div>
                     </FadeInWhenVisible>
 
-                    {/* --- DESKTOP VIEW: "Bus Architecture" Tree from Sketch --- */}
-                    <div className="hidden xl:block relative">
-                        <div className="flex flex-col items-center">
-                            {/* CEO */}
-                            <div className="relative mb-20">
-                                <TeamMemberCard member={orgChartData} isCEO onClick={handleMemberClick} />
-                                <OrgLine className="top-full left-1/2 -translate-x-1/2" length="h-20" delay={0.2} />
+                    {/* --- DECORATIVE FRAME WRAPPER --- */}
+                    <div className="relative border-[1px] border-gray-100 p-8 sm:p-12 bg-white shadow-[0_40px_100px_rgba(0,0,0,0.03)] overflow-hidden">
+                        {/* Logo and Company Name from Screenshot */}
+                        <div className="absolute top-8 left-8 flex flex-col items-center">
+                            <div className="w-16 h-10 relative bg-[#C8102E] rounded-full flex items-center justify-center text-white font-black text-xl italic shadow-md">
+                                KM
                             </div>
+                            <p className="text-[7px] font-black text-[#002B5B] uppercase text-center mt-1 leading-[1.1]">
+                                ក្រុមហ៊ុន គីម ម៉ិច កនសស្ដ្រាក់សិន & វីយោគ <br />
+                                <span className="text-[6px] opacity-60 italic">KIM MEX CONSTRUCTION & INVESTMENT CO., LTD.</span>
+                            </p>
+                        </div>
 
-                            {/* DCEO Cluster */}
-                            {orgChartData.children?.map((dceo, i) => (
-                                <div key={i} className="flex flex-col items-center w-full">
-                                    <div className="relative mb-20">
-                                        <TeamMemberCard member={dceo} onClick={handleMemberClick} />
-                                        <OrgLine className="top-full left-1/2 -translate-x-1/2" length="h-20" delay={0.4} />
+                        {/* Corner Flourishes (Simulated with CSS/SVG) */}
+                        <div className="absolute top-0 left-0 w-16 h-16 border-t-[3px] border-l-[3px] border-[#002B5B] rounded-tl-lg" />
+                        <div className="absolute top-0 right-0 w-16 h-16 border-t-[3px] border-r-[3px] border-[#002B5B] rounded-tr-lg" />
+                        <div className="absolute bottom-0 left-0 w-16 h-16 border-b-[3px] border-l-[3px] border-[#002B5B] rounded-bl-lg" />
+                        <div className="absolute bottom-0 right-0 w-16 h-16 border-b-[3px] border-r-[3px] border-[#002B5B] rounded-br-lg" />
+
+                        {/* --- DESKTOP VIEW: Traditional Tree Architecture --- */}
+                        <div className="hidden xl:block pb-52 pt-12 overflow-x-auto">
+                            <div className="flex flex-col items-center min-w-[1400px]">
+                                {/* TOP HIERARCHY: CEO -> DCEO -> DGM */}
+                                <div className="flex flex-col items-center relative gap-8">
+                                    <div className="relative">
+                                        <TeamMemberCard member={orgChartData} isCEO onClick={handleMemberClick} />
+                                        <div className="absolute left-1/2 -translate-x-1/2 top-full h-8 w-[2px] bg-gray-200" />
                                     </div>
+                                    {orgChartData.children?.[0] && (
+                                        <div className="relative pt-8">
+                                            <TeamMemberCard member={orgChartData.children[0]} onClick={handleMemberClick} />
+                                            <div className="absolute left-1/2 -translate-x-1/2 top-full h-8 w-[2px] bg-gray-200" />
+                                        </div>
+                                    )}
+                                    {orgChartData.children?.[0]?.children?.[0] && (
+                                        <div className="relative pt-8 mb-20">
+                                            <TeamMemberCard member={orgChartData.children[0].children[0]} onClick={handleMemberClick} />
+                                            <div className="absolute left-1/2 -translate-x-1/2 top-full h-24 w-[2px] bg-gray-200" />
+                                        </div>
+                                    )}
+                                </div>
 
-                                    {/* DGM Level */}
-                                    {dceo.children?.map((dgm, j) => (
-                                        <div key={j} className="flex flex-col items-center w-full">
-                                            <div className="relative mb-24">
-                                                <TeamMemberCard member={dgm} onClick={handleMemberClick} />
-                                                <OrgLine className="top-full left-1/2 -translate-x-1/2" length="h-24" delay={0.6} />
+                                {/* VERTICAL TRUNK SPINE */}
+                                <div className="flex flex-col items-center w-full relative">
+                                    {/* The Central Spine Line */}
+                                    <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-gray-200 via-gray-300 to-gray-200" />
+
+                                    {orgChartData.children?.[0]?.children?.[0]?.children?.map((director, dIdx) => (
+                                        <div key={dIdx} className="relative flex flex-col items-center w-full mb-32 z-10">
+                                            {/* Connector from spine to Director */}
+                                            <div className="absolute left-1/2 -translate-x-1/2 -top-8 w-4 h-4 rounded-full bg-white border-2 border-titan-red shadow-sm z-20" />
+
+                                            <div className="mb-12 relative z-20">
+                                                <DirectorCard member={director} onClick={handleMemberClick} />
                                             </div>
 
-                                            {/* MAIN HORIZONTAL SPINE (The Bus) */}
-                                            <div className="relative w-full px-12 overflow-x-auto pb-20 scrollbar-hide">
-                                                <div className="min-w-max mx-auto px-10">
-                                                    <OrgLine
-                                                        direction="horizontal"
-                                                        className="top-0 left-20 right-20"
-                                                        delay={0.8}
-                                                    />
+                                            {/* Departments for this director */}
+                                            <div className="flex flex-wrap justify-center gap-16 w-full max-w-[1400px]">
+                                                {director.children?.map((dept, deptIdx) => (
+                                                    <div key={deptIdx} className="flex flex-col items-center min-w-[200px]">
+                                                        {/* Column Header */}
+                                                        <div className="bg-[#002B5B] text-white px-4 py-1.5 rounded-sm text-[9px] font-black uppercase tracking-widest shadow-sm mb-8 flex items-center justify-between gap-3 w-full border-t-2 border-[#C8102E]">
+                                                            <span className="truncate">{dept.name}</span>
+                                                            {dept.children?.[0]?.memberCount && (
+                                                                <span className="bg-[#C8102E] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center border border-white/20 shrink-0">
+                                                                    {dept.children[0].memberCount}
+                                                                </span>
+                                                            )}
+                                                        </div>
 
-                                                    <div className="flex justify-start items-start gap-24 pt-12">
-                                                        {/* LEVEL 4: DIRECTORS (Finance, SC, Design, Ops) */}
-                                                        {dgm.children?.map((director, k) => (
-                                                            <div key={k} className="relative flex flex-col items-center pt-12">
-                                                                {/* Vertical lead from main spine to Directer Card */}
-                                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-12 bg-gray-200"></div>
+                                                        {/* LIST OF MEMBERS IN COLUMN */}
+                                                        <div className="relative pl-6 flex flex-col gap-6 w-full max-w-[200px]">
+                                                            {/* Vertical Stem for the members */}
+                                                            <div className="absolute left-0 top-[-20px] bottom-10 w-[1px] bg-gray-100" />
+                                                            {dept.children?.map((mgr, mgrIdx) => (
+                                                                <div key={mgrIdx} className="flex flex-col group">
+                                                                    <div className="mb-2">
+                                                                        <OrgColumnItem node={mgr} onClick={handleMemberClick} />
+                                                                    </div>
 
-                                                                {/* Director Header Card */}
-                                                                <div className="mb-16 z-10 px-4">
-                                                                    <TeamMemberCard member={director} onClick={handleMemberClick} />
-                                                                </div>
+                                                                    {/* STAFF LIST (Reveals on hover) */}
+                                                                    {mgr.children && mgr.children.length > 0 && (
+                                                                        <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none group-hover:pointer-events-auto">
+                                                                            <div className="overflow-hidden">
+                                                                                <div className={`relative pt-4 mt-2 ${mgr.children.length > 5 ? 'grid grid-cols-2 gap-x-4 gap-y-6 bg-gray-50/50 p-4 rounded-xl border border-gray-100/50' : 'pl-6 flex flex-col gap-4'}`}>
+                                                                                    {/* Continuous Stem - only for single column */}
+                                                                                    {mgr.children && mgr.children.length <= 5 && (
+                                                                                        <div className="absolute left-0 top-0 bottom-4 w-[1px] bg-gray-100/50" />
+                                                                                    )}
 
-                                                                {/* SUB-SPINE (Secondary horizontal line for departments) */}
-                                                                {director.children && director.children.length > 0 && (
-                                                                    <div className="relative pt-12 flex flex-col items-center">
-                                                                        {/* Vertical line from Director to Sub-Spine */}
-                                                                        <OrgLine direction="vertical" length="h-12" className="top-0" delay={1.2} />
-
-                                                                        {/* The Sub-Spine */}
-                                                                        <div className="relative px-12">
-                                                                            <OrgLine
-                                                                                direction="horizontal"
-                                                                                className="top-0 left-12 right-12"
-                                                                                delay={1.4}
-                                                                            />
-
-                                                                            <div className="flex justify-center gap-20 pt-12">
-                                                                                {director.children.map((dept, dIdx) => (
-                                                                                    <div key={dIdx} className="relative flex flex-col items-start min-w-[320px]">
-                                                                                        {/* Blueprint Junction Dot at Spine Entrance */}
-                                                                                        <JunctionDot className="left-0 top-0" delay={0.9 + (dIdx * 0.1)} />
-
-                                                                                        {/* Vertical lead from sub-spine to department stem */}
-                                                                                        <OrgLine direction="vertical" length="h-12" className="left-0 top-0" delay={1.0 + (dIdx * 0.1)} />
-
-                                                                                        {/* Department Label */}
-                                                                                        <div className="mb-10 pl-8 pt-16">
-                                                                                            <div className="text-[10px] font-black text-titan-navy/30 italic uppercase tracking-[0.3em] bg-gray-50 px-3 py-1 rounded inline-block border border-gray-100 shadow-sm">
-                                                                                                {dept.name}
-                                                                                            </div>
+                                                                                    {mgr.children.map((staff, sIdx) => (
+                                                                                        <div key={sIdx} className="relative flex items-center justify-center group/staff">
+                                                                                            {/* Branch line - only for single column */}
+                                                                                            {mgr.children && mgr.children.length <= 5 && (
+                                                                                                <div className="absolute left-[-24px] top-1/2 -translate-y-1/2 w-6 h-[1px] bg-gray-100/50 group-hover/staff:bg-[#C8102E]" />
+                                                                                            )}
+                                                                                            <CompactOrgCard node={staff} onClick={handleMemberClick} />
                                                                                         </div>
-
-                                                                                        {/* Vertical Stem for Department */}
-                                                                                        <div className="relative flex flex-col gap-12 pl-8">
-                                                                                            {/* Main Stem line with Blueprint pulse */}
-                                                                                            <OrgLine direction="vertical" length="h-full" className="left-0 top-0" delay={1.1 + (dIdx * 0.1)} />
-
-                                                                                            {dept.children?.map((mgr, mIdx) => (
-                                                                                                <div key={mIdx} className="flex flex-col items-start">
-                                                                                                    <OrgColumnItem node={mgr} onClick={handleMemberClick} />
-
-                                                                                                    {/* Staff list - Premium Blueprint mini-cards */}
-                                                                                                    {mgr.children && (
-                                                                                                        <div className="flex flex-col gap-4 mt-6 ml-14 pl-8 relative">
-                                                                                                            {/* Junction Dot for Staff Group */}
-                                                                                                            <JunctionDot className="left-0 top-0 !w-1.5 !h-1.5" delay={1.4 + (mIdx * 0.1)} />
-
-                                                                                                            {/* Sub-stem for staff */}
-                                                                                                            <OrgLine direction="vertical" length="h-[calc(100%-16px)]" className="left-0 top-0 !bg-gray-100" delay={1.5 + (mIdx * 0.1)} />
-
-                                                                                                            {mgr.children.map((staff, sIdx) => (
-                                                                                                                <div key={sIdx} className="relative flex items-center group/staff">
-                                                                                                                    {/* Blueprint Junction Dot at Staff Card */}
-                                                                                                                    <JunctionDot className="left-0 top-1/2 !w-1.5 !h-1.5 !border-gray-200" delay={1.6 + (mIdx * 0.1) + (sIdx * 0.05)} />
-
-                                                                                                                    {/* Horizontal connector to staff card */}
-                                                                                                                    <OrgLine direction="horizontal" length="w-6" className="left-0 top-1/2 -translate-y-1/2 !bg-gray-100" delay={1.7 + (mIdx * 0.1) + (sIdx * 0.05)} />
-
-                                                                                                                    <div className="bg-white/70 hover:bg-white backdrop-blur-sm border border-gray-100/50 px-4 py-2.5 rounded-2xl text-[10px] font-black text-titan-navy/70 hover:text-titan-red transition-all duration-500 cursor-pointer flex items-center gap-3 shadow-sm hover:shadow-xl min-w-[220px] group/item ml-6 border-l-4 border-l-titan-red/20 hover:border-l-titan-red">
-                                                                                                                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-white shadow-sm bg-gray-50 relative">
-                                                                                                                            {staff.image ? (
-                                                                                                                                <Image src={staff.image} alt={staff.name} fill className="object-cover group-hover/item:scale-125 transition-transform duration-700" />
-                                                                                                                            ) : (
-                                                                                                                                <div className="absolute inset-0 flex items-center justify-center text-titan-navy/10">
-                                                                                                                                    <Users size={14} />
-                                                                                                                                </div>
-                                                                                                                            )}
-                                                                                                                        </div>
-                                                                                                                        <div className="min-w-0 flex-grow">
-                                                                                                                            <div className="truncate uppercase leading-tight tracking-tight">{staff.name}</div>
-                                                                                                                            <div className="text-[8px] font-bold text-titan-navy/30 truncate uppercase mt-1 tracking-wider">{staff.role}</div>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            ))}
-                                                                                                        </div>
-                                                                                                    )}
-                                                                                                </div>
-                                                                                            ))}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                ))}
+                                                                                    ))}
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        ))}
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                ))}
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* --- TABLET/MOBILE VIEW: Vertical Tree --- */}
-                    <div className="xl:hidden flex flex-col items-center max-w-[600px] mx-auto">
-                        <div className="flex flex-col items-center w-full">
-                            {/* CEO, DCEO, DGM */}
-                            <div className="flex flex-col items-center gap-8 mb-12">
-                                <TeamMemberCard member={orgChartData} onClick={handleMemberClick} />
-                                <div className="relative h-8 w-full flex justify-center">
-                                    <OrgLine direction="vertical" length="h-8" delay={0.1} />
-                                </div>
-                                {orgChartData.children?.map((dceo, i) => (
-                                    <React.Fragment key={i}>
-                                        <TeamMemberCard member={dceo} onClick={handleMemberClick} />
-                                        <div className="relative h-8 w-full flex justify-center">
-                                            <OrgLine direction="vertical" length="h-8" delay={0.2} />
-                                        </div>
-                                        {dceo.children?.map((dgm, j) => (
-                                            <TeamMemberCard key={j} member={dgm} onClick={handleMemberClick} />
-                                        ))}
-                                    </React.Fragment>
-                                ))}
                             </div>
+                        </div>
 
-                            {/* Departments List */}
-                            <div className="w-full space-y-12 pl-6">
-                                {orgChartData.children?.[0].children?.[0].children?.map((branch, k) => (
-                                    <div key={k} className="relative pl-10 border-l-2 border-blue-100 py-2">
-                                        <div className="absolute left-0 top-6 w-10 h-0.5 bg-blue-100"></div>
-                                        <div className="bg-titan-navy/5 p-4 rounded-2xl">
-                                            <div className="text-[10px] font-black text-titan-red uppercase mb-4 tracking-widest">{branch.role}</div>
-                                            <TeamMemberRowCard member={branch} onClick={handleMemberClick} />
-
-                                            {branch.children && (
-                                                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {branch.children.map((manager, m) => (
-                                                        <div key={m} className="bg-white/50 p-3 rounded-xl">
-                                                            <div className="flex items-center gap-3">
-                                                                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
-                                                                    {manager.image ? <Image src={manager.image} alt={manager.name} width={40} height={40} className="rounded-full object-cover" /> : <Users size={16} />}
-                                                                </div>
-                                                                <div className="min-w-0">
-                                                                    <div className="text-[10px] font-bold text-titan-navy truncate">{manager.name}</div>
-                                                                    <div className="text-[8px] text-titan-navy/50 truncate">{manager.role}</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
+                        {/* --- TABLET/MOBILE VIEW --- */}
+                        <div className="xl:hidden flex flex-col items-center mt-12 pb-24">
+                            <div className="w-full max-w-md space-y-6 relative px-6 border-l-2 border-gray-100 ml-4 py-8">
+                                <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#C8102E] via-gray-100 to-[#002B5B]" />
+                                {[orgChartData, ...(orgChartData.children || [])].map((member, i) => (
+                                    <div key={i} className="relative z-10 pl-8 text-left w-full">
+                                        <div className="absolute left-[-41px] top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-[#C8102E] rounded-full shadow-sm"></div>
+                                        <TeamMemberRowCard member={member} onClick={handleMemberClick} />
                                     </div>
                                 ))}
                             </div>

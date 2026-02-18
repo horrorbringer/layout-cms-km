@@ -38,7 +38,7 @@ export default function DesignYLayout({ children }: { children: React.ReactNode 
             label: 'The Company', href: '/design-y/about',
             children: [
                 { label: 'Our Vision', href: '/design-y/about' },
-                { label: 'Leadership', href: '/design-y/about#leadership' },
+                { label: 'Command Structure', href: '/design-y/organization' },
                 { label: 'Doc Collection', href: '/design-y/structure' },
                 { label: 'HSE Policy', href: '/design-y/about#safety' }
             ]
