@@ -67,6 +67,7 @@ const sidebarItems: SidebarItem[] = [
             },
             { id: 'careers', label: 'Careers', href: '/admin/content?section=careers' },
             { id: 'testimonials', label: 'Testimonials', href: '/admin/content?section=testimonials' },
+            { id: 'org-chart', label: 'Org Chart (Design Z)', href: '/admin/org-chart' },
             { id: 'contact', label: 'Contact Info', href: '/admin/content?section=contact' },
         ]
     },
@@ -135,8 +136,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 <Link
                                     href={sub.href}
                                     className={`block py-1.5 px-2 rounded-md text-[13px] font-medium transition-colors ${isSubActive
-                                            ? 'text-indigo-600 bg-indigo-50/50 font-semibold'
-                                            : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                                        ? 'text-indigo-600 bg-indigo-50/50 font-semibold'
+                                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                                         }`}
                                 >
                                     {sub.label}
@@ -189,8 +190,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     <Link
                                         href={item.href}
                                         className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${isActive
-                                                ? 'bg-indigo-50 text-indigo-700'
-                                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                            ? 'bg-indigo-50 text-indigo-700'
+                                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                             } ${isCollapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''}`}
                                     >
                                         <item.icon size={18} className={isActive ? 'text-indigo-600' : 'text-slate-400'} />

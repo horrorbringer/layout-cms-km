@@ -39,6 +39,7 @@ const dictionary: Translations = {
     'Private': { en: 'Private Service', kh: 'សេវាឯកជន' },
     'Water Treatment': { en: 'Water Treatment', kh: 'ស្ថានីយ៍ប្រព្រឹត្តកម្មទឹក' },
     'Slope': { en: 'Slope', kh: 'ការសាងសង់ជម្រាល' },
+    'Systems': { en: 'Systems', kh: 'ប្រព័ន្ធបច្ចេកទេស' },
     'News': { en: 'News', kh: 'ព័ត៌មាន' },
     'News & Updates': { en: 'News & Updates', kh: 'ព័ត៌មាន & បច្ចុប្បន្នភាព' },
     'Doc Collection': { en: 'Doc Collection', kh: 'ឯកសារ' },
@@ -83,6 +84,27 @@ const dictionary: Translations = {
         en: 'Engineering the future of Cambodia since 1999. Delivering excellence in high-rise, infrastructure, and industrial construction with unwavering commitment to quality and safety.',
         kh: 'កសាងអនាគតរបស់កម្ពុជាតាំងពីឆ្នាំ ១៩៩៩។ ផ្តល់ជូននូវឧត្តមភាពក្នុងការសាងសង់អគារខ្ពស់ ហេដ្ឋារចនាសម្ព័ន្ធ និងឧស្សាហកម្ម ដោយមានការប្តេជ្ញាចិត្តខ្ពស់ចំពោះគុណភាព និងសុវត្ថិភាព។'
     },
+    'All Stories': { en: 'All Stories', kh: 'រឿងរ៉ាវទាំងអស់' },
+    'Year': { en: 'Year', kh: 'ឆ្នាំ' },
+    'All': { en: 'All', kh: 'ទាំងអស់' },
+    'Read Story': { en: 'Read Story', kh: 'អានបន្ត' },
+    'Featured Story': { en: 'Featured Story', kh: 'រឿងរ៉ាវលេចធ្លោ' },
+    'Clear Filter': { en: 'Clear Filter', kh: 'សម្អាតការចម្រាញ់' },
+    'By': { en: 'By', kh: 'ដោយ' },
+    'Email Address': { en: 'Email Address', kh: 'អាសយដ្ឋានអ៊ីមែល' },
+    'Subscribe Now': { en: 'Subscribe Now', kh: 'ចុះឈ្មោះឥឡូវនេះ' },
+    'INSIGHTS & UPDATES': { en: 'INSIGHTS & UPDATES', kh: 'ចំណេះដឹង & បច្ចុប្បន្នភាព' },
+    'NEWSROOM': { en: 'NEWSROOM', kh: 'បន្ទប់ព័ត៌មាន' },
+    'Newsroom Subtitle': {
+        en: 'Your central hub for the latest construction announcements, project milestones, and industry insights from Kimmex.',
+        kh: 'មជ្ឈមណ្ឌលសម្រាប់សេចក្តីប្រកាសសំណង់ចុងក្រោយបំផុត សមិទ្ធផលគម្រោង និងចំណេះដឹងឧស្សាហកម្មពី Kimmex។'
+    },
+    'Innovation': { en: 'Innovation', kh: 'នវានុវត្តន៍' },
+    'Safety': { en: 'Safety', kh: 'សុវត្ថិភាព' },
+    'Sustainability': { en: 'Sustainability', kh: 'និរន្តរភាព' },
+    'Culture': { en: 'Culture', kh: 'វប្បធម៌' },
+    'Project Updates': { en: 'Project Updates', kh: 'បច្ចុប្បន្នភាពគម្រោង' },
+    'Awards': { en: 'Awards', kh: 'ពានរង្វាន់' }
 };
 
 interface LanguageContextType {

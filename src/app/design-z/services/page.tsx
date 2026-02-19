@@ -71,18 +71,20 @@ export default function ServicesPage() {
     ];
 
     const process = [
-        { step: '01', title: 'Consultation', desc: 'Understanding your vision & requirements.' },
-        { step: '02', title: 'Concept', desc: 'Drafting plans & architectural rendering.' },
-        { step: '03', title: 'Planning', desc: 'Cost estimation & timeline scheduling.' },
-        { step: '04', title: 'Execution', desc: 'Construction with rigorous supervision.' },
-        { step: '05', title: 'Handover', desc: 'Final delivery & post-project support.' }
+        { step: '01', title: 'Consultation & Analysis', desc: 'Understanding requirements, performing site data deep dives, and feasibility analysis.', icon: Users },
+        { step: '02', title: 'Planning & Procurement', desc: 'Defining project roadmap, budgets, baselines, and vendor selection.', icon: LayoutTemplate },
+        { step: '03', title: 'Execution & Advisory', desc: 'On-site management, daily coordination, and ongoing strategic guidance.', icon: HardHat },
+        { step: '04', title: 'Systems Integration', desc: 'Implementing smart building tech, MEP systems, and advanced automation.', icon: Settings },
+        { step: '05', title: 'Close-out & Reporting', desc: 'Final accounting, documentation, and delivering actionable recommendations.', icon: CheckCircle2 }
     ];
 
     const sectors = [
         { title: 'Government', icon: Landmark, image: '/images/projects/Thumbnail-1.jpg' },
-        { title: 'Education', icon: GraduationCap, image: '/images/projects/Thumbnail-9.jpg' },
+        { title: 'Public Service', icon: GraduationCap, image: '/images/projects/Thumbnail-9.jpg' },
         { title: 'Commercial', icon: Building, image: '/images/projects/Thumbnail-2.jpg' },
         { title: 'Infrastructure', icon: Truck, image: '/images/projects/Thumbnail-7.jpg' },
+        { title: 'Water Treatment', icon: Zap, image: '/images/projects/Thumbnail-1.jpg' },
+        { title: 'Systems', icon: Settings, image: '/images/projects/Thumbnail-6.jpg' },
     ];
 
     return (
@@ -240,18 +242,49 @@ export default function ServicesPage() {
 
                     <div className="relative">
                         {/* Connecting Line (Desktop) */}
-                        <div className="hidden md:block absolute top-12 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                        <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-titan-red/50 to-transparent z-0">
+                            {/* Animated Pulse on Line */}
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-40 w-1/4 h-full"
+                                animate={{ left: ['-25%', '100%'] }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                            />
+                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-4 relative">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-4 relative z-10">
                             {process.map((s, i) => (
                                 <FadeInWhenVisible key={i} delay={i * 0.1}>
                                     <div className="flex flex-col items-center text-center group">
-                                        <div className="w-24 h-24 bg-titan-navy border-4 border-white/10 rounded-full flex items-center justify-center mb-8 relative z-10 group-hover:border-titan-red group-hover:scale-110 transition-all duration-300 shadow-xl">
-                                            <span className="text-3xl font-black text-white group-hover:text-titan-red transition-colors">{s.step}</span>
-                                            <div className="absolute inset-0 bg-white/5 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300 rounded-full"></div>
+                                        <div className="relative mb-12">
+                                            {/* Large Background Ghost Number (ជាន់គ្នា Style) */}
+                                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-9xl font-black text-white/[0.04] group-hover:text-titan-red/[0.08] transition-all duration-700 pointer-events-none z-0 tracking-tighter">
+                                                {s.step}
+                                            </div>
+
+                                            {/* Decorative Light Ring */}
+                                            <div className="absolute -inset-8 bg-titan-red/5 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700 opacity-0 group-hover:opacity-100 border border-white/5 blur-2xl"></div>
+
+                                            {/* Rotating Architectural Square */}
+                                            <div className="w-24 h-24 bg-[#0F172A]/90 backdrop-blur-2xl border-[1px] border-white/10 rounded-2xl flex items-center justify-center relative z-10 group-hover:border-titan-red transition-all duration-700 rotate-45 group-hover:rotate-[225deg] shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)]">
+                                                <div className="-rotate-45 group-hover:-rotate-[225deg] transition-all duration-700 flex flex-col items-center">
+                                                    <s.icon size={32} className="text-white group-hover:text-titan-red transition-colors" />
+                                                </div>
+                                            </div>
+
+                                            {/* Floating Mini Step Indicator */}
+                                            <div className="absolute -bottom-2 -right-2 w-9 h-9 bg-titan-red rounded-xl flex items-center justify-center shadow-[0_10px_20px_rgba(255,107,0,0.3)] border-[3px] border-[#0F172A] z-20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12">
+                                                <span className="text-[11px] font-black text-white tracking-tight">{s.step}</span>
+                                            </div>
                                         </div>
-                                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-titan-red transition-colors">{s.title}</h3>
-                                        <p className="text-sm text-white/50 leading-relaxed px-2">{s.desc}</p>
+
+                                        <div className="px-4">
+                                            <h3 className="text-lg font-black text-white mb-3 uppercase tracking-tight group-hover:text-titan-red transition-colors">
+                                                {s.title}
+                                            </h3>
+                                            <p className="text-xs text-white/40 leading-relaxed max-w-[200px] mx-auto group-hover:text-white/60 transition-colors">
+                                                {s.desc}
+                                            </p>
+                                        </div>
                                     </div>
                                 </FadeInWhenVisible>
                             ))}

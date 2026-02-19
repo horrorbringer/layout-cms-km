@@ -53,10 +53,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                     desc: t('View our portfolio'),
                     children: [
                         { label: t('Government'), href: '/design-z/projects/completed?type=Government Office Building' },
-                        { label: t('Public Service'), href: '/design-z/projects/completed?type=Public Service Building' },
-                        { label: t('Private'), href: '/design-z/projects/completed?type=Private Building' },
                         { label: t('Water Treatment'), href: '/design-z/projects/completed?type=Water Treatment Plant' },
-                        { label: t('Slope'), href: '/design-z/projects/completed?type=Slope Construction' }
+                        { label: t('Slope'), href: '/design-z/projects/completed?type=Slope Construction' },
+                        { label: t('Systems'), href: '/design-z/projects/completed?type=Systems' }
                     ]
                 },
                 {
@@ -64,8 +63,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                     href: '/design-z/projects/implementation',
                     desc: t('Current developments'),
                     children: [
-                        { label: t('Public Service'), href: '/design-z/projects/implementation?type=Public Service Building' },
-                        { label: t('Water Treatment'), href: '/design-z/projects/implementation?type=Water Treatment Plant' }
+                        { label: t('Water Treatment'), href: '/design-z/projects/implementation?type=Water Treatment Plant' },
+                        { label: t('Systems'), href: '/design-z/projects/implementation?type=Systems' }
                     ]
                 }
             ]

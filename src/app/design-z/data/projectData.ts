@@ -133,7 +133,6 @@ export const projects = [
         summary: 'Advanced soil reinforcement for hillside development safety.'
     },
 
-    // --- Private ---
     {
         id: 'vattanac',
         title: 'Vattanac Capital Tower Fit-out',
@@ -142,5 +141,24 @@ export const projects = [
         status: 'Completed',
         image: '/images/projects/Thumbnail-5.jpg',
         summary: 'Luxury office and retail fit-out for one of Cambodia’s tallest skyscrapers.'
+    },
+    // --- Systems Integration ---
+    {
+        id: 'smart-grid-ph',
+        title: 'Smart Grid Central Control',
+        location: 'Phnom Penh',
+        type: 'Systems',
+        status: 'Completed',
+        image: '/images/projects/Thumbnail-6.jpg',
+        summary: 'Implementation of advanced energy management systems for the city central grid.'
+    },
+    {
+        id: 'mep-retrofit',
+        title: 'Olympic Stadium MEP Retrofit',
+        location: 'Phnom Penh',
+        type: 'Systems',
+        status: 'Completed',
+        image: '/images/projects/Thumbnail-7.jpg',
+        summary: 'Complete modernization of mechanical, electrical, and plumbing systems for international competition standards.'
     }
 ];

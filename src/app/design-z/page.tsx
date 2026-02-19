@@ -40,6 +40,13 @@ export default function DesignGenX() {
             icon: Ruler,
             features: ['Structural Strengthening', 'Facade Upgrades', 'MEP Retrofitting'],
             stat: '40+'
+        },
+        {
+            title: 'Systems',
+            desc: 'Smart building technologies and advanced MEP integration for modern hubs.',
+            icon: Target,
+            features: ['Smart Grid Control', 'Advanced MEP', 'Building Automation'],
+            stat: '20+'
         }
     ];
 
@@ -70,6 +77,15 @@ export default function DesignGenX() {
             cat: 'Infrastructure',
             year: '2024',
             size: '120,000 sqm'
+        },
+        {
+            id: 'smart-grid-ph',
+            name: 'Smart Grid Central',
+            loc: 'Phnom Penh',
+            img: '/images/projects/Thumbnail-6.jpg',
+            cat: 'Systems',
+            year: '2025',
+            size: 'Tech Hub'
         },
     ];
 

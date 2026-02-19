@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import {
     Building, ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Ruler, Users,
     DraftingCompass, PenTool, Hammer, Lightbulb, Briefcase,
-    Clock, ShieldCheck, TrendingUp, Star, MapPin
+    Clock, ShieldCheck, TrendingUp, Star, MapPin, Search, LayoutTemplate, HardHat, Settings, Zap, Target
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -47,7 +47,7 @@ type ServiceData = {
     description: string;
     targetAudience: string;
     scopeOfWork: string[];
-    process: { step: string; title: string; desc: string }[];
+    process: { step: string; title: string; desc: string; icon: any }[];
     benefits: { title: string; desc: string; icon: any }[];
     relatedProjects: Project[];
 };
@@ -71,10 +71,10 @@ const services: ServiceData[] = [
             'Interior Design & Fit-out'
         ],
         process: [
-            { step: '01', title: 'Consultation', desc: 'Understanding your vision, budget, and feasibility analysis.' },
-            { step: '02', title: 'Design & Plan', desc: 'Developing detailed architectural and engineering blueprints.' },
-            { step: '03', title: 'Build', desc: 'Construction execution with rigorous quality control.' },
-            { step: '04', title: 'Handover', desc: 'Final inspection, documentation, and key delivery.' }
+            { step: '01', title: 'Consultation', desc: 'Understanding your vision, budget, and feasibility analysis.', icon: Search },
+            { step: '02', title: 'Design & Plan', desc: 'Developing detailed architectural and engineering blueprints.', icon: PenTool },
+            { step: '03', title: 'Build', desc: 'Construction execution with rigorous quality control.', icon: Hammer },
+            { step: '04', title: 'Handover', desc: 'Final inspection, documentation, and key delivery.', icon: CheckCircle2 }
         ],
         benefits: [
             { title: 'Single Point of Contact', desc: 'Streamlined communication and accountability.', icon: Users },
@@ -104,10 +104,10 @@ const services: ServiceData[] = [
             'Comprehensive Site Finishing'
         ],
         process: [
-            { step: '01', title: 'Survey', desc: 'Detailed site analysis, topographical survey, and soil testing.' },
-            { step: '02', title: 'Preparation', desc: 'Site clearing, mobilization of equipment, and foundation layout.' },
-            { step: '03', title: 'Execution', desc: 'Phased construction with expert supervision and QA/QC.' },
-            { step: '04', title: 'Finalization', desc: 'Structural certification, site cleanup, and project handover.' }
+            { step: '01', title: 'Survey', desc: 'Detailed site analysis, topographical survey, and soil testing.', icon: Target },
+            { step: '02', title: 'Preparation', desc: 'Site clearing, mobilization of equipment, and foundation layout.', icon: LayoutTemplate },
+            { step: '03', title: 'Execution', desc: 'Phased construction with expert supervision and QA/QC.', icon: HardHat },
+            { step: '04', title: 'Finalization', desc: 'Structural certification, site cleanup, and project handover.', icon: CheckCircle2 }
         ],
         benefits: [
             { title: 'Structural Integrity', desc: 'Built to exceed standard building codes and regulations.', icon: ShieldCheck },
@@ -137,10 +137,10 @@ const services: ServiceData[] = [
             'Regulatory Compliance Advisory'
         ],
         process: [
-            { step: '01', title: 'Consultation & Analysis', desc: 'Understanding requirements, performing site data deep dives, and feasibility analysis.' },
-            { step: '02', title: 'Planning & Procurement', desc: 'Defining project roadmap, budgets, baselines, and vendor selection.' },
-            { step: '03', title: 'Execution & Advisory', desc: 'On-site management, daily coordination, and ongoing strategic guidance.' },
-            { step: '04', title: 'Close-out & Reporting', desc: 'Final accounting, documentation, and delivering actionable recommendations.' }
+            { step: '01', title: 'Consultation & Analysis', desc: 'Understanding requirements, performing site data deep dives, and feasibility analysis.', icon: Users },
+            { step: '02', title: 'Planning & Procurement', desc: 'Defining project roadmap, budgets, baselines, and vendor selection.', icon: LayoutTemplate },
+            { step: '03', title: 'Execution & Advisory', desc: 'On-site management, daily coordination, and ongoing strategic guidance.', icon: HardHat },
+            { step: '04', title: 'Close-out & Reporting', desc: 'Final accounting, documentation, and delivering actionable recommendations.', icon: CheckCircle2 }
         ],
         benefits: [
             { title: 'Informed Decisions', desc: 'Data-driven insights to reduce investment risk effectively.', icon: Lightbulb },
@@ -295,18 +295,50 @@ export default function ServiceDetailPage() {
 
                     <div className="relative">
                         {/* Connecting Line */}
-                        <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-[3px] bg-gradient-to-r from-gray-200 via-titan-red/20 to-gray-200"></div>
+                        <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-titan-red/50 to-transparent z-0">
+                            {/* Animated Pulse on Line */}
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-titan-red to-transparent opacity-40 w-1/4 h-full"
+                                animate={{ left: ['-25%', '100%'] }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                            />
+                        </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
                             {service.process.map((step, i) => (
                                 <FadeInWhenVisible key={i} delay={i * 0.1}>
                                     <div className="flex flex-col items-center text-center group">
-                                        <div className="w-32 h-32 bg-white rounded-full border-8 border-gray-100 flex items-center justify-center mb-8 shadow-xl group-hover:border-titan-red/20 group-hover:scale-110 transition-all duration-300 relative">
-                                            <span className="text-4xl font-black text-gray-200 group-hover:text-titan-red transition-colors absolute top-2 right-6">{step.step}</span>
-                                            <Briefcase className="text-titan-navy w-10 h-10 relative z-10 group-hover:text-titan-red transition-colors" />
+                                        {/* Step Circle Container */}
+                                        <div className="relative mb-12">
+                                            {/* Large Background Ghost Number */}
+                                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-9xl font-black text-titan-navy/[0.03] group-hover:text-titan-red/[0.06] transition-all duration-700 pointer-events-none z-0 tracking-tighter">
+                                                {step.step}
+                                            </div>
+
+                                            {/* Decorative Light Ring */}
+                                            <div className="absolute -inset-8 bg-titan-red/5 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700 opacity-0 group-hover:opacity-100 border border-titan-navy/5 blur-2xl"></div>
+
+                                            {/* Rotating Architectural Square */}
+                                            <div className="w-28 h-28 bg-[#0B1221] border-[1px] border-white/5 rounded-2xl flex items-center justify-center relative z-10 group-hover:border-titan-red transition-all duration-700 rotate-45 group-hover:rotate-[225deg] shadow-[0_30px_60px_-12px_rgba(0,0,0,0.2)]">
+                                                <div className="-rotate-45 group-hover:-rotate-[225deg] transition-all duration-500 flex flex-col items-center">
+                                                    <step.icon size={36} className="text-white group-hover:text-titan-red transition-colors" />
+                                                </div>
+                                            </div>
+
+                                            {/* Floating Mini Step Indicator */}
+                                            <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-titan-red rounded-xl flex items-center justify-center shadow-[0_10px_20px_rgba(255,107,0,0.2)] border-[3px] border-gray-50 z-20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12">
+                                                <span className="text-[12px] font-black text-white tracking-tight">{step.step}</span>
+                                            </div>
                                         </div>
-                                        <h3 className="text-xl font-bold text-titan-navy mb-3">{step.title}</h3>
-                                        <p className="text-titan-navy/60 leading-relaxed px-4">{step.desc}</p>
+
+                                        <div className="px-4">
+                                            <h3 className="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">
+                                                {step.title}
+                                            </h3>
+                                            <p className="text-sm text-titan-navy/50 leading-relaxed max-w-[240px] mx-auto group-hover:text-titan-navy/80 transition-colors">
+                                                {step.desc}
+                                            </p>
+                                        </div>
                                     </div>
                                 </FadeInWhenVisible>
                             ))}

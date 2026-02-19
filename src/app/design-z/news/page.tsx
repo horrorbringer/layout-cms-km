@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar, User, Tag, Search, TrendingUp, Newspaper, ChevronRight, Briefcase, FileText, Download, Check, ChevronDown, Filter, Clock, Bookmark, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage } from '../context/LanguageContext';
 
 // Mock Data for News
 const allNews = [
@@ -91,26 +92,43 @@ const allNews = [
         featured: false,
         trending: false,
         author: 'Engineering'
+    },
+    {
+        id: '8',
+        title: 'Advanced MEP Systems Integration in High-Rise Buildings',
+        category: 'Systems',
+        date: 'Mar 15, 2025',
+        readTime: '7 min read',
+        image: '/images/projects/Thumbnail-4.jpg',
+        excerpt: 'How we are implementing smart mechanical, electrical, and plumbing systems to improve building efficiency and sustainability.',
+        featured: false,
+        trending: false,
+        author: 'Technical Team'
     }
 ];
 
-const categories = ['All', 'Project Updates', 'Awards', 'Safety', 'Sustainability', 'Culture', 'Community'];
+const categories = ['All', 'Project Updates', 'Awards', 'Safety', 'Sustainability', 'Culture', 'Innovation', 'Systems'];
+const years = ['All', '2026', '2025', '2024'];
 
 const trendingNews = allNews.filter(n => n.trending);
 
 export default function NewsPage() {
+    const { t } = useLanguage();
     const [activeCategory, setActiveCategory] = useState('All');
+    const [activeYear, setActiveYear] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const featuredNews = allNews.find(n => n.featured) || allNews[0];
-
-    // Grid items (excluding featured)
-    const gridNews = allNews.filter(n => n.id !== featuredNews.id).filter(n => {
+    // Filtered News Items
+    const filteredNews = allNews.filter(n => {
         const matchesCategory = activeCategory === 'All' || n.category === activeCategory;
+        const matchesYear = activeYear === 'All' || n.date.includes(activeYear);
         const matchesSearch = n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             n.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
+        return matchesCategory && matchesYear && matchesSearch;
     });
+
+    const activeFeaturedNews = filteredNews[0] || allNews[0];
+    const gridNews = filteredNews.filter(n => n.id !== activeFeaturedNews.id);
 
     return (
         <div className="bg-gray-50/50 min-h-screen font-sans text-titan-navy pb-24">
@@ -136,52 +154,73 @@ export default function NewsPage() {
                 </div>
             </div>
 
-            {/* --- TOP BAR (Sticky below main nav) --- */}
-            <div className="sticky top-[80px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all h-14">
-                <div className="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between">
-                    {/* Filter Scroll */}
-                    <div className="flex-1 overflow-x-auto no-scrollbar items-center gap-2 flex">
-                        <span className="text-xs font-black uppercase tracking-widest text-titan-navy/40 mr-2 hidden md:block">Filter:</span>
-                        <button
-                            onClick={() => setActiveCategory('All')}
-                            className={`
-                                px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap
-                                ${activeCategory === 'All'
-                                    ? 'bg-titan-navy text-white shadow-md'
-                                    : 'bg-gray-100 text-titan-navy/60 hover:bg-gray-200 hover:text-titan-navy'}
-                            `}
-                        >
-                            All Stories
-                        </button>
-                        {categories.filter(c => c !== 'All').map(cat => (
-                            <button
-                                key={cat}
-                                onClick={() => setActiveCategory(cat)}
-                                className={`
-                                    px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap
-                                    ${activeCategory === cat
-                                        ? 'bg-titan-navy text-white shadow-md'
-                                        : 'bg-transparent border border-gray-200 text-titan-navy/60 hover:border-titan-navy/30 hover:text-titan-navy'}
-                                `}
-                            >
-                                {cat}
-                            </button>
-                        ))}
+            {/* --- TOP BAR: FACETED FILTER SYSTEM --- */}
+            <div className="sticky top-[80px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all py-2">
+                <div className="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+
+                    {/* Category Facet */}
+                    <div className="flex items-center gap-4 flex-1 overflow-x-auto no-scrollbar w-full">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-titan-navy/40 shrink-0">Category</span>
+                        <div className="flex items-center gap-1.5 p-1 bg-gray-100/50 rounded-full">
+                            {categories.map(cat => {
+                                const isActive = activeCategory === cat;
+                                return (
+                                    <button
+                                        key={cat}
+                                        onClick={() => setActiveCategory(cat)}
+                                        className={`
+                                            relative px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap z-10
+                                            ${isActive ? 'text-white' : 'text-titan-navy/60 hover:text-titan-navy'}
+                                        `}
+                                    >
+                                        {cat === 'All' ? t('All Stories') : t(cat)}
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="newsActiveCategory"
+                                                className="absolute inset-0 bg-titan-navy rounded-full -z-10 shadow-md"
+                                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                            />
+                                        )}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
 
-                    {/* Search (Simplified) */}
-                    <div className="flex items-center gap-3 pl-4 border-l border-gray-200 ml-4">
-                        <div className="relative group hidden md:block">
+                    <div className="flex items-center gap-6 w-full md:w-auto overflow-x-auto no-scrollbar">
+                        {/* Year Facet */}
+                        <div className="flex items-center gap-3 border-l border-gray-200 pl-6 h-8">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-titan-navy/40 shrink-0">{t('Year')}</span>
+                            <div className="flex items-center gap-1 bg-gray-100/50 p-1 rounded-lg">
+                                {years.map(year => {
+                                    const isActive = activeYear === year;
+                                    return (
+                                        <button
+                                            key={year}
+                                            onClick={() => setActiveYear(year)}
+                                            className={`
+                                                relative px-3 py-1 rounded-md text-[9px] font-black tracking-widest transition-all
+                                                ${isActive ? 'text-titan-red bg-white shadow-sm' : 'text-titan-navy/40 hover:text-titan-navy'}
+                                            `}
+                                        >
+                                            {year === 'All' ? t('All') : year}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Search Facet */}
+                        <div className="relative group min-w-[200px]">
                             <input
                                 type="text"
-                                placeholder="Search news..."
+                                placeholder={t('Search...')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-40 bg-transparent border-none text-xs font-bold placeholder:text-gray-400 focus:outline-none focus:w-56 transition-all"
+                                className="w-full bg-gray-50 border border-gray-100 px-4 py-2 pl-9 rounded-xl text-xs font-bold placeholder:text-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-titan-navy/5 transition-all"
                             />
-                            <Search size={14} className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-titan-red transition-colors" />
                         </div>
-                        <button className="md:hidden text-titan-navy/60"><Search size={16} /></button>
                     </div>
                 </div>
             </div>
@@ -193,8 +232,8 @@ export default function NewsPage() {
 
                     {/* Featured Article (Left - Large) */}
                     <div className="lg:col-span-8 h-full relative group cursor-pointer overflow-hidden rounded-2xl shadow-sm border border-gray-100">
-                        <Link href={`/design-z/news/${featuredNews.id}`} className="block h-[400px] md:h-[500px] lg:h-full relative">
-                            <Image src={featuredNews.image} alt={featuredNews.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        <Link href={`/design-z/news/${activeFeaturedNews.id}`} className="block h-[400px] md:h-[500px] lg:h-full relative">
+                            <Image src={activeFeaturedNews.image} alt={activeFeaturedNews.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
                             <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
                             <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full max-w-3xl">
                                 <motion.div
@@ -203,18 +242,18 @@ export default function NewsPage() {
                                     viewport={{ once: true }}
                                 >
                                     <span className="inline-flex items-center gap-2 bg-titan-red/90 backdrop-blur text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 mb-4 rounded-sm shadow-lg">
-                                        <TrendingUp size={12} /> Featured Story
+                                        <TrendingUp size={12} /> {t('Featured Story')}
                                     </span>
                                     <h1 className="text-2xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-[0.9] tracking-tight group-hover:underline decoration-4 underline-offset-8 decoration-titan-red/50">
-                                        {featuredNews.title}
+                                        {activeFeaturedNews.title}
                                     </h1>
                                     <p className="text-white/80 text-sm md:text-lg mb-6 line-clamp-2 max-w-xl font-medium leading-relaxed">
-                                        {featuredNews.excerpt}
+                                        {activeFeaturedNews.excerpt}
                                     </p>
                                     <div className="flex items-center gap-4 md:gap-6 text-white/60 text-[10px] md:text-xs font-bold uppercase tracking-widest border-t border-white/10 pt-6">
-                                        <span className="flex items-center gap-2 text-white"><User size={14} className="text-titan-red" /> {featuredNews.author}</span>
-                                        <span className="flex items-center gap-2"><Calendar size={14} /> {featuredNews.date}</span>
-                                        <span className="flex items-center gap-2"><Clock size={14} /> {featuredNews.readTime}</span>
+                                        <span className="flex items-center gap-2 text-white"><User size={14} className="text-titan-red" /> {activeFeaturedNews.author}</span>
+                                        <span className="flex items-center gap-2"><Calendar size={14} /> {activeFeaturedNews.date}</span>
+                                        <span className="flex items-center gap-2"><Clock size={14} /> {activeFeaturedNews.readTime}</span>
                                     </div>
                                 </motion.div>
                             </div>
@@ -260,7 +299,7 @@ export default function NewsPage() {
                             <h2 className="text-3xl md:text-4xl font-black text-titan-navy">LATEST <span className="text-titan-navy/30">STORIES</span></h2>
                         </div>
                         {activeCategory !== 'All' && (
-                            <button onClick={() => setActiveCategory('All')} className="text-xs text-titan-red font-black uppercase tracking-widest hover:underline">Clear Filter</button>
+                            <button onClick={() => setActiveCategory('All')} className="text-xs text-titan-red font-black uppercase tracking-widest hover:underline">{t('Clear Filter')}</button>
                         )}
                     </div>
 
@@ -279,7 +318,7 @@ export default function NewsPage() {
                                         <Image src={news.image} alt={news.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                                         <div className="absolute top-4 left-4">
                                             <span className="bg-white/95 backdrop-blur text-titan-navy px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-sm shadow-sm">
-                                                {news.category}
+                                                {t(news.category)}
                                             </span>
                                         </div>
                                     </div>
@@ -304,7 +343,7 @@ export default function NewsPage() {
                                             <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-black text-gray-500 group-hover/author:bg-titan-red group-hover/author:text-white transition-colors">
                                                 {news.author.charAt(0)}
                                             </div>
-                                            <span className="text-[10px] font-bold uppercase text-gray-400 group-hover/author:text-titan-navy transition-colors">By {news.author}</span>
+                                            <span className="text-[10px] font-bold uppercase text-gray-400 group-hover/author:text-titan-navy transition-colors">{t('By')} {news.author}</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -328,11 +367,11 @@ export default function NewsPage() {
                         <div className="lg:col-span-5 bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-white/10 shadow-inner">
                             <form className="flex flex-col gap-4">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Email Address</label>
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">{t('Email Address')}</label>
                                     <input type="email" placeholder="name@company.com" className="w-full bg-white/10 border border-white/10 focus:bg-white focus:text-titan-navy px-6 py-4 rounded-xl text-white placeholder:text-white/30 focus:outline-none transition-all font-medium" />
                                 </div>
                                 <button className="w-full bg-titan-red text-white font-black uppercase tracking-widest py-4 rounded-xl hover:bg-white hover:text-titan-red transition-all shadow-lg hover:shadow-xl mt-2">
-                                    Subscribe Now
+                                    {t('Subscribe Now')}
                                 </button>
                             </form>
                         </div>

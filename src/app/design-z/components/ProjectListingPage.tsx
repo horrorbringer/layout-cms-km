@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, ArrowRight, Building, CheckCircle, Clock, Droplets, Mountain, Filter } from 'lucide-react';
+import { MapPin, ArrowRight, Building, CheckCircle, Clock, Droplets, Mountain, Filter, Settings } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
@@ -13,10 +13,9 @@ const locations = ['All', 'Phnom Penh', 'Siem Reap', 'Kandal', 'Sihanoukville'];
 const types = [
     'All',
     'Government Office Building',
-    'Public Service Building',
-    'Private Building',
     'Water Treatment Plant',
-    'Slope Construction'
+    'Slope Construction',
+    'Systems'
 ];
 
 interface ProjectListingPageProps {
@@ -122,39 +121,40 @@ export default function ProjectListingPage({
                     <div className="bg-white/40 backdrop-blur-2xl border border-white/40 rounded-[2rem] p-3 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.03)] flex flex-col xl:flex-row items-center justify-between gap-4 ring-1 ring-black/[0.03]">
 
                         {/* Type Filter - Left Side */}
-                        <div className="flex flex-wrap items-center justify-center gap-2 p-1">
-                            {types.filter(t => t !== 'All').map((type) => {
-                                const isActive = filterType === type;
-                                return (
-                                    <button
-                                        key={type}
-                                        onClick={() => setFilterType(type)}
-                                        className={`group relative px-6 py-2.5 rounded-full text-[13px] font-semibold tracking-tight transition-all duration-500 overflow-hidden ${isActive
+                        <div className="flex-1 w-full overflow-hidden">
+                            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar p-1 snap-x">
+                                {types.map((type) => {
+                                    const isActive = filterType === type;
+                                    return (
+                                        <button
+                                            key={type}
+                                            onClick={() => setFilterType(type)}
+                                            className={`group relative px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-500 whitespace-nowrap snap-start ${isActive
                                                 ? 'text-white'
-                                                : 'text-titan-navy/50 hover:text-titan-navy'
-                                            }`}
-                                    >
-                                        <div className="relative z-10 flex items-center gap-3">
-                                            {type === 'Water Treatment Plant' && <Droplets size={14} strokeWidth={isActive ? 2.5 : 2} />}
-                                            {type === 'Slope Construction' && <Mountain size={14} strokeWidth={isActive ? 2.5 : 2} />}
-                                            {type.includes('Building') && <Building size={14} strokeWidth={isActive ? 2.5 : 2} />}
-                                            <span>{type}</span>
-                                        </div>
+                                                : 'text-titan-navy/50 hover:text-titan-navy bg-white/50'
+                                                }`}
+                                        >
+                                            <div className="relative z-10 flex items-center gap-2.5">
+                                                {type === 'All' && <Filter size={12} strokeWidth={isActive ? 3 : 2} />}
+                                                {type === 'Water Treatment Plant' && <Droplets size={12} strokeWidth={isActive ? 3 : 2} />}
+                                                {type === 'Slope Construction' && <Mountain size={12} strokeWidth={isActive ? 3 : 2} />}
+                                                {type === 'Systems' && <Settings size={12} strokeWidth={isActive ? 3 : 2} />}
+                                                {type.includes('Building') && <Building size={12} strokeWidth={isActive ? 3 : 2} />}
+                                                <span>{type === 'All' ? 'All Portfolio' : type}</span>
+                                            </div>
 
-                                        {isActive && (
-                                            <motion.div
-                                                layoutId="premiumActiveBg"
-                                                className="absolute inset-0 bg-titan-navy shadow-[0_10px_20px_-5px_rgba(0,43,91,0.3)]"
-                                                initial={false}
-                                                transition={{ type: "spring", bounce: 0.15, duration: 0.6 }}
-                                            />
-                                        )}
-                                        {!isActive && (
-                                            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/80 transition-colors duration-300 -z-10" />
-                                        )}
-                                    </button>
-                                );
-                            })}
+                                            {isActive && (
+                                                <motion.div
+                                                    layoutId="premiumActiveBg"
+                                                    className="absolute inset-0 bg-titan-navy shadow-[0_8px_15px_-5px_rgba(0,43,91,0.4)]"
+                                                    initial={false}
+                                                    transition={{ type: "spring", bounce: 0.15, duration: 0.6 }}
+                                                />
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
 
                         {/* Location Filter - Right Side */}

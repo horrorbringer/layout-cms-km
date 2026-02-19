@@ -58,19 +58,51 @@ export default function TeamAdmin() {
         setIsModalOpen(true);
     };
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
+        let newMembers;
         if (editingMember) {
-            setMembers(members.map(m => m.name === editingMember.name ? formData : m));
+            newMembers = members.map(m => m.name === editingMember.name ? formData : m);
         } else {
-            setMembers([...members, formData]);
+            newMembers = [...members, formData];
         }
+
+        setMembers(newMembers);
         setIsModalOpen(false);
+
+        // Persistent save
+        try {
+            await fetch('/api/cms/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    data: newMembers,
+                    fileName: 'teamData.ts'
+                })
+            });
+        } catch (error) {
+            console.error('Failed to persist team changes:', error);
+        }
     };
 
-    const handleDelete = (name: string) => {
+    const handleDelete = async (name: string) => {
         if (confirm(`Are you sure you want to remove ${name}?`)) {
-            setMembers(members.filter(m => m.name !== name));
+            const newMembers = members.filter(m => m.name !== name);
+            setMembers(newMembers);
+
+            // Persistent save
+            try {
+                await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        data: newMembers,
+                        fileName: 'teamData.ts'
+                    })
+                });
+            } catch (error) {
+                console.error('Failed to persist team deletion:', error);
+            }
         }
     };
 
