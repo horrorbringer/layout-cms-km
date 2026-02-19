@@ -142,7 +142,7 @@ export default function NewsPage() {
                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500 rounded-full blur-[180px] opacity-10 -ml-20 -mb-20"></div>
 
                 <div className="relative z-10 max-w-[1600px] mx-auto flex flex-col items-center text-center">
-                    <span className="inline-block px-3 py-1 rounded-full border border-white/20 text-[10px] font-black uppercase tracking-widest text-white/80 mb-4 backdrop-blur-sm bg-white/5">
+                    <span className="inline-block px-3 py-1 rounded-full border border-white/20 text-[10px] font-black uppercase tracking-widest text-white/80 mb-4 backdrop-blur-sm bg-white/5 mt-5">
                         Insights & Updates
                     </span>
                     <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight mb-6 drop-shadow-lg">
