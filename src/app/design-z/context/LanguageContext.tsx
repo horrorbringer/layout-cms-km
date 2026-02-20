@@ -104,7 +104,11 @@ const dictionary: Translations = {
     'Sustainability': { en: 'Sustainability', kh: 'និរន្តរភាព' },
     'Culture': { en: 'Culture', kh: 'វប្បធម៌' },
     'Project Updates': { en: 'Project Updates', kh: 'បច្ចុប្បន្នភាពគម្រោង' },
-    'Awards': { en: 'Awards', kh: 'ពានរង្វាន់' }
+    'Awards': { en: 'Awards', kh: 'ពានរង្វាន់' },
+    'Trending': { en: 'Trending', kh: 'ពេញនិយម' },
+    'View All Trends': { en: 'View All Trends', kh: 'មើលនិន្នាការទាំងអស់' },
+    'Topics': { en: 'Topics', kh: 'ប្រធានបទ' },
+    'All Years': { en: 'All Years', kh: 'ឆ្នាំទាំងអស់' }
 };
 
 interface LanguageContextType {

@@ -16,6 +16,7 @@ export default function ImplementationProjectsPage() {
                 heroIcon={<HardHat size={12} className="text-titan-red" />}
                 heroImage="/images/projects/Thumbnail-6.jpg"
                 filterStatus="Under Construction"
+                categories={['All', 'Water Treatment Plant', 'Systems']}
                 badgeConfig={{
                     className: "bg-titan-navy text-white",
                     icon: <Clock size={10} />,

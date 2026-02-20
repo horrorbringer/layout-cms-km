@@ -171,7 +171,7 @@ async function main() {
                 firstName: firstName || member.name,
                 lastName: lastName || '',
                 email: `${member.name.replace(/\s+/g, '.').toLowerCase()}@kimmex.com`,
-                // role: member.role, // Removed as it is not in Employee schema
+                role: member.role,
                 image: member.image,
                 bio: member.bio,
                 experience: member.experience,

@@ -135,13 +135,14 @@ export default function DesignGenX() {
                                         { icon: Clock, title: 'On-Time Delivery', desc: '98% completion rate' },
                                         { icon: Target, title: 'Quality Focus', desc: 'Exceeding expectations' },
                                     ].map((item, i) => (
-                                        <div key={i} className="flex items-start gap-4 p-6 bg-white border-l-4 border-titan-navy hover:border-titan-red transition-all shadow-xl">
-                                            <div className="w-12 h-12 bg-gray-50 flex items-center justify-center shrink-0">
-                                                <item.icon className="text-titan-navy" size={24} />
-                                            </div>
-                                            <div>
-                                                <div className="font-black text-titan-navy uppercase text-xs tracking-wider mb-1">{item.title}</div>
-                                                <div className="text-xs text-titan-navy/40 font-bold">{item.desc}</div>
+                                        <div key={i} className="group bg-white p-8 rounded-xl border border-gray-100 relative overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-2">
+                                            <div className="absolute top-0 left-0 w-1 h-full bg-gray-100 group-hover:bg-accent-orange transition-colors duration-500"></div>
+                                            <div className="ml-4">
+                                                <div className="w-14 h-14 bg-gray-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent-orange group-hover:text-white transition-all duration-300">
+                                                    <item.icon size={24} className="text-titan-navy group-hover:text-white transition-colors" />
+                                                </div>
+                                                <h3 className="text-xl font-black text-titan-navy mb-3 group-hover:text-accent-orange transition-colors">{item.title}</h3>
+                                                <p className="text-titan-navy/60 text-sm leading-relaxed">{item.desc}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -219,21 +220,21 @@ export default function DesignGenX() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
                         {services.map((s, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
-                                <div className="bg-white p-10 group hover:bg-titan-navy transition-all duration-500 border border-gray-100 h-full relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
-                                        <s.icon size={80} />
+                                <div className="bg-white p-10 group hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500 border border-gray-100 border-b-4 border-b-transparent hover:border-b-accent-orange h-full relative overflow-hidden rounded-xl">
+                                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-700">
+                                        <s.icon size={80} className="text-titan-navy" />
                                     </div>
                                     <div className="flex items-center justify-between mb-8">
-                                        <div className="w-14 h-14 bg-titan-bg-alt flex items-center justify-center group-hover:bg-titan-red transition-all duration-300">
-                                            <s.icon className="text-titan-navy group-hover:text-white transition-colors" size={26} />
+                                        <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center group-hover:bg-accent-orange group-hover:shadow-lg group-hover:shadow-accent-orange/30 transition-all duration-300">
+                                            <s.icon className="text-titan-navy group-hover:text-white transition-colors" size={28} />
                                         </div>
                                     </div>
-                                    <h3 className="text-2xl font-black text-titan-navy group-hover:text-white mb-4 uppercase tracking-tighter">{s.title}</h3>
-                                    <p className="text-titan-navy/50 group-hover:text-white/60 mb-8 text-sm leading-relaxed">{s.desc}</p>
-                                    <ul className="space-y-3 pt-8 border-t border-gray-100 group-hover:border-white/10">
+                                    <h3 className="text-2xl font-black text-titan-navy group-hover:text-accent-orange transition-colors mb-4 uppercase tracking-tighter">{s.title}</h3>
+                                    <p className="text-titan-navy/60 mb-8 text-sm leading-relaxed">{s.desc}</p>
+                                    <ul className="space-y-3 pt-8 border-t border-gray-100">
                                         {s.features.map((f, idx) => (
-                                            <li key={idx} className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-titan-navy/40 group-hover:text-white/40">
-                                                <div className="w-1.5 h-1.5 bg-titan-red rounded-full"></div> {f}
+                                            <li key={idx} className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-titan-navy/40 group-hover:text-titan-navy/80 transition-colors">
+                                                <div className="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-150 transition-transform"></div> {f}
                                             </li>
                                         ))}
                                     </ul>
@@ -265,7 +266,7 @@ export default function DesignGenX() {
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
                         {/* Connecting Line */}
-                        <div className="hidden md:block absolute top-16 left-[12%] right-[12%] h-[2px] bg-accent-orange/30 z-0"></div>
+                        <div className="hidden md:block absolute top-[4.5rem] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent z-0"></div>
 
                         {[
                             { step: '01', title: 'Consultation', desc: 'Understanding your vision and requirements', icon: Target },
@@ -275,12 +276,12 @@ export default function DesignGenX() {
                         ].map((s, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
                                 <div className="relative z-10 flex flex-col items-center text-center group">
-                                    <div className="w-32 h-32 bg-titan-navy-light rounded-2xl border-2 border-accent-orange/30 flex flex-col items-center justify-center mb-6 group-hover:border-accent-orange group-hover:bg-accent-orange/10 transition-all duration-300">
-                                        <s.icon className="text-accent-orange mb-2" size={32} />
-                                        <span className="text-2xl font-black text-white">{s.step}</span>
+                                    <div className="w-36 h-36 bg-white/5 backdrop-blur-sm rounded-full border border-white/10 flex flex-col items-center justify-center mb-8 group-hover:bg-accent-orange group-hover:border-accent-orange group-hover:shadow-[0_0_40px_rgba(255,107,0,0.5)] group-hover:-translate-y-2 transition-all duration-500 relative">
+                                        <s.icon className="text-accent-orange mb-2 group-hover:text-white group-hover:scale-110 transition-all duration-300" size={32} />
+                                        <span className="text-xl font-black text-white/40 group-hover:text-white transition-colors">{s.step}</span>
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-2">{s.title}</h3>
-                                    <p className="text-sm text-white/50 max-w-[200px]">{s.desc}</p>
+                                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-accent-orange transition-colors">{s.title}</h3>
+                                    <p className="text-sm text-white/50 max-w-[200px] leading-relaxed group-hover:text-white/80 transition-colors">{s.desc}</p>
                                 </div>
                             </FadeInWhenVisible>
                         ))}

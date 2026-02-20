@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 import { orgChartData, OrgNode } from '../data/orgChartData';
+import { milestones } from '../data/milestonesData';
 
 // Modal Component for Member Details
 function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: boolean; onClose: () => void }) {
@@ -516,37 +517,67 @@ export default function AboutPage() {
         {
             year: '2014-2017',
             title: 'Institutional Partnerships',
-            desc: 'Delivery of key institutional projects including:\n• Ministry of Economy and Finance\n• Ministry of Post and Telecommunication\n• Clean Water in Mondulkiri Province\n• Electricity of Cambodia Wat Phnom\n• Al Serkal Mosque',
+            desc: 'Delivery of key institutional projects including:',
+            projects: [
+                'Ministry of Economy and Finance',
+                'Ministry of Post and Telecommunication',
+                'Clean Water in Mondulkiri Province',
+                'Electricity of Cambodia Wat Phnom',
+                'Al Serkal Mosque'
+            ],
             image: '/images/projects/Thumbnail-4.jpg'
         },
         {
             year: '2018-2020',
             title: 'Scaling Innovation',
-            desc: 'Integration of modern systems and complex structural works:\n• Anti-Corruption Unit\n• Siem Reap Electricity\n• Ministry of Economy Underground Parking Lot\n• General Department of National Treasury',
+            desc: 'Integration of modern systems and complex structural works:',
+            projects: [
+                'Anti-Corruption Unit',
+                'Siem Reap Electricity',
+                'Ministry of Economy Underground Parking Lot',
+                'General Department of National Treasury'
+            ],
             image: '/images/projects/Thumbnail-5.jpg'
         },
         {
             year: '2021-2022',
             title: 'Infrastructure Excellence',
-            desc: 'Securing major national landmarks and utility hubs:\n• Stung Treng Water Purification Station\n• General Department of Customs and Excise\n• Securities and Exchange Commission of Cambodia\n• Electricity of Cambodia (EDC)',
+            desc: 'Securing major national landmarks and utility hubs:',
+            projects: [
+                'Stung Treng Water Purification Station',
+                'General Department of Customs and Excise',
+                'Securities and Exchange Commission of Cambodia',
+                'Electricity of Cambodia (EDC)'
+            ],
             image: '/images/projects/Thumbnail-6.jpg'
         },
         {
             year: '2023',
             title: 'Strategic Progress',
-            desc: 'Completion of high-profile government headquarters:\n• Ministry of Interior HQ\n• National Social Security Fund (NSSF)',
+            desc: 'Completion of high-profile government headquarters:',
+            projects: [
+                'Ministry of Interior HQ',
+                'National Social Security Fund (NSSF)'
+            ],
             image: '/images/projects/Thumbnail-7.jpg'
         },
         {
             year: '2024',
             title: 'Future Foundations',
-            desc: 'Expanding into healthcare and regulatory sectors:\n• Commercial Gambling Management Commission\n• Chea Chumneas Hospital',
+            desc: 'Expanding into healthcare and regulatory sectors:',
+            projects: [
+                'Commercial Gambling Management Commission',
+                'Chea Chumneas Hospital'
+            ],
             image: '/images/projects/Thumbnail-8.jpg'
         },
         {
             year: '2025',
             title: 'Vision 2025',
-            desc: 'Ongoing and future flagship developments:\n• National Election Committee HQ',
+            desc: 'Ongoing and future flagship developments:',
+            projects: [
+                'National Election Committee HQ'
+            ],
             image: '/images/projects/Thumbnail-9.jpg'
         }
     ];
@@ -845,12 +876,15 @@ export default function AboutPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {coreValues.map((value, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
-                                <div className="bg-gray-50 p-8 rounded-2xl hover:bg-titan-navy group transition-all duration-500 h-full">
-                                    <div className="w-16 h-16 bg-titan-red/10 rounded-2xl flex items-center justify-center text-titan-red mb-6 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
+                                <div className="bg-white p-8 rounded-2xl group transition-all duration-500 h-full border border-gray-100 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-2 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                        <value.icon size={100} className="text-titan-navy" />
+                                    </div>
+                                    <div className="w-16 h-16 bg-titan-red/5 rounded-2xl flex items-center justify-center text-titan-red mb-6 group-hover:bg-titan-red group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-titan-red/30">
                                         <value.icon size={28} />
                                     </div>
-                                    <h3 className="text-xl font-bold text-titan-navy mb-3 group-hover:text-white transition-colors">{value.title}</h3>
-                                    <p className="text-titan-navy/50 leading-relaxed group-hover:text-white/70 transition-colors">{value.desc}</p>
+                                    <h3 className="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">{value.title}</h3>
+                                    <p className="text-titan-navy/60 leading-relaxed text-sm group-hover:text-titan-navy/80 transition-colors">{value.desc}</p>
                                 </div>
                             </FadeInWhenVisible>
                         ))}
@@ -874,21 +908,39 @@ export default function AboutPage() {
                         <div className="md:hidden absolute left-6 top-0 bottom-0 w-[2px] bg-gradient-to-b from-titan-red via-titan-navy/20 to-titan-red"></div>
 
                         <div className="space-y-16 md:space-y-24">
-                            {milestones.map((item, i) => (
+                            {milestones.map((item: any, i) => (
                                 <FadeInWhenVisible key={i} delay={0.1}>
                                     <div className={`flex flex-col md:flex-row items-start md:items-center gap-8 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
                                         <div className={`w-full md:w-5/12 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:text-right md:pr-12' : 'md:text-left md:pl-12'}`}>
-                                            <div className={`inline-block bg-titan-red text-white text-sm font-bold px-4 py-2 rounded-full mb-4`}>
+                                            <div className={`inline-block bg-titan-red text-white text-sm font-bold px-4 py-2 rounded-full mb-4 shadow-md`}>
                                                 {item.year}
                                             </div>
                                             <h3 className="text-2xl font-bold text-titan-navy mb-3">{item.title}</h3>
-                                            <p className="text-titan-navy/50 leading-relaxed">{item.desc}</p>
+                                            <p className="text-titan-navy/60 leading-relaxed mb-4">{item.desc}</p>
+
+                                            {/* Projects List */}
+                                            {item.projects && (
+                                                <ul className={`space-y-2 mt-4 inline-block text-left ${i % 2 === 0 ? 'md:text-right' : ''} w-full`}>
+                                                    {item.projects.map((project: string, idx: number) => (
+                                                        <li key={idx} className={`flex items-start gap-2 text-sm font-bold text-titan-navy/80 hover:text-titan-red transition-colors ${i % 2 === 0 ? 'md:flex-row-reverse md:text-right' : ''}`}>
+                                                            <div className={`w-1.5 h-1.5 bg-titan-red rounded-full mt-1.5 shrink-0`}></div>
+                                                            <span>{project}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
                                         </div>
                                         <div className="absolute left-6 md:left-1/2 w-4 h-4 bg-white border-4 border-titan-red rounded-full -translate-x-1/2 shadow-lg z-10"></div>
                                         <div className={`w-full md:w-5/12 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:pl-12' : 'md:pr-12'}`}>
-                                            <div className="aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-100 relative">
+                                            <Link href={`/design-z/about/milestone/${encodeURIComponent(item.year)}`} className="block aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-100 relative group">
                                                 <Image src={item.image} alt={item.title} fill className="object-cover hover:scale-105 transition-transform duration-700" />
-                                            </div>
+                                                <div className="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-300"></div>
+                                                <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                                    <span className="bg-white/90 backdrop-blur-sm text-titan-navy px-3 py-1 text-xs font-bold rounded-full shadow-sm">
+                                                        View Details
+                                                    </span>
+                                                </div>
+                                            </Link>
                                         </div>
                                     </div>
                                 </FadeInWhenVisible>

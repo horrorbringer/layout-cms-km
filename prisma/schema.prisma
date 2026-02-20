@@ -79,6 +79,7 @@ model Employee {
   lastName       String
   email          String?   @unique
   phone          String?
+  role           String?
   image          String?
   bio            String?   @db.Text
   experience     String?

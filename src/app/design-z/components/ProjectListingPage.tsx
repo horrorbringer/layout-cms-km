@@ -34,6 +34,7 @@ interface ProjectListingPageProps {
         title: string;
         message: string;
     };
+    categories?: string[];
 }
 
 export default function ProjectListingPage({
@@ -44,12 +45,13 @@ export default function ProjectListingPage({
     heroImage,
     filterStatus,
     badgeConfig,
-    emptyState
+    emptyState,
+    categories = types
 }: ProjectListingPageProps) {
     const searchParams = useSearchParams();
     const initialType = searchParams.get('type');
     // Ensure initialType is valid, otherwise default to 'All'
-    const validInitialType = initialType && types.includes(initialType) ? initialType : 'All';
+    const validInitialType = initialType && categories.includes(initialType) ? initialType : 'All';
 
     const [filterLoc, setFilterLoc] = useState('All');
     const [filterType, setFilterType] = useState(validInitialType);
@@ -57,12 +59,12 @@ export default function ProjectListingPage({
     // Sync state with URL query params
     useEffect(() => {
         const type = searchParams.get('type');
-        if (type && types.includes(type)) {
+        if (type && categories.includes(type)) {
             setFilterType(type);
         } else if (!type) {
             setFilterType('All');
         }
-    }, [searchParams]);
+    }, [searchParams, categories]);
 
     const filteredProjects = projects.filter(p => {
         return (filterLoc === 'All' || p.location === filterLoc) &&
@@ -123,7 +125,7 @@ export default function ProjectListingPage({
                         {/* Type Filter - Left Side */}
                         <div className="flex-1 w-full overflow-hidden">
                             <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar p-1 snap-x">
-                                {types.map((type) => {
+                                {categories.map((type) => {
                                     const isActive = filterType === type;
                                     return (
                                         <button
@@ -146,7 +148,7 @@ export default function ProjectListingPage({
                                             {isActive && (
                                                 <motion.div
                                                     layoutId="premiumActiveBg"
-                                                    className="absolute inset-0 bg-titan-navy shadow-[0_8px_15px_-5px_rgba(0,43,91,0.4)]"
+                                                    className="absolute inset-0 bg-titan-navy shadow-[0_8_15px_-5px_rgba(0,43,91,0.4)]"
                                                     initial={false}
                                                     transition={{ type: "spring", bounce: 0.15, duration: 0.6 }}
                                                 />
