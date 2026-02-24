@@ -135,7 +135,7 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                             ) : (
                                 <>
                                     <p className="text-base md:text-lg leading-relaxed">
-                                        An integral part of KIM MEX Construction, {member.name.split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {member.role.toLowerCase()} division.
+                                       Test Jira An integral part of KIM MEX Construction, {member.name.split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {member.role.toLowerCase()} division.
                                     </p>
                                     <p className="text-sm md:text-base">
                                         Focused on operational efficiency and upholding our core values of excellence and safety, they play a vital role in delivering landmark projects across the Kingdom.
