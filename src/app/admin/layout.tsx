@@ -67,6 +67,16 @@ const sidebarItems: SidebarItem[] = [
                     { id: 'about_values', label: 'Core Values', href: '/admin/content?section=about#values' },
                 ]
             },
+            {
+                id: 'services',
+                label: 'Services',
+                href: '/admin/content?section=services',
+                subItems: [
+                    { id: 'services_list', label: 'Service Cards', href: '/admin/content?section=services#services-list' },
+                    { id: 'services_process', label: 'Working Process', href: '/admin/content?section=services#services-process' },
+                    { id: 'services_sectors', label: 'Sectors We Serve', href: '/admin/content?section=services#services-sectors' },
+                ]
+            },
             { id: 'careers', label: 'Careers', href: '/admin/content?section=careers' },
             { id: 'testimonials', label: 'Testimonials', href: '/admin/content?section=testimonials' },
             { id: 'org-chart', label: 'Org Chart (Design Z)', href: '/admin/org-chart' },

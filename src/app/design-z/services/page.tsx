@@ -11,6 +11,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage, getLocalizedText } from '../context/LanguageContext';
+import { serviceData } from '../data/serviceData';
 
 // Animation wrapper
 function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -40,64 +41,11 @@ export default function ServicesPage() {
     const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
     const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-    const services = [
-        {
-            id: 'design-build',
-            title: { en: 'Design & Build', kh: 'រចនា និងសាងសង់' },
-            desc: { en: 'A seamless integration of architectural creativity and engineering precision. We handle the entire lifecycle from concept to completion.', kh: 'ការរួមបញ្ចូលគ្នារវាងភាពច្នៃប្រឌិតស្ថាបត្យកម្ម និងភាពជាក់លាក់នៃវិស្វកម្ម។ យើងគ្រប់គ្រងវដ្តជីវិតទាំងមូលពីគំនិតដល់ការបញ្ចប់។' },
-            icon: PenTool,
-            features: [
-                { en: 'Architectural Design', kh: 'ការរចនាស្ថាបត្យកម្ម' },
-                { en: 'Structural Engineering', kh: 'វិស្វកម្មសំណង់' },
-                { en: 'Permit Acquisition', kh: 'ការស្នើសុំលិខិតអនុញ្ញាត' },
-                { en: 'Turnkey Construction', kh: 'សេវាកម្មសាងសង់ទាំងស្រុង' }
-            ],
-            image: '/images/projects/Thumbnail-6.jpg'
-        },
-        {
-            id: 'renovation',
-            title: { en: 'Construction', kh: 'ការសាងសង់' },
-            desc: { en: 'World-class building and civil engineering solutions. We deliver robust structures tailored to residential, commercial, and industrial needs.', kh: 'ដំណោះស្រាយវិស្វកម្មស៊ីវិល និងសំណង់កម្រិតពិភពលោក។ យើងផ្តល់ជូននូវរចនាសម្ព័ន្ធរឹងមាំតម្រូវតាមតម្រូវការលំនៅដ្ឋាន ពាណិជ្ជកម្ម និងឧស្សាហកម្ម។' },
-            icon: Hammer,
-            features: [
-                { en: 'Civil Engineering', kh: 'វិស្វកម្មស៊ីវិល' },
-                { en: 'Building Structure', kh: 'រចនាសម្ព័ន្ធអគារ' },
-                { en: 'MEP Systems', kh: 'ប្រព័ន្ធទឹក ភ្លើង និងម៉ាស៊ីន (MEP)' },
-                { en: 'Industrial Plants', kh: 'រោងចក្រឧស្សាហកម្ម' }
-            ],
-            image: '/images/projects/Thumbnail-4.jpg'
-        },
-        {
-            id: 'project-management',
-            title: { en: 'Project Management', kh: 'ការគ្រប់គ្រងគម្រោង' },
-            desc: { en: 'Comprehensive oversight and strategic advisory ensuring on-time, on-budget delivery. We combine rigorous on-field management with technical and financial insights.', kh: 'ការត្រួតពិនិត្យដ៏ទូលំទូលាយ និងការផ្តល់ប្រឹក្សាយុទ្ធសាស្រ្តធានាបាននូវការដឹកជញ្ជូនទាន់ពេល និងចំថវិកា។ យើងរួមបញ្ចូលការគ្រប់គ្រងយ៉ាងតឹងរ៉ឹងជាមួយចំណេះដឹងផ្នែកបច្ចេកទេស និងហិរញ្ញវត្ថុ។' },
-            icon: Briefcase,
-            features: [
-                { en: 'Cost Control & Value Engineering', kh: 'ការគ្រប់គ្រងថ្លៃដើម និងវិស្វកម្មតម្លៃ' },
-                { en: 'Feasibility Studies', kh: 'ការសិក្សាសមិទ្ធភាព' },
-                { en: 'Quality & Safety Compliance', kh: 'ការអនុលោមតាមគុណភាព និងសុវត្ថិភាព' },
-                { en: 'Regulatory Advice', kh: 'ការប្រឹក្សាបទប្បញ្ញត្តិ' }
-            ],
-            image: '/images/projects/Thumbnail-5.jpg'
-        }
-    ];
+    const { services, process, sectors } = serviceData;
 
-    const process = [
-        { step: '01', title: { en: 'Consultation & Analysis', kh: 'ការប្រឹក្សា និងការវិភាគ' }, desc: { en: 'Understanding requirements, performing site data deep dives, and feasibility analysis.', kh: 'ការយល់ដឹងអំពីតម្រូវការ ការវិភាគទិន្នន័យទីតាំង និងការវិភាគសមិទ្ធភាព។' }, icon: Users },
-        { step: '02', title: { en: 'Planning & Procurement', kh: 'ការរៀបចំផែនការ និងការទិញ' }, desc: { en: 'Defining project roadmap, budgets, baselines, and vendor selection.', kh: 'ការកំណត់ផែនទីបង្ហាញផ្លូវគម្រោង ថវិកា និងការជ្រើសរើសអ្នកផ្គត់ផ្គង់។' }, icon: LayoutTemplate },
-        { step: '03', title: { en: 'Execution & Advisory', kh: 'ការអនុវត្ត និងការប្រឹក្សា' }, desc: { en: 'On-site management, daily coordination, and ongoing strategic guidance.', kh: 'ការគ្រប់គ្រងនៅនឹងកន្លែង ការសម្របសម្រួលប្រចាំថ្ងៃ និងការណែនាំយុទ្ធសាស្រ្ត។' }, icon: HardHat },
-        { step: '04', title: { en: 'Systems Integration', kh: 'ការរួមបញ្ចូលប្រព័ន្ធ' }, desc: { en: 'Implementing smart building tech, MEP systems, and advanced automation.', kh: 'ការអនុវត្តបច្ចេកវិទ្យាអគារឆ្លាតវៃ ប្រព័ន្ធ MEP និងការធ្វើស្វ័យប្រវត្តិកម្ម។' }, icon: Settings },
-        { step: '05', title: { en: 'Close-out & Reporting', kh: 'ការបញ្ចប់ និងការរាយការណ៍' }, desc: { en: 'Final accounting, documentation, and delivering actionable recommendations.', kh: 'គណនេយ្យចុងក្រោយ ឯកសារ និងការផ្តល់អនុសាសន៍។' }, icon: CheckCircle2 }
-    ];
-
-    const sectors = [
-        { title: { en: 'Government', kh: 'រដ្ឋាភិបាល' }, icon: Landmark, image: '/images/projects/Thumbnail-1.jpg' },
-        { title: { en: 'Public Service', kh: 'សេវាសាធារណៈ' }, icon: GraduationCap, image: '/images/projects/Thumbnail-9.jpg' },
-        { title: { en: 'Commercial', kh: 'ពាណិជ្ជកម្ម' }, icon: Building, image: '/images/projects/Thumbnail-2.jpg' },
-        { title: { en: 'Infrastructure', kh: 'ហេដ្ឋារចនាសម្ព័ន្ធ' }, icon: Truck, image: '/images/projects/Thumbnail-7.jpg' },
-        { title: { en: 'Water Treatment', kh: 'ប្រព្រឹត្តិកម្មទឹក' }, icon: Zap, image: '/images/projects/Thumbnail-1.jpg' },
-        { title: { en: 'Systems', kh: 'ប្រព័ន្ធទូទៅ' }, icon: Settings, image: '/images/projects/Thumbnail-6.jpg' },
-    ];
+    // Icon lookups (icons are React components and cannot be stored in JSON data)
+    const processIcons = [Users, LayoutTemplate, HardHat, Settings, CheckCircle2];
+    const sectorIcons = [Landmark, GraduationCap, Building, Truck, Zap, Settings];
 
     return (
         <div className="bg-white min-h-screen font-sans text-titan-navy">
@@ -192,7 +140,7 @@ export default function ServicesPage() {
 
                 <div className="space-y-12">
                     {services.map((service, i) => (
-                        <FadeInWhenVisible key={i} delay={i * 0.1}>
+                        <FadeInWhenVisible key={service.id} delay={i * 0.1}>
                             <Link href={`/design-z/services/${service.id}`} className="group block">
                                 <div className={`flex flex-col lg:flex-row gap-0 rounded-none overflow-hidden shadow-2xl transition-all duration-500 bg-white border-b-4 border-titan-navy hover:border-titan-red`}>
 
@@ -279,7 +227,7 @@ export default function ServicesPage() {
                                             {/* Rotating Architectural Square */}
                                             <div className="w-24 h-24 bg-[#0F172A]/90 backdrop-blur-2xl border-[1px] border-white/10 rounded-2xl flex items-center justify-center relative z-10 group-hover:border-titan-red transition-all duration-700 rotate-45 group-hover:rotate-[225deg] shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)]">
                                                 <div className="-rotate-45 group-hover:-rotate-[225deg] transition-all duration-700 flex flex-col items-center">
-                                                    <s.icon size={32} className="text-white group-hover:text-titan-red transition-colors" />
+                                                    {React.createElement(processIcons[i] || Settings, { size: 32, className: 'text-white group-hover:text-titan-red transition-colors' })}
                                                 </div>
                                             </div>
 
@@ -393,7 +341,7 @@ export default function ServicesPage() {
                                 {/* Content */}
                                 <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                                     <div className="w-12 h-12 bg-titan-red rounded-lg flex items-center justify-center text-white mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                        <sector.icon size={24} />
+                                        {React.createElement(sectorIcons[i] || Building, { size: 24 })}
                                     </div>
                                     <h3 className="text-2xl font-bold text-white mb-2">{getLocalizedText(sector.title, language)}</h3>
                                     <div className="h-0 group-hover:h-auto overflow-hidden transition-all duration-300">
