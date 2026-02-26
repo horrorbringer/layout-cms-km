@@ -37,9 +37,26 @@ export default function ProjectsAdmin() {
         return matchesSearch && matchesCategory;
     });
 
-    const handleDelete = (id: string, title: string) => {
+    const handleDelete = async (id: string, title: string) => {
         if (confirm(`Are you sure you want to delete ${title}?`)) {
-            setProjects(projects.filter(p => p.id !== id));
+            const updatedProjects = projects.filter(p => p.id !== id);
+            setProjects(updatedProjects);
+
+            try {
+                const response = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'projectData.ts', data: updatedProjects }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save project deletion');
+                }
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                alert('Failed to save deletion. Reverting changes.');
+                setProjects(projects); // Revert UI
+            }
         }
     };
 

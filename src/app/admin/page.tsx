@@ -16,20 +16,46 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const stats = [
-    { label: 'Total Projects', value: '15', icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50', change: '+2', trend: 'up' },
-    { label: 'Active Team', value: '10', icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50', change: '0', trend: 'neutral' },
-    { label: 'Completed', value: '12', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50', change: '+3', trend: 'up' },
-    { label: 'Pending', value: '3', icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50', change: '-1', trend: 'down' },
-];
-
-const recentProjects = [
-    { title: 'Ministry of Interior HQ', category: 'Government', status: 'Completed', date: '2 hours ago' },
-    { title: 'Phum Prek WTP Expansion', category: 'Infrastructure', status: 'In Progress', date: '5 hours ago' },
-    { title: 'Royal University Stadium', category: 'Education', status: 'In Progress', date: '1 day ago' },
-];
+import { projects } from '@/app/design-z/data/projectData';
+import { teamMembers } from '@/app/design-z/data/teamData';
 
 export default function AdminDashboard() {
+    const totalProjects = projects.length;
+    const activeTeam = teamMembers.length;
+    const completedProjects = projects.filter(p => p.status.en === 'Completed' || p.status.en === 'បានបញ្ចប់').length;
+    const pendingProjects = totalProjects - completedProjects;
+
+    const stats = [
+        { label: 'Total Projects', value: totalProjects.toString(), icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50', change: '+2', trend: 'up' },
+        { label: 'Active Team', value: activeTeam.toString(), icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50', change: '0', trend: 'neutral' },
+        { label: 'Completed', value: completedProjects.toString(), icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50', change: '+3', trend: 'up' },
+        { label: 'Pending', value: pendingProjects.toString(), icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50', change: '-1', trend: 'down' },
+    ];
+
+    const recentProjects = projects.slice(0, 3).map((p, index) => ({
+        title: p.title.en || 'Untitled',
+        category: p.type.en || 'N/A',
+        status: p.status.en || 'Pending',
+        date: index === 0 ? '2 hours ago' : index === 1 ? '5 hours ago' : '1 day ago'
+    }));
+
+    const typeDistribution = projects.reduce((acc, p) => {
+        let type = p.type.en || 'Other';
+        if (type.includes('Government')) type = 'Government';
+        else if (type.includes('Water') || type.includes('Infrastructure') || type.includes('Slope')) type = 'Infrastructure';
+        else if (type.includes('Public')) type = 'Public Service';
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+
+    const topTypes = Object.entries(typeDistribution)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 3)
+        .map(([name, count], i) => ({
+            name,
+            percentage: Math.round((count / Math.max(1, totalProjects)) * 100),
+            colorClass: i === 0 ? 'bg-indigo-500' : i === 1 ? 'bg-blue-500' : 'bg-emerald-500'
+        }));
     return (
         <div className="space-y-8">
             {/* Page Header */}
@@ -59,8 +85,8 @@ export default function AdminDashboard() {
                                 <stat.icon size={20} />
                             </div>
                             <div className={`flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-md ${stat.trend === 'up' ? 'text-emerald-600 bg-emerald-50' :
-                                    stat.trend === 'down' ? 'text-red-500 bg-red-50' :
-                                        'text-slate-500 bg-slate-100'
+                                stat.trend === 'down' ? 'text-red-500 bg-red-50' :
+                                    'text-slate-500 bg-slate-100'
                                 }`}>
                                 {stat.trend === 'up' && <ArrowUpRight size={14} />}
                                 {stat.trend === 'down' && <ArrowDownRight size={14} />}
@@ -132,33 +158,17 @@ export default function AdminDashboard() {
                         </div>
 
                         <div className="space-y-5">
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
-                                    <span className="text-slate-500">Infrastructure</span>
-                                    <span className="text-slate-900">45%</span>
+                            {topTypes.map((type, i) => (
+                                <div key={i} className="space-y-2">
+                                    <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
+                                        <span className="text-slate-500">{type.name}</span>
+                                        <span className="text-slate-900">{type.percentage}%</span>
+                                    </div>
+                                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                        <motion.div initial={{ width: 0 }} animate={{ width: `${type.percentage}%` }} className={`h-full ${type.colorClass}`} />
+                                    </div>
                                 </div>
-                                <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                    <motion.div initial={{ width: 0 }} animate={{ width: '45%' }} className="h-full bg-indigo-500" />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
-                                    <span className="text-slate-500">Government</span>
-                                    <span className="text-slate-900">35%</span>
-                                </div>
-                                <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                    <motion.div initial={{ width: 0 }} animate={{ width: '35%' }} className="h-full bg-blue-500" />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
-                                    <span className="text-slate-500">Commercial</span>
-                                    <span className="text-slate-900">20%</span>
-                                </div>
-                                <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                    <motion.div initial={{ width: 0 }} animate={{ width: '20%' }} className="h-full bg-emerald-500" />
-                                </div>
-                            </div>
+                            ))}
                         </div>
 
                         <div className="mt-8 pt-6 border-t border-slate-100">
