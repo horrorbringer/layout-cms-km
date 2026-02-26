@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useLanguage, getLocalizedText } from '../context/LanguageContext';
 import { orgChartData, OrgNode } from '../data/orgChartData';
 import { milestones, Milestone } from '../data/milestonesData';
+import { aboutData } from '../data/aboutData';
 
 // Modal Component for Member Details
 function MemberDetailModal({ member, isOpen, onClose, language }: { member: any; isOpen: boolean; onClose: () => void; language: string }) {
@@ -637,92 +638,50 @@ export default function AboutPage() {
                                     {t('Cambodia Premier Partner')}
                                 </h2>
                                 <p className="text-titan-navy/60 text-lg leading-relaxed mb-8">
-                                    {t('Who We Are Desc Headline')}
+                                    {getLocalizedText(aboutData.story as any, language as any)}
                                 </p>
 
                                 <div className="space-y-4">
-                                    {[
-                                        {
-                                            icon: Flag,
-                                            title: { en: 'Our Mission', kh: 'បេសកកម្មរបស់យើង' },
-                                            desc: { en: 'To bridge the gap between concept and reality through exceptional engineering and safety.', kh: 'បញ្ចប់គម្លាតរវាងគំនិត និងភាពពិតប្រាកដតាមរយៈវិស្វកម្ម និងសុវត្ថិភាពដ៏ល្អឥតខ្ចោះ។' },
-                                            detail: '',
-                                            points: [
-                                                { en: 'WINNING THROUGH TALENT RESTRUCTURING & DEVELOPMENT.', kh: 'ជោគជ័យតាមរយៈការរៀបចំរចនាសម្ព័ន្ធ និងអភិវឌ្ឍន៍ជំនាញ។' },
-                                                { en: 'INTEGRATED PROJECT MANAGEMENT.', kh: 'ការគ្រប់គ្រងគម្រោងចម្រុះ។' },
-                                                { en: 'BUILD WITH QUALITY AND CREATIVITY.', kh: 'សាងសង់ប្រកបដោយគុណភាព និងភាពច្នៃប្រឌិត។' }
-                                            ]
-                                        },
-                                        {
-                                            icon: Eye,
-                                            title: { en: 'Our Vision', kh: 'ចក្ខុវិស័យរបស់យើង' },
-                                            desc: { en: 'To be the most trusted and innovative construction partner in Cambodia.', kh: 'ដើម្បីក្លាយជាដៃគូសាងសង់ដែលគួរឱ្យទុកចិត្ត និងប្រកបដោយភាពច្នៃប្រឌិតបំផុតនៅកម្ពុជា។' },
-                                            detail: '“ TO BE THE FIRST CHOICE OF TRUSTED PARTNER OF CONSTURCTION & ARCHITECTURE”',
-                                            points: []
-                                        },
-                                        {
-                                            icon: Target,
-                                            title: { en: 'Our Goal', kh: 'គោលដៅរបស់យើង' },
-                                            desc: { en: 'To complete every project on time and within budget with zero-accident safety.', kh: 'ដើម្បីបញ្ចប់រាល់គម្រោងទាន់ពេលវេលា និងក្នុងថវិកាដោយសុវត្ថិភាពគ្មានគ្រោះថ្នាក់។' },
-                                            detail: { en: 'Success for us is measured by the safety of our team and the satisfaction of our clients. We strive for excellence through meticulous planning and execution.', kh: 'ភាពជោគជ័យសម្រាប់យើងត្រូវបានវាស់វែងដោយសុវត្ថិភាពរបស់ក្រុមការងារ និងការពេញចិត្តរបស់អតិថិជន។ យើងខិតខំស្វះស្វែងរកឧត្តមភាពតាមរយៈការធ្វើផែនការ និងការអនុវត្តយ៉ាងយកចិត្តទុកដាក់។' },
-                                            points: [
-                                                { en: 'Achieving 100% on-time project completion.', kh: 'សម្រេចឲ្យបានការបញ្ចប់គម្រោងទាន់ពេល 100% ។' },
-                                                { en: 'Maintaining a strict zero-accident safety record.', kh: 'រក្សាអត្រាសុវត្ថិភាពគ្មានគ្រោះថ្នាក់។' },
-                                                { en: 'Expanding our footprint into renewable infrastructure.', kh: 'ពង្រីកដំណើរការរបស់យើងទៅក្នុងហេដ្ឋារចនាសម្ព័ន្ធកកើតឡើងវិញ។' },
-                                                { en: 'Investing in professional growth of our staff.', kh: 'ការវិនិយោគក្នុងការរីកចម្រើនផ្នែកវិជ្ជាជីវៈនៃបុគ្គលិករបស់យើង។' }
-                                            ]
-                                        },
-                                    ].map((item, i) => (
-                                        <div
-                                            key={i}
-                                            className={`p-6 rounded-2xl transition-all duration-300 cursor-pointer border ${activeMissionIndex === i ? 'bg-gray-50 border-titan-red/20 shadow-sm' : 'bg-white border-transparent hover:bg-gray-50'}`}
-                                            onClick={() => setActiveMissionIndex(activeMissionIndex === i ? null : i)}
-                                        >
-                                            <div className="flex gap-5 group">
-                                                <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${activeMissionIndex === i ? 'bg-titan-red text-white' : 'bg-titan-red/10 text-titan-red group-hover:bg-titan-red group-hover:text-white'}`}>
-                                                    <item.icon size={24} />
-                                                </div>
-                                                <div className="flex-grow">
-                                                    <div className="flex items-center justify-between mb-1">
-                                                        <h3 className={`text-lg font-bold transition-colors ${activeMissionIndex === i ? 'text-titan-red' : 'text-titan-navy group-hover:text-titan-red'}`}>{getLocalizedText(item.title, language)}</h3>
-                                                        <motion.div
-                                                            animate={{ rotate: activeMissionIndex === i ? 90 : 0 }}
-                                                            className={`text-titan-red/30 transition-colors ${activeMissionIndex === i ? 'text-titan-red' : ''}`}
-                                                        >
-                                                            <ArrowRight size={18} />
-                                                        </motion.div>
+                                    {aboutData.values.map((item, i) => {
+                                        const icon = i === 1 ? Flag : i === 0 ? Eye : Target;
+                                        return (
+                                            <div
+                                                key={item.id}
+                                                className={`p-6 rounded-2xl transition-all duration-300 cursor-pointer border ${activeMissionIndex === i ? 'bg-gray-50 border-titan-red/20 shadow-sm' : 'bg-white border-transparent hover:bg-gray-50'}`}
+                                                onClick={() => setActiveMissionIndex(activeMissionIndex === i ? null : i)}
+                                            >
+                                                <div className="flex gap-5 group">
+                                                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${activeMissionIndex === i ? 'bg-titan-red text-white' : 'bg-titan-red/10 text-titan-red group-hover:bg-titan-red group-hover:text-white'}`}>
+                                                        {React.createElement(icon, { size: 24 })}
                                                     </div>
-                                                    <p className="text-titan-navy/50 text-sm leading-relaxed">{getLocalizedText(item.desc, language)}</p>
+                                                    <div className="flex-grow">
+                                                        <div className="flex items-center justify-between mb-1">
+                                                            <h3 className={`text-lg font-bold transition-colors ${activeMissionIndex === i ? 'text-titan-red' : 'text-titan-navy group-hover:text-titan-red'}`}>{getLocalizedText(item.title as any, language as any)}</h3>
+                                                        </div>
+                                                        <p className="text-titan-navy/50 text-sm leading-relaxed">{getLocalizedText(item.content as any, language as any)}</p>
 
-                                                    <AnimatePresence>
-                                                        {activeMissionIndex === i && (
-                                                            <motion.div
-                                                                initial={{ height: 0, opacity: 0 }}
-                                                                animate={{ height: 'auto', opacity: 1 }}
-                                                                exit={{ height: 0, opacity: 0 }}
-                                                                transition={{ duration: 0.3 }}
-                                                                className="overflow-hidden"
-                                                            >
-                                                                <div className="pt-6 mt-6 border-t border-gray-200">
-                                                                    <p className="text-titan-navy/70 text-sm leading-relaxed mb-4 italic">
-                                                                        {typeof item.detail === 'string' ? item.detail : getLocalizedText(item.detail, language)}
-                                                                    </p>
-                                                                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                                                                        {item.points.map((point: any, idx) => (
-                                                                            <li key={idx} className="flex items-start gap-2 text-xs font-bold text-titan-navy/60">
-                                                                                <div className="w-1.5 h-1.5 bg-titan-red rounded-full mt-1.5 shrink-0"></div>
-                                                                                {getLocalizedText(point, language)}
-                                                                            </li>
-                                                                        ))}
-                                                                    </ul>
-                                                                </div>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
+                                                        <AnimatePresence>
+                                                            {activeMissionIndex === i && (
+                                                                <motion.div
+                                                                    initial={{ height: 0, opacity: 0 }}
+                                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                                    exit={{ height: 0, opacity: 0 }}
+                                                                    transition={{ duration: 0.3 }}
+                                                                    className="overflow-hidden"
+                                                                >
+                                                                    <div className="pt-6 mt-6 border-t border-gray-200">
+                                                                        <p className="text-titan-navy/70 text-sm leading-relaxed italic">
+                                                                            {getLocalizedText(item.content as any, language as any)}
+                                                                        </p>
+                                                                    </div>
+                                                                </motion.div>
+                                                            )}
+                                                        </AnimatePresence>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </FadeInWhenVisible>
