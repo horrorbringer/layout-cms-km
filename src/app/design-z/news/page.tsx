@@ -5,107 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar, User, Tag, TrendingUp, Newspaper, ChevronRight, Briefcase, FileText, Download, Check, ChevronDown, Filter, Clock, Bookmark, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage, getLocalizedText } from '../context/LanguageContext';
+import { allNews } from '../data/newsData';
 
-// Mock Data for News
-const allNews = [
-    {
-        id: '1',
-        title: 'Kimmex Awarded "Best Commercial Project 2025" at PropertyGuru Awards',
-        category: 'Awards',
-        date: 'Oct 15, 2025',
-        readTime: '5 min read',
-        image: '/images/projects/Thumbnail-8.jpg',
-        excerpt: 'We are honored to receive the prestigious Gold Award for the new Ministry of Interior complex, recognized for its architectural excellence and sustainable design.',
-        featured: true,
-        trending: true,
-        author: 'Sarah Jenkins'
-    },
-    {
-        id: '2',
-        title: 'Breaking Ground on the New Sihanoukville Logistics Hub',
-        category: 'Project Updates',
-        date: 'Sep 22, 2025',
-        readTime: '3 min read',
-        image: '/images/projects/Thumbnail-1.jpg',
-        excerpt: 'Phase 1 of the massive logistics center has officially begun. This project aims to revolutionize the supply chain infrastructure in the coastal region.',
-        featured: false,
-        trending: true,
-        author: 'David Chen'
-    },
-    {
-        id: '3',
-        title: 'Safety First: Achieving 2 Million Man-Hours Without Lost Time Injury',
-        category: 'Safety',
-        date: 'Aug 05, 2025',
-        readTime: '4 min read',
-        image: '/images/projects/Thumbnail-2.jpg',
-        excerpt: 'A milestone achievement for our construction teams at the Calmette Hospital site, proving that safety and speed can go hand in hand.',
-        featured: false,
-        trending: false,
-        author: 'HSE Dept'
-    },
-    {
-        id: '4',
-        title: 'Introducing Our New "Green Build" Initiative',
-        category: 'Sustainability',
-        date: 'Jul 12, 2025',
-        readTime: '6 min read',
-        image: '/images/projects/Thumbnail-7.jpg',
-        excerpt: 'Commiting to a sustainable future, Kimmex pledges to reduce carbon footprint by 30% across all new projects starting 2026.',
-        featured: false,
-        trending: false,
-        author: 'Eco Team'
-    },
-    {
-        id: '5',
-        title: 'Annual Staff Retreat 2025: Building Bonds',
-        category: 'Culture',
-        date: 'Jun 20, 2025',
-        readTime: '8 min read',
-        image: '/images/projects/Thumbnail-5.jpg',
-        excerpt: 'Our team gathered in Siem Reap for a weekend of team building, strategy planning, and celebrating our shared successes.',
-        featured: false,
-        trending: false,
-        author: 'HR Dept'
-    },
-    {
-        id: '6',
-        title: 'Kimmex Partners with RUPP for Internship Program',
-        category: 'Community',
-        date: 'May 30, 2025',
-        readTime: '2 min read',
-        image: '/images/projects/Thumbnail-6.jpg',
-        excerpt: 'Fostering the next generation of engineers, we are proud to announce a signed MoU with the Royal University of Phnom Penh.',
-        featured: false,
-        trending: true,
-        author: 'University Rel.'
-    },
-    {
-        id: '7',
-        title: 'Innovative Steel Structures: A New Era',
-        category: 'Innovation',
-        date: 'Apr 10, 2025',
-        readTime: '5 min read',
-        image: '/images/projects/Thumbnail-3.jpg',
-        excerpt: 'Exploring the latest in steel fabrication technology and how it speeds up delivery times.',
-        featured: false,
-        trending: false,
-        author: 'Engineering'
-    },
-    {
-        id: '8',
-        title: 'Advanced MEP Systems Integration in High-Rise Buildings',
-        category: 'Systems',
-        date: 'Mar 15, 2025',
-        readTime: '7 min read',
-        image: '/images/projects/Thumbnail-4.jpg',
-        excerpt: 'How we are implementing smart mechanical, electrical, and plumbing systems to improve building efficiency and sustainability.',
-        featured: false,
-        trending: false,
-        author: 'Technical Team'
-    }
-];
 
 const categories = ['All', 'Trending', 'Project Updates', 'Awards', 'Safety', 'Sustainability', 'Culture', 'Innovation', 'Systems'];
 const years = ['All', '2026', '2025', '2024'];
@@ -127,7 +29,7 @@ const getCategoryColor = (category: string) => {
 const trendingNews = allNews.filter(n => n.trending);
 
 export default function NewsPage() {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [activeCategory, setActiveCategory] = useState('All');
     const [activeYear, setActiveYear] = useState('All');
     const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
@@ -149,7 +51,7 @@ export default function NewsPage() {
     const filteredNews = allNews.filter(n => {
         const matchesCategory = activeCategory === 'All' ||
             (activeCategory === 'Trending' ? n.trending : n.category === activeCategory);
-        const matchesYear = activeYear === 'All' || n.date.includes(activeYear);
+        const matchesYear = activeYear === 'All' || n.year === activeYear;
         return matchesCategory && matchesYear;
     });
 
@@ -169,13 +71,17 @@ export default function NewsPage() {
 
                 <div className="relative z-10 max-w-[1600px] mx-auto flex flex-col items-center text-center">
                     <span className="inline-block px-3 py-1 rounded-full border border-white/20 text-[10px] font-black uppercase tracking-widest text-white/80 mb-4 backdrop-blur-sm bg-white/5 mt-5">
-                        Insights & Updates
+                        {t('INSIGHTS & UPDATES')}
                     </span>
-                    <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight mb-6 drop-shadow-lg font-outfit">
-                        TITAN <span className="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-orange-400">NEWSROOM</span>
+                    <h1 className={`font-black text-white mb-6 drop-shadow-lg font-outfit ${language === 'kh'
+                        ? 'text-4xl md:text-5xl leading-[1.3] tracking-normal'
+                        : 'text-4xl md:text-7xl leading-tight tracking-tight'
+                        }`}>
+                        TITAN <span className="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-orange-400">{t('NEWSROOM')}</span>
                     </h1>
-                    <p className="max-w-xl text-white/80 text-lg font-light leading-relaxed drop-shadow-md">
-                        Your central hub for the latest construction announcements, project milestones, and industry insights from Kimmex.
+                    <p className={`max-w-xl text-white/80 font-light drop-shadow-md ${language === 'kh' ? 'text-base leading-[1.8]' : 'text-lg leading-relaxed'
+                        }`}>
+                        {t('Newsroom Subtitle')}
                     </p>
                 </div>
             </div>
@@ -195,7 +101,8 @@ export default function NewsPage() {
                                         key={cat}
                                         onClick={() => setActiveCategory(cat)}
                                         className={`
-                                            relative px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap z-10
+                                            relative px-5 py-2 rounded-full transition-all whitespace-nowrap z-10 font-bold
+                                            ${language === 'kh' ? 'text-[13px]' : 'text-[10px] uppercase tracking-widest font-black'}
                                             ${isActive ? 'text-white' : 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-100'}
                                         `}
                                     >
@@ -275,7 +182,7 @@ export default function NewsPage() {
                     {/* Featured Article (Left - Large) */}
                     <div className="lg:col-span-8 h-full relative group cursor-pointer overflow-hidden rounded-2xl shadow-sm border border-gray-100">
                         <Link href={`/design-z/news/${activeFeaturedNews.id}`} className="block h-[400px] md:h-[500px] lg:h-full relative">
-                            <Image src={activeFeaturedNews.image} alt={activeFeaturedNews.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+                            <Image src={activeFeaturedNews.image} alt={getLocalizedText(activeFeaturedNews.title, language)} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
                             <div className="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
                             <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full max-w-3xl">
                                 <motion.div
@@ -286,16 +193,22 @@ export default function NewsPage() {
                                     <span className="inline-flex items-center gap-2 bg-titan-red/90 backdrop-blur text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 mb-4 rounded-sm shadow-lg">
                                         <TrendingUp size={12} /> {t('Featured Story')}
                                     </span>
-                                    <h1 className="text-2xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-[0.9] tracking-tight group-hover:underline decoration-4 underline-offset-8 decoration-titan-red/50 font-outfit">
-                                        {activeFeaturedNews.title}
+                                    <h1 className={`font-black text-white mb-6 group-hover:underline decoration-4 underline-offset-8 decoration-titan-red/50 font-outfit ${language === 'kh'
+                                        ? 'text-xl md:text-3xl lg:text-4xl leading-[1.4] tracking-normal'
+                                        : 'text-2xl md:text-5xl lg:text-6xl leading-[0.95] tracking-tight'
+                                        }`}>
+                                        {getLocalizedText(activeFeaturedNews.title, language)}
                                     </h1>
-                                    <p className="text-white/80 text-sm md:text-lg mb-6 line-clamp-2 max-w-xl font-medium leading-relaxed">
-                                        {activeFeaturedNews.excerpt}
+                                    <p className={`text-white/80 mb-6 line-clamp-2 max-w-xl font-medium ${language === 'kh' ? 'text-sm md:text-base leading-[1.8]' : 'text-sm md:text-lg leading-relaxed'
+                                        }`}>
+                                        {getLocalizedText(activeFeaturedNews.excerpt, language)}
                                     </p>
                                     <div className="flex items-center gap-4 md:gap-6 text-white/60 text-[10px] md:text-xs font-bold uppercase tracking-widest border-t border-white/10 pt-6">
-                                        <span className="flex items-center gap-2 text-white"><User size={14} className="text-titan-red" /> {activeFeaturedNews.author}</span>
-                                        <span className="flex items-center gap-2"><Calendar size={14} /> {activeFeaturedNews.date}</span>
-                                        <span className="flex items-center gap-2"><Clock size={14} /> {activeFeaturedNews.readTime}</span>
+                                        <span className="flex items-center gap-2 text-titan-navy/70"><Calendar size={14} className="text-titan-red" /> {getLocalizedText(activeFeaturedNews.date, language)}</span>
+                                        <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                        <span className="flex items-center gap-2"><User size={14} /> {getLocalizedText(activeFeaturedNews.author, language)}</span>
+                                        <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                        <span className="flex items-center gap-2"><Clock size={14} /> {getLocalizedText(activeFeaturedNews.readTime, language)}</span>
                                     </div>
                                 </motion.div>
                             </div>
@@ -307,7 +220,7 @@ export default function NewsPage() {
                         <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col">
                             <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
                                 <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-titan-navy">
-                                    <TrendingUp size={16} className="text-titan-red" /> Trending Now
+                                    <TrendingUp size={16} className="text-titan-red" /> {t('Trending')}
                                 </h3>
                             </div>
 
@@ -316,11 +229,12 @@ export default function NewsPage() {
                                     <Link key={i} href={`/design-z/news/${news.id}`} className="group flex gap-5 items-start">
                                         <div className="text-3xl font-black text-gray-100 group-hover:text-titan-red/20 transition-colors leading-none -mt-1">0{i + 1}</div>
                                         <div>
-                                            <span className="text-[9px] font-bold text-titan-red uppercase tracking-wider mb-1.5 block">{news.category}</span>
-                                            <h4 className="font-bold text-lg text-titan-navy leading-tight group-hover:text-titan-red transition-colors mb-2">
-                                                {news.title}
+                                            <span className="text-[9px] font-bold text-titan-red uppercase tracking-wider mb-1.5 block">{t(news.category)}</span>
+                                            <h4 className={`font-bold text-titan-navy group-hover:text-titan-red transition-colors mb-2 ${language === 'kh' ? 'text-base leading-[1.6]' : 'text-lg leading-tight'
+                                                }`}>
+                                                {getLocalizedText(news.title, language)}
                                             </h4>
-                                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wide">{news.date}</p>
+                                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wide">{getLocalizedText(news.date, language)}</p>
                                         </div>
                                     </Link>
                                 ))}
@@ -343,8 +257,8 @@ export default function NewsPage() {
                 <div className="mb-20" ref={archiveRef}>
                     <div className="flex items-end justify-between mb-10 pb-4 border-b border-gray-100">
                         <div>
-                            <span className="text-titan-red font-black text-sm uppercase tracking-widest mb-2 block">The Archives</span>
-                            <h2 className="text-3xl md:text-4xl font-black text-titan-navy font-outfit">LATEST <span className="text-titan-navy/30">STORIES</span></h2>
+                            <span className="text-titan-red font-black text-sm uppercase tracking-widest mb-2 block">{t('The Archives')}</span>
+                            <h2 className="text-3xl md:text-4xl font-black text-titan-navy font-outfit">{t('LATEST')} <span className="text-titan-navy/30">{t('STORIES')}</span></h2>
                         </div>
                         {activeCategory !== 'All' && (
                             <button onClick={() => setActiveCategory('All')} className="text-xs text-titan-red font-black uppercase tracking-widest hover:underline">{t('Clear Filter')}</button>
@@ -369,10 +283,11 @@ export default function NewsPage() {
                                     <Link href={`/design-z/news/${news.id}`} className="group block h-full flex flex-col">
                                         {/* Image Container */}
                                         <div className="aspect-[16/10] relative overflow-hidden rounded-2xl mb-8 shadow-sm group-hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)] transition-all duration-500">
-                                            <Image src={news.image} alt={news.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                                            <Image src={news.image} alt={getLocalizedText(news.title, language)} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
                                             <div className="absolute top-5 left-5">
                                                 <span className={`
-                                                    backdrop-blur-md px-4 py-2 text-[9px] font-black uppercase tracking-[0.15em] rounded-lg shadow-sm border border-white/20
+                                                    backdrop-blur-md px-4 py-2 rounded-lg shadow-sm border border-white/20
+                                                    ${language === 'kh' ? 'text-[11px] font-bold' : 'text-[9px] font-black uppercase tracking-[0.15em]'}
                                                     ${getCategoryColor(news.category)}
                                                 `}>
                                                     {t(news.category)}
@@ -384,25 +299,29 @@ export default function NewsPage() {
                                         {/* Content */}
                                         <div className="flex flex-col flex-1 px-1">
                                             <div className="flex items-center gap-4 text-[10px] font-black text-titan-navy/30 uppercase tracking-[0.2em] mb-4">
-                                                <span className="flex items-center gap-1.5"><Calendar size={12} className="text-titan-red/50" /> {news.date}</span>
-                                                <span className="w-1.5 h-1.5 rounded-full bg-titan-red/20"></span>
-                                                <span className="flex items-center gap-1.5"><Clock size={12} className="text-titan-red/50" /> {news.readTime}</span>
+                                                <span className="flex items-center gap-2"><Calendar size={12} className="text-titan-red" /> {getLocalizedText(news.date, language)}</span>
+                                                <span className="w-1 h-1 bg-gray-200 rounded-full"></span>
+                                                <span className="flex items-center gap-2"><Clock size={12} /> {getLocalizedText(news.readTime, language)}</span>
                                             </div>
 
-                                            <h3 className="text-xl md:text-2xl font-black text-titan-navy mb-4 leading-[1.1] group-hover:text-titan-red transition-all duration-300">
-                                                {news.title}
+                                            <h3 className={`font-black text-titan-navy mb-4 group-hover:text-titan-red transition-all duration-300 ${language === 'kh'
+                                                    ? 'text-lg md:text-xl leading-[1.5]'
+                                                    : 'text-xl md:text-2xl leading-[1.1]'
+                                                }`}>
+                                                {getLocalizedText(news.title, language)}
                                             </h3>
 
-                                            <p className="text-[15px] text-gray-500/80 leading-relaxed mb-6 font-medium line-clamp-3">
-                                                {news.excerpt}
+                                            <p className={`text-gray-500/80 mb-6 font-medium line-clamp-3 ${language === 'kh' ? 'text-sm leading-[1.9]' : 'text-[15px] leading-relaxed'
+                                                }`}>
+                                                {getLocalizedText(news.excerpt, language)}
                                             </p>
 
                                             <div className="mt-auto flex items-center justify-between group/footer">
                                                 <div className="flex items-center gap-3 group/author">
                                                     <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-[10px] font-black text-titan-navy/40 group-hover/author:bg-titan-navy group-hover/author:text-white transition-all duration-300 shadow-sm">
-                                                        {news.author.charAt(0)}
+                                                        {getLocalizedText(news.author, language).charAt(0)}
                                                     </div>
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-titan-navy/40 group-hover/author:text-titan-navy transition-colors">{t('By')} {news.author}</span>
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-titan-navy/40 group-hover/author:text-titan-navy transition-colors">{t('By')} {getLocalizedText(news.author, language)}</span>
                                                 </div>
                                                 <div className="opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-500">
                                                     <ArrowRight size={18} className="text-titan-red" />
@@ -423,14 +342,14 @@ export default function NewsPage() {
                                         <Newspaper size={40} />
                                     </div>
                                     <div className="space-y-2">
-                                        <h3 className="text-2xl font-black text-titan-navy uppercase tracking-tight">No stories found</h3>
-                                        <p className="text-gray-400 font-medium max-w-sm mx-auto">We couldn't find any news matching your current filters. Try selecting a different topic or year.</p>
+                                        <h3 className="text-2xl font-black text-titan-navy uppercase tracking-tight">{t('No stories found')}</h3>
+                                        <p className="text-gray-400 font-medium max-w-sm mx-auto">{t('No stories desc')}</p>
                                     </div>
                                     <button
                                         onClick={() => { setActiveCategory('All'); setActiveYear('All'); }}
                                         className="mt-4 px-8 py-3 bg-titan-navy text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-titan-red transition-all shadow-xl shadow-titan-navy/20"
                                     >
-                                        Reset All Filters
+                                        {t('Reset All Filters')}
                                     </button>
                                 </motion.div>
                             </div>
@@ -440,7 +359,7 @@ export default function NewsPage() {
                     {gridNews.length > 0 && (
                         <div className="mt-20 flex justify-center">
                             <button className="group flex items-center gap-4 px-10 py-5 bg-white border border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy hover:bg-titan-navy hover:text-white hover:border-titan-navy transition-all shadow-sm hover:shadow-2xl hover:-translate-y-1">
-                                Load More Stories
+                                {t('Load More Stories')}
                                 <ChevronDown size={14} className="group-hover:translate-y-1 transition-transform" />
                             </button>
                         </div>
@@ -453,10 +372,10 @@ export default function NewsPage() {
                     <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                         <div className="lg:col-span-7 space-y-6">
                             <h2 className="text-3xl lg:text-6xl font-black text-white leading-tight tracking-tight font-outfit">
-                                STAY AHEAD OF <br /><span className="text-white/30">THE CURVE.</span>
+                                {t('STAY AHEAD OF')} <br /><span className="text-white/30">{t('THE CURVE')}</span>
                             </h2>
                             <p className="text-white/60 text-lg max-w-xl font-light leading-relaxed">
-                                Subscribe to our newsletter for exclusive insights on Cambodia's construction landscape, project updates, and industry analysis.
+                                {t('Newsletter Desc')}
                             </p>
                         </div>
                         <div className="lg:col-span-5 bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-white/10 shadow-inner">

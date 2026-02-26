@@ -2,77 +2,78 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, MapPin, Briefcase, Clock, Search, Filter, ChevronDown, Users, Globe, Award, Upload, Send, Check, DollarSign, Zap, BookOpen, Coffee, Smile, ChevronRight, Target } from 'lucide-react';
+import { ArrowRight, MapPin, Briefcase, Search, Filter, ChevronDown, Users, Globe, Award, Upload, Send, Check, DollarSign, Zap, Target } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage } from '../context/LanguageContext';
 
-// Mock Jobs Data (Enhanced with Transparent Info)
+// Mock Jobs Data
 const allJobs = [
     {
         id: 1,
-        title: 'Senior Civil Engineer',
+        title: { en: 'Senior Civil Engineer', kh: 'វិស្វករស៊ីវិលជាន់ខ្ពស់' },
         dept: 'Engineering',
         loc: 'Phnom Penh',
         type: 'Full-time',
-        tags: ['Construction', 'Planning'],
+        tags: [{ en: 'Construction', kh: 'សំណង់' }, { en: 'Planning', kh: 'ផែនការ' }],
         salary: '$2,500 - $3,500',
         experience: '5+ Years',
-        postedDate: '2 days ago'
+        postedDate: { en: '2 days ago', kh: '២ ថ្ងៃmoon' }
     },
     {
         id: 2,
-        title: 'Site Manager',
+        title: { en: 'Site Manager', kh: 'អ្នកគ្រប់គ្រងទីតាំង' },
         dept: 'Operations',
         loc: 'Sihanoukville',
         type: 'Contract',
-        tags: ['Management', 'On-site'],
+        tags: [{ en: 'Management', kh: 'គ្រប់គ្រង' }, { en: 'On-site', kh: 'នៅទីតាំង' }],
         salary: '$1,800 - $2,500',
         experience: '3-5 Years',
-        postedDate: '5 days ago'
+        postedDate: { en: '5 days ago', kh: '៥ ថ្ងៃmoon' }
     },
     {
         id: 3,
-        title: 'Architectural Designer',
+        title: { en: 'Architectural Designer', kh: 'អ្នករចនាស្ថាបត្យកម្ម' },
         dept: 'Design',
         loc: 'Phnom Penh',
         type: 'Full-time',
-        tags: ['Creativity', 'CAD'],
+        tags: [{ en: 'Creativity', kh: 'ភាពច្នៃប្រឌិត' }, { en: 'CAD', kh: 'CAD' }],
         salary: '$1,200 - $1,800',
         experience: '2+ Years',
-        postedDate: '1 week ago'
+        postedDate: { en: '1 week ago', kh: '១ សប្ដាហ៍moon' }
     },
     {
         id: 4,
-        title: 'Procurement Officer',
+        title: { en: 'Procurement Officer', kh: 'មន្ត្រីការស្នើប្រើ' },
         dept: 'Supply Chain',
         loc: 'Phnom Penh',
         type: 'Full-time',
-        tags: ['Logistics', 'Finance'],
+        tags: [{ en: 'Logistics', kh: 'ភស្តុភារ' }, { en: 'Finance', kh: 'ហិរញ្ញវត្ថុ' }],
         salary: '$800 - $1,200',
         experience: '1-3 Years',
-        postedDate: '1 week ago'
+        postedDate: { en: '1 week ago', kh: '១ សប្ដាហ៍moon' }
     },
     {
         id: 5,
-        title: 'Safety Inspector (HSE)',
+        title: { en: 'Safety Inspector (HSE)', kh: 'អ្នកត្រួតពិនិត្យសុវត្ថិភាព (HSE)' },
         dept: 'Quality & Safety',
         loc: 'Kampot',
         type: 'Full-time',
-        tags: ['Safety', 'Inspection'],
+        tags: [{ en: 'Safety', kh: 'សុវត្ថិភាព' }, { en: 'Inspection', kh: 'ការត្រួតពិនិត្យ' }],
         salary: '$1,000 - $1,500',
         experience: '3+ Years',
-        postedDate: '2 weeks ago'
+        postedDate: { en: '2 weeks ago', kh: '២ សប្ដាហ៍moon' }
     },
     {
         id: 6,
-        title: 'MEP Engineer',
+        title: { en: 'MEP Engineer', kh: 'វិស្វករ MEP' },
         dept: 'Engineering',
         loc: 'Siem Reap',
         type: 'Full-time',
-        tags: ['Electrical', 'Mechanical'],
+        tags: [{ en: 'Electrical', kh: 'អគ្គិសនី' }, { en: 'Mechanical', kh: 'មេកានិច' }],
         salary: '$1,500 - $2,200',
         experience: '4+ Years',
-        postedDate: '2 weeks ago'
+        postedDate: { en: '2 weeks ago', kh: '២ សប្ដាហ៍moon' }
     }
 ];
 
@@ -118,21 +119,47 @@ const CustomDropdown = ({ options, value, onChange, icon: Icon }: { options: str
 };
 
 export default function CareersPage() {
-    const [filterDept, setFilterDept] = useState('All Departments');
-    const [filterLoc, setFilterLoc] = useState('All Locations');
+    const { t, language } = useLanguage();
+    const [filterDept, setFilterDept] = useState(t('All Departments'));
+    const [filterLoc, setFilterLoc] = useState(t('All Locations'));
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredJobs = allJobs.filter(job => {
-        if (filterDept !== 'All Departments' && job.dept !== filterDept) return false;
-        if (filterLoc !== 'All Locations' && job.loc !== filterLoc) return false;
-        if (searchQuery && !job.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+        const deptLabel = t(job.dept);
+        if (filterDept !== t('All Departments') && deptLabel !== filterDept) return false;
+        if (filterLoc !== t('All Locations') && job.loc !== filterLoc) return false;
+        const titleEn = job.title.en.toLowerCase();
+        const titleKh = (job.title.kh || '').toLowerCase();
+        if (searchQuery && !titleEn.includes(searchQuery.toLowerCase()) && !titleKh.includes(searchQuery.toLowerCase())) return false;
         return true;
     });
 
-    const categories = ['All Departments', 'Engineering', 'Operations', 'Design', 'Supply Chain', 'Quality & Safety'];
-    const locations = ['All Locations', 'Phnom Penh', 'Sihanoukville', 'Kampot', 'Siem Reap'];
+    const categories = [t('All Departments'), t('Engineering'), t('Operations'), t('Design'), t('Supply Chain'), t('Quality & Safety')];
+    const locations = [t('All Locations'), 'Phnom Penh', 'Sihanoukville', 'Kampot', 'Siem Reap'];
 
     const [isApplyOpen, setIsApplyOpen] = useState(false);
+
+    const benefits = [
+        { icon: Briefcase, label: t('Performance Bonuses') },
+        { icon: Globe, label: t('Health Insurance') },
+        { icon: Users, label: t('Paid Time Off') },
+        { icon: Check, label: t('Training Budget') },
+        { icon: Zap, label: t('Career Development') },
+        { icon: Target, label: t('Team Retreats') },
+    ];
+
+    const cultureItems = [
+        { icon: Target, title: t('Purpose-Driven Work'), desc: t('Purpose-Driven Work Desc') },
+        { icon: Users, title: t('Mentorship Culture'), desc: t('Mentorship Culture Desc') },
+        { icon: Zap, title: t('Fast-Track Growth'), desc: t('Fast-Track Growth Desc') }
+    ];
+
+    const hiringSteps = [
+        { step: '01', title: t('Application'), desc: language === 'kh' ? 'ដាក់ CV & ស្នាដៃរបស់អ្នកតាមរយៈប្រព័ន្ធរបស់យើង។' : 'Submit your CV & Portfolio via our portal.' },
+        { step: '02', title: t('Screening'), desc: language === 'kh' ? 'ការហៅទូរស័ព្ទដំបូងជាមួយ HR ដើម្បីពិភាក្សា។' : 'Initial call with HR to discuss fit & basics.' },
+        { step: '03', title: t('Technical'), desc: language === 'kh' ? 'ការសម្ភាសន៍ស៊ីជម្រៅជាមួយប្រធានផ្នែក។' : 'Deep-dive interview with the department led.' },
+        { step: '04', title: t('Offer'), desc: language === 'kh' ? 'កំណត់លក្ខខណ្ឌ ហើយស្វាគមន៍មកកាន់ក្រុម!' : 'Establish terms and welcome you aboard!' },
+    ];
 
     return (
         <div className="bg-gray-50 min-h-screen font-sans text-titan-navy relative">
@@ -157,32 +184,32 @@ export default function CareersPage() {
                     >
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-white/90 text-xs font-bold uppercase tracking-widest mb-8 border border-white/10 backdrop-blur-sm mt-30">
                             <span className="w-2 h-2 rounded-full bg-titan-red animate-pulse"></span>
-                            We are Hiring
+                            {t('We are Hiring')}
                         </div>
                         <h1 className="text-6xl md:text-8xl font-black text-white mb-8 tracking-tight leading-[0.9]">
-                            BUILD <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">YOUR LEGACY</span>
+                            {t('BUILD YOUR LEGACY line1')} <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">{t('BUILD YOUR LEGACY line2')}</span>
                         </h1>
                         <p className="text-xl text-white/70 font-light max-w-xl leading-relaxed mb-10 border-l-4 border-titan-red pl-6">
-                            Join a team of visionaries. At Kimmex, we don't just construct buildings; we shape the skyline and engineering future of Cambodia.
+                            {t('Careers Hero Sub')}
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <button
                                 onClick={() => document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })}
                                 className="bg-titan-red text-white px-8 py-4 rounded-lg font-bold uppercase tracking-widest hover:bg-white hover:text-titan-red transition-all shadow-lg hover:shadow-titan-red/20"
                             >
-                                View Openings
+                                {t('View Openings')}
                             </button>
                             <button
                                 onClick={() => setIsApplyOpen(true)}
                                 className="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-lg font-bold uppercase tracking-widest hover:bg-white hover:text-titan-navy transition-all backdrop-blur-sm"
                             >
-                                Apply General
+                                {t('Apply General')}
                             </button>
                         </div>
                     </motion.div>
 
-                    {/* Hero Stats/Visuals - Hidden on mobile */}
+                    {/* Hero Stats (Hidden on mobile) */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -191,16 +218,16 @@ export default function CareersPage() {
                     >
                         <div className="bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-white/10 translate-y-8">
                             <h3 className="text-4xl font-black text-white mb-2">500+</h3>
-                            <p className="text-white/60 text-sm font-bold uppercase tracking-widest">Team Members</p>
+                            <p className="text-white/60 text-sm font-bold uppercase tracking-widest">{t('Team Members')}</p>
                         </div>
                         <div className="bg-titan-red p-8 rounded-2xl shadow-2xl shadow-titan-red/20">
                             <h3 className="text-4xl font-black text-white mb-2">30+</h3>
-                            <p className="text-white/80 text-sm font-bold uppercase tracking-widest">Active Projects</p>
+                            <p className="text-white/80 text-sm font-bold uppercase tracking-widest">{t('Active Projects')}</p>
                         </div>
                         <div className="bg-white p-8 rounded-2xl shadow-xl col-span-2 flex items-center justify-between">
                             <div>
-                                <h3 className="text-2xl font-black text-titan-navy mb-1">Top Employer</h3>
-                                <p className="text-titan-navy-subtle text-xs font-bold uppercase tracking-widest">Awarded 2024 - 2025</p>
+                                <h3 className="text-2xl font-black text-titan-navy mb-1">{t('Top Employer')}</h3>
+                                <p className="text-titan-navy-subtle text-xs font-bold uppercase tracking-widest">{t('Awarded 2024 - 2025')}</p>
                             </div>
                             <Award size={48} className="text-titan-red" />
                         </div>
@@ -211,8 +238,8 @@ export default function CareersPage() {
             {/* --- WHY JOIN US --- */}
             <section className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl font-black text-titan-navy mb-4">Why Choose Kimmex?</h2>
-                    <p className="text-titan-navy-subtle max-w-2xl mx-auto">More than just a job, we offer a pathway to professional excellence.</p>
+                    <h2 className="text-4xl font-black text-titan-navy mb-4">{t('Why Choose Kimmex?')}</h2>
+                    <p className="text-titan-navy-subtle max-w-2xl mx-auto">{t('Why Choose Kimmex? Sub')}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -225,10 +252,8 @@ export default function CareersPage() {
                         <div className="w-16 h-16 bg-titan-bg rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-titan-red group-hover:text-white transition-colors">
                             <Award size={28} />
                         </div>
-                        <h3 className="text-xl font-black text-titan-navy mb-4">Excellence Driven</h3>
-                        <p className="text-titan-navy-subtle leading-relaxed">
-                            Work on award-winning projects that challenge the status quo and push engineering boundaries.
-                        </p>
+                        <h3 className="text-xl font-black text-titan-navy mb-4">{t('Excellence Driven')}</h3>
+                        <p className="text-titan-navy-subtle leading-relaxed">{t('Excellence Driven Desc')}</p>
                     </motion.div>
 
                     <motion.div
@@ -241,10 +266,22 @@ export default function CareersPage() {
                         <div className="w-16 h-16 bg-titan-bg rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-titan-navy group-hover:text-white transition-colors">
                             <Target size={28} />
                         </div>
-                        <h3 className="text-xl font-black text-titan-navy mb-4">Impactful Work</h3>
-                        <p className="text-titan-navy-subtle leading-relaxed">
-                            Contribute to projects that matter and leave a lasting legacy for the community.
-                        </p>
+                        <h3 className="text-xl font-black text-titan-navy mb-4">{t('Impactful Work')}</h3>
+                        <p className="text-titan-navy-subtle leading-relaxed">{t('Impactful Work Desc')}</p>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                        className="bg-white p-10 rounded-2xl shadow-xl border-b-4 border-titan-red text-center group hover:-translate-y-2 transition-transform duration-300"
+                    >
+                        <div className="w-16 h-16 bg-titan-bg rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-titan-red group-hover:text-white transition-colors">
+                            <Users size={28} />
+                        </div>
+                        <h3 className="text-xl font-black text-titan-navy mb-4">{t('Mentorship Culture')}</h3>
+                        <p className="text-titan-navy-subtle leading-relaxed">{t('Mentorship Culture Desc')}</p>
                     </motion.div>
                 </div>
             </section>
@@ -252,16 +289,12 @@ export default function CareersPage() {
             <section className="py-24 px-6 bg-white">
                 <div className="max-w-[1400px] mx-auto">
                     <div className="text-center mb-16">
-                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">Our Culture</span>
-                        <h2 className="text-4xl text-titan-navy font-black">Why Kimmex?</h2>
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">{t('Our Culture')}</span>
+                        <h2 className="text-4xl text-titan-navy font-black">{t('Why Kimmex?')}</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { icon: Target, title: 'Purpose-Driven Work', desc: 'Contribute to landmark projects that shape the nation\'s infrastructure.' },
-                            { icon: Users, title: 'Mentorship Culture', desc: 'Learn directly from industry veterans and grow your expertise.' },
-                            { icon: Zap, title: 'Fast-Track Growth', desc: 'Clear career pathways and performance-based promotion opportunities.' }
-                        ].map((item, i) => (
+                        {cultureItems.map((item, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: 0, y: 20 }}
@@ -287,21 +320,12 @@ export default function CareersPage() {
                 <div className="max-w-[1400px] mx-auto relative z-10">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <div>
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Total Rewards</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-white mb-8">More Than Just A Salary.</h2>
-                            <p className="text-white/60 text-lg mb-12 leading-relaxed">
-                                We believe in taking care of our people. Our comprehensive benefits package is designed to support your health, wealth, and professional growth.
-                            </p>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Total Rewards')}</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-white mb-8">{t('Benefits Headline')}</h2>
+                            <p className="text-white/60 text-lg mb-12 leading-relaxed">{t('Benefits Sub')}</p>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                {[
-                                    { icon: Briefcase, label: "Performance Bonuses" },
-                                    { icon: Globe, label: "Health Insurance" },
-                                    { icon: Users, label: "Paid Time Off" },
-                                    { icon: Check, label: "Training Budget" },
-                                    { icon: Zap, label: "Career Development" },
-                                    { icon: Target, label: "Team Retreats" },
-                                ].map((benefit, i) => (
+                                {benefits.map((benefit, i) => (
                                     <div key={i} className="flex items-center gap-4 bg-white/5 p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
                                         <benefit.icon size={20} className="text-titan-red" />
                                         <span className="text-white font-bold text-sm uppercase tracking-wide">{benefit.label}</span>
@@ -319,10 +343,9 @@ export default function CareersPage() {
                                 />
                                 <div className="absolute inset-0 bg-titan-navy/20"></div>
                             </div>
-                            {/* Floating Stats */}
                             <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-xl shadow-xl hidden md:block">
                                 <span className="block text-4xl font-black text-titan-navy mb-1">98%</span>
-                                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Employee Retention</span>
+                                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">{t('Employee Retention')}</span>
                             </div>
                         </div>
                     </div>
@@ -333,22 +356,15 @@ export default function CareersPage() {
             <section className="py-24 px-6 bg-gray-50">
                 <div className="max-w-[1400px] mx-auto">
                     <div className="text-center mb-20">
-                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">What To Expect</span>
-                        <h2 className="text-4xl text-titan-navy font-black">Our Hiring Process</h2>
-                        <p className="text-titan-navy/50 mt-4 max-w-2xl mx-auto">Transparent, fair, and fast. We respect your time and effort.</p>
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">{t('What To Expect')}</span>
+                        <h2 className="text-4xl text-titan-navy font-black">{t('Our Hiring Process')}</h2>
+                        <p className="text-titan-navy/50 mt-4 max-w-2xl mx-auto">{t('Our Hiring Process Sub')}</p>
                     </div>
 
                     <div className="relative">
-                        {/* Connecting Line */}
                         <div className="hidden md:block absolute top-[40px] left-0 right-0 h-[2px] bg-gray-200 z-0"></div>
-
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
-                            {[
-                                { step: "01", title: "Application", desc: "Submit your CV & Portfolio via our portal." },
-                                { step: "02", title: "Screening", desc: "Initial call with HR to discuss fit & basics." },
-                                { step: "03", title: "Technical", desc: "Deep-dive interview with the department led." },
-                                { step: "04", title: "Offer", desc: "Establish terms and welcome you aboard!" },
-                            ].map((s, i) => (
+                            {hiringSteps.map((s, i) => (
                                 <div key={i} className="flex flex-col items-center text-center group">
                                     <div className="w-20 h-20 bg-white border-4 border-gray-100 rounded-full flex items-center justify-center text-2xl font-black text-titan-navy shadow-sm mb-6 group-hover:border-titan-red group-hover:text-titan-red transition-all relative z-10">
                                         {s.step}
@@ -366,17 +382,16 @@ export default function CareersPage() {
             <section id="openings" className="px-6 max-w-[1400px] mx-auto pb-32 pt-10 border-t border-gray-200">
                 <div className="flex flex-col xl:flex-row justify-between items-end mb-12 gap-8 relative z-30 pt-20">
                     <div>
-                        <h2 className="text-4xl font-black text-titan-navy mb-3">Current Openings</h2>
-                        <p className="text-titan-navy-subtle text-lg font-medium">Find the perfect role for your skills and passion.</p>
+                        <h2 className="text-4xl font-black text-titan-navy mb-3">{t('Current Openings')}</h2>
+                        <p className="text-titan-navy-subtle text-lg font-medium">{t('Current Openings Sub')}</p>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-4 w-full xl:w-auto bg-white p-2 rounded-2xl shadow-lg border border-gray-100">
-                        {/* Search Input */}
                         <div className="relative flex-grow md:flex-grow-0 md:w-64">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                             <input
                                 type="text"
-                                placeholder="Search roles..."
+                                placeholder={t('Search roles...')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-10 pr-4 py-3 rounded-xl border-none bg-gray-50 text-sm font-bold text-titan-navy focus:outline-none focus:ring-2 focus:ring-titan-red/20 transition-all placeholder:text-gray-400"
@@ -418,47 +433,45 @@ export default function CareersPage() {
                                     <div>
                                         <div className="flex flex-wrap justify-between items-start mb-4">
                                             <div className="flex flex-wrap gap-2 items-center mb-2">
-                                                {job.tags.map(tag => (
-                                                    <span key={tag} className="px-3 py-1 bg-gray-50 text-[10px] font-black uppercase tracking-widest text-titan-navy-subtle rounded-md border border-gray-100">
-                                                        {tag}
+                                                {job.tags.map((tag, ti) => (
+                                                    <span key={ti} className="px-3 py-1 bg-gray-50 text-[10px] font-black uppercase tracking-widest text-titan-navy-subtle rounded-md border border-gray-100">
+                                                        {language === 'kh' ? tag.kh : tag.en}
                                                     </span>
                                                 ))}
-                                                {/* Posted Date */}
-                                                <span className="text-[10px] text-gray-400 font-medium ml-2">{job.postedDate}</span>
+                                                <span className="text-[10px] text-gray-400 font-medium ml-2">{language === 'kh' ? job.postedDate.kh : job.postedDate.en}</span>
                                             </div>
                                             <span className="text-[10px] font-black uppercase tracking-widest text-titan-navy/40 bg-gray-50 px-2 py-1 rounded">
-                                                {job.type}
+                                                {t(job.type)}
                                             </span>
                                         </div>
 
                                         <h3 className="text-2xl font-black text-titan-navy group-hover:text-titan-red transition-colors mb-2 pr-12 line-clamp-2">
-                                            {job.title}
+                                            {language === 'kh' ? job.title.kh : job.title.en}
                                         </h3>
 
-                                        {/* Transparent Info Grid */}
                                         <div className="grid grid-cols-2 gap-4 mb-8 bg-gray-50 rounded-xl p-4 border border-gray-100">
                                             <div>
-                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">Salary Range</span>
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">{t('Salary Range')}</span>
                                                 <div className="flex items-center gap-2 text-green-600 font-bold text-sm">
                                                     <DollarSign size={14} /> {job.salary}
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">Experience</span>
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">{t('Experience')}</span>
                                                 <div className="flex items-center gap-2 text-titan-navy font-bold text-sm">
                                                     <Award size={14} className="text-titan-red" /> {job.experience}
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">Location</span>
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">{t('Location')}</span>
                                                 <div className="flex items-center gap-2 text-titan-navy-subtle text-xs font-bold">
                                                     <MapPin size={12} /> {job.loc}
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">Department</span>
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">{t('Department')}</span>
                                                 <div className="flex items-center gap-2 text-titan-navy-subtle text-xs font-bold">
-                                                    <Briefcase size={12} /> {job.dept}
+                                                    <Briefcase size={12} /> {t(job.dept)}
                                                 </div>
                                             </div>
                                         </div>
@@ -466,7 +479,7 @@ export default function CareersPage() {
 
                                     <div className="flex items-center justify-between mt-auto">
                                         <Link href={`/design-z/careers/${job.id}`} className="w-full group/btn flex items-center justify-between bg-titan-navy text-white px-6 py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-all shadow-md">
-                                            View Full Description
+                                            {t('View Full Description')}
                                             <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                                         </Link>
                                     </div>
@@ -481,10 +494,10 @@ export default function CareersPage() {
                                 <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <Search className="text-gray-300" size={32} />
                                 </div>
-                                <h3 className="text-xl font-black text-titan-navy mb-2">No positions found</h3>
-                                <p className="text-titan-navy-subtle text-sm mb-8 font-medium">Try adjusting your search criteria or view all openings.</p>
-                                <button onClick={() => { setFilterDept('All Departments'); setFilterLoc('All Locations'); setSearchQuery(''); }} className="bg-titan-navy text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors shadow-lg">
-                                    Clear All Filters
+                                <h3 className="text-xl font-black text-titan-navy mb-2">{t('No positions found')}</h3>
+                                <p className="text-titan-navy-subtle text-sm mb-8 font-medium">{t('No positions found Sub')}</p>
+                                <button onClick={() => { setFilterDept(t('All Departments')); setFilterLoc(t('All Locations')); setSearchQuery(''); }} className="bg-titan-navy text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors shadow-lg">
+                                    {t('Clear All Filters')}
                                 </button>
                             </motion.div>
                         )}
@@ -495,15 +508,13 @@ export default function CareersPage() {
                 <div className="mt-20 bg-titan-navy rounded-2xl p-12 text-center text-white relative overflow-hidden shadow-2xl">
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                     <div className="relative z-10">
-                        <h3 className="text-3xl font-black mb-4">Don't see your perfect role?</h3>
-                        <p className="text-white/70 mb-8 max-w-xl mx-auto text-lg font-light">
-                            We are always looking for exceptional talent. Submit your CV to our general talent pool and we'll contact you when a matching opportunity arises.
-                        </p>
+                        <h3 className="text-3xl font-black mb-4">{t("Don't see your perfect role?")}</h3>
+                        <p className="text-white/70 mb-8 max-w-xl mx-auto text-lg font-light">{t('Talent Pool Sub')}</p>
                         <button
                             onClick={() => setIsApplyOpen(true)}
                             className="inline-flex items-center gap-2 bg-titan-red text-white px-8 py-4 rounded-lg font-bold uppercase tracking-widest hover:bg-white hover:text-titan-red transition-colors shadow-lg"
                         >
-                            Send General Application <Send size={16} />
+                            {t('Send General Application')} <Send size={16} />
                         </button>
                     </div>
                 </div>
@@ -513,7 +524,6 @@ export default function CareersPage() {
             <AnimatePresence>
                 {isApplyOpen && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                        {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -522,7 +532,6 @@ export default function CareersPage() {
                             className="absolute inset-0 bg-titan-navy/80 backdrop-blur-sm"
                         />
 
-                        {/* Modal Content */}
                         <motion.div
                             initial={{ scale: 0.95, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -539,55 +548,55 @@ export default function CareersPage() {
 
                             <div className="p-8 md:p-12">
                                 <div className="mb-8 text-center">
-                                    <h3 className="text-3xl font-black text-titan-navy mb-2">General Application</h3>
-                                    <p className="text-titan-navy-subtle text-sm">Join our talent network for future opportunities.</p>
+                                    <h3 className="text-3xl font-black text-titan-navy mb-2">{t('General Application')}</h3>
+                                    <p className="text-titan-navy-subtle text-sm">{t('General Application Sub')}</p>
                                 </div>
 
                                 <form onSubmit={(e) => { e.preventDefault(); setIsApplyOpen(false); alert('Application Submitted (Mock)'); }}>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                         <div>
-                                            <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">First Name *</label>
-                                            <input type="text" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder="John" required />
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">{t('First Name')}</label>
+                                            <input type="text" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder={language === 'kh' ? 'ឧ. សុខ' : 'John'} required />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">Last Name *</label>
-                                            <input type="text" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder="Doe" required />
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">{t('Last Name')}</label>
+                                            <input type="text" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder={language === 'kh' ? 'ឧ. ដារ៉ា' : 'Doe'} required />
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                         <div>
-                                            <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">Email Address *</label>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">{t('Email Address')}</label>
                                             <input type="email" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder="john@example.com" required />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">Phone Number *</label>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">{t('Phone Number required')}</label>
                                             <input type="tel" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all" placeholder="+855 ..." required />
                                         </div>
                                     </div>
 
                                     <div className="mb-6">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">Area of Interest *</label>
+                                        <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">{t('Area of Interest')}</label>
                                         <select className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-titan-navy focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none transition-all cursor-pointer">
-                                            <option value="">Select Department...</option>
-                                            {categories.slice(1).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                            <option value="">{t('Select Department...')}</option>
+                                            {['Engineering', 'Operations', 'Design', 'Supply Chain', 'Quality & Safety'].map(cat => <option key={cat} value={cat}>{t(cat)}</option>)}
                                         </select>
                                     </div>
 
                                     <div className="mb-8">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">Resume / CV *</label>
+                                        <label className="block text-xs font-bold uppercase tracking-widest text-titan-navy mb-2">{t('Resume / CV')}</label>
                                         <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:bg-gray-50 hover:border-titan-red/50 transition-colors cursor-pointer relative group">
                                             <input type="file" className="absolute inset-0 opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx" />
                                             <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-400 group-hover:text-titan-red group-hover:bg-red-50 transition-colors">
                                                 <Upload size={20} />
                                             </div>
-                                            <p className="text-sm font-bold text-titan-navy group-hover:text-titan-red transition-colors">Click to Upload or Drag & Drop</p>
-                                            <p className="text-xs text-gray-400 mt-1">PDF, DOCX up to 5MB</p>
+                                            <p className="text-sm font-bold text-titan-navy group-hover:text-titan-red transition-colors">{t('Click to Upload or Drag & Drop')}</p>
+                                            <p className="text-xs text-gray-400 mt-1">{t('PDF, DOCX up to 5MB')}</p>
                                         </div>
                                     </div>
 
                                     <button className="w-full bg-titan-navy text-white font-bold uppercase tracking-widest py-4 rounded-lg hover:bg-titan-red transition-all shadow-lg flex items-center justify-center gap-2">
-                                        Submit Application <Send size={16} />
+                                        {t('Submit Application')} <Send size={16} />
                                     </button>
                                 </form>
                             </div>

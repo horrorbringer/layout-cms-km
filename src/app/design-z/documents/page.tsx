@@ -2,77 +2,82 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Download, Bell, ArrowRight, Calendar, Tag, ChevronRight, Search, Filter, FolderOpen, Database } from 'lucide-react';
+import { FileText, Download, ChevronRight, Search, Database } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage, getLocalizedText } from '../context/LanguageContext';
+
+interface LocalizedString { en: string; kh: string; }
 
 // Detailed Mock Data for Knowledge/Documents
 const documents = [
     {
         id: 1,
-        title: 'Kimmex Engineering Standards 2026: High-Rise Structural Integrity',
+        title: { en: 'Kimmex Engineering Standards 2026: High-Rise Structural Integrity', kh: 'ស្តង់ដារវិស្វកម្ម Kimmex ២០២៦: សុចរិតភាពរចនាសម្ព័ន្ធអាគារខ្ពស់' },
         date: 'Jan 10, 2026',
         category: 'Engineering',
         size: '15.4 MB',
         type: 'PDF',
-        description: 'Comprehensive guidelines and technical specifications for structural steel and concrete reinforcement in high-rise developments greater than 40 floors.',
+        description: { en: 'Comprehensive guidelines and technical specifications for structural steel and concrete reinforcement in high-rise developments greater than 40 floors.', kh: 'គោលការណ៍ណែនាំ និងលក្ខណៈបច្ចេកទេសសំរាប់ដែកថែប និងការពង្រឹងបេតុងក្នុងការអភិវឌ្ឍអាគារខ្ពស់ជាង ៤០ ជាន់។' },
         image: '/images/projects/Thumbnail-1.jpg'
     },
     {
         id: 2,
-        title: 'Sustainable Materials Research: Green Concrete Viability',
+        title: { en: 'Sustainable Materials Research: Green Concrete Viability', kh: 'ការស្រាវជ្រាវសម្ភារៈនិរន្តរ: ការអាចប្រើប្រាស់បេតុងបៃតង' },
         date: 'Dec 15, 2025',
         category: 'Research',
         size: '4.2 MB',
         type: 'PDF',
-        description: 'Internal research findings on the cost-benefit analysis and long-term durability of recycled aggregate concrete in tropical climates.',
+        description: { en: 'Internal research findings on the cost-benefit analysis and long-term durability of recycled aggregate concrete in tropical climates.', kh: 'លទ្ធផលស្រាវជ្រាវផ្ទៃក្នុងស្ដីអំពីការវិភាគចំណូល-ចំណាយ និងភាពស្ថិតស្ថេររយៈពេលវែងនៃបេតុងចាក់ក្នុងអាកាសធាតុត្រូពិក។' },
         image: '/images/projects/Thumbnail-8.jpg'
     },
     {
         id: 3,
-        title: 'Standard Operating Procedures (SOP): Heavy Machinery Safety',
+        title: { en: 'Standard Operating Procedures (SOP): Heavy Machinery Safety', kh: 'នីតិវិធីប្រតិបត្តិការស្តង់ដារ (SOP): សុវត្ថិភាពម៉ាស៊ីនធ្ងន់' },
         date: 'Nov 22, 2025',
         category: 'Safety',
         size: '12.8 MB',
         type: 'PDF',
-        description: 'Mandatory safety protocols for crane and excavator operators, including pre-start checks and emergency shutdown procedures.',
+        description: { en: 'Mandatory safety protocols for crane and excavator operators, including pre-start checks and emergency shutdown procedures.', kh: 'ពិធីការសុវត្ថិភាពចាំបាច់សំរាប់អ្នកបើកប្រវ័ញ្ច និងយន្ត្រករ ទាំងការត្រួតពិនិត្យមុនចាប់ផ្ដើម និងនីតិវិធីបិទអន្ត្រាយ។' },
         image: '/images/projects/Thumbnail-6.jpg'
     },
     {
         id: 4,
-        title: 'Urban Planning Case Study: Phnom Penh 2030',
+        title: { en: 'Urban Planning Case Study: Phnom Penh 2030', kh: 'ករណីសិក្សាការរៀបចំទីក្រុង: ភ្នំពេញ ២០៣០' },
         date: 'Oct 05, 2025',
         category: 'Case Study',
         size: '25 MB',
         type: 'PDF',
-        description: 'A forward-looking analysis of infrastructure needs for the expanding metropolitan area, prepared by Kimmex Strategy Division.',
+        description: { en: 'A forward-looking analysis of infrastructure needs for the expanding metropolitan area, prepared by Kimmex Strategy Division.', kh: 'ការវិភាគទស្សន៍ទ្រនិចអំពីតម្រូវការហេដ្ឋារចនាសម្ព័ន្ធសម្រាប់តំបន់ទីក្រុងកំពុងពង្រីក ដោយនាយកដ្ឋានយុទ្ធសាស្ត្ររបស់ Kimmex។' },
         image: '/images/projects/Thumbnail-2.jpg'
     },
     {
         id: 5,
-        title: 'ISO 9001:2015 Quality Management Framework',
+        title: { en: 'ISO 9001:2015 Quality Management Framework', kh: 'ក្របខ័ណ្ឌគ្រប់គ្រងគុណភាព ISO 9001:2015' },
         date: 'Sep 12, 2025',
         category: 'Corporate',
         size: '3.5 MB',
         type: 'PDF',
-        description: 'Official documentation of our quality assurance processes, utilized across all project lifecycles.',
+        description: { en: 'Official documentation of our quality assurance processes, utilized across all project lifecycles.', kh: 'ឯកសាររបស់ការធានាគុណភាពផ្លូវការ ដែលត្រូវបានប្រើប្រាស់ក្នុងវដ្តជីវិតគម្រោងទាំងអស់។' },
         image: '/images/projects/Thumbnail-5.jpg'
     },
     {
         id: 6,
-        title: 'Technical Specification: Solar Facade Integration',
+        title: { en: 'Technical Specification: Solar Facade Integration', kh: 'លក្ខណៈបច្ចេកទេស: ការបញ្ចូលស្រាប់ព្រះអាទិត្យ' },
         date: 'Aug 20, 2025',
         category: 'Technical',
         size: '8.1 MB',
         type: 'PDF',
-        description: 'Technical drawings and electrical specifications for integrating BIPV (Building Integrated Photovoltaics) into glass facades.',
+        description: { en: 'Technical drawings and electrical specifications for integrating BIPV (Building Integrated Photovoltaics) into glass facades.', kh: 'គំនូររូបភាពបច្ចេកទេស និងលក្ខណៈអគ្គិសនីសម្រាប់ការបញ្ចូល BIPV (ថាមពលព្រះអាទិត្យបញ្ចូលក្នុងអគារ) ទៅក្នុងមុខអគារកញ្ចក់។' },
         image: '/images/projects/Thumbnail-9.jpg'
     }
 ];
 
-const categories = ['All Types', 'Engineering', 'Safety', 'Research', 'Corporate', 'Technical', 'Case Study'];
+// category keys mapped to translation keys
+const categoryKeys = ['All Types', 'Engineering', 'Safety', 'Research', 'Corporate', 'Technical', 'Case Study'];
 
 export default function DocCollectionPage() {
+    const { t, language } = useLanguage();
     const [activeCategory, setActiveCategory] = useState('All Types');
 
     const filteredDocs = activeCategory === 'All Types'
@@ -96,17 +101,18 @@ export default function DocCollectionPage() {
                     >
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-white/90 text-xs font-bold uppercase tracking-widest mb-6 border border-white/10 backdrop-blur-sm">
                             <Database size={14} className="text-titan-red" />
-                            Resource Center
+                            {t('Resource Center')}
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black text-white mb-6 leading-none">
-                            DOC <span className="text-titan-red">COLLECTION</span>
+                        <h1 className={`font-black text-white mb-6 ${language === 'kh' ? 'text-5xl md:text-6xl leading-[1.3]' : 'text-5xl md:text-7xl leading-none'}`}>
+                            {t('Doc Collection Title')} <span className="text-titan-red">{t('Doc Collection Title2')}</span>
                         </h1>
-                        <p className="text-white/60 text-lg max-w-2xl leading-relaxed font-light">
-                            Access our centralized repository of engineering standards, research papers, technical specifications, and corporate policies.
+                        <p className={`text-white/60 max-w-2xl font-light ${language === 'kh' ? 'text-base leading-[1.8]' : 'text-lg leading-relaxed'
+                            }`}>
+                            {t('Doc Collection Desc')}
                         </p>
                     </motion.div>
 
-                    {/* Quick Stats or Action */}
+                    {/* Quick Stats */}
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -115,11 +121,13 @@ export default function DocCollectionPage() {
                     >
                         <div>
                             <span className="block text-3xl font-black text-white">120+</span>
-                            <span className="text-xs uppercase tracking-widest font-bold">Documents</span>
+                            <span className={`font-bold ${language === 'kh' ? 'text-sm' : 'text-xs uppercase tracking-widest'
+                                }`}>{t('Documents')}</span>
                         </div>
                         <div>
                             <span className="block text-3xl font-black text-white">15</span>
-                            <span className="text-xs uppercase tracking-widest font-bold">Categories</span>
+                            <span className={`font-bold ${language === 'kh' ? 'text-sm' : 'text-xs uppercase tracking-widest'
+                                }`}>{t('Categories')}</span>
                         </div>
                     </motion.div>
                 </div>
@@ -131,16 +139,19 @@ export default function DocCollectionPage() {
                     {/* Categories Scroll */}
                     <div className="w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
                         <div className="flex gap-2">
-                            {categories.map((cat) => (
+                            {categoryKeys.map((cat) => (
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`whitespace-nowrap px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${activeCategory === cat
-                                        ? 'bg-titan-navy text-white shadow-md'
-                                        : 'bg-gray-50 text-titan-navy-subtle hover:bg-gray-100 hover:text-titan-navy'
+                                    className={`whitespace-nowrap px-5 py-2.5 rounded-lg font-bold transition-all ${language === 'kh'
+                                        ? 'text-[13px]'
+                                        : 'text-xs uppercase tracking-wide'
+                                        } ${activeCategory === cat
+                                            ? 'bg-titan-navy text-white shadow-md'
+                                            : 'bg-gray-50 text-titan-navy-subtle hover:bg-gray-100 hover:text-titan-navy'
                                         }`}
                                 >
-                                    {cat}
+                                    {t(cat)}
                                 </button>
                             ))}
                         </div>
@@ -150,7 +161,7 @@ export default function DocCollectionPage() {
                     <div className="relative w-full md:w-80 shrink-0">
                         <input
                             type="text"
-                            placeholder="Search by title or keyword..."
+                            placeholder={t('Search by title or keyword...')}
                             className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2.5 pl-10 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red transition-all"
                         />
                         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -166,7 +177,7 @@ export default function DocCollectionPage() {
                     >
                         <div className="flex items-center gap-2 mb-6">
                             <span className="w-2 h-2 rounded-full bg-titan-red"></span>
-                            <span className="text-xs font-bold uppercase tracking-widest text-titan-navy-subtle">Latest Release</span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-titan-navy-subtle">{t('Latest Release')}</span>
                         </div>
 
                         <Link href={`/design-z/documents/${documents[0].id}`} className="group bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 grid grid-cols-1 lg:grid-cols-5 hover:shadow-2xl transition-all duration-300">
@@ -174,34 +185,36 @@ export default function DocCollectionPage() {
                                 <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-titan-navy/0 transition-colors z-10"></div>
                                 <Image
                                     src={documents[0].image}
-                                    alt={documents[0].title}
+                                    alt={getLocalizedText(documents[0].title, language)}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
                                 <div className="absolute top-6 left-6 z-20">
                                     <span className="bg-titan-red text-white px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-widest shadow-lg">
-                                        Featured
+                                        {t('Featured')}
                                     </span>
                                 </div>
                             </div>
                             <div className="lg:col-span-2 p-8 md:p-12 flex flex-col justify-center bg-white relative">
                                 <div className="mb-6 flex flex-wrap gap-3">
                                     <span className="px-3 py-1 bg-titan-bg rounded-full text-[10px] font-bold uppercase tracking-wider text-titan-navy border border-gray-200">
-                                        {documents[0].category}
+                                        {t(documents[0].category)}
                                     </span>
                                     <span className="px-3 py-1 bg-titan-bg rounded-full text-[10px] font-bold uppercase tracking-wider text-titan-navy-subtle border border-gray-200">
                                         {documents[0].type} • {documents[0].size}
                                     </span>
                                 </div>
-                                <h2 className="text-2xl md:text-3xl font-black text-titan-navy mb-4 group-hover:text-titan-red transition-colors leading-tight">
-                                    {documents[0].title}
+                                <h2 className={`font-black text-titan-navy mb-4 group-hover:text-titan-red transition-colors ${language === 'kh' ? 'text-xl md:text-2xl leading-[1.4]' : 'text-2xl md:text-3xl leading-tight'
+                                    }`}>
+                                    {getLocalizedText(documents[0].title, language)}
                                 </h2>
-                                <p className="text-titan-navy-subtle mb-8 leading-relaxed">
-                                    {documents[0].description}
+                                <p className={`text-titan-navy-subtle mb-8 ${language === 'kh' ? 'text-sm leading-[1.8]' : 'leading-relaxed'
+                                    }`}>
+                                    {getLocalizedText(documents[0].description, language)}
                                 </p>
                                 <div className="mt-auto flex gap-4">
                                     <button className="flex-1 bg-titan-navy text-white py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors flex items-center justify-center gap-2 shadow-lg">
-                                        <Download size={16} /> Download
+                                        <Download size={16} /> {t('Download')}
                                     </button>
                                 </div>
                             </div>
@@ -223,7 +236,7 @@ export default function DocCollectionPage() {
                                 <div className="aspect-[4/3] relative overflow-hidden bg-titan-bg">
                                     <Image
                                         src={doc.image}
-                                        alt={doc.title}
+                                        alt={getLocalizedText(doc.title, language)}
                                         fill
                                         className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
                                     />
@@ -231,14 +244,14 @@ export default function DocCollectionPage() {
 
                                     <div className="absolute top-4 left-4">
                                         <span className="bg-white/95 backdrop-blur-sm text-titan-navy px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md shadow-sm">
-                                            {doc.category}
+                                            {t(doc.category)}
                                         </span>
                                     </div>
 
                                     {/* Hover Action */}
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-titan-navy/40 backdrop-blur-[2px]">
                                         <div className="bg-white text-titan-navy px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wide flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl">
-                                            View Details <ChevronRight size={14} />
+                                            {t('View Details')} <ChevronRight size={14} />
                                         </div>
                                     </div>
                                 </div>
@@ -246,7 +259,7 @@ export default function DocCollectionPage() {
                                 <div className="p-6 flex flex-col flex-1">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex flex-col">
-                                            <span className="text-[10px] font-bold text-titan-navy-subtle uppercase tracking-wider mb-1">Published</span>
+                                            <span className="text-[10px] font-bold text-titan-navy-subtle uppercase tracking-wider mb-1">{t('Published')}</span>
                                             <span className="text-xs font-bold text-titan-navy">{doc.date}</span>
                                         </div>
                                         <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded text-[10px] font-bold text-titan-navy border border-gray-100">
@@ -255,18 +268,20 @@ export default function DocCollectionPage() {
                                         </div>
                                     </div>
 
-                                    <h3 className="text-lg font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors leading-snug line-clamp-2">
-                                        {doc.title}
+                                    <h3 className={`font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors line-clamp-2 ${language === 'kh' ? 'text-base leading-[1.5]' : 'text-lg leading-snug'
+                                        }`}>
+                                        {getLocalizedText(doc.title, language)}
                                     </h3>
 
-                                    <p className="text-sm text-titan-navy-subtle mb-6 line-clamp-2">
-                                        {doc.description}
+                                    <p className={`text-titan-navy-subtle mb-6 line-clamp-2 ${language === 'kh' ? 'text-xs leading-[1.8]' : 'text-sm'
+                                        }`}>
+                                        {getLocalizedText(doc.description, language)}
                                     </p>
 
                                     <div className="mt-auto pt-4 border-t border-gray-50 flex justify-between items-center text-xs">
                                         <span className="font-bold text-titan-navy-subtle">{doc.size}</span>
                                         <span className="font-bold text-titan-navy group-hover:text-titan-red transition-colors flex items-center gap-1">
-                                            <Download size={12} /> Download
+                                            <Download size={12} /> {t('Download')}
                                         </span>
                                     </div>
                                 </div>

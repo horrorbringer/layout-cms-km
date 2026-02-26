@@ -2,10 +2,12 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send, Facebook, Linkedin, Instagram, ArrowRight, MessageSquare } from 'lucide-react';
+import { MapPin, Phone, Mail, Send, Facebook, Linkedin, Instagram, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ContactPage() {
+    const { t, language } = useLanguage();
     return (
         <div className="bg-gray-50 min-h-screen font-sans text-titan-navy relative">
             {/* --- HERO --- */}
@@ -27,7 +29,7 @@ export default function ContactPage() {
                         className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-white/90 text-xs font-bold uppercase tracking-widest mb-6 border border-white/10 backdrop-blur-sm"
                     >
                         <MessageSquare size={14} className="text-titan-red" />
-                        Let's Talk
+                        {t("Let's Talk")}
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
@@ -35,7 +37,7 @@ export default function ContactPage() {
                         transition={{ delay: 0.1 }}
                         className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight"
                     >
-                        GET IN <span className="text-titan-red">TOUCH</span>
+                        {language === 'kh' ? 'ទាក់ទង' : 'GET IN'} <span className="text-titan-red">{language === 'kh' ? 'មកយើង' : 'TOUCH'}</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -43,7 +45,7 @@ export default function ContactPage() {
                         transition={{ delay: 0.2 }}
                         className="text-xl text-white/70 font-light max-w-2xl mx-auto mb-10"
                     >
-                        Have a project in mind or want to learn more about our services? Our team is ready to assist you.
+                        {t('Contact Hero Sub')}
                     </motion.p>
                 </div>
             </section>
@@ -64,7 +66,7 @@ export default function ContactPage() {
                         <div className="bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 overflow-hidden relative">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-titan-red/5 rounded-full blur-3xl -mr-10 -mt-10"></div>
 
-                            <h3 className="text-2xl font-black text-titan-navy mb-8">Headquarters</h3>
+                            <h3 className="text-2xl font-black text-titan-navy mb-8">{t('Headquarters')}</h3>
 
                             <div className="space-y-8 relative z-10">
                                 <div className="flex items-start gap-5 group">
@@ -72,7 +74,7 @@ export default function ContactPage() {
                                         <MapPin size={24} />
                                     </div>
                                     <div>
-                                        <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">Visit Us</span>
+                                        <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Visit Us')}</span>
                                         <p className="text-titan-navy-subtle leading-relaxed">
                                             #56, Street 315, Boeng Kak 1,<br />
                                             Tuol Kouk, Phnom Penh, Cambodia
@@ -85,9 +87,9 @@ export default function ContactPage() {
                                         <Phone size={24} />
                                     </div>
                                     <div>
-                                        <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">Call Us</span>
+                                        <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Call Us')}</span>
                                         <p className="text-titan-navy-subtle">+855 23 999 999</p>
-                                        <p className="text-titan-navy-subtle text-sm mt-1">Mon - Sat, 8am - 5pm</p>
+                                        <p className="text-titan-navy-subtle text-sm mt-1">{t('Mon - Sat, 8am - 5pm')}</p>
                                     </div>
                                 </div>
 
@@ -96,7 +98,7 @@ export default function ContactPage() {
                                         <Mail size={24} />
                                     </div>
                                     <div>
-                                        <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">Email Us</span>
+                                        <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Email Us')}</span>
                                         <p className="text-titan-navy-subtle">info@kimmex.com</p>
                                         <p className="text-titan-navy-subtle">sales@kimmex.com</p>
                                     </div>
@@ -105,7 +107,7 @@ export default function ContactPage() {
 
                             {/* Socials */}
                             <div className="mt-10 pt-8 border-t border-gray-100">
-                                <h4 className="font-bold text-titan-navy mb-4 text-xs uppercase tracking-widest">Connect With Us</h4>
+                                <h4 className="font-bold text-titan-navy mb-4 text-xs uppercase tracking-widest">{t('Connect With Us')}</h4>
                                 <div className="flex gap-3">
                                     <a href="#" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
                                         <Facebook size={18} />
@@ -130,7 +132,7 @@ export default function ContactPage() {
                             />
                             <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors rounded-xl">
                                 <div className="bg-white text-titan-navy px-6 py-3 rounded-full font-bold text-xs uppercase tracking-widest shadow-lg flex items-center gap-2 transform group-hover:-translate-y-1 transition-transform duration-300">
-                                    <MapPin size={14} className="text-titan-red" /> View on Google Maps
+                                    <MapPin size={14} className="text-titan-red" /> {t('View on Google Maps')}
                                 </div>
                             </div>
                         </div>
@@ -147,36 +149,36 @@ export default function ContactPage() {
                             <div className="absolute top-0 right-0 w-64 h-64 bg-gray-50 rounded-full -mr-20 -mt-20 opacity-50 pointer-events-none"></div>
 
                             <div className="relative z-10 mb-10">
-                                <h3 className="text-3xl font-black text-titan-navy mb-3">Send a Message</h3>
-                                <p className="text-titan-navy-subtle">Fill out the form below and our team will get back to you within 24 hours.</p>
+                                <h3 className="text-3xl font-black text-titan-navy mb-3">{t('Send a Message')}</h3>
+                                <p className="text-titan-navy-subtle">{t('Contact Form Sub')}</p>
                             </div>
 
                             <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Full Name *</label>
-                                        <input type="text" className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm" placeholder="John Doe" required />
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Full Name')}</label>
+                                        <input type="text" className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm" placeholder={t('Full Name placeholder')} required />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Email Address *</label>
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Email Address')}</label>
                                         <input type="email" className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm" placeholder="john@example.com" required />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Phone Number</label>
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Phone Number')}</label>
                                         <input type="tel" className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm" placeholder="+855 ..." />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Subject *</label>
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Subject')}</label>
                                         <div className="relative">
                                             <select className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm appearance-none cursor-pointer">
-                                                <option>General Inquiry</option>
-                                                <option>Project Consultation</option>
-                                                <option>Partnership Proposal</option>
-                                                <option>Careers</option>
-                                                <option>Other</option>
+                                                <option>{t('General Inquiry')}</option>
+                                                <option>{t('Project Consultation')}</option>
+                                                <option>{t('Partnership Proposal')}</option>
+                                                <option>{t('Careers')}</option>
+                                                <option>{t('Other')}</option>
                                             </select>
                                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
@@ -186,12 +188,12 @@ export default function ContactPage() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">Message *</label>
-                                    <textarea rows={6} className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm resize-none" placeholder="Tell us about your project or inquiry..." required></textarea>
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Message')}</label>
+                                    <textarea rows={6} className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm resize-none" placeholder={t('Message placeholder')} required></textarea>
                                 </div>
 
                                 <button className="w-full bg-titan-navy text-white font-bold uppercase tracking-widest py-5 rounded-lg hover:bg-titan-red transition-all shadow-lg flex items-center justify-center gap-3 group text-sm">
-                                    Send Message
+                                    {t('Send Message')}
                                     <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                 </button>
                             </form>

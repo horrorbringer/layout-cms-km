@@ -6,6 +6,7 @@ import { MapPin, ArrowRight, Building, CheckCircle, Clock, Droplets, Mountain, F
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import { useLanguage, getLocalizedText } from '../context/LanguageContext';
 import { projects } from '../data/projectData';
 
 // FILTER OPTIONS
@@ -48,6 +49,7 @@ export default function ProjectListingPage({
     emptyState,
     categories = types
 }: ProjectListingPageProps) {
+    const { t, language } = useLanguage();
     const searchParams = useSearchParams();
     const initialType = searchParams.get('type');
     // Ensure initialType is valid, otherwise default to 'All'
@@ -67,9 +69,9 @@ export default function ProjectListingPage({
     }, [searchParams, categories]);
 
     const filteredProjects = projects.filter(p => {
-        return (filterLoc === 'All' || p.location === filterLoc) &&
-            (filterType === 'All' || p.type === filterType) &&
-            p.status === filterStatus;
+        return (filterLoc === 'All' || p.location.en === filterLoc) &&
+            (filterType === 'All' || p.type.en === filterType) &&
+            p.status.en === filterStatus;
     });
 
     return (
@@ -142,7 +144,7 @@ export default function ProjectListingPage({
                                                 {type === 'Slope Construction' && <Mountain size={12} strokeWidth={isActive ? 3 : 2} />}
                                                 {type === 'Systems' && <Settings size={12} strokeWidth={isActive ? 3 : 2} />}
                                                 {type.includes('Building') && <Building size={12} strokeWidth={isActive ? 3 : 2} />}
-                                                <span>{type === 'All' ? 'All Portfolio' : type}</span>
+                                                <span>{type === 'All' ? t('All Portfolio') : t(type)}</span>
                                             </div>
 
                                             {isActive && (
@@ -171,7 +173,7 @@ export default function ProjectListingPage({
                                     onChange={(e) => setFilterLoc(e.target.value)}
                                     className="w-full appearance-none bg-white/60 pl-16 pr-12 py-3.5 rounded-full text-[13px] font-semibold text-titan-navy cursor-pointer focus:outline-none ring-1 ring-gray-100 focus:ring-2 focus:ring-titan-navy/10 border-none transition-all hover:bg-white hover:shadow-md"
                                 >
-                                    {locations.map(loc => <option key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</option>)}
+                                    {locations.map(loc => <option key={loc} value={loc}>{loc === 'All' ? t('All Locations') : t(loc)}</option>)}
                                 </select>
                                 <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-titan-navy/20 group-hover:text-titan-red transition-colors z-10">
                                     <Filter size={14} />
@@ -204,7 +206,7 @@ export default function ProjectListingPage({
                                         <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-titan-navy/0 transition-colors z-10"></div>
                                         <Image
                                             src={project.image}
-                                            alt={project.title}
+                                            alt={getLocalizedText(project.title, language)}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-700"
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -212,7 +214,7 @@ export default function ProjectListingPage({
                                         {/* Status Badge */}
                                         <div className={`absolute top-4 left-4 z-20 px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 shadow-sm ${badgeConfig.className}`}>
                                             {badgeConfig.icon}
-                                            {badgeConfig.label}
+                                            {t(badgeConfig.label)}
                                         </div>
                                     </div>
 
@@ -220,20 +222,20 @@ export default function ProjectListingPage({
                                     <div className="p-8 flex-1 flex flex-col">
                                         <div className="mb-4">
                                             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-titan-navy-subtle mb-2">
-                                                <span className="text-titan-red">{project.location}</span>
+                                                <span className="text-titan-red">{getLocalizedText(project.location, language)}</span>
                                                 <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                                                <span className="truncate">{project.type}</span>
+                                                <span className="truncate">{getLocalizedText(project.type, language)}</span>
                                             </div>
                                             <h3 className="text-xl font-black text-titan-navy leading-tight group-hover:text-titan-red transition-colors">
-                                                {project.title}
+                                                {getLocalizedText(project.title, language)}
                                             </h3>
                                         </div>
                                         <p className="text-titan-navy-subtle text-sm leading-relaxed mb-8 line-clamp-3">
-                                            {project.summary}
+                                            {getLocalizedText(project.summary, language)}
                                         </p>
 
                                         <div className="mt-auto pt-6 border-t border-gray-100 flex justify-between items-center text-xs font-bold uppercase tracking-widest text-titan-navy group-hover:text-titan-red transition-colors">
-                                            View Case Study
+                                            {t('View Case Study')}
                                             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
