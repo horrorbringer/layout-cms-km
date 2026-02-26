@@ -1,13 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Send, Facebook, Linkedin, Instagram, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 
+import { contactData } from '../data/contactData';
+
 export default function ContactPage() {
     const { t, language } = useLanguage();
+
+    const getLocalized = (obj: any) => {
+        if (!obj) return '';
+        return obj[language] || obj['en'] || '';
+    };
+
     return (
         <div className="bg-gray-50 min-h-screen font-sans text-titan-navy relative">
             {/* --- HERO --- */}
@@ -75,9 +83,8 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Visit Us')}</span>
-                                        <p className="text-titan-navy-subtle leading-relaxed">
-                                            #56, Street 315, Boeng Kak 1,<br />
-                                            Tuol Kouk, Phnom Penh, Cambodia
+                                        <p className="text-titan-navy-subtle leading-relaxed whitespace-pre-line">
+                                            {getLocalized(contactData.address)}
                                         </p>
                                     </div>
                                 </div>
@@ -88,8 +95,10 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Call Us')}</span>
-                                        <p className="text-titan-navy-subtle">+855 23 999 999</p>
-                                        <p className="text-titan-navy-subtle text-sm mt-1">{t('Mon - Sat, 8am - 5pm')}</p>
+                                        {contactData.phone.map((p, i) => (
+                                            <p key={i} className="text-titan-navy-subtle">{p}</p>
+                                        ))}
+                                        <p className="text-titan-navy-subtle text-sm mt-1">{getLocalized(contactData.hours)}</p>
                                     </div>
                                 </div>
 
@@ -99,8 +108,9 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Email Us')}</span>
-                                        <p className="text-titan-navy-subtle">info@kimmex.com</p>
-                                        <p className="text-titan-navy-subtle">sales@kimmex.com</p>
+                                        {contactData.email.map((e, i) => (
+                                            <p key={i} className="text-titan-navy-subtle">{e}</p>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -109,13 +119,13 @@ export default function ContactPage() {
                             <div className="mt-10 pt-8 border-t border-gray-100">
                                 <h4 className="font-bold text-titan-navy mb-4 text-xs uppercase tracking-widest">{t('Connect With Us')}</h4>
                                 <div className="flex gap-3">
-                                    <a href="#" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                    <a href={contactData.socials.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
                                         <Facebook size={18} />
                                     </a>
-                                    <a href="#" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                    <a href={contactData.socials.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
                                         <Linkedin size={18} />
                                     </a>
-                                    <a href="#" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                    <a href={contactData.socials.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
                                         <Instagram size={18} />
                                     </a>
                                 </div>
@@ -123,7 +133,12 @@ export default function ContactPage() {
                         </div>
 
                         {/* Interactive Map Card */}
-                        <div className="bg-white p-2 rounded-2xl shadow-lg border border-gray-100 h-64 relative group cursor-pointer overflow-hidden">
+                        <a
+                            href={contactData.googleMapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block bg-white p-2 rounded-2xl shadow-lg border border-gray-100 h-64 relative group cursor-pointer overflow-hidden"
+                        >
                             <Image
                                 src="/images/projects/Thumbnail-1.jpg"
                                 alt="Map Location"
@@ -135,10 +150,9 @@ export default function ContactPage() {
                                     <MapPin size={14} className="text-titan-red" /> {t('View on Google Maps')}
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </motion.div>
 
-                    {/* RIGHT COLUMN: CONTACT FORM */}
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -153,55 +167,139 @@ export default function ContactPage() {
                                 <p className="text-titan-navy-subtle">{t('Contact Form Sub')}</p>
                             </div>
 
-                            <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Full Name')}</label>
-                                        <input type="text" className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm" placeholder={t('Full Name placeholder')} required />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Email Address')}</label>
-                                        <input type="email" className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm" placeholder="john@example.com" required />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Phone Number')}</label>
-                                        <input type="tel" className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm" placeholder="+855 ..." />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Subject')}</label>
-                                        <div className="relative">
-                                            <select className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm appearance-none cursor-pointer">
-                                                <option>{t('General Inquiry')}</option>
-                                                <option>{t('Project Consultation')}</option>
-                                                <option>{t('Partnership Proposal')}</option>
-                                                <option>{t('Careers')}</option>
-                                                <option>{t('Other')}</option>
-                                            </select>
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Message')}</label>
-                                    <textarea rows={6} className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm resize-none" placeholder={t('Message placeholder')} required></textarea>
-                                </div>
-
-                                <button className="w-full bg-titan-navy text-white font-bold uppercase tracking-widest py-5 rounded-lg hover:bg-titan-red transition-all shadow-lg flex items-center justify-center gap-3 group text-sm">
-                                    {t('Send Message')}
-                                    <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                </button>
-                            </form>
+                            <ContactForm t={t} />
                         </div>
                     </motion.div>
 
                 </div>
             </section>
         </div>
+    );
+}
+
+function ContactForm({ t }: { t: (key: string) => string }) {
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        subject: t('General Inquiry'),
+        message: ''
+    });
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setStatus('loading');
+
+        try {
+            const res = await fetch('/api/contact/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (res.ok) {
+                setStatus('success');
+                setFormData({ name: '', email: '', phone: '', subject: t('General Inquiry'), message: '' });
+                setTimeout(() => setStatus('idle'), 5000);
+            } else {
+                setStatus('error');
+            }
+        } catch (error) {
+            setStatus('error');
+        }
+    };
+
+    return (
+        <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
+            {status === 'success' && (
+                <div className="bg-green-50 text-green-600 p-4 rounded-lg text-sm font-bold animate-in fade-in slide-in-from-top-2">
+                    {t('Message sent successfully! We will get back to you soon.') || 'Message sent successfully!'}
+                </div>
+            )}
+            {status === 'error' && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm font-bold">
+                    {t('Failed to send message. Please try again.') || 'Something went wrong. Please try again.'}
+                </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Full Name')}</label>
+                    <input
+                        type="text"
+                        className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm"
+                        placeholder={t('Full Name placeholder')}
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Email Address')}</label>
+                    <input
+                        type="email"
+                        className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm"
+                        placeholder="john@example.com"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Phone Number')}</label>
+                    <input
+                        type="tel"
+                        className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm"
+                        placeholder="+855 ..."
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Subject')}</label>
+                    <div className="relative">
+                        <select
+                            className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm appearance-none cursor-pointer"
+                            value={formData.subject}
+                            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                        >
+                            <option>{t('General Inquiry')}</option>
+                            <option>{t('Project Consultation')}</option>
+                            <option>{t('Partnership Proposal')}</option>
+                            <option>{t('Careers')}</option>
+                            <option>{t('Other')}</option>
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-titan-navy">{t('Message')}</label>
+                <textarea
+                    rows={6}
+                    className="w-full bg-gray-50 border border-gray-200 p-4 rounded-lg focus:border-titan-red focus:ring-1 focus:ring-titan-red focus:outline-none focus:bg-white transition-all font-medium text-titan-navy text-sm resize-none"
+                    placeholder={t('Message placeholder')}
+                    required
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                ></textarea>
+            </div>
+
+            <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="w-full bg-titan-navy text-white font-bold uppercase tracking-widest py-5 rounded-lg hover:bg-titan-red transition-all shadow-lg flex items-center justify-center gap-3 group text-sm disabled:opacity-50"
+            >
+                {status === 'loading' ? t('Sending...') : t('Send Message')}
+                <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </button>
+        </form>
     );
 }

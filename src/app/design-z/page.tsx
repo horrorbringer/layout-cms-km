@@ -8,6 +8,7 @@ import { FadeInWhenVisible } from './_components/Animations';
 import UnifiedHero, { HeroMode } from './_components/UnifiedHero';
 import { allNews } from './data/newsData';
 import { projects as allProjects } from './data/projectData';
+import { homeData } from './data/homeData';
 import { useLanguage, getLocalizedText } from './context/LanguageContext';
 
 // --- CONFIGURATION ---
@@ -76,26 +77,16 @@ export default function DesignGenX() {
 
     const projects = allProjects.slice(0, 4);
 
-    const testimonials = [
-        {
-            quote: { en: "Kimmex delivered our project on time and exceeded our quality expectations. Their professionalism is unmatched.", kh: "Kimmex បានប្រគល់គម្រោងរបស់យើងទាន់ពេលវេលា និងលើសពីការរំពឹងទុករបស់យើង។ វិជ្ជាជីវៈរបស់ពួកគេគឺមិនអាចប្រៀបផ្ទឹមបានទេ។" },
-            author: { en: "H.E. Minister of Economy", kh: "ឯកឧត្តម រដ្ឋមន្ត្រីក្រសួងសេដ្ឋកិច្ច" },
-            role: { en: "Government Client", kh: "ស្ថាប័នរដ្ឋាភិបាល" },
-            rating: 5
-        },
-        {
-            quote: { en: "Working with Kimmex was a seamless experience. They understood our vision and brought it to life perfectly.", kh: "ការធ្វើការជាមួយ Kimmex គឺជាបទពិសោធន៍ដ៏រលូនមួយ។ ពួកគេយល់ពីចក្ខុវិស័យរបស់យើង និងធ្វើអោយវាក្លាយជាការពិត។" },
-            author: { en: "Mr. Chen Wei", kh: "លោក Chen Wei" },
-            role: { en: "CEO, Vattanac Group", kh: "អគ្គនាយកសម្ព័ន្ធ វឌ្ឍនៈ" },
-            rating: 5
-        },
-        {
-            quote: { en: "The attention to safety and quality standards sets Kimmex apart from other contractors in Cambodia.", kh: "ការយកចិត្តទុកដាក់លើស្តង់ដារសុវត្ថិភាព និងគុណភាព ធ្វើឲ្យ Kimmex មានភាពលេចធ្លោជាងក្រុមហ៊ុនម៉ៅការដទៃនៅក្នុងប្រទេសកម្ពុជា។" },
-            author: { en: "Dr. Sarah Johnson", kh: "បណ្ឌិត Sarah Johnson" },
-            role: { en: "World Bank Representative", kh: "តំណាងធនាគារពិភពលោក" },
-            rating: 5
-        }
-    ];
+    const testimonials = homeData.testimonials;
+
+    const statsMapping = (label: string) => {
+        const icons: any = { ShieldCheck, Trophy, Clock, Target, Award, Hammer, PenTool };
+        const iconName = homeData.stats.find(s => getLocalizedText(s.label, 'en') === label)?.iconName || 'ShieldCheck';
+        return icons[iconName] || ShieldCheck;
+    };
+
+    const processIcons: any = { Target, PenTool, Hammer, Trophy };
+
 
     return (
         <>
@@ -118,23 +109,21 @@ export default function DesignGenX() {
                                 </p>
 
                                 <div className="grid grid-cols-2 gap-4">
-                                    {[
-                                        { icon: ShieldCheck, title: t('Safety First'), desc: t('Zero accident policy') },
-                                        { icon: Award, title: t('ISO Certified'), desc: t('9001:2015 standards') },
-                                        { icon: Clock, title: t('On-Time Delivery'), desc: t('98% completion rate') },
-                                        { icon: Target, title: t('Quality Focus'), desc: t('Exceeding expectations') },
-                                    ].map((item, i) => (
-                                        <div key={i} className="group bg-white p-8 rounded-xl border border-gray-100 relative overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-2">
-                                            <div className="absolute top-0 left-0 w-1 h-full bg-gray-100 group-hover:bg-accent-orange transition-colors duration-500"></div>
-                                            <div className="ml-4">
-                                                <div className="w-14 h-14 bg-gray-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent-orange group-hover:text-white transition-all duration-300">
-                                                    <item.icon size={24} className="text-titan-navy group-hover:text-white transition-colors" />
+                                    {homeData.stats.map((item, i) => {
+                                        const Icon = processIcons[item.iconName] || statsMapping(getLocalizedText(item.label, 'en')) || Award;
+                                        return (
+                                            <div key={i} className="group bg-white p-8 rounded-xl border border-gray-100 relative overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-2">
+                                                <div className="absolute top-0 left-0 w-1 h-full bg-gray-100 group-hover:bg-accent-orange transition-colors duration-500"></div>
+                                                <div className="ml-4">
+                                                    <div className="w-14 h-14 bg-gray-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent-orange group-hover:text-white transition-all duration-300">
+                                                        <Icon size={24} className="text-titan-navy group-hover:text-white transition-colors" />
+                                                    </div>
+                                                    <h3 className="text-xl font-black text-titan-navy mb-3 group-hover:text-accent-orange transition-colors">{getLocalizedText(item.label, language)}</h3>
+                                                    <p className="text-titan-navy/60 text-sm leading-relaxed">{getLocalizedText(item.val, language)}</p>
                                                 </div>
-                                                <h3 className="text-xl font-black text-titan-navy mb-3 group-hover:text-accent-orange transition-colors">{item.title}</h3>
-                                                <p className="text-titan-navy/60 text-sm leading-relaxed">{item.desc}</p>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
 
                                 <Link href="/design-z/about" className="inline-flex items-center gap-3 mt-10 text-titan-red font-black uppercase tracking-[0.3em] text-xs hover:gap-6 transition-all">
@@ -257,23 +246,21 @@ export default function DesignGenX() {
                         {/* Connecting Line */}
                         <div className="hidden md:block absolute top-[4.5rem] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent z-0"></div>
 
-                        {[
-                            { step: '01', title: t('Consultation'), desc: t('Consultation Desc'), icon: Target },
-                            { step: '02', title: t('Planning'), desc: t('Planning Desc'), icon: PenTool },
-                            { step: '03', title: t('Construction'), desc: t('Construction Desc'), icon: Hammer },
-                            { step: '04', title: t('Handover'), desc: t('Handover Desc'), icon: Trophy }
-                        ].map((s, i) => (
-                            <FadeInWhenVisible key={i} delay={i * 0.1}>
-                                <div className="relative z-10 flex flex-col items-center text-center group">
-                                    <div className="w-36 h-36 bg-white/5 backdrop-blur-sm rounded-full border border-white/10 flex flex-col items-center justify-center mb-8 group-hover:bg-accent-orange group-hover:border-accent-orange group-hover:shadow-[0_0_40px_rgba(255,107,0,0.5)] group-hover:-translate-y-2 transition-all duration-500 relative">
-                                        <s.icon className="text-accent-orange mb-2 group-hover:text-white group-hover:scale-110 transition-all duration-300" size={32} />
-                                        <span className="text-xl font-black text-white/40 group-hover:text-white transition-colors">{s.step}</span>
+                        {homeData.process.map((s, i) => {
+                            const Icon = processIcons[s.iconName] || Target;
+                            return (
+                                <FadeInWhenVisible key={i} delay={i * 0.1}>
+                                    <div className="relative z-10 flex flex-col items-center text-center group">
+                                        <div className="w-36 h-36 bg-white/5 backdrop-blur-sm rounded-full border border-white/10 flex flex-col items-center justify-center mb-8 group-hover:bg-accent-orange group-hover:border-accent-orange group-hover:shadow-[0_0_40px_rgba(255,107,0,0.5)] group-hover:-translate-y-2 transition-all duration-500 relative">
+                                            <Icon className="text-accent-orange mb-2 group-hover:text-white group-hover:scale-110 transition-all duration-300" size={32} />
+                                            <span className="text-xl font-black text-white/40 group-hover:text-white transition-colors">{s.step}</span>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-accent-orange transition-colors">{getLocalizedText(s.title, language)}</h3>
+                                        <p className="text-sm text-white/50 max-w-[200px] leading-relaxed group-hover:text-white/80 transition-colors">{getLocalizedText(s.desc, language)}</p>
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-accent-orange transition-colors">{s.title}</h3>
-                                    <p className="text-sm text-white/50 max-w-[200px] leading-relaxed group-hover:text-white/80 transition-colors">{s.desc}</p>
-                                </div>
-                            </FadeInWhenVisible>
-                        ))}
+                                </FadeInWhenVisible>
+                            );
+                        })}
                     </div>
                 </div>
             </section>

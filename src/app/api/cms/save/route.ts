@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const { data, fileName } = await request.json();
 
         // Security check: only allow updating files in the data directory
-        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts', 'aboutData.ts', 'projectDetailData.ts', 'serviceData.ts', 'serviceDetailData.ts', 'documentData.ts'];
+        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts', 'aboutData.ts', 'projectDetailData.ts', 'serviceData.ts', 'serviceDetailData.ts', 'documentData.ts', 'contactData.ts', 'messagesData.ts', 'homeData.ts', 'jobData.ts'];
         if (!allowedFiles.includes(fileName)) {
             return NextResponse.json({ error: 'Invalid file' }, { status: 400 });
         }
@@ -180,6 +180,82 @@ export interface Document {
 }
 
 export const allDocuments: Document[] = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'contactData.ts') {
+            content = `import { LocalizedString } from '../context/LanguageContext';
+
+export interface ContactData {
+    address: LocalizedString;
+    phone: string[];
+    email: string[];
+    hours: LocalizedString;
+    googleMapsUrl: string;
+    socials: {
+        facebook: string;
+        linkedin: string;
+        instagram: string;
+    };
+}
+
+export const contactData: ContactData = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'messagesData.ts') {
+            content = `export interface ContactMessage {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    subject: string;
+    message: string;
+    date: string;
+    status: 'new' | 'read' | 'replied';
+}
+
+export const allMessages: ContactMessage[] = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'homeData.ts') {
+            content = `import { LocalizedString } from '../context/LanguageContext';
+
+export interface HomeData {
+    hero: {
+        title: LocalizedString;
+        subtitle: LocalizedString;
+    };
+    stats: {
+        label: LocalizedString;
+        val: LocalizedString;
+        iconName: string;
+    }[];
+    process: {
+        id: string;
+        step: string;
+        title: LocalizedString;
+        desc: LocalizedString;
+        iconName: string;
+    }[];
+    testimonials: {
+        id: string;
+        quote: LocalizedString;
+        author: LocalizedString;
+        role: LocalizedString;
+        rating: number;
+    }[];
+}
+
+export const homeData: HomeData = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'jobData.ts') {
+            content = `import { LocalizedString } from '../context/LanguageContext';
+
+export interface Job {
+    id: string;
+    title: LocalizedString;
+    dept: string;
+    loc: string;
+    type: string;
+    tags: LocalizedString[];
+    salary: string;
+    experience: string;
+    postedDate: LocalizedString;
+}
+
+export const jobData: Job[] = ${JSON.stringify(data, null, 4)};`;
         }
 
         await fs.writeFile(filePath, content, 'utf8');

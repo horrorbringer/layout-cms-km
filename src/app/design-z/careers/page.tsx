@@ -7,75 +7,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 
-// Mock Jobs Data
-const allJobs = [
-    {
-        id: 1,
-        title: { en: 'Senior Civil Engineer', kh: 'វិស្វករស៊ីវិលជាន់ខ្ពស់' },
-        dept: 'Engineering',
-        loc: 'Phnom Penh',
-        type: 'Full-time',
-        tags: [{ en: 'Construction', kh: 'សំណង់' }, { en: 'Planning', kh: 'ផែនការ' }],
-        salary: '$2,500 - $3,500',
-        experience: '5+ Years',
-        postedDate: { en: '2 days ago', kh: '២ ថ្ងៃmoon' }
-    },
-    {
-        id: 2,
-        title: { en: 'Site Manager', kh: 'អ្នកគ្រប់គ្រងទីតាំង' },
-        dept: 'Operations',
-        loc: 'Sihanoukville',
-        type: 'Contract',
-        tags: [{ en: 'Management', kh: 'គ្រប់គ្រង' }, { en: 'On-site', kh: 'នៅទីតាំង' }],
-        salary: '$1,800 - $2,500',
-        experience: '3-5 Years',
-        postedDate: { en: '5 days ago', kh: '៥ ថ្ងៃmoon' }
-    },
-    {
-        id: 3,
-        title: { en: 'Architectural Designer', kh: 'អ្នករចនាស្ថាបត្យកម្ម' },
-        dept: 'Design',
-        loc: 'Phnom Penh',
-        type: 'Full-time',
-        tags: [{ en: 'Creativity', kh: 'ភាពច្នៃប្រឌិត' }, { en: 'CAD', kh: 'CAD' }],
-        salary: '$1,200 - $1,800',
-        experience: '2+ Years',
-        postedDate: { en: '1 week ago', kh: '១ សប្ដាហ៍moon' }
-    },
-    {
-        id: 4,
-        title: { en: 'Procurement Officer', kh: 'មន្ត្រីការស្នើប្រើ' },
-        dept: 'Supply Chain',
-        loc: 'Phnom Penh',
-        type: 'Full-time',
-        tags: [{ en: 'Logistics', kh: 'ភស្តុភារ' }, { en: 'Finance', kh: 'ហិរញ្ញវត្ថុ' }],
-        salary: '$800 - $1,200',
-        experience: '1-3 Years',
-        postedDate: { en: '1 week ago', kh: '១ សប្ដាហ៍moon' }
-    },
-    {
-        id: 5,
-        title: { en: 'Safety Inspector (HSE)', kh: 'អ្នកត្រួតពិនិត្យសុវត្ថិភាព (HSE)' },
-        dept: 'Quality & Safety',
-        loc: 'Kampot',
-        type: 'Full-time',
-        tags: [{ en: 'Safety', kh: 'សុវត្ថិភាព' }, { en: 'Inspection', kh: 'ការត្រួតពិនិត្យ' }],
-        salary: '$1,000 - $1,500',
-        experience: '3+ Years',
-        postedDate: { en: '2 weeks ago', kh: '២ សប្ដាហ៍moon' }
-    },
-    {
-        id: 6,
-        title: { en: 'MEP Engineer', kh: 'វិស្វករ MEP' },
-        dept: 'Engineering',
-        loc: 'Siem Reap',
-        type: 'Full-time',
-        tags: [{ en: 'Electrical', kh: 'អគ្គិសនី' }, { en: 'Mechanical', kh: 'មេកានិច' }],
-        salary: '$1,500 - $2,200',
-        experience: '4+ Years',
-        postedDate: { en: '2 weeks ago', kh: '២ សប្ដាហ៍moon' }
-    }
-];
+import { jobData as allJobs, Job } from '../data/jobData';
+
 
 // --- Custom Dropdown Component ---
 const CustomDropdown = ({ options, value, onChange, icon: Icon }: { options: string[], value: string, onChange: (val: string) => void, icon?: any }) => {
@@ -119,7 +52,7 @@ const CustomDropdown = ({ options, value, onChange, icon: Icon }: { options: str
 };
 
 export default function CareersPage() {
-    const { t, language } = useLanguage();
+    const { t, language, fontClassName } = useLanguage();
     const [filterDept, setFilterDept] = useState(t('All Departments'));
     const [filterLoc, setFilterLoc] = useState(t('All Locations'));
     const [searchQuery, setSearchQuery] = useState('');
@@ -135,7 +68,7 @@ export default function CareersPage() {
     });
 
     const categories = [t('All Departments'), t('Engineering'), t('Operations'), t('Design'), t('Supply Chain'), t('Quality & Safety')];
-    const locations = [t('All Locations'), 'Phnom Penh', 'Sihanoukville', 'Kampot', 'Siem Reap'];
+    const locations = [t('All Locations'), t('Phnom Penh'), t('Sihanoukville'), t('Kampot'), t('Siem Reap')];
 
     const [isApplyOpen, setIsApplyOpen] = useState(false);
 
@@ -155,14 +88,14 @@ export default function CareersPage() {
     ];
 
     const hiringSteps = [
-        { step: '01', title: t('Application'), desc: language === 'kh' ? 'ដាក់ CV & ស្នាដៃរបស់អ្នកតាមរយៈប្រព័ន្ធរបស់យើង។' : 'Submit your CV & Portfolio via our portal.' },
-        { step: '02', title: t('Screening'), desc: language === 'kh' ? 'ការហៅទូរស័ព្ទដំបូងជាមួយ HR ដើម្បីពិភាក្សា។' : 'Initial call with HR to discuss fit & basics.' },
-        { step: '03', title: t('Technical'), desc: language === 'kh' ? 'ការសម្ភាសន៍ស៊ីជម្រៅជាមួយប្រធានផ្នែក។' : 'Deep-dive interview with the department led.' },
-        { step: '04', title: t('Offer'), desc: language === 'kh' ? 'កំណត់លក្ខខណ្ឌ ហើយស្វាគមន៍មកកាន់ក្រុម!' : 'Establish terms and welcome you aboard!' },
+        { step: '01', title: t('Application'), desc: t('Hiring Step 1 Desc') },
+        { step: '02', title: t('Screening'), desc: t('Hiring Step 2 Desc') },
+        { step: '03', title: t('Technical'), desc: t('Hiring Step 3 Desc') },
+        { step: '04', title: t('Offer'), desc: t('Hiring Step 4 Desc') },
     ];
 
     return (
-        <div className="bg-gray-50 min-h-screen font-sans text-titan-navy relative">
+        <div className={`bg-gray-50 min-h-screen text-titan-navy relative ${fontClassName}`}>
             {/* --- HERO SECTION --- */}
             <section className="relative h-[80vh] bg-titan-navy flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
