@@ -5,35 +5,38 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ChevronLeft, ChevronRight, Phone } from 'lucide-react';
-
-const slides = [
-    {
-        id: 1,
-        image: '/images/projects/Thumbnail-1.jpg',
-        subtitle: 'Government Infrastructure',
-        title: 'Ministry of Economy',
-        desc: 'A landmark of modern governance and architectural excellence in the heart of Phnom Penh.',
-        link: '/design-z/projects/1'
-    },
-    {
-        id: 2,
-        image: '/images/projects/Thumbnail-2.jpg',
-        subtitle: 'Commercial Excellence',
-        title: 'Vattanac Capital Extension',
-        desc: 'Pushing the boundaries of vertical design and engineering for Cambodia’s premium business hub.',
-        link: '/design-z/projects/2'
-    },
-    {
-        id: 3,
-        image: '/images/projects/Thumbnail-3.jpg',
-        subtitle: 'National Development',
-        title: 'Sihanoukville Deep Sea Port',
-        desc: 'Building the gateway to global trade with robust maritime infrastructure.',
-        link: '/design-z/projects/3'
-    }
-];
+import { useLanguage } from '../context/LanguageContext';
 
 export default function HeroCarousel() {
+    const { t, language } = useLanguage();
+
+    const slides = [
+        {
+            id: 1,
+            image: '/images/projects/Thumbnail-1.jpg',
+            subtitle: t('Government Infrastructure'),
+            title: t('Ministry of Economy'),
+            desc: t('Slide 1 Desc'),
+            link: '/design-z/projects/1'
+        },
+        {
+            id: 2,
+            image: '/images/projects/Thumbnail-2.jpg',
+            subtitle: t('Commercial Excellence'),
+            title: t('Vattanac Capital Extension'),
+            desc: t('Slide 2 Desc'),
+            link: '/design-z/projects/2'
+        },
+        {
+            id: 3,
+            image: '/images/projects/Thumbnail-3.jpg',
+            subtitle: t('National Development'),
+            title: t('Sihanoukville Deep Sea Port'),
+            desc: t('Slide 3 Desc'),
+            link: '/design-z/projects/3'
+        }
+    ];
+
     const [current, setCurrent] = useState(0);
     const [direction, setDirection] = useState(0);
 
@@ -143,14 +146,18 @@ export default function HeroCarousel() {
 
                             <motion.h1
                                 variants={contentVariants}
-                                className="text-5xl md:text-7xl font-black leading-[1.1] mb-6 tracking-tight"
+                                className={`font-black mb-6 ${language === 'kh'
+                                        ? 'text-4xl md:text-6xl leading-[1.3] tracking-normal'
+                                        : 'text-5xl md:text-7xl leading-[1.1] tracking-tight'
+                                    }`}
                             >
                                 {slides[current].title}
                             </motion.h1>
 
                             <motion.p
                                 variants={contentVariants}
-                                className="text-lg md:text-xl text-white/80 max-w-lg mb-10 leading-relaxed font-light"
+                                className={`text-white/80 max-w-lg mb-10 font-light ${language === 'kh' ? 'text-base md:text-lg leading-[1.6]' : 'text-lg md:text-xl leading-relaxed'
+                                    }`}
                             >
                                 {slides[current].desc}
                             </motion.p>
@@ -160,12 +167,12 @@ export default function HeroCarousel() {
                                 className="flex flex-wrap gap-4"
                             >
                                 <Link href={slides[current].link} className="group bg-titan-red text-white px-8 py-4 font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-titan-navy transition-all duration-300 flex items-center gap-3 rounded-none">
-                                    <span>View Project</span>
+                                    <span>{t('View Project')}</span>
                                     <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
                                 </Link>
                                 <Link href="/design-z/contact" className="group border-2 border-white text-white px-8 py-4 font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-titan-navy transition-all duration-300 flex items-center gap-3 rounded">
                                     <Phone size={18} />
-                                    <span>Contact Us</span>
+                                    <span>{t('Contact Us')}</span>
                                 </Link>
                             </motion.div>
                         </motion.div>
@@ -211,11 +218,11 @@ export default function HeroCarousel() {
                 <div className="flex gap-12">
                     <div>
                         <div className="text-3xl font-black text-white">25+</div>
-                        <div className="text-[10px] text-accent-orange uppercase tracking-widest font-bold">Years Exp</div>
+                        <div className="text-[10px] text-accent-orange uppercase tracking-widest font-bold">{t('Years Exp')}</div>
                     </div>
                     <div>
                         <div className="text-3xl font-black text-white">150+</div>
-                        <div className="text-[10px] text-titan-red uppercase tracking-widest font-bold">Projects</div>
+                        <div className="text-[10px] text-titan-red uppercase tracking-widest font-bold">{t('Projects')}</div>
                     </div>
                 </div>
             </div>

@@ -5,8 +5,10 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Phone, Building2, HardHat, Layout, Wrench, MapPin, Award } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Hero() {
+    const { t, language } = useLanguage();
     const { scrollY } = useScroll();
     const heroY = useTransform(scrollY, [0, 500], [0, 150]);
 
@@ -42,7 +44,7 @@ export default function Hero() {
                         >
                             <div className="w-16 h-1 bg-titan-red"></div>
                             <span className="text-titan-red font-bold tracking-[0.2em] uppercase text-sm">
-                                Since 1999
+                                {t('Since 1999')}
                             </span>
                         </motion.div>
 
@@ -50,20 +52,24 @@ export default function Hero() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
-                            className="text-4xl md:text-7xl lg:text-8xl font-black text-white leading-[0.95] mb-8 tracking-tight"
+                            className={`font-black text-white ${language === 'kh'
+                                    ? 'text-4xl md:text-6xl lg:text-7xl leading-[1.3] tracking-normal mb-6'
+                                    : 'text-4xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8'
+                                }`}
                         >
-                            WE BUILD
+                            {t('WE BUILD')}
                             <br />
-                            <span className="text-titan-red">YOUR VISION</span>
+                            <span className="text-titan-red">{t('YOUR VISION')}</span>
                         </motion.h1>
 
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.4 }}
-                            className="text-lg md:text-xl text-white/70 max-w-lg mb-10 leading-relaxed"
+                            className={`text-white/70 max-w-lg mb-10 ${language === 'kh' ? 'text-base md:text-lg leading-[1.6]' : 'text-lg md:text-xl leading-relaxed'
+                                }`}
                         >
-                            Cambodia&apos;s premier construction company delivering world-class infrastructure, commercial buildings, and government projects with precision and excellence.
+                            {t('Home Hero Body')}
                         </motion.p>
 
                         <motion.div
@@ -73,12 +79,12 @@ export default function Hero() {
                             className="flex flex-wrap gap-4"
                         >
                             <Link href="/design-z/projects" className="group bg-titan-red text-white px-8 py-4 font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-titan-navy transition-all duration-300 flex items-center gap-3 rounded-none">
-                                <span>Our Projects</span>
+                                <span>{t('Our Projects')}</span>
                                 <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
                             </Link>
                             <Link href="/design-z/contact" className="group border-2 border-white text-white px-8 py-4 font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-titan-navy transition-all duration-300 flex items-center gap-3 rounded">
                                 <Phone size={18} />
-                                <span>Contact Us</span>
+                                <span>{t('Contact Us')}</span>
                             </Link>
                         </motion.div>
 
@@ -90,9 +96,9 @@ export default function Hero() {
                             className="flex gap-8 mt-12 pt-8 border-t border-white/20"
                         >
                             {[
-                                { val: '150+', label: 'Projects' },
-                                { val: '25+', label: 'Years' },
-                                { val: '500+', label: 'Team' },
+                                { val: '150+', label: t('Projects') },
+                                { val: '25+', label: t('Years') },
+                                { val: '500+', label: t('Team') },
                             ].map((stat, i) => (
                                 <div key={i}>
                                     <div className="text-4xl font-black text-titan-red">{stat.val}</div>
@@ -113,7 +119,7 @@ export default function Hero() {
                             <div className="relative overflow-hidden rounded-2xl shadow-2xl h-[500px]">
                                 <Image
                                     src="/images/projects/Thumbnail-1.jpg"
-                                    alt="Featured Project"
+                                    alt={t('Featured Project')}
                                     fill
                                     className="object-cover"
                                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -122,10 +128,10 @@ export default function Hero() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-transparent z-10"></div>
 
                                 <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
-                                    <span className="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-none mb-3">Featured Project</span>
-                                    <h3 className="text-white text-3xl font-bold">Ministry of Economy</h3>
+                                    <span className="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-none mb-3">{t('Featured Project')}</span>
+                                    <h3 className="text-white text-3xl font-bold">{t('Ministry of Economy')}</h3>
                                     <p className="text-white/60 text-sm mt-2 flex items-center gap-2">
-                                        <MapPin size={14} /> Phnom Penh, Cambodia
+                                        <MapPin size={14} /> {language === 'kh' ? 'ភ្នំពេញ, ប្រទេសកម្ពុជា' : 'Phnom Penh, Cambodia'}
                                     </p>
                                 </div>
                             </div>
@@ -138,13 +144,13 @@ export default function Hero() {
                                     </div>
                                     <div>
                                         <div className="text-2xl font-black text-titan-navy">A+</div>
-                                        <div className="text-xs text-titan-navy/50 uppercase tracking-wider">Rating</div>
+                                        <div className="text-xs text-titan-navy/50 uppercase tracking-wider">{t('Rating')}</div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="absolute -top-4 -right-4 bg-titan-navy p-4 rounded-xl shadow-xl z-30">
-                                <div className="text-titan-red text-2xl font-black">ISO</div>
+                                <div className="text-titan-red text-2xl font-black">{t('ISO')}</div>
                                 <div className="text-white text-xs">9001:2015</div>
                             </div>
                         </div>
@@ -158,7 +164,7 @@ export default function Hero() {
                 transition={{ repeat: Infinity, duration: 2 }}
                 className="absolute bottom-24 left-1/2 -translate-x-1/2 text-white flex flex-col items-center gap-2 cursor-pointer z-20"
             >
-                <span className="text-[10px] uppercase tracking-widest font-bold text-white/60">Scroll</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-white/60">{t('Scroll')}</span>
                 <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
                     <motion.div
                         animate={{ y: [0, 8, 0] }}
@@ -173,10 +179,10 @@ export default function Hero() {
                 <div className="max-w-[1400px] mx-auto">
                     <div className="grid grid-cols-2 md:grid-cols-4">
                         {[
-                            { icon: Building2, label: 'Commercial', desc: 'High-rise & Office' },
-                            { icon: HardHat, label: 'Industrial', desc: 'Factory & Warehouse' },
-                            { icon: Layout, label: 'Infrastructure', desc: 'Roads & Bridges' },
-                            { icon: Wrench, label: 'Management', desc: 'Strategic Oversight' },
+                            { icon: Building2, label: t('Commercial'), desc: t('High-rise & Office') },
+                            { icon: HardHat, label: t('Industrial'), desc: t('Factory & Warehouse') },
+                            { icon: Layout, label: t('Infrastructure'), desc: t('Roads & Bridges') },
+                            { icon: Wrench, label: t('Management'), desc: t('Strategic Oversight') },
                         ].map((item, i) => (
                             <Link href="/design-z/services" key={i} className="group px-6 py-8 border-r border-gray-100 last:border-r-0 hover:bg-titan-navy transition-all cursor-pointer">
                                 <div className="flex items-center gap-4">

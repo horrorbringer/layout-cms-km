@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage, getLocalizedText } from '../context/LanguageContext';
 
 // Animation wrapper
 function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -31,6 +32,7 @@ function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: 
 
 export default function ServicesPage() {
     const heroRef = useRef(null);
+    const { language, t } = useLanguage();
     const { scrollYProgress } = useScroll({
         target: heroRef,
         offset: ["start start", "end start"]
@@ -41,50 +43,60 @@ export default function ServicesPage() {
     const services = [
         {
             id: 'design-build',
-            title: 'Design & Build',
-            desc: 'A seamless integration of architectural creativity and engineering precision. We handle the entire lifecycle from concept to completion.',
+            title: { en: 'Design & Build', kh: 'រចនា និងសាងសង់' },
+            desc: { en: 'A seamless integration of architectural creativity and engineering precision. We handle the entire lifecycle from concept to completion.', kh: 'ការរួមបញ្ចូលគ្នារវាងភាពច្នៃប្រឌិតស្ថាបត្យកម្ម និងភាពជាក់លាក់នៃវិស្វកម្ម។ យើងគ្រប់គ្រងវដ្តជីវិតទាំងមូលពីគំនិតដល់ការបញ្ចប់។' },
             icon: PenTool,
-            features: ['Architectural Design', 'Structural Engineering', 'Permit Acquisition', 'Turnkey Construction'],
+            features: [
+                { en: 'Architectural Design', kh: 'ការរចនាស្ថាបត្យកម្ម' },
+                { en: 'Structural Engineering', kh: 'វិស្វកម្មសំណង់' },
+                { en: 'Permit Acquisition', kh: 'ការស្នើសុំលិខិតអនុញ្ញាត' },
+                { en: 'Turnkey Construction', kh: 'សេវាកម្មសាងសង់ទាំងស្រុង' }
+            ],
             image: '/images/projects/Thumbnail-6.jpg'
         },
         {
             id: 'renovation',
-            title: 'Construction',
-            desc: 'World-class building and civil engineering solutions. We deliver robust structures tailored to residential, commercial, and industrial needs.',
+            title: { en: 'Construction', kh: 'ការសាងសង់' },
+            desc: { en: 'World-class building and civil engineering solutions. We deliver robust structures tailored to residential, commercial, and industrial needs.', kh: 'ដំណោះស្រាយវិស្វកម្មស៊ីវិល និងសំណង់កម្រិតពិភពលោក។ យើងផ្តល់ជូននូវរចនាសម្ព័ន្ធរឹងមាំតម្រូវតាមតម្រូវការលំនៅដ្ឋាន ពាណិជ្ជកម្ម និងឧស្សាហកម្ម។' },
             icon: Hammer,
-            features: ['Civil Engineering', 'Building Structure', 'MEP Systems', 'Industrial Plants'],
+            features: [
+                { en: 'Civil Engineering', kh: 'វិស្វកម្មស៊ីវិល' },
+                { en: 'Building Structure', kh: 'រចនាសម្ព័ន្ធអគារ' },
+                { en: 'MEP Systems', kh: 'ប្រព័ន្ធទឹក ភ្លើង និងម៉ាស៊ីន (MEP)' },
+                { en: 'Industrial Plants', kh: 'រោងចក្រឧស្សាហកម្ម' }
+            ],
             image: '/images/projects/Thumbnail-4.jpg'
         },
         {
             id: 'project-management',
-            title: 'Project Management',
-            desc: 'Comprehensive oversight and strategic advisory ensuring on-time, on-budget delivery. We combine rigorous on-field management with technical and financial insights.',
+            title: { en: 'Project Management', kh: 'ការគ្រប់គ្រងគម្រោង' },
+            desc: { en: 'Comprehensive oversight and strategic advisory ensuring on-time, on-budget delivery. We combine rigorous on-field management with technical and financial insights.', kh: 'ការត្រួតពិនិត្យដ៏ទូលំទូលាយ និងការផ្តល់ប្រឹក្សាយុទ្ធសាស្រ្តធានាបាននូវការដឹកជញ្ជូនទាន់ពេល និងចំថវិកា។ យើងរួមបញ្ចូលការគ្រប់គ្រងយ៉ាងតឹងរ៉ឹងជាមួយចំណេះដឹងផ្នែកបច្ចេកទេស និងហិរញ្ញវត្ថុ។' },
             icon: Briefcase,
             features: [
-                'Cost Control & Value Engineering',
-                'Feasibility Studies',
-                'Quality & Safety Compliance',
-                'Regulatory Advice'
+                { en: 'Cost Control & Value Engineering', kh: 'ការគ្រប់គ្រងថ្លៃដើម និងវិស្វកម្មតម្លៃ' },
+                { en: 'Feasibility Studies', kh: 'ការសិក្សាសមិទ្ធភាព' },
+                { en: 'Quality & Safety Compliance', kh: 'ការអនុលោមតាមគុណភាព និងសុវត្ថិភាព' },
+                { en: 'Regulatory Advice', kh: 'ការប្រឹក្សាបទប្បញ្ញត្តិ' }
             ],
             image: '/images/projects/Thumbnail-5.jpg'
         }
     ];
 
     const process = [
-        { step: '01', title: 'Consultation & Analysis', desc: 'Understanding requirements, performing site data deep dives, and feasibility analysis.', icon: Users },
-        { step: '02', title: 'Planning & Procurement', desc: 'Defining project roadmap, budgets, baselines, and vendor selection.', icon: LayoutTemplate },
-        { step: '03', title: 'Execution & Advisory', desc: 'On-site management, daily coordination, and ongoing strategic guidance.', icon: HardHat },
-        { step: '04', title: 'Systems Integration', desc: 'Implementing smart building tech, MEP systems, and advanced automation.', icon: Settings },
-        { step: '05', title: 'Close-out & Reporting', desc: 'Final accounting, documentation, and delivering actionable recommendations.', icon: CheckCircle2 }
+        { step: '01', title: { en: 'Consultation & Analysis', kh: 'ការប្រឹក្សា និងការវិភាគ' }, desc: { en: 'Understanding requirements, performing site data deep dives, and feasibility analysis.', kh: 'ការយល់ដឹងអំពីតម្រូវការ ការវិភាគទិន្នន័យទីតាំង និងការវិភាគសមិទ្ធភាព។' }, icon: Users },
+        { step: '02', title: { en: 'Planning & Procurement', kh: 'ការរៀបចំផែនការ និងការទិញ' }, desc: { en: 'Defining project roadmap, budgets, baselines, and vendor selection.', kh: 'ការកំណត់ផែនទីបង្ហាញផ្លូវគម្រោង ថវិកា និងការជ្រើសរើសអ្នកផ្គត់ផ្គង់។' }, icon: LayoutTemplate },
+        { step: '03', title: { en: 'Execution & Advisory', kh: 'ការអនុវត្ត និងការប្រឹក្សា' }, desc: { en: 'On-site management, daily coordination, and ongoing strategic guidance.', kh: 'ការគ្រប់គ្រងនៅនឹងកន្លែង ការសម្របសម្រួលប្រចាំថ្ងៃ និងការណែនាំយុទ្ធសាស្រ្ត។' }, icon: HardHat },
+        { step: '04', title: { en: 'Systems Integration', kh: 'ការរួមបញ្ចូលប្រព័ន្ធ' }, desc: { en: 'Implementing smart building tech, MEP systems, and advanced automation.', kh: 'ការអនុវត្តបច្ចេកវិទ្យាអគារឆ្លាតវៃ ប្រព័ន្ធ MEP និងការធ្វើស្វ័យប្រវត្តិកម្ម។' }, icon: Settings },
+        { step: '05', title: { en: 'Close-out & Reporting', kh: 'ការបញ្ចប់ និងការរាយការណ៍' }, desc: { en: 'Final accounting, documentation, and delivering actionable recommendations.', kh: 'គណនេយ្យចុងក្រោយ ឯកសារ និងការផ្តល់អនុសាសន៍។' }, icon: CheckCircle2 }
     ];
 
     const sectors = [
-        { title: 'Government', icon: Landmark, image: '/images/projects/Thumbnail-1.jpg' },
-        { title: 'Public Service', icon: GraduationCap, image: '/images/projects/Thumbnail-9.jpg' },
-        { title: 'Commercial', icon: Building, image: '/images/projects/Thumbnail-2.jpg' },
-        { title: 'Infrastructure', icon: Truck, image: '/images/projects/Thumbnail-7.jpg' },
-        { title: 'Water Treatment', icon: Zap, image: '/images/projects/Thumbnail-1.jpg' },
-        { title: 'Systems', icon: Settings, image: '/images/projects/Thumbnail-6.jpg' },
+        { title: { en: 'Government', kh: 'រដ្ឋាភិបាល' }, icon: Landmark, image: '/images/projects/Thumbnail-1.jpg' },
+        { title: { en: 'Public Service', kh: 'សេវាសាធារណៈ' }, icon: GraduationCap, image: '/images/projects/Thumbnail-9.jpg' },
+        { title: { en: 'Commercial', kh: 'ពាណិជ្ជកម្ម' }, icon: Building, image: '/images/projects/Thumbnail-2.jpg' },
+        { title: { en: 'Infrastructure', kh: 'ហេដ្ឋារចនាសម្ព័ន្ធ' }, icon: Truck, image: '/images/projects/Thumbnail-7.jpg' },
+        { title: { en: 'Water Treatment', kh: 'ប្រព្រឹត្តិកម្មទឹក' }, icon: Zap, image: '/images/projects/Thumbnail-1.jpg' },
+        { title: { en: 'Systems', kh: 'ប្រព័ន្ធទូទៅ' }, icon: Settings, image: '/images/projects/Thumbnail-6.jpg' },
     ];
 
     return (
@@ -125,7 +137,7 @@ export default function ServicesPage() {
                         className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-md rounded-full text-white text-xs font-bold uppercase tracking-widest mb-8 border border-white/20 shadow-lg"
                     >
                         <Settings size={14} className="text-titan-red" />
-                        <span>World-Class Engineering</span>
+                        <span>{t('Services')}</span>
                     </motion.div>
 
                     <motion.h1
@@ -134,7 +146,7 @@ export default function ServicesPage() {
                         transition={{ duration: 0.8, delay: 0.3 }}
                         className="text-5xl md:text-9xl font-black text-white mb-8 leading-[0.8] tracking-tighter"
                     >
-                        OUR <span className="text-titan-red">EXPERTISE</span>
+                        {language === 'kh' ? 'ជំនាញ' : 'OUR'} <span className="text-titan-red">{language === 'kh' ? 'របស់យើង' : 'EXPERTISE'}</span>
                     </motion.h1>
 
                     <motion.p
@@ -143,7 +155,7 @@ export default function ServicesPage() {
                         transition={{ duration: 0.8, delay: 0.5 }}
                         className="text-lg md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed font-bold uppercase tracking-widest"
                     >
-                        Precision. Innovation. Excellence.
+                        {t('Precision. Innovation. Excellence.')}
                     </motion.p>
                 </motion.div>
 
@@ -155,7 +167,7 @@ export default function ServicesPage() {
                     className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white flex flex-col items-center gap-3 cursor-pointer"
                     onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
                 >
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50">Explore Services</span>
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50">{language === 'kh' ? 'ស្វែងយល់សេវាកម្ម' : 'Explore Services'}</span>
                     <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2 backdrop-blur-sm bg-white/5">
                         <motion.div
                             animate={{ y: [0, 12, 0] }}
@@ -170,10 +182,10 @@ export default function ServicesPage() {
             <section className="py-24 px-6 max-w-[1400px] mx-auto">
                 <FadeInWhenVisible>
                     <div className="text-center mb-20">
-                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">What We Do</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">Capabilities & Expertise</h2>
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{language === 'kh' ? 'អ្វីដែលយើងធ្វើ' : 'What We Do'}</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">{language === 'kh' ? 'សមត្ថភាព និងជំនាញ' : 'Capabilities & Expertise'}</h2>
                         <p className="text-titan-navy/50 text-lg max-w-2xl mx-auto">
-                            We bring decades of experience to every project, ensuring quality and efficiency at every stage.
+                            {language === 'kh' ? 'យើងមានបទពិសោធន៍ជាច្រើនទសវត្សរ៍សម្រាប់គម្រោងនីមួយៗ ដោយធានាបាននូវគុណភាព និងប្រសិទ្ធភាពនៅគ្រប់ជំហាន។' : 'We bring decades of experience to every project, ensuring quality and efficiency at every stage.'}
                         </p>
                     </div>
                 </FadeInWhenVisible>
@@ -188,7 +200,7 @@ export default function ServicesPage() {
                                     <div className={`lg:w-2/5 relative overflow-hidden h-72 lg:h-auto ${i % 2 === 1 ? 'lg:order-last' : ''}`}>
                                         <Image
                                             src={service.image}
-                                            alt={service.title}
+                                            alt={getLocalizedText(service.title, language)}
                                             fill
                                             className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                                         />
@@ -202,16 +214,16 @@ export default function ServicesPage() {
 
                                         <div className="w-16 h-2 bg-titan-red mb-8"></div>
 
-                                        <h3 className="text-4xl font-black text-titan-navy mb-6 uppercase tracking-tight">{service.title}</h3>
+                                        <h3 className="text-4xl font-black text-titan-navy mb-6 uppercase tracking-tight">{getLocalizedText(service.title, language)}</h3>
                                         <p className="text-titan-navy/60 text-xl leading-relaxed mb-10">
-                                            {service.desc}
+                                            {getLocalizedText(service.desc, language)}
                                         </p>
 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12">
-                                            {service.features.map((feature, idx) => (
+                                            {service.features.map((feature: any, idx) => (
                                                 <div key={idx} className="flex items-center gap-4 text-titan-navy/80 font-bold text-sm uppercase tracking-widest">
                                                     <div className="w-2 h-2 bg-titan-red rounded-full"></div>
-                                                    {feature}
+                                                    {getLocalizedText(feature, language)}
                                                 </div>
                                             ))}
                                         </div>
@@ -232,10 +244,10 @@ export default function ServicesPage() {
                 <div className="max-w-[1400px] mx-auto px-6 relative z-10">
                     <FadeInWhenVisible>
                         <div className="text-center mb-24">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">How It Works</span>
-                            <h2 className="text-4xl md:text-5xl font-black mb-6">Our Methodology</h2>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{language === 'kh' ? 'ដំណើរការការងារ' : 'How It Works'}</span>
+                            <h2 className="text-4xl md:text-5xl font-black mb-6">{language === 'kh' ? 'វិធីសាស្រ្តអនុវត្តន៍' : 'Our Methodology'}</h2>
                             <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                                A systematic approach ensuring transparency, safety, and excellence from the first meeting to final handover.
+                                {language === 'kh' ? 'វិធីសាស្រ្តដែលមានការៀបចំជាប្រព័ន្ធធានាបាននូវតម្លាភាព សុវត្ថិភាព និងភាពល្អឥតខ្ចោះ។' : 'A systematic approach ensuring transparency, safety, and excellence from the first meeting to final handover.'}
                             </p>
                         </div>
                     </FadeInWhenVisible>
@@ -279,10 +291,10 @@ export default function ServicesPage() {
 
                                         <div className="px-4">
                                             <h3 className="text-lg font-black text-white mb-3 uppercase tracking-tight group-hover:text-titan-red transition-colors">
-                                                {s.title}
+                                                {getLocalizedText(s.title, language)}
                                             </h3>
                                             <p className="text-xs text-white/40 leading-relaxed max-w-[200px] mx-auto group-hover:text-white/60 transition-colors">
-                                                {s.desc}
+                                                {getLocalizedText(s.desc, language)}
                                             </p>
                                         </div>
                                     </div>
@@ -299,25 +311,25 @@ export default function ServicesPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <FadeInWhenVisible>
                             <div>
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">The Kimmex Advantage</span>
-                                <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">Why Partner With Us?</h2>
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{language === 'kh' ? 'អត្ថប្រយោជន៍របស់ Kimmex' : 'The Kimmex Advantage'}</span>
+                                <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">{language === 'kh' ? 'ហេតុអ្វីអ្នកគួរធ្វើជាដៃគូរបស់យើង?' : 'Why Partner With Us?'}</h2>
                                 <p className="text-titan-navy/60 text-lg leading-relaxed mb-8">
-                                    We deliver more than just buildings; we deliver peace of mind. Our integrated approach ensures your project is handled with the utmost care and professionalism.
+                                    {language === 'kh' ? 'យើងផ្តល់ជូនលើសពីអគារ; យើងផ្តល់ជូនទាំងទំនុកចិត្ត។ វិធីសាស្ត្ររួមបញ្ចូលបច្ចេកវិទ្យារបស់យើងធានាថាគម្រោងរបស់អ្នកនឹងត្រូវបានដោះស្រាយដោយយកចិត្តទុកដាក់ និងប្រកបដោយវិជ្ជាជីវៈ។' : 'We deliver more than just buildings; we deliver peace of mind. Our integrated approach ensures your project is handled with the utmost care and professionalism.'}
                                 </p>
 
                                 <div className="space-y-6">
                                     {[
-                                        { icon: ShieldCheck, title: 'Uncompromising Safety', desc: 'Zero-tolerance policy ensuring the safety of all stakeholders.' },
-                                        { icon: Clock, title: 'On-Time Delivery', desc: 'Rigorous scheduling and project management to meet deadlines.' },
-                                        { icon: Zap, title: 'Innovative Solutions', desc: 'Using modern technologies to solve complex engineering challenges.' },
+                                        { icon: ShieldCheck, title: { en: 'Uncompromising Safety', kh: 'សុវត្ថិភាពជាចម្បង' }, desc: { en: 'Zero-tolerance policy ensuring the safety of all stakeholders.', kh: 'គោលការណ៍តឹងរ៉ឹងបំផុតដើម្បីធានាសុវត្ថិភាពសម្រាប់ភាគីពាក់ព័ន្ធទាំងអស់។' } },
+                                        { icon: Clock, title: { en: 'On-Time Delivery', kh: 'ការប្រគល់ជូនទាន់ពេលវេលា' }, desc: { en: 'Rigorous scheduling and project management to meet deadlines.', kh: 'ការរៀបចំកាលវិភាគ និងគ្រប់គ្រងគម្រោងយ៉ាងម៉ត់ចត់ដើម្បីឆ្លើយតបពេលវេលាកំណត់។' } },
+                                        { icon: Zap, title: { en: 'Innovative Solutions', kh: 'ដំណោះស្រាយច្នៃប្រឌិត' }, desc: { en: 'Using modern technologies to solve complex engineering challenges.', kh: 'ប្រើប្រាស់បច្ចេកវិទ្យាទំនើបដើម្បីដោះស្រាយបញ្ហាវិស្វកម្មស្មុគស្មាញ។' } },
                                     ].map((item, i) => (
                                         <div key={i} className="flex gap-5">
                                             <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-titan-red shrink-0 shadow-sm border border-gray-100">
                                                 <item.icon size={26} />
                                             </div>
                                             <div>
-                                                <h3 className="text-xl font-bold text-titan-navy mb-1">{item.title}</h3>
-                                                <p className="text-titan-navy/50">{item.desc}</p>
+                                                <h3 className="text-xl font-bold text-titan-navy mb-1">{getLocalizedText(item.title, language)}</h3>
+                                                <p className="text-titan-navy/50">{getLocalizedText(item.desc, language)}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -359,8 +371,8 @@ export default function ServicesPage() {
             <section className="py-24 px-6 max-w-[1400px] mx-auto">
                 <FadeInWhenVisible>
                     <div className="text-center mb-16">
-                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Industries</span>
-                        <h2 className="text-4xl font-black text-titan-navy">Sectors We Serve</h2>
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{language === 'kh' ? 'វិស័យ' : 'Industries'}</span>
+                        <h2 className="text-4xl font-black text-titan-navy">{language === 'kh' ? 'វិស័យដែលយើងបម្រើ' : 'Sectors We Serve'}</h2>
                     </div>
                 </FadeInWhenVisible>
 
@@ -373,7 +385,7 @@ export default function ServicesPage() {
                                     src={sector.image}
                                     fill
                                     className="object-cover group-hover:scale-110 transition-transform duration-700"
-                                    alt={sector.title}
+                                    alt={getLocalizedText(sector.title, language)}
                                 />
                                 {/* Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-300"></div>
@@ -383,10 +395,10 @@ export default function ServicesPage() {
                                     <div className="w-12 h-12 bg-titan-red rounded-lg flex items-center justify-center text-white mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
                                         <sector.icon size={24} />
                                     </div>
-                                    <h3 className="text-2xl font-bold text-white mb-2">{sector.title}</h3>
+                                    <h3 className="text-2xl font-bold text-white mb-2">{getLocalizedText(sector.title, language)}</h3>
                                     <div className="h-0 group-hover:h-auto overflow-hidden transition-all duration-300">
                                         <p className="text-white/80 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                                            Providing world-class solutions for {sector.title.toLowerCase()} infrastructure.
+                                            {language === 'kh' ? `ផ្តល់ដំណោះស្រាយលំដាប់ពិភពលោកសម្រាប់ហេដ្ឋារចនាសម្ព័ន្ធ${getLocalizedText(sector.title, 'kh')}។` : `Providing world-class solutions for ${getLocalizedText(sector.title, 'en').toLowerCase()} infrastructure.`}
                                         </p>
                                     </div>
                                 </div>
@@ -400,16 +412,16 @@ export default function ServicesPage() {
             <section className="py-24 bg-white border-t border-gray-100">
                 <div className="max-w-5xl mx-auto px-6 text-center">
                     <FadeInWhenVisible>
-                        <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-8">Have a project in mind?</h2>
+                        <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-8">{language === 'kh' ? 'តើអ្នកមានគម្រោងចង់ស្នើសុំមែនទេ?' : 'Have a project in mind?'}</h2>
                         <p className="text-xl text-titan-navy/60 mb-12 max-w-2xl mx-auto">
-                            Let's discuss how we can bring your vision to life with our expert engineering and construction services.
+                            {language === 'kh' ? 'សូមទំនាក់ទំនងមកយើងដើម្បីពិភាក្សាអំពីគម្រោងរបស់អ្នក យើងនឹងជួយអ្នកឱ្យក្លាយជាការពិត។' : 'Let\'s discuss how we can bring your vision to life with our expert engineering and construction services.'}
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
                             <Link href="/design-z/contact" className="bg-titan-red text-white px-10 py-5 font-bold uppercase tracking-widest hover:bg-titan-navy transition-all rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-titan-red/20">
-                                Get a Free Quote <ArrowRight size={18} />
+                                {language === 'kh' ? 'ទទួលការប្រឹក្សាឥតគិតថ្លៃ' : 'Get a Free Quote'} <ArrowRight size={18} />
                             </Link>
                             <Link href="/design-z/projects" className="bg-titan-bg-alt text-titan-navy px-10 py-5 font-bold uppercase tracking-widest hover:bg-titan-navy hover:text-white transition-all rounded-lg border border-gray-200">
-                                View Our Work
+                                {language === 'kh' ? 'មើលស្នាដៃរបស់យើង' : 'View Our Work'}
                             </Link>
                         </div>
                     </FadeInWhenVisible>

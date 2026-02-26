@@ -10,6 +10,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { useLanguage, getLocalizedText, LocalizedString } from '../../context/LanguageContext';
 
 // Animation wrapper
 function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -32,23 +33,23 @@ function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: 
 // --- Types ---
 type Project = {
     id: string;
-    title: string;
-    location: string;
+    title: LocalizedString;
+    location: LocalizedString;
     image: string;
-    category: string;
+    category: LocalizedString;
 };
 
 type ServiceData = {
     id: string;
-    title: string;
-    subtitle: string;
+    title: LocalizedString;
+    subtitle: LocalizedString;
     icon: any;
     heroImage: string;
-    description: string;
-    targetAudience: string;
-    scopeOfWork: string[];
-    process: { step: string; title: string; desc: string; icon: any }[];
-    benefits: { title: string; desc: string; icon: any }[];
+    description: LocalizedString;
+    targetAudience: LocalizedString;
+    scopeOfWork: LocalizedString[];
+    process: { step: string; title: LocalizedString; desc: LocalizedString; icon: any }[];
+    benefits: { title: LocalizedString; desc: LocalizedString; icon: any }[];
     relatedProjects: Project[];
 };
 
@@ -56,101 +57,101 @@ type ServiceData = {
 const services: ServiceData[] = [
     {
         id: 'design-build',
-        title: 'Design & Build',
-        subtitle: 'From Concept to Creation',
+        title: { en: 'Design & Build', kh: 'រចនា និងសាងសង់' },
+        subtitle: { en: 'From Concept to Creation', kh: 'ពីគំនិតដល់ការបង្កើតថ្មី' },
         icon: PenTool,
         heroImage: '/images/projects/Thumbnail-6.jpg',
-        description: 'Our flagship service integrating architectural creativity with engineering precision. We manage the entire project lifecycle, ensuring a seamless transition from the drawing board to the final handover. This unified approach minimizes risks and accelerates delivery.',
-        targetAudience: 'Ideal for property developers, commercial business owners, and private investors looking for a single point of responsibility.',
+        description: { en: 'Our flagship service integrating architectural creativity with engineering precision. We manage the entire project lifecycle, ensuring a seamless transition from the drawing board to the final handover. This unified approach minimizes risks and accelerates delivery.', kh: 'សេវាកម្មដ៏សំខាន់របស់យើងរួមបញ្ចូលភាពច្នៃប្រឌិតស្ថាបត្យកម្ម និងភាពជាក់លាក់នៃវិស្វកម្ម។ យើងគ្រប់គ្រងវដ្តជីវិតគម្រោងទាំងមូល ធានាបាននូវការផ្លាស់ប្តូរយ៉ាងរលូនពីការគូសប្លង់រហូតដល់ការប្រគល់ជូន។ វិធីសាស្រ្តរួមនេះកាត់បន្ថយហានិភ័យ និងជំរុញការចែកចាយឲ្យបានរហ័ស។' },
+        targetAudience: { en: 'Ideal for property developers, commercial business owners, and private investors looking for a single point of responsibility.', kh: 'ស័ក្តិសមសម្រាប់អ្នកអភិវឌ្ឍន៍អចលនទ្រព្យ ម្ចាស់អាជីវកម្មពាណិជ្ជកម្ម និងអ្នកវិនិយោគឯកជនដែលកំពុងស្វែងរកការទទួលខុសត្រូវតែមួយ។' },
         scopeOfWork: [
-            'Architectural Conceptualization & 3D Rendering',
-            'Structural & Civil Engineering',
-            'Mechanical, Electrical, & Plumbing (MEP) Design',
-            'Permit Acquisition & Regulatory Approvals',
-            'Turnkey Construction Execution',
-            'Interior Design & Fit-out'
+            { en: 'Architectural Conceptualization & 3D Rendering', kh: 'គំនូសព្រាងស្ថាបត្យកម្ម និងលក្ខណៈ 3D' },
+            { en: 'Structural & Civil Engineering', kh: 'វិស្វកម្មសំណង់ និងស៊ីវិល' },
+            { en: 'Mechanical, Electrical, & Plumbing (MEP) Design', kh: 'ការរចនាប្រព័ន្ធទឹក ភ្លើង និងម៉ាស៊ីន (MEP)' },
+            { en: 'Permit Acquisition & Regulatory Approvals', kh: 'ការស្នើសុំលិខិតអនុញ្ញាត និងការយល់ព្រមតាមច្បាប់' },
+            { en: 'Turnkey Construction Execution', kh: 'ការប្រតិបត្តិការសាងសង់ទាំងស្រុង' },
+            { en: 'Interior Design & Fit-out', kh: 'ការរចនា និងតុបតែងផ្នែកខាងក្នុង' }
         ],
         process: [
-            { step: '01', title: 'Consultation', desc: 'Understanding your vision, budget, and feasibility analysis.', icon: Search },
-            { step: '02', title: 'Design & Plan', desc: 'Developing detailed architectural and engineering blueprints.', icon: PenTool },
-            { step: '03', title: 'Build', desc: 'Construction execution with rigorous quality control.', icon: Hammer },
-            { step: '04', title: 'Handover', desc: 'Final inspection, documentation, and key delivery.', icon: CheckCircle2 }
+            { step: '01', title: { en: 'Consultation', kh: 'ការប្រឹក្សា' }, desc: { en: 'Understanding your vision, budget, and feasibility analysis.', kh: 'ការយល់ដឹងពីចក្ខុវិស័យ ថវិកា និងការវិភាគសមិទ្ធភាព។' }, icon: Search },
+            { step: '02', title: { en: 'Design & Plan', kh: 'រចនា និងយុទ្ធសាស្រ្ត' }, desc: { en: 'Developing detailed architectural and engineering blueprints.', kh: 'ការបង្កើតប្លង់ស្ថាបត្យកម្ម និងយុទ្ធសាស្រ្តលម្អិត។' }, icon: PenTool },
+            { step: '03', title: { en: 'Build', kh: 'សាងសង់' }, desc: { en: 'Construction execution with rigorous quality control.', kh: 'ការអនុវត្តសាងសង់ប្រកបដោយការគ្រប់គ្រងគុណភាព។' }, icon: Hammer },
+            { step: '04', title: { en: 'Handover', kh: 'ប្រគល់ជូន' }, desc: { en: 'Final inspection, documentation, and key delivery.', kh: 'ការត្រួតពិនិត្យចុងក្រោយ ឯកសារ និងការប្រគល់សោ។' }, icon: CheckCircle2 }
         ],
         benefits: [
-            { title: 'Single Point of Contact', desc: 'Streamlined communication and accountability.', icon: Users },
-            { title: 'Accelerated Timeline', desc: 'Overlapping design and construction phases.', icon: Clock },
-            { title: 'Cost Certainty', desc: ' minimized change orders and precise budgeting.', icon: TrendingUp },
-            { title: 'Quality Assurance', desc: 'Integrated teams ensure design intent is met.', icon: ShieldCheck }
+            { title: { en: 'Single Point of Contact', kh: 'ចំណុចទំនាក់ទំនងតែមួយ' }, desc: { en: 'Streamlined communication and accountability.', kh: 'ការប្រាស្រ័យទាក់ទង និងការទទួលខុសត្រូវមានប្រសិទ្ធភាព។' }, icon: Users },
+            { title: { en: 'Accelerated Timeline', kh: 'ពេលវេលាលឿនរហ័ស' }, desc: { en: 'Overlapping design and construction phases.', kh: 'ការត្រួតគ្នានៃដំណាក់កាលរចនា និងការសាងសង់។' }, icon: Clock },
+            { title: { en: 'Cost Certainty', kh: 'ភាពប្រាកដប្រជាថ្លៃដើម' }, desc: { en: 'Minimized change orders and precise budgeting.', kh: 'កាត់បន្ថយការផ្លាស់ប្តូរ និងរៀបចំថវិកាបានត្រឹមត្រូវ។' }, icon: TrendingUp },
+            { title: { en: 'Quality Assurance', kh: 'ធានាគុណភាព' }, desc: { en: 'Integrated teams ensure design intent is met.', kh: 'ក្រុមការងារប្រកបដោយវិជ្ជាជីវៈធានាបាននូវការរចនាស្របតាមគោលដៅ។' }, icon: ShieldCheck }
         ],
         relatedProjects: [
-            { id: '1', title: 'Vattanac Capital Extension', location: 'Phnom Penh', category: 'Commercial', image: '/images/projects/Thumbnail-1.jpg' },
-            { id: '2', title: 'Skyline Residential', location: 'Siem Reap', category: 'Residential', image: '/images/projects/Thumbnail-4.jpg' }
+            { id: '1', title: { en: 'Vattanac Capital Extension', kh: 'ការពង្រីកបរិវេណ វឌ្ឍនៈ កាពីតាល' }, location: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' }, category: { en: 'Commercial', kh: 'ពាណិជ្ជកម្ម' }, image: '/images/projects/Thumbnail-1.jpg' },
+            { id: '2', title: { en: 'Skyline Residential', kh: 'អគារលំនៅដ្ឋាន Skyline' }, location: { en: 'Siem Reap', kh: 'សៀមរាប' }, category: { en: 'Residential', kh: 'លំនៅដ្ឋាន' }, image: '/images/projects/Thumbnail-4.jpg' }
         ]
     },
     {
         id: 'renovation',
-        title: 'Construction',
-        subtitle: 'Building the Future with Precision',
+        title: { en: 'Construction', kh: 'ការសាងសង់' },
+        subtitle: { en: 'Building the Future with Precision', kh: 'កសាងអនាគតជាមួយនឹងភាពច្បាស់លាស់' },
         icon: Hammer,
         heroImage: '/images/projects/Thumbnail-4.jpg',
-        description: 'We specialize in high-quality construction of residential, commercial, and industrial structures. From ground-breaking to the final coat of paint, our expert team ensures structural integrity, modern aesthetics, and adherence to the strictest safety standards.',
-        targetAudience: 'Ideal for property developers, government agencies, and private investors seeking reliable construction excellence.',
+        description: { en: 'We specialize in high-quality construction of residential, commercial, and industrial structures. From ground-breaking to the final coat of paint, our expert team ensures structural integrity, modern aesthetics, and adherence to the strictest safety standards.', kh: 'យើងមានជំនាញក្នុងការសាងសង់លំនៅដ្ឋាន ពាណិជ្ជកម្ម និងរចនាសម្ព័ន្ធឧស្សាហកម្មប្រកបដោយគុណភាពខ្ពស់។ ពីដំណាក់កាលបុកគ្រឹះរហូតដល់ការលាបពណ៌ចុងក្រោយ ក្រុមការងាររបស់យើងធានាបាននូវភាពរឹងមាំ សោភ័ណភាព និងការអនុលោមតាមស្តង់ដារសុវត្ថិភាពយ៉ាងតឹងរ៉ឹងបំផុត។' },
+        targetAudience: { en: 'Ideal for property developers, government agencies, and private investors seeking reliable construction excellence.', kh: 'ស័ក្តិសមសម្រាប់អ្នកអភិវឌ្ឍន៍អចលនទ្រព្យ ស្ថាប័នរដ្ឋាភិបាល និងអ្នកវិនិយោគឯកជនដែលកំពុងស្វែងរកស្ថេរភាពសំណង់។' },
         scopeOfWork: [
-            'Structural Engineering & Foundations',
-            'Reinforced Concrete Works',
-            'Steel Structure Fabrication & Erection',
-            'Masonry & Structural Framing',
-            'MEP System Installation',
-            'Comprehensive Site Finishing'
+            { en: 'Structural Engineering & Foundations', kh: 'វិស្វកម្មសំណង់ និងការរៀបចំគ្រឹះ' },
+            { en: 'Reinforced Concrete Works', kh: 'ការងារបេតុងប្រដាប់ដែក' },
+            { en: 'Steel Structure Fabrication & Erection', kh: 'ការផលិត និងការដំឡើងរចនាសម្ព័ន្ធដែក' },
+            { en: 'Masonry & Structural Framing', kh: 'ការសាងសង់ជញ្ជាំង និងរចនាសម្ព័ន្ធអគារ' },
+            { en: 'MEP System Installation', kh: 'ការដំឡើងប្រព័ន្ធទឹក ភ្លើង និងម៉ាស៊ីន (MEP)' },
+            { en: 'Comprehensive Site Finishing', kh: 'បញ្ចប់ការងារសំណង់ទាំងស្រុង' }
         ],
         process: [
-            { step: '01', title: 'Survey', desc: 'Detailed site analysis, topographical survey, and soil testing.', icon: Target },
-            { step: '02', title: 'Preparation', desc: 'Site clearing, mobilization of equipment, and foundation layout.', icon: LayoutTemplate },
-            { step: '03', title: 'Execution', desc: 'Phased construction with expert supervision and QA/QC.', icon: HardHat },
-            { step: '04', title: 'Finalization', desc: 'Structural certification, site cleanup, and project handover.', icon: CheckCircle2 }
+            { step: '01', title: { en: 'Survey', kh: 'ការសិក្សាទីតាំង' }, desc: { en: 'Detailed site analysis, topographical survey, and soil testing.', kh: 'ការវិភាគទីតាំង ទម្រង់ដី និងការធ្វើតេស្តលក្ខណៈដី។' }, icon: Target },
+            { step: '02', title: { en: 'Preparation', kh: 'ការរៀបចំ' }, desc: { en: 'Site clearing, mobilization of equipment, and foundation layout.', kh: 'ការសម្អាតទីតាំង ការបញ្ជូនសម្ភារៈ និងការផ្តើមគ្រឹះ។' }, icon: LayoutTemplate },
+            { step: '03', title: { en: 'Execution', kh: 'ការអនុវត្ត' }, desc: { en: 'Phased construction with expert supervision and QA/QC.', kh: 'ការសាងសង់តាមដំណាក់កាលជាមួយនឹងការគ្រប់គ្រងគុណភាព (QA/QC)។' }, icon: HardHat },
+            { step: '04', title: { en: 'Finalization', kh: 'ការបញ្ចប់ការងារ' }, desc: { en: 'Structural certification, site cleanup, and project handover.', kh: 'ការផ្ទៀងផ្ទាត់គុណភាព ការសម្អាតទីតាំង និងការប្រគល់គម្រោង។' }, icon: CheckCircle2 }
         ],
         benefits: [
-            { title: 'Structural Integrity', desc: 'Built to exceed standard building codes and regulations.', icon: ShieldCheck },
-            { title: 'Expert Craftsmanship', desc: 'Attention to detail in every brick and beam.', icon: Star },
-            { title: 'Safety Commitment', desc: 'Zero-incident policy on all construction sites.', icon: ShieldCheck },
-            { title: 'Value Engineering', desc: 'Optimizing materials for durability and cost-efficiency.', icon: TrendingUp }
+            { title: { en: 'Structural Integrity', kh: 'ភាពរឹងមាំរចនាសម្ព័ន្ធ' }, desc: { en: 'Built to exceed standard building codes and regulations.', kh: 'សាងសង់ល្អជាងបទដ្ឋាន និងប្បញ្ញត្តិសំណង់។' }, icon: ShieldCheck },
+            { title: { en: 'Expert Craftsmanship', kh: 'ភាពប៉ិនប្រសប់វិជ្ជាជីវៈ' }, desc: { en: 'Attention to detail in every brick and beam.', kh: 'យកចិត្តទុកដាក់លម្អិតនៅគ្រប់ឥដ្ឋ និងធ្នឹម។' }, icon: Star },
+            { title: { en: 'Safety Commitment', kh: 'ការប្តេជ្ញាចិត្តសុវត្ថិភាព' }, desc: { en: 'Zero-incident policy on all construction sites.', kh: 'គោលការណ៍កាត់បន្ថយគ្រោះថ្នាក់បានទាំងស្រុងនៅគ្រប់ទីតាំងសំណង់។' }, icon: ShieldCheck },
+            { title: { en: 'Value Engineering', kh: 'ការវាយតម្លៃវិស្វកម្ម' }, desc: { en: 'Optimizing materials for durability and cost-efficiency.', kh: 'ចំណេញវត្ថុធាតុនៃការសាងសង់ដើម្បីបានគុណភាព និងសន្សំសំចៃ។' }, icon: TrendingUp }
         ],
         relatedProjects: [
-            { id: '3', title: 'Colonial Villa Restoration', location: 'Kep', category: 'Heritage', image: '/images/projects/Thumbnail-9.jpg' },
-            { id: '4', title: 'Tech Hub Office', location: 'Phnom Penh', category: 'Corporate', image: '/images/projects/Thumbnail-2.jpg' }
+            { id: '3', title: { en: 'Colonial Villa Restoration', kh: 'ការស្តារវីឡាកូឡូនីស' }, location: { en: 'Kep', kh: 'កែប' }, category: { en: 'Heritage', kh: 'បេតិកភណ្ឌ' }, image: '/images/projects/Thumbnail-9.jpg' },
+            { id: '4', title: { en: 'Tech Hub Office', kh: 'ការិយាល័យ Tech Hub' }, location: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' }, category: { en: 'Corporate', kh: 'សាជីវកម្ម' }, image: '/images/projects/Thumbnail-2.jpg' }
         ]
     },
     {
         id: 'project-management',
-        title: 'Project Management',
-        subtitle: 'Strategic Oversight & Expert Advisory',
+        title: { en: 'Project Management', kh: 'ការគ្រប់គ្រងគម្រោង' },
+        subtitle: { en: 'Strategic Oversight & Expert Advisory', kh: 'ការត្រួតពិនិត្យយុទ្ធសាស្រ្ត និងការប្រឹក្សាជំនាញ' },
         icon: Briefcase,
         heroImage: '/images/projects/Thumbnail-5.jpg',
-        description: 'Comprehensive oversight ensuring your project is delivered to the highest standards. We combine professional disciplined management of contractors, schedules, and costs with strategic technical insights and feasibility studies to optimize your investment value.',
-        targetAudience: 'Investors and owners who need expert representation, control over complex projects, and data-driven strategic advice.',
+        description: { en: 'Comprehensive oversight ensuring your project is delivered to the highest standards. We combine professional disciplined management of contractors, schedules, and costs with strategic technical insights and feasibility studies to optimize your investment value.', kh: 'ការត្រួតពិនិត្យទូលំទូលាយធានាបាននូវគម្រោងប្រគល់ដល់គុណភាពខ្ពស់។ យើងរួមបញ្ចូលការគ្រប់គ្រងអ្នកម៉ៅការសាងសង់ កាលវិភាគ និងការចំណាយជាមួយជំនាញត្រួតពិនិត្យបច្ចេកទេសដើម្បីបង្កើនតម្លៃនៃការវិនិយោគរបស់លោកអ្នក។' },
+        targetAudience: { en: 'Investors and owners who need expert representation, control over complex projects, and data-driven strategic advice.', kh: 'អ្នកវិនិយោគ និងម្ចាស់គម្រោងដែលត្រូវការតំណាងវិជ្ជាជីវៈ ការគ្រប់គ្រងលើគម្រោងស្មុគស្មាញ និងការណែនាំយុទ្ធសាស្រ្តផ្ទាល់ខ្លួន។' },
         scopeOfWork: [
-            'Project Planning, Scheduling & Budget Control',
-            'Feasibility Studies & Market Analysis',
-            'Contract Administration & Risk Management',
-            'Quality Assurance (QA/QC) & HSE Oversight',
-            'Value Engineering & Cost Optimization',
-            'Regulatory Compliance Advisory'
+            { en: 'Project Planning, Scheduling & Budget Control', kh: 'ការធ្វើផែនការគម្រោង ការកំណត់ពេលវេលា និងការគ្រប់គ្រងថវិកា' },
+            { en: 'Feasibility Studies & Market Analysis', kh: 'ការសិក្សាសមិទ្ធភាព និងការវិភាគទីផ្សារ' },
+            { en: 'Contract Administration & Risk Management', kh: 'ការគ្រប់គ្រងកិច្ចសន្យា និងហានិភ័យ' },
+            { en: 'Quality Assurance (QA/QC) & HSE Oversight', kh: 'ការធានាគុណភាព (QA/QC) និងប្រព័ន្ធសុវត្ថិភាព(HSE)' },
+            { en: 'Value Engineering & Cost Optimization', kh: 'ការវាយតម្លៃវិស្វកម្ម និងការសន្សំសំចំណាយ' },
+            { en: 'Regulatory Compliance Advisory', kh: 'ការអនុលោមតាមបទប្បញ្ញត្តិច្បាប់' }
         ],
         process: [
-            { step: '01', title: 'Consultation & Analysis', desc: 'Understanding requirements, performing site data deep dives, and feasibility analysis.', icon: Users },
-            { step: '02', title: 'Planning & Procurement', desc: 'Defining project roadmap, budgets, baselines, and vendor selection.', icon: LayoutTemplate },
-            { step: '03', title: 'Execution & Advisory', desc: 'On-site management, daily coordination, and ongoing strategic guidance.', icon: HardHat },
-            { step: '04', title: 'Close-out & Reporting', desc: 'Final accounting, documentation, and delivering actionable recommendations.', icon: CheckCircle2 }
+            { step: '01', title: { en: 'Consultation & Analysis', kh: 'ការប្រឹក្សា និងការវិភាគ' }, desc: { en: 'Understanding requirements, performing site data deep dives, and feasibility analysis.', kh: 'ការយល់ដឹងពីតម្រូវការ ការសិក្សាទីតាំង និងការសិក្សាសមិទ្ធភាព។' }, icon: Users },
+            { step: '02', title: { en: 'Planning & Procurement', kh: 'ការធ្វើផែនការ និងការផ្គត់ផ្គង់' }, desc: { en: 'Defining project roadmap, budgets, baselines, and vendor selection.', kh: 'កំណត់គុណតម្លៃគម្រោង ការគ្រប់គ្រងថវិកា និងជ្រើសរើសអ្នកផ្គត់ផ្គង់។' }, icon: LayoutTemplate },
+            { step: '03', title: { en: 'Execution & Advisory', kh: 'ការអនុវត្ត និងការប្រឹក្សា' }, desc: { en: 'On-site management, daily coordination, and ongoing strategic guidance.', kh: 'គ្រប់គ្រងនៅទីតាំងផ្ទាល់ សម្របសម្រួលប្រចាំថ្ងៃ និងណែនាំយុទ្ធសាស្រ្ត។' }, icon: HardHat },
+            { step: '04', title: { en: 'Close-out & Reporting', kh: 'ការបញ្ចប់ និងការរាយការណ៍' }, desc: { en: 'Final accounting, documentation, and delivering actionable recommendations.', kh: 'របាយការណ៍គណនេយ្យចុងក្រោយ រៀបចំឯកសារ និងបញ្ជូនអនុសាសន៍។' }, icon: CheckCircle2 }
         ],
         benefits: [
-            { title: 'Informed Decisions', desc: 'Data-driven insights to reduce investment risk effectively.', icon: Lightbulb },
-            { title: 'Budget & Cost Control', desc: 'Detailed tracking and value engineering prevent cost overruns.', icon: TrendingUp },
-            { title: 'Timely Quality Delivery', desc: 'Strict schedule enforcement and quality standards.', icon: Clock },
-            { title: 'Risk & Strategy', desc: 'Proactive issue resolution and smooth regulatory navigation.', icon: ShieldCheck }
+            { title: { en: 'Informed Decisions', kh: 'ការសម្រេចចិត្តប្រកបដោយចំណេះដឹង' }, desc: { en: 'Data-driven insights to reduce investment risk effectively.', kh: 'ផ្អែកលើទិន្នន័យច្បាស់លាស់ដើម្បីកាត់បន្ថយហានិភ័យវិនិយោគប្រកបដោយប្រសិទ្ធភាព។' }, icon: Lightbulb },
+            { title: { en: 'Budget & Cost Control', kh: 'ការគ្រប់គ្រងថវិកា និងចំណាយ' }, desc: { en: 'Detailed tracking and value engineering prevent cost overruns.', kh: 'ការតាមដានលម្អិត និងបច្ចេកទេសវិស្វកម្មតម្លៃបង្ការការចំណាយហួសកម្រិត។' }, icon: TrendingUp },
+            { title: { en: 'Timely Quality Delivery', kh: 'ការប្រគល់ជូនទាន់ពេលវេលាដែលមានគុណភាព' }, desc: { en: 'Strict schedule enforcement and quality standards.', kh: 'អនុវត្តយ៉ាងម៉ឺងម៉ាត់តាមកម្មវិធីការងារ និងស្តង់ដារគុណភាព។' }, icon: Clock },
+            { title: { en: 'Risk & Strategy', kh: 'ហានិភ័យ និងយុទ្ធសាស្រ្ត' }, desc: { en: 'Proactive issue resolution and smooth regulatory navigation.', kh: 'ដោះស្រាយបញ្ហាយ៉ាងសកម្ម និងរុករកយ៉ាងរលូនរាល់បទប្បញ្ញត្តិដែលមានស្រាប់។' }, icon: ShieldCheck }
         ],
         relatedProjects: [
-            { id: '5', title: 'Logistics Center Ph-1', location: 'Sihanoukville', category: 'Industrial', image: '/images/projects/Thumbnail-7.jpg' },
-            { id: '6', title: 'Eco-Resort Masterplan', location: 'Koh Kong', category: 'Hospitality', image: '/images/projects/Thumbnail-8.jpg' }
+            { id: '5', title: { en: 'Logistics Center Ph-1', kh: 'មជ្ឈមណ្ឌលភស្តុភារ ដំណាក់កាលទី ១' }, location: { en: 'Sihanoukville', kh: 'ព្រះសីហនុ' }, category: { en: 'Industrial', kh: 'ឧស្សាហកម្ម' }, image: '/images/projects/Thumbnail-7.jpg' },
+            { id: '6', title: { en: 'Eco-Resort Masterplan', kh: 'ផែនការមេសណ្ឋាគារធម្មជាតិ' }, location: { en: 'Koh Kong', kh: 'កោះកុង' }, category: { en: 'Hospitality', kh: 'បដិសណ្ឋារកិច្ច' }, image: '/images/projects/Thumbnail-8.jpg' }
         ]
     }
 ];
@@ -161,6 +162,8 @@ export default function ServiceDetailPage() {
     // Fallback to first if not found
     const service = services.find(s => s.id === id) || services[0];
     const Icon = service.icon || Building;
+
+    const { language, t } = useLanguage();
 
     const heroRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -176,7 +179,7 @@ export default function ServiceDetailPage() {
             {/* === 1. PARALLAX HERO === */}
             <section ref={heroRef} className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">
                 <motion.div style={{ y: heroY, scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }} className="absolute inset-0">
-                    <Image src={service.heroImage} alt={service.title} width={1920} height={1200} className="w-full h-[120%] object-cover opacity-50 mix-blend-overlay" />
+                    <Image src={service.heroImage} alt={getLocalizedText(service.title, language)} width={1920} height={1200} className="w-full h-[120%] object-cover opacity-50 mix-blend-overlay" />
                     <div className="absolute inset-0 bg-gradient-to-b from-titan-navy/80 via-titan-navy/40 to-titan-navy"></div>
                 </motion.div>
 
@@ -185,7 +188,7 @@ export default function ServiceDetailPage() {
                         <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:border-titan-red group-hover:bg-titan-red group-hover:text-white transition-all">
                             <ArrowLeft size={12} />
                         </div>
-                        Back to Services
+                        {t('Back')}
                     </Link>
 
                     <motion.div
@@ -203,7 +206,7 @@ export default function ServiceDetailPage() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 uppercase tracking-tighter"
                     >
-                        {service.title}
+                        {getLocalizedText(service.title, language)}
                     </motion.h1>
 
                     <motion.p
@@ -212,7 +215,7 @@ export default function ServiceDetailPage() {
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto font-light leading-relaxed"
                     >
-                        {service.subtitle}
+                        {getLocalizedText(service.subtitle, language)}
                     </motion.p>
                 </motion.div>
             </section>
@@ -222,10 +225,10 @@ export default function ServiceDetailPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                     <FadeInWhenVisible>
                         <div className="mb-12">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Overview</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">Redefining {service.title}</h2>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Overview')}</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">{language === 'kh' ? 'ការកំណត់ឡើងវិញនូវ' : 'Redefining'} {getLocalizedText(service.title, language)}</h2>
                             <p className="text-lg md:text-xl text-titan-navy/60 leading-relaxed mb-10">
-                                {service.description}
+                                {getLocalizedText(service.description, language)}
                             </p>
                         </div>
 
@@ -234,10 +237,10 @@ export default function ServiceDetailPage() {
                                 <div className="p-2 bg-titan-red/10 rounded-lg">
                                     <Users size={20} className="text-titan-red" />
                                 </div>
-                                Ideal For
+                                {language === 'kh' ? 'ស័ក្តិសមសម្រាប់' : 'Ideal For'}
                             </h3>
                             <p className="text-titan-navy/70 leading-relaxed">
-                                {service.targetAudience}
+                                {getLocalizedText(service.targetAudience, language)}
                             </p>
                         </div>
                     </FadeInWhenVisible>
@@ -261,9 +264,8 @@ export default function ServiceDetailPage() {
                 <div className="max-w-[1400px] mx-auto px-6 relative z-10">
                     <FadeInWhenVisible>
                         <div className="text-center mb-16">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Scope of Work</span>
-                            <h2 className="text-4xl md:text-5xl font-black mb-6">Comprehensive Coverage</h2>
-                            <p className="text-white/60 text-lg max-w-2xl mx-auto">We handle every detail so you don&apos;t have to. Here&apos;s what&apos;s included in our service.</p>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{language === 'kh' ? 'វិសាលភាពការងារ' : 'Scope of Work'}</span>
+                            <h2 className="text-4xl md:text-5xl font-black mb-6">{language === 'kh' ? 'សេវាកម្មដ៏ទូលំទូលាយ' : 'Comprehensive Coverage'}</h2>
                         </div>
                     </FadeInWhenVisible>
 
@@ -274,7 +276,7 @@ export default function ServiceDetailPage() {
                                     <div className="w-10 h-10 rounded-full bg-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white transition-colors duration-300">
                                         <CheckCircle2 className="text-titan-red group-hover:text-white" size={20} />
                                     </div>
-                                    <span className="font-bold text-lg leading-tight pt-2 group-hover:text-titan-red transition-colors">{item}</span>
+                                    <span className="font-bold text-lg leading-tight pt-2 group-hover:text-titan-red transition-colors">{getLocalizedText(item, language)}</span>
                                 </div>
                             </FadeInWhenVisible>
                         ))}
@@ -287,9 +289,9 @@ export default function ServiceDetailPage() {
                 <div className="max-w-[1400px] mx-auto">
                     <FadeInWhenVisible>
                         <div className="text-center max-w-3xl mx-auto mb-20">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our Process</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">The Path to Success</h2>
-                            <p className="text-titan-navy/60 text-xl">A transparent, structured approach to ensure your project&apos;s success.</p>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{language === 'kh' ? 'ដំណើរការរបស់យើង' : 'Our Process'}</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6">{language === 'kh' ? 'មាគ៌ាឆ្ពោះទៅរកភាពជោគជ័យ' : 'The Path to Success'}</h2>
+                            <p className="text-titan-navy/60 text-xl">{language === 'kh' ? 'វិធីសាស្រ្តដែលមានរចនាសម្ព័ន្ធ និងតម្លាភាពដើម្បីធានាភាពជោគជ័យនៃគម្រោងរបស់អ្នក។' : 'A transparent, structured approach to ensure your project\'s success.'}</p>
                         </div>
                     </FadeInWhenVisible>
 
@@ -333,10 +335,10 @@ export default function ServiceDetailPage() {
 
                                         <div className="px-4">
                                             <h3 className="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">
-                                                {step.title}
+                                                {getLocalizedText(step.title, language)}
                                             </h3>
                                             <p className="text-sm text-titan-navy/50 leading-relaxed max-w-[240px] mx-auto group-hover:text-titan-navy/80 transition-colors">
-                                                {step.desc}
+                                                {getLocalizedText(step.desc, language)}
                                             </p>
                                         </div>
                                     </div>
@@ -351,8 +353,8 @@ export default function ServiceDetailPage() {
             <section className="py-24 px-6 max-w-[1400px] mx-auto">
                 <FadeInWhenVisible>
                     <div className="text-center mb-16">
-                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Why Choose Us</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-titan-navy">Value Delivered</h2>
+                        <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{language === 'kh' ? 'ហេតុអ្វីជ្រើសរើសយើង' : 'Why Choose Us'}</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-titan-navy">{language === 'kh' ? 'គុណតម្លៃដែលផ្តល់ជូន' : 'Value Delivered'}</h2>
                     </div>
                 </FadeInWhenVisible>
 
@@ -363,9 +365,9 @@ export default function ServiceDetailPage() {
                                 <div className="w-16 h-16 bg-titan-navy/5 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
                                     <benefit.icon size={30} className="text-titan-navy group-hover:text-white transition-colors" />
                                 </div>
-                                <h3 className="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">{benefit.title}</h3>
+                                <h3 className="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">{getLocalizedText(benefit.title, language)}</h3>
                                 <p className="text-titan-navy/60 leading-relaxed">
-                                    {benefit.desc}
+                                    {getLocalizedText(benefit.desc, language)}
                                 </p>
                             </div>
                         </FadeInWhenVisible>
@@ -380,11 +382,11 @@ export default function ServiceDetailPage() {
                         <FadeInWhenVisible>
                             <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-8">
                                 <div>
-                                    <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Portfolio</span>
-                                    <h2 className="text-4xl md:text-5xl font-black">Featured Projects</h2>
+                                    <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{language === 'kh' ? 'ស្នាដៃ' : 'Portfolio'}</span>
+                                    <h2 className="text-4xl md:text-5xl font-black">{t('Featured Projects')}</h2>
                                 </div>
                                 <Link href="/design-z/projects" className="mt-8 md:mt-0 px-8 py-3 bg-white/10 hover:bg-white hover:text-titan-navy transition-all font-bold uppercase tracking-widest text-sm flex items-center gap-2 rounded-lg backdrop-blur-sm">
-                                    View All Projects <ArrowRight size={16} />
+                                    {language === 'kh' ? 'មើលគម្រោងទាំងអស់' : 'View All Projects'} <ArrowRight size={16} />
                                 </Link>
                             </div>
                         </FadeInWhenVisible>
@@ -393,15 +395,15 @@ export default function ServiceDetailPage() {
                             {service.relatedProjects.map((project, i) => (
                                 <FadeInWhenVisible key={i} delay={i * 0.1}>
                                     <Link href={`/design-z/projects/${project.id}`} className="group relative aspect-[16/9] overflow-hidden rounded-2xl cursor-pointer block shadow-2xl">
-                                        <Image src={project.image} alt={project.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                                        <Image src={project.image} alt={getLocalizedText(project.title, language)} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
 
                                         <div className="absolute bottom-0 left-0 p-8 w-full">
                                             <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                                <span className="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{project.category}</span>
-                                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{project.title}</h3>
+                                                <span className="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{getLocalizedText(project.category, language)}</span>
+                                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{getLocalizedText(project.title, language)}</h3>
                                                 <div className="flex items-center gap-2 text-white/80 text-sm">
-                                                    <MapPin size={16} className="text-titan-red" /> {project.location}
+                                                    <MapPin size={16} className="text-titan-red" /> {getLocalizedText(project.location, language)}
                                                 </div>
                                             </div>
                                         </div>
@@ -424,12 +426,12 @@ export default function ServiceDetailPage() {
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[50px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
                     <FadeInWhenVisible>
-                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Ready to start?</h2>
+                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6">{language === 'kh' ? 'រួចរាល់សម្រាប់ការចាប់ផ្តើម?' : 'Ready to start?'}</h2>
                         <p className="text-white/90 text-xl mb-10 font-medium">
-                            Contact our expert team today for a free consultation and feasibility study.
+                            {language === 'kh' ? 'ទាក់ទងក្រុមការងារជំនាញរបស់យើងថ្ងៃនេះ សម្រាប់ការពិគ្រោះយោបល់ និងការសិក្សាសមិទ្ធភាពដោយឥតគិតថ្លៃ។' : 'Contact our expert team today for a free consultation and feasibility study.'}
                         </p>
                         <Link href="/design-z/contact" className="inline-flex items-center gap-2 bg-white text-titan-red px-10 py-5 font-bold uppercase tracking-widest hover:bg-titan-navy hover:text-white transition-all shadow-xl rounded-lg">
-                            Request Quote <ArrowRight size={18} />
+                            {language === 'kh' ? 'ស្នើសុំការប្រឹក្សា' : 'Request Quote'} <ArrowRight size={18} />
                         </Link>
                     </FadeInWhenVisible>
                 </div>

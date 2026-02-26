@@ -14,11 +14,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     // Adjust sizes for Khmer to match legibility of English
     const isKh = language === 'kh';
     // Top bar: smaller text
-    const textTopBar = isKh ? 'text-[12px]' : 'text-[11px]';
+    const textTopBar = isKh ? 'text-[14px]' : 'text-[11px]';
     // Main Nav: Standard is 13px uppercase, Khmer needs bigger
-    const textMainNav = isKh ? 'text-base' : 'text-[13px]';
+    const textMainNav = isKh ? 'text-[15px] font-medium' : 'text-[13px] font-bold uppercase';
     // Dropdown items: Standard is sm (14px)
-    const textDropdown = isKh ? 'text-base' : 'text-sm';
+    const textDropdown = isKh ? 'text-[14px]' : 'text-sm';
 
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [hoveredNav, setHoveredNav] = React.useState<number | null>(null);
@@ -200,7 +200,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                             href={item.href}
                                             className="flex items-center gap-1 px-5 py-8 cursor-pointer relative"
                                         >
-                                            <span className={`${textMainNav} font-bold uppercase tracking-wide transition-all duration-200 group-hover/nav:text-accent-orange ${isScrolled ? 'text-titan-navy' : 'text-white'}`}>
+                                            <span className={`${textMainNav} tracking-wide transition-all duration-200 group-hover/nav:text-accent-orange ${isScrolled ? 'text-titan-navy' : 'text-white'}`}>
                                                 {item.label}
                                             </span>
                                             {item.children && (
@@ -482,7 +482,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 <div className="flex flex-wrap gap-2">
                                     {['Commercial', 'Infrastructure', 'Industrial', 'Renovation', 'Government'].map(tag => (
                                         <span key={tag} className="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-accent-orange hover:text-white transition-all">
-                                            {tag}
+                                            {t(tag)}
                                         </span>
                                     ))}
                                 </div>

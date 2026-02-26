@@ -5,12 +5,13 @@ import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'fra
 import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Quote, ChevronDown, ChevronUp, Plus, Minus, X, Mail, Linkedin, ArrowRight, ArrowUpRight, Layers, Phone, Network } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage, getLocalizedText } from '../context/LanguageContext';
 import { orgChartData, OrgNode } from '../data/orgChartData';
-import { milestones } from '../data/milestonesData';
+import { milestones, Milestone } from '../data/milestonesData';
 
 // Modal Component for Member Details
-function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: boolean; onClose: () => void }) {
+function MemberDetailModal({ member, isOpen, onClose, language }: { member: any; isOpen: boolean; onClose: () => void; language: string }) {
+    const { t } = useLanguage();
     if (!isOpen || !member) return null;
 
     return (
@@ -55,7 +56,7 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                     <div className="absolute bottom-6 left-6 right-6">
                         <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1.5 rounded-full text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">
                             <Shield size={10} className="text-titan-red animate-pulse" />
-                            Verified Leadership
+                            {t('Verified Leadership')}
                         </div>
                     </div>
                 </div>
@@ -68,7 +69,7 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                     </div>
 
                     <div className="mb-8 md:mb-12 relative">
-                        <span className="text-titan-red font-black uppercase tracking-[0.3em] text-[10px] block mb-3">{member.role}</span>
+                        <span className="text-titan-red font-black uppercase tracking-[0.3em] text-[10px] block mb-3">{getLocalizedText(member.role, language as any) || member.role}</span>
                         <h3 className="text-3xl md:text-5xl font-black text-titan-navy uppercase leading-[1.1] tracking-tighter">
                             {member.name}
                         </h3>
@@ -76,14 +77,14 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                     </div>
 
                     <div className="flex-grow">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-4 italic">Executive Biography</h4>
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-4 italic">{t('Executive Biography')}</h4>
                         <div className="space-y-4 md:space-y-6 text-titan-navy/80 leading-relaxed font-medium">
                             {member.bio ? (
-                                <p className="text-base md:text-lg leading-relaxed">{member.bio}</p>
+                                <p className="text-base md:text-lg leading-relaxed">{getLocalizedText(member.bio, language as any) || member.bio}</p>
                             ) : (
                                 <>
                                     <p className="text-base md:text-lg leading-relaxed">
-                                        An integral part of KIM MEX Construction, {member.name.split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {member.role.toLowerCase()} division.
+                                        An integral part of KIM MEX Construction, {member.name.split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {(getLocalizedText(member.role, language as any) || member.role).toLowerCase()} division.
                                     </p>
                                     <p className="text-sm md:text-base">
                                         Focused on operational efficiency and upholding our core values of excellence and safety, they play a vital role in delivering landmark projects across the Kingdom.
@@ -99,8 +100,8 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                                 <Users size={18} />
                             </div>
                             <div className="text-[10px] md:text-[11px] leading-tight">
-                                <div className="font-bold text-titan-navy uppercase">Directorate</div>
-                                <div className="text-titan-navy/40 font-bold">KIMMEX GROUP</div>
+                                <div className="font-bold text-titan-navy uppercase">{t('Directorate')}</div>
+                                <div className="text-titan-navy/40 font-bold">{t('KIMMEX GROUP')}</div>
                             </div>
                         </div>
 
@@ -109,7 +110,7 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                                 href={`/design-z/team/${member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}
                                 className="w-full sm:w-auto px-10 py-3.5 bg-titan-navy text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-titan-red transition-all text-center shadow-lg shadow-titan-navy/10 active:scale-95"
                             >
-                                Full Biography
+                                {t('Full Biography')}
                             </Link>
                         </div>
                     </div>
@@ -120,7 +121,7 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
 }
 
 // Director Level Card (Mid Hierarchy)
-function DirectorCard({ member, onClick }: { member: any; onClick?: (member: any) => void }) {
+function DirectorCard({ member, onClick, language }: { member: any; onClick?: (member: any) => void; language: string }) {
     return (
         <div
             className="flex flex-col items-center group cursor-pointer"
@@ -137,7 +138,7 @@ function DirectorCard({ member, onClick }: { member: any; onClick?: (member: any
                     )}
                 </div>
                 <div className="bg-[#C8102E] text-white px-3 py-0.5 rounded-sm text-[8px] font-black uppercase tracking-wider mb-1.5">
-                    {member.role === 'Deputy General Manager' ? 'DGM' : member.role}
+                    {(getLocalizedText(member.role, language as any) || member.role) === 'Deputy General Manager' ? 'DGM' : (getLocalizedText(member.role, language as any) || member.role)}
                 </div>
                 <h4 className="text-[10px] font-black text-titan-navy uppercase text-center leading-tight">
                     {member.name}
@@ -155,7 +156,8 @@ function BusJunction({ className = '', active = false }: { className?: string; a
 }
 
 // Team Member Card Component (Top Level Hierarchy)
-function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO?: boolean; onClick?: (member: any) => void }) {
+function TeamMemberCard({ member, isCEO = false, onClick, language }: { member: any; isCEO?: boolean; onClick?: (member: any) => void; language: string }) {
+    const { t } = useLanguage();
     const roleColors: Record<string, string> = {
         'CEO': 'bg-[#002B5B] text-white',
         'DCEO': 'bg-[#C8102E] text-white',
@@ -165,7 +167,7 @@ function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO
         'DGM - DCEO': 'bg-[#002B5B] text-white',
     };
 
-    const roleColor = roleColors[member.role] || 'bg-gray-100 text-titan-navy';
+    const roleColor = roleColors[getLocalizedText(member.role, language as any) || member.role] || 'bg-gray-100 text-titan-navy';
 
     return (
         <div
@@ -191,7 +193,7 @@ function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO
 
             <div className="flex flex-col items-center">
                 <div className={`${roleColor} px-4 py-0.5 rounded-sm text-[10px] font-black uppercase tracking-widest mb-1.5 shadow-sm whitespace-nowrap`}>
-                    {member.role === 'Deputy General Manager' ? 'DGM' : member.role}
+                    {(getLocalizedText(member.role, language as any) || member.role) === 'Deputy General Manager' ? 'DGM' : (getLocalizedText(member.role, language as any) || member.role)}
                 </div>
                 <h3 className="text-[11px] font-black text-titan-navy uppercase tracking-tight text-center max-w-[150px] leading-tight group-hover:text-[#C8102E] transition-colors">
                     {member.name}
@@ -205,7 +207,7 @@ function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO
 }
 
 // Team Member Row Card (Mobile View - Horizontal / Vertical Tree)
-function TeamMemberRowCard({ member, onClick }: { member: any; onClick?: (member: any) => void }) {
+function TeamMemberRowCard({ member, onClick, language }: { member: any; onClick?: (member: any) => void; language: string }) {
     return (
         <div
             className="flex items-center gap-3 bg-white p-2.5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group w-full"
@@ -227,7 +229,7 @@ function TeamMemberRowCard({ member, onClick }: { member: any; onClick?: (member
             </div>
             <div className="flex-grow min-w-0">
                 <h4 className="text-[11px] font-bold text-titan-navy uppercase tracking-tight leading-tight group-hover:text-titan-red transition-colors truncate">{member.name}</h4>
-                <p className="text-[8px] text-accent-orange font-bold uppercase tracking-wider mt-0.5 truncate">{member.role}</p>
+                <p className="text-[8px] text-accent-orange font-bold uppercase tracking-wider mt-0.5 truncate">{getLocalizedText(member.role, language as any) || member.role}</p>
             </div>
             <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-titan-red/10 group-hover:text-titan-red transition-all">
                 <ArrowRight size={10} />
@@ -237,7 +239,7 @@ function TeamMemberRowCard({ member, onClick }: { member: any; onClick?: (member
 }
 
 // Compact Org Card for deep levels (matching the KIM SREY style)
-function CompactOrgCard({ node, onClick }: { node: OrgNode; onClick: (member: any) => void }) {
+function CompactOrgCard({ node, onClick, language }: { node: OrgNode; onClick: (member: any) => void; language: string }) {
     return (
         <div
             className="flex flex-col items-center group cursor-pointer w-24"
@@ -261,7 +263,7 @@ function CompactOrgCard({ node, onClick }: { node: OrgNode; onClick: (member: an
             </div>
             <div className="text-center flex flex-col items-center">
                 <div className="text-[9.5px] font-black text-[#002B5B] uppercase leading-tight tracking-tight mb-0.5 group-hover:text-[#C8102E] transition-colors">{node.name}</div>
-                <div className="text-[7.5px] font-bold text-[#FF5722] uppercase tracking-normal leading-tight">{node.role}</div>
+                <div className="text-[7.5px] font-bold text-[#FF5722] uppercase tracking-normal leading-tight">{getLocalizedText(node.role, language as any) || (node.role as any)}</div>
             </div>
         </div>
     );
@@ -322,7 +324,7 @@ function JunctionDot({ className = '', delay = 0, active = false }: { className?
 }
 
 // Member Column for the Tree style (Compact row with circle on left)
-function OrgColumnItem({ node, onClick }: { node: OrgNode; onClick: (m: any) => void }) {
+function OrgColumnItem({ node, onClick, language }: { node: OrgNode; onClick: (m: any) => void; language: string }) {
     return (
         <div className="relative flex flex-col items-center group">
             {/* Horizontal branch line from parent stem */}
@@ -343,7 +345,7 @@ function OrgColumnItem({ node, onClick }: { node: OrgNode; onClick: (m: any) => 
                 </div>
 
                 <div className="bg-[#C8102E] text-white px-2 py-0.5 rounded-sm text-[7px] font-black uppercase tracking-wider mb-1 shadow-sm">
-                    {node.role}
+                    {getLocalizedText(node.role, language as any) || (node.role as any)}
                 </div>
 
                 <div className="text-center w-full">
@@ -358,7 +360,7 @@ function OrgColumnItem({ node, onClick }: { node: OrgNode; onClick: (m: any) => 
 }
 
 // Small Circle for sub-staff
-function StaffCircle({ node }: { node: OrgNode }) {
+function StaffCircle({ node, language }: { node: OrgNode; language: string }) {
     return (
         <div className="group relative">
             <div className="w-8 h-8 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-[10px] text-titan-navy font-bold hover:bg-titan-red hover:text-white transition-all cursor-help overflow-hidden">
@@ -370,7 +372,7 @@ function StaffCircle({ node }: { node: OrgNode }) {
             </div>
             {/* Tooltip */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-titan-navy text-white text-[8px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
-                {node.name} - {node.role}
+                {node.name} - {getLocalizedText(node.role, language as any) || (node.role as any)}
             </div>
         </div>
     );
@@ -433,7 +435,7 @@ function AnimatedCounter({ value, suffix = '', label }: { value: number; suffix?
 
 export default function AboutPage() {
     const heroRef = useRef(null);
-    const { t } = useLanguage();
+    const { language, t } = useLanguage();
     const { scrollYProgress } = useScroll({
         target: heroRef,
         offset: ["start start", "end start"]
@@ -464,7 +466,7 @@ export default function AboutPage() {
                         <div className="absolute left-[-35px] top-1/2 -translate-y-1/2 w-8 h-[1px] bg-gray-200" />
 
                         <div style={{ marginLeft: depth > 1 ? `${(depth - 1) * 20}px` : '0px' }}>
-                            <TeamMemberRowCard member={node} onClick={handleMemberClick} />
+                            <TeamMemberRowCard member={node} onClick={handleMemberClick} language={language} />
                         </div>
                     </div>
                 ) : (
@@ -488,98 +490,11 @@ export default function AboutPage() {
 
     const coreValues = [
         { icon: Shield, title: t('Integrity'), desc: t('Integrity Desc') },
-        { icon: Award, title: t('Excellence'), desc: t('Excellence Desc') },
+        { icon: Award, title: t('Excellence'), desc: t('Excellence Desc Value') },
         { icon: Handshake, title: t('Partnership'), desc: t('Partnership Desc') },
         { icon: Lightbulb, title: t('Innovation'), desc: t('Innovation Desc') },
         { icon: Heart, title: t('Safety First'), desc: t('Safety Desc') },
         { icon: TrendingUp, title: t('Growth'), desc: t('Growth Desc') },
-    ];
-
-    const milestones = [
-        {
-            year: '1999',
-            title: 'Foundation',
-            desc: 'Kim Mex Construction & Investment Co.,Ltd. was established and registered in accordance with the regulations and laws of the Kingdom of Cambodia.',
-            image: '/images/projects/Thumbnail-1.jpg'
-        },
-        {
-            year: '2001-2004',
-            title: 'Early Growth',
-            desc: 'Laying the groundwork for excellence in provincial infrastructure and building quality partnerships across the kingdom.',
-            image: '/images/projects/Thumbnail-2.jpg'
-        },
-        {
-            year: '2005-2013',
-            title: 'Expanding Horizons',
-            desc: 'Significant expansion of services into specialized building construction and large-scale public utility projects.',
-            image: '/images/projects/Thumbnail-3.jpg'
-        },
-        {
-            year: '2014-2017',
-            title: 'Institutional Partnerships',
-            desc: 'Delivery of key institutional projects including:',
-            projects: [
-                'Ministry of Economy and Finance',
-                'Ministry of Post and Telecommunication',
-                'Clean Water in Mondulkiri Province',
-                'Electricity of Cambodia Wat Phnom',
-                'Al Serkal Mosque'
-            ],
-            image: '/images/projects/Thumbnail-4.jpg'
-        },
-        {
-            year: '2018-2020',
-            title: 'Scaling Innovation',
-            desc: 'Integration of modern systems and complex structural works:',
-            projects: [
-                'Anti-Corruption Unit',
-                'Siem Reap Electricity',
-                'Ministry of Economy Underground Parking Lot',
-                'General Department of National Treasury'
-            ],
-            image: '/images/projects/Thumbnail-5.jpg'
-        },
-        {
-            year: '2021-2022',
-            title: 'Infrastructure Excellence',
-            desc: 'Securing major national landmarks and utility hubs:',
-            projects: [
-                'Stung Treng Water Purification Station',
-                'General Department of Customs and Excise',
-                'Securities and Exchange Commission of Cambodia',
-                'Electricity of Cambodia (EDC)'
-            ],
-            image: '/images/projects/Thumbnail-6.jpg'
-        },
-        {
-            year: '2023',
-            title: 'Strategic Progress',
-            desc: 'Completion of high-profile government headquarters:',
-            projects: [
-                'Ministry of Interior HQ',
-                'National Social Security Fund (NSSF)'
-            ],
-            image: '/images/projects/Thumbnail-7.jpg'
-        },
-        {
-            year: '2024',
-            title: 'Future Foundations',
-            desc: 'Expanding into healthcare and regulatory sectors:',
-            projects: [
-                'Commercial Gambling Management Commission',
-                'Chea Chumneas Hospital'
-            ],
-            image: '/images/projects/Thumbnail-8.jpg'
-        },
-        {
-            year: '2025',
-            title: 'Vision 2025',
-            desc: 'Ongoing and future flagship developments:',
-            projects: [
-                'National Election Committee HQ'
-            ],
-            image: '/images/projects/Thumbnail-9.jpg'
-        }
     ];
 
     return (
@@ -591,6 +506,7 @@ export default function AboutPage() {
                         member={selectedMember}
                         isOpen={!!selectedMember}
                         onClose={() => setSelectedMember(null)}
+                        language={language}
                     />
                 )}
             </AnimatePresence>
@@ -630,9 +546,9 @@ export default function AboutPage() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-[0.95]"
                     >
-                        BUILDING
+                        {t('BUILDING')}
                         <br />
-                        <span className="text-titan-red">CAMBODIA&apos;S FUTURE</span>
+                        <span className="text-titan-red">{t('CAMBODIA FUTURE')}</span>
                     </motion.h1>
 
                     <motion.p
@@ -641,7 +557,7 @@ export default function AboutPage() {
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed"
                     >
-                        For over 25 years, KIM MEX Construction has been at the forefront of Cambodia&apos;s infrastructure development, transforming visions into landmarks.
+                        {t('About Hero Body')}
                     </motion.p>
                 </motion.div>
             </section>
@@ -650,10 +566,10 @@ export default function AboutPage() {
             <section className="bg-titan-navy py-16 border-t border-white/10">
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                        <AnimatedCounter value={25} suffix="+" label="Years Experience" />
-                        <AnimatedCounter value={150} suffix="+" label="Projects Completed" />
-                        <AnimatedCounter value={500} suffix="+" label="Team Members" />
-                        <AnimatedCounter value={98} suffix="%" label="Client Satisfaction" />
+                        <AnimatedCounter value={25} suffix="+" label={t('Years Experience')} />
+                        <AnimatedCounter value={150} suffix="+" label={t('Projects Completed')} />
+                        <AnimatedCounter value={500} suffix="+" label={t('Team Members')} />
+                        <AnimatedCounter value={98} suffix="%" label={t('Client Satisfaction')} />
                     </div>
                 </div>
             </section>
@@ -708,7 +624,7 @@ export default function AboutPage() {
                                 {/* Floating Badge */}
                                 <div className="absolute -bottom-6 -right-6 bg-titan-red text-white p-6 rounded-2xl shadow-xl hidden md:block">
                                     <div className="text-4xl font-black">25+</div>
-                                    <div className="text-sm uppercase tracking-widest">Years</div>
+                                    <div className="text-sm uppercase tracking-widest">{t('Years')}</div>
                                 </div>
                             </div>
                         </FadeInWhenVisible>
@@ -716,50 +632,44 @@ export default function AboutPage() {
                         {/* Right: Content */}
                         <FadeInWhenVisible delay={0.2}>
                             <div>
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Who We Are</span>
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Who We Are')}</span>
                                 <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6 leading-tight">
-                                    Cambodia&apos;s Premier <span className="text-titan-red">Construction Partner</span>
+                                    {t('Cambodia Premier Partner')}
                                 </h2>
                                 <p className="text-titan-navy/60 text-lg leading-relaxed mb-8">
-                                    Kim Mex Construction & Investment Co.,Ltd. Company has formerly named Kim Mex
-                                    Construction & Investment Co.,Ltd, was established since 1999 and eligible to bid being a
-                                    company duly registered in accordance with regulation and law in the Kingdom of Cambodia.
+                                    {t('Who We Are Desc Headline')}
                                 </p>
 
                                 <div className="space-y-4">
                                     {[
                                         {
                                             icon: Flag,
-                                            title: 'Our Mission',
-                                            desc: 'To bridge the gap between concept and reality through exceptional engineering and safety.',
+                                            title: { en: 'Our Mission', kh: 'បេសកកម្មរបស់យើង' },
+                                            desc: { en: 'To bridge the gap between concept and reality through exceptional engineering and safety.', kh: 'បញ្ចប់គម្លាតរវាងគំនិត និងភាពពិតប្រាកដតាមរយៈវិស្វកម្ម និងសុវត្ថិភាពដ៏ល្អឥតខ្ចោះ។' },
                                             detail: '',
                                             points: [
-                                                'WINNING THROUGH TALENT RESTRUCTURING & DEVELOPMENT.',
-                                                'INTEGRATED PROJECT MANAGEMENT.',
-                                                'BUILD WITH QUALITY AND CREATIVITY.',
-
+                                                { en: 'WINNING THROUGH TALENT RESTRUCTURING & DEVELOPMENT.', kh: 'ជោគជ័យតាមរយៈការរៀបចំរចនាសម្ព័ន្ធ និងអភិវឌ្ឍន៍ជំនាញ។' },
+                                                { en: 'INTEGRATED PROJECT MANAGEMENT.', kh: 'ការគ្រប់គ្រងគម្រោងចម្រុះ។' },
+                                                { en: 'BUILD WITH QUALITY AND CREATIVITY.', kh: 'សាងសង់ប្រកបដោយគុណភាព និងភាពច្នៃប្រឌិត។' }
                                             ]
                                         },
                                         {
                                             icon: Eye,
-                                            title: 'Our Vision',
-                                            desc: 'To be the most trusted and innovative construction partner in Cambodia.',
+                                            title: { en: 'Our Vision', kh: 'ចក្ខុវិស័យរបស់យើង' },
+                                            desc: { en: 'To be the most trusted and innovative construction partner in Cambodia.', kh: 'ដើម្បីក្លាយជាដៃគូសាងសង់ដែលគួរឱ្យទុកចិត្ត និងប្រកបដោយភាពច្នៃប្រឌិតបំផុតនៅកម្ពុជា។' },
                                             detail: '“ TO BE THE FIRST CHOICE OF TRUSTED PARTNER OF CONSTURCTION & ARCHITECTURE”',
-                                            points: [
-
-
-                                            ]
+                                            points: []
                                         },
                                         {
                                             icon: Target,
-                                            title: 'Our Goal',
-                                            desc: 'To complete every project on time and within budget with zero-accident safety.',
-                                            detail: 'Success for us is measured by the safety of our team and the satisfaction of our clients. We strive for excellence through meticulous planning and execution.',
+                                            title: { en: 'Our Goal', kh: 'គោលដៅរបស់យើង' },
+                                            desc: { en: 'To complete every project on time and within budget with zero-accident safety.', kh: 'ដើម្បីបញ្ចប់រាល់គម្រោងទាន់ពេលវេលា និងក្នុងថវិកាដោយសុវត្ថិភាពគ្មានគ្រោះថ្នាក់។' },
+                                            detail: { en: 'Success for us is measured by the safety of our team and the satisfaction of our clients. We strive for excellence through meticulous planning and execution.', kh: 'ភាពជោគជ័យសម្រាប់យើងត្រូវបានវាស់វែងដោយសុវត្ថិភាពរបស់ក្រុមការងារ និងការពេញចិត្តរបស់អតិថិជន។ យើងខិតខំស្វះស្វែងរកឧត្តមភាពតាមរយៈការធ្វើផែនការ និងការអនុវត្តយ៉ាងយកចិត្តទុកដាក់។' },
                                             points: [
-                                                'Achieving 100% on-time project completion.',
-                                                'Maintaining a strict zero-accident safety record.',
-                                                'Expanding our footprint into renewable infrastructure.',
-                                                'Investing in professional growth of our staff.'
+                                                { en: 'Achieving 100% on-time project completion.', kh: 'សម្រេចឲ្យបានការបញ្ចប់គម្រោងទាន់ពេល 100% ។' },
+                                                { en: 'Maintaining a strict zero-accident safety record.', kh: 'រក្សាអត្រាសុវត្ថិភាពគ្មានគ្រោះថ្នាក់។' },
+                                                { en: 'Expanding our footprint into renewable infrastructure.', kh: 'ពង្រីកដំណើរការរបស់យើងទៅក្នុងហេដ្ឋារចនាសម្ព័ន្ធកកើតឡើងវិញ។' },
+                                                { en: 'Investing in professional growth of our staff.', kh: 'ការវិនិយោគក្នុងការរីកចម្រើនផ្នែកវិជ្ជាជីវៈនៃបុគ្គលិករបស់យើង។' }
                                             ]
                                         },
                                     ].map((item, i) => (
@@ -774,7 +684,7 @@ export default function AboutPage() {
                                                 </div>
                                                 <div className="flex-grow">
                                                     <div className="flex items-center justify-between mb-1">
-                                                        <h3 className={`text-lg font-bold transition-colors ${activeMissionIndex === i ? 'text-titan-red' : 'text-titan-navy group-hover:text-titan-red'}`}>{item.title}</h3>
+                                                        <h3 className={`text-lg font-bold transition-colors ${activeMissionIndex === i ? 'text-titan-red' : 'text-titan-navy group-hover:text-titan-red'}`}>{getLocalizedText(item.title, language)}</h3>
                                                         <motion.div
                                                             animate={{ rotate: activeMissionIndex === i ? 90 : 0 }}
                                                             className={`text-titan-red/30 transition-colors ${activeMissionIndex === i ? 'text-titan-red' : ''}`}
@@ -782,7 +692,7 @@ export default function AboutPage() {
                                                             <ArrowRight size={18} />
                                                         </motion.div>
                                                     </div>
-                                                    <p className="text-titan-navy/50 text-sm leading-relaxed">{item.desc}</p>
+                                                    <p className="text-titan-navy/50 text-sm leading-relaxed">{getLocalizedText(item.desc, language)}</p>
 
                                                     <AnimatePresence>
                                                         {activeMissionIndex === i && (
@@ -795,13 +705,13 @@ export default function AboutPage() {
                                                             >
                                                                 <div className="pt-6 mt-6 border-t border-gray-200">
                                                                     <p className="text-titan-navy/70 text-sm leading-relaxed mb-4 italic">
-                                                                        {item.detail}
+                                                                        {typeof item.detail === 'string' ? item.detail : getLocalizedText(item.detail, language)}
                                                                     </p>
                                                                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                                                                        {item.points.map((point, idx) => (
+                                                                        {item.points.map((point: any, idx) => (
                                                                             <li key={idx} className="flex items-start gap-2 text-xs font-bold text-titan-navy/60">
                                                                                 <div className="w-1.5 h-1.5 bg-titan-red rounded-full mt-1.5 shrink-0"></div>
-                                                                                {point}
+                                                                                {getLocalizedText(point, language)}
                                                                             </li>
                                                                         ))}
                                                                     </ul>
@@ -841,10 +751,10 @@ export default function AboutPage() {
                                 <div className="p-10 lg:p-16 flex flex-col justify-center relative">
                                     <Quote className="text-titan-red/20 absolute top-8 right-8" size={80} />
 
-                                    <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Message from CEO</span>
+                                    <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Message from CEO')}</span>
 
                                     <blockquote className="text-xl md:text-2xl text-white/90 font-light italic leading-relaxed mb-8 relative z-10">
-                                        &ldquo;Construction is not just about concrete and steel. It&apos;s about building trust, fostering communities, and leaving a legacy that stands the test of time. At KIM MEX, we pour our heart into every foundation we lay.&rdquo;
+                                        &ldquo;{t('CEO Message Body')}&rdquo;
                                     </blockquote>
 
                                     <div className="flex items-center gap-4">
@@ -853,7 +763,7 @@ export default function AboutPage() {
                                         </div>
                                         <div>
                                             <div className="text-white font-bold text-lg">Okhna. TOUCH KIM</div>
-                                            <div className="text-titan-red text-sm uppercase tracking-widest font-bold">Founder & CEO</div>
+                                            <div className="text-titan-red text-sm uppercase tracking-widest font-bold">{t('Founder & CEO')}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -868,8 +778,8 @@ export default function AboutPage() {
                 <div className="max-w-[1400px] mx-auto">
                     <FadeInWhenVisible>
                         <div className="text-center mb-16">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">What Drives Us</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">Our Core Values</h2>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('What Drives Us')}</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">{t('Our Core Values')}</h2>
                         </div>
                     </FadeInWhenVisible>
 
@@ -897,8 +807,8 @@ export default function AboutPage() {
                 <div className="max-w-[1200px] mx-auto">
                     <FadeInWhenVisible>
                         <div className="text-center mb-16">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our Journey</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">Company Milestones</h2>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Our Journey')}</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">{t('Company Milestones')}</h2>
                         </div>
                     </FadeInWhenVisible>
 
@@ -908,23 +818,23 @@ export default function AboutPage() {
                         <div className="md:hidden absolute left-6 top-0 bottom-0 w-[2px] bg-gradient-to-b from-titan-red via-titan-navy/20 to-titan-red"></div>
 
                         <div className="space-y-16 md:space-y-24">
-                            {milestones.map((item: any, i) => (
+                            {milestones.map((item: Milestone, i) => (
                                 <FadeInWhenVisible key={i} delay={0.1}>
                                     <div className={`flex flex-col md:flex-row items-start md:items-center gap-8 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
                                         <div className={`w-full md:w-5/12 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:text-right md:pr-12' : 'md:text-left md:pl-12'}`}>
                                             <div className={`inline-block bg-titan-red text-white text-sm font-bold px-4 py-2 rounded-full mb-4 shadow-md`}>
                                                 {item.year}
                                             </div>
-                                            <h3 className="text-2xl font-bold text-titan-navy mb-3">{item.title}</h3>
-                                            <p className="text-titan-navy/60 leading-relaxed mb-4">{item.desc}</p>
+                                            <h3 className="text-2xl font-bold text-titan-navy mb-3">{getLocalizedText(item.title, language)}</h3>
+                                            <p className="text-titan-navy/60 leading-relaxed mb-4">{getLocalizedText(item.desc, language)}</p>
 
                                             {/* Projects List */}
                                             {item.projects && (
                                                 <ul className={`space-y-2 mt-4 inline-block text-left ${i % 2 === 0 ? 'md:text-right' : ''} w-full`}>
-                                                    {item.projects.map((project: string, idx: number) => (
+                                                    {item.projects.map((project: any, idx: number) => (
                                                         <li key={idx} className={`flex items-start gap-2 text-sm font-bold text-titan-navy/80 hover:text-titan-red transition-colors ${i % 2 === 0 ? 'md:flex-row-reverse md:text-right' : ''}`}>
                                                             <div className={`w-1.5 h-1.5 bg-titan-red rounded-full mt-1.5 shrink-0`}></div>
-                                                            <span>{project}</span>
+                                                            <span>{getLocalizedText(project, language)}</span>
                                                         </li>
                                                     ))}
                                                 </ul>
@@ -933,11 +843,11 @@ export default function AboutPage() {
                                         <div className="absolute left-6 md:left-1/2 w-4 h-4 bg-white border-4 border-titan-red rounded-full -translate-x-1/2 shadow-lg z-10"></div>
                                         <div className={`w-full md:w-5/12 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:pl-12' : 'md:pr-12'}`}>
                                             <Link href={`/design-z/about/milestone/${encodeURIComponent(item.year)}`} className="block aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-100 relative group">
-                                                <Image src={item.image} alt={item.title} fill className="object-cover hover:scale-105 transition-transform duration-700" />
+                                                <Image src={item.image} alt={getLocalizedText(item.title, language)} fill className="object-cover hover:scale-105 transition-transform duration-700" />
                                                 <div className="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-300"></div>
                                                 <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
                                                     <span className="bg-white/90 backdrop-blur-sm text-titan-navy px-3 py-1 text-xs font-bold rounded-full shadow-sm">
-                                                        View Details
+                                                        {t('View Details')}
                                                     </span>
                                                 </div>
                                             </Link>
@@ -971,10 +881,10 @@ export default function AboutPage() {
 
                             {/* Khmer Title from Screenshot */}
                             <h2 className="text-4xl font-black text-[#002B5B] tracking-tight mb-2 uppercase">
-                                KIM MEX ORGANIZATION STRUCTURE
+                                {t('KIM MEX Organization Structure')}
                             </h2>
                             <p className="font-mono text-xs uppercase tracking-[0.4em] text-titan-navy/40">
-                                Management & Operations Hierarchy
+                                {t('Management & Operations Hierarchy')}
                             </p>
 
                             {/* Visual Divider */}
@@ -992,8 +902,8 @@ export default function AboutPage() {
                                 KM
                             </div>
                             <p className="text-[7px] font-black text-[#002B5B] uppercase text-center mt-1 leading-[1.1]">
-                                ក្រុមហ៊ុន គីម ម៉ិច កនសស្ដ្រាក់សិន & វីយោគ <br />
-                                <span className="text-[6px] opacity-60 italic">KIM MEX CONSTRUCTION & INVESTMENT CO., LTD.</span>
+                                {language === 'kh' ? 'ក្រុមហ៊ុន គីម ម៉ិច កនសស្ដ្រាក់សិន & វីយោគ' : 'KIM MEX CONSTRUCTION & INVESTMENT'} <br />
+                                <span className="text-[6px] opacity-60 italic">{t('KM Group Branding')}</span>
                             </p>
                         </div>
 
@@ -1009,18 +919,18 @@ export default function AboutPage() {
                                 {/* TOP HIERARCHY: CEO -> DCEO -> DGM */}
                                 <div className="flex flex-col items-center relative gap-8">
                                     <div className="relative">
-                                        <TeamMemberCard member={orgChartData} isCEO onClick={handleMemberClick} />
+                                        <TeamMemberCard member={orgChartData} isCEO onClick={handleMemberClick} language={language} />
                                         <div className="absolute left-1/2 -translate-x-1/2 top-full h-8 w-[2px] bg-gray-200" />
                                     </div>
                                     {orgChartData.children?.[0] && (
                                         <div className="relative pt-8">
-                                            <TeamMemberCard member={orgChartData.children[0]} onClick={handleMemberClick} />
+                                            <TeamMemberCard member={orgChartData.children[0]} onClick={handleMemberClick} language={language} />
                                             <div className="absolute left-1/2 -translate-x-1/2 top-full h-8 w-[2px] bg-gray-200" />
                                         </div>
                                     )}
                                     {orgChartData.children?.[0]?.children?.[0] && (
                                         <div className="relative pt-8 mb-20">
-                                            <TeamMemberCard member={orgChartData.children[0].children[0]} onClick={handleMemberClick} />
+                                            <TeamMemberCard member={orgChartData.children[0].children[0]} onClick={handleMemberClick} language={language} />
                                             <div className="absolute left-1/2 -translate-x-1/2 top-full h-24 w-[2px] bg-gray-200" />
                                         </div>
                                     )}
@@ -1037,7 +947,7 @@ export default function AboutPage() {
                                             <div className="absolute left-1/2 -translate-x-1/2 -top-8 w-4 h-4 rounded-full bg-white border-2 border-titan-red shadow-sm z-20" />
 
                                             <div className="mb-12 relative z-20">
-                                                <DirectorCard member={director} onClick={handleMemberClick} />
+                                                <DirectorCard member={director} onClick={handleMemberClick} language={language} />
                                             </div>
 
                                             {/* Departments for this director */}
@@ -1051,7 +961,7 @@ export default function AboutPage() {
                                                             {dept.children?.map((mgr, mgrIdx) => (
                                                                 <div key={mgrIdx} className="flex flex-col group">
                                                                     <div className="mb-2">
-                                                                        <OrgColumnItem node={mgr} onClick={handleMemberClick} />
+                                                                        <OrgColumnItem node={mgr} onClick={handleMemberClick} language={language} />
                                                                     </div>
 
                                                                     {/* STAFF LIST (Reveals on hover) */}
@@ -1070,7 +980,7 @@ export default function AboutPage() {
                                                                                             {mgr.children && mgr.children.length <= 5 && (
                                                                                                 <div className="absolute left-[-24px] top-1/2 -translate-y-1/2 w-6 h-[1px] bg-gray-100/50 group-hover/staff:bg-[#C8102E]" />
                                                                                             )}
-                                                                                            <CompactOrgCard node={staff} onClick={handleMemberClick} />
+                                                                                            <CompactOrgCard node={staff} onClick={handleMemberClick} language={language} />
                                                                                         </div>
                                                                                     ))}
                                                                                 </div>
@@ -1108,20 +1018,19 @@ export default function AboutPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <FadeInWhenVisible>
                             <div>
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our Standards</span>
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Our Standards')}</span>
                                 <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                                    Quality & Safety <span className="text-titan-red">First</span>
+                                    {t('Quality & Safety First Header')}
                                 </h2>
                                 <p className="text-white/60 text-lg leading-relaxed mb-10">
-                                    We implement rigorous Quality Assurance (QA) and Quality Control (QC) protocols on every site. Our safety record is a testament to our commitment to our workforce and our clients.
+                                    {t('Safety Desc Body')}
                                 </p>
-
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     {[
-                                        { icon: Shield, title: 'ISO 9001:2015', desc: 'Quality Management Certified' },
-                                        { icon: Award, title: 'Zero Accidents', desc: 'Safety record policy' },
-                                        { icon: CheckCircle2, title: '100% Compliance', desc: 'Building code adherence' },
-                                        { icon: Clock, title: 'On-Time Delivery', desc: '98% completion rate' },
+                                        { icon: Shield, title: 'ISO 9001:2015', desc: t('Quality Management Certified') },
+                                        { icon: Award, title: t('Zero Accidents'), desc: t('Safety record policy') },
+                                        { icon: CheckCircle2, title: t('100% Compliance'), desc: t('Building code adherence') },
+                                        { icon: Clock, title: t('On-Time Delivery'), desc: t('98% completion rate') },
                                     ].map((item, i) => (
                                         <div key={i} className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
                                             <div className="w-12 h-12 bg-titan-red/20 rounded-lg flex items-center justify-center text-titan-red shrink-0">
@@ -1141,7 +1050,7 @@ export default function AboutPage() {
                             <div className="relative">
                                 <Image
                                     src="/images/projects/Thumbnail-6.jpg"
-                                    alt="Safety Inspection"
+                                    alt={t('Safety Inspection')}
                                     width={800}
                                     height={600}
                                     className="rounded-2xl shadow-2xl w-full h-auto"
@@ -1153,7 +1062,7 @@ export default function AboutPage() {
                                         </div>
                                         <div>
                                             <div className="text-2xl font-black text-titan-navy">ISO</div>
-                                            <div className="text-sm text-titan-navy/50">9001:2015 Certified</div>
+                                            <div className="text-sm text-titan-navy/50">{t('9001:2015 Certified')}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1167,16 +1076,16 @@ export default function AboutPage() {
             <section className="py-20 px-6 bg-titan-red">
                 <div className="max-w-[1200px] mx-auto text-center">
                     <FadeInWhenVisible>
-                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Ready to Build Together?</h2>
+                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6">{t('Ready to Build Together?')}</h2>
                         <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                            Partner with Cambodia&apos;s most trusted construction company for your next project.
+                            {t('About CTA Desc')}
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
                             <Link href="/design-z/contact" className="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg">
-                                Contact Us
+                                {t('Contact Us')}
                             </Link>
                             <Link href="/design-z/projects" className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-titan-navy transition-all rounded-lg">
-                                View Projects
+                                {t('View Projects')}
                             </Link>
                         </div>
                     </FadeInWhenVisible>

@@ -1,16 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { notFound } from 'next/navigation';
 import { milestones } from '../../../data/milestonesData';
 import { ArrowLeft, Target, Calendar, CheckCircle2 } from 'lucide-react';
+import { useLanguage, getLocalizedText } from '../../../context/LanguageContext';
 
-export default async function MilestoneDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    // Await params for Next.js 15+ compatibility
-    const resolvedParams = await params;
+export default function MilestoneDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { t, language } = useLanguage();
+    // Use React.use() to resolve params in a Client Component (Next.js 15+)
+    const resolvedParams = use(params);
     // Decoding the ID to match the format in the data (e.g., '1999', '2001-2004')
     const decodedId = decodeURIComponent(resolvedParams.id);
     const milestone = milestones.find(m => m.year === decodedId);
@@ -26,7 +28,7 @@ export default async function MilestoneDetailPage({ params }: { params: Promise<
                 <div className="absolute inset-0">
                     <Image
                         src={milestone.image}
-                        alt={milestone.title}
+                        alt={getLocalizedText(milestone.title, language)}
                         fill
                         className="object-cover"
                         priority
@@ -55,11 +57,11 @@ export default async function MilestoneDetailPage({ params }: { params: Promise<
                     </div>
 
                     <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tight mb-6 drop-shadow-lg">
-                        {milestone.title}
+                        {getLocalizedText(milestone.title, language)}
                     </h1>
 
                     <p className="text-xl md:text-2xl text-white/90 max-w-3xl leading-relaxed font-light drop-shadow-md">
-                        {milestone.desc}
+                        {getLocalizedText(milestone.desc, language)}
                     </p>
                 </div>
             </section>
@@ -75,7 +77,7 @@ export default async function MilestoneDetailPage({ params }: { params: Promise<
                                     <Target size={24} />
                                 </div>
                                 <h2 className="text-3xl font-black text-titan-navy uppercase tracking-tight">
-                                    Project Portfolio
+                                    {t('Project Portfolio')}
                                 </h2>
                             </div>
 
@@ -92,7 +94,7 @@ export default async function MilestoneDetailPage({ params }: { params: Promise<
                                             <CheckCircle2 size={14} />
                                         </div>
                                         <span className="text-lg font-bold text-titan-navy group-hover:text-titan-red transition-colors">
-                                            {project}
+                                            {getLocalizedText(project, language)}
                                         </span>
                                     </motion.div>
                                 ))}
@@ -104,22 +106,22 @@ export default async function MilestoneDetailPage({ params }: { params: Promise<
                             <div className="bg-titan-navy text-white p-8 rounded-3xl sticky top-8">
                                 <h3 className="text-xl font-bold mb-6 flex items-center gap-3">
                                     <div className="w-1.5 h-6 bg-titan-red"></div>
-                                    Milestone Highlights
+                                    {t('Milestone Highlights')}
                                 </h3>
 
                                 <div className="space-y-6">
                                     <div className="pb-6 border-b border-white/10">
-                                        <div className="text-white/40 text-sm font-bold uppercase tracking-wider mb-1">Year</div>
+                                        <div className="text-white/40 text-sm font-bold uppercase tracking-wider mb-1">{t('Year')}</div>
                                         <div className="text-2xl font-black">{milestone.year}</div>
                                     </div>
                                     <div className="pb-6 border-b border-white/10">
-                                        <div className="text-white/40 text-sm font-bold uppercase tracking-wider mb-1">Projects Completed</div>
+                                        <div className="text-white/40 text-sm font-bold uppercase tracking-wider mb-1">{t('Projects Completed')}</div>
                                         <div className="text-2xl font-black">{milestone.projects.length}+</div>
                                     </div>
                                     <div>
-                                        <div className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4">Impact</div>
+                                        <div className="text-titan-red font-bold uppercase tracking-widest text-xs mb-4">{t('Impact')}</div>
                                         <p className="text-white/70 leading-relaxed text-sm">
-                                            This period marked a significant phase in our growth, contributing deeply to the nation&apos;s infrastructure backbone.
+                                            {t('Milestone Impact Desc')}
                                         </p>
                                     </div>
                                 </div>
@@ -131,8 +133,8 @@ export default async function MilestoneDetailPage({ params }: { params: Promise<
                         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-200 text-gray-400 mb-4">
                             <Target size={32} />
                         </div>
-                        <h3 className="text-xl font-bold text-titan-navy mb-2">Projects details recorded in archive</h3>
-                        <p className="text-titan-navy/50">Detailed project breakdown for this period is available upon request.</p>
+                        <h3 className="text-xl font-bold text-titan-navy mb-2">{t('Projects details recorded in archive')}</h3>
+                        <p className="text-titan-navy/50">{t('Milestone Archive Desc')}</p>
                     </div>
                 )}
             </section>

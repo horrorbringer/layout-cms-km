@@ -3,16 +3,19 @@
 import React, { Suspense } from 'react';
 import { HardHat, Clock } from 'lucide-react';
 import ProjectListingPage from '../../components/ProjectListingPage';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ImplementationProjectsPage() {
+    const { t } = useLanguage();
+
     return (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-100">Loading...</div>}>
             <ProjectListingPage
                 title={<h1 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter">
-                    PROJECTS <span className="text-titan-red">IN PROGRESS</span>
+                    {t('Projects')} <span className="text-titan-red">{t('IN PROGRESS')}</span>
                 </h1>}
-                subtitle="Witness our ongoing commitment to building the future. These projects are currently under construction and shaping the skyline."
-                heroTag="Currently Active"
+                subtitle={t('Project In Progress Sub')}
+                heroTag={t('Currently Active')}
                 heroIcon={<HardHat size={12} className="text-titan-red" />}
                 heroImage="/images/projects/Thumbnail-6.jpg"
                 filterStatus="Under Construction"
@@ -23,8 +26,8 @@ export default function ImplementationProjectsPage() {
                     label: "Under Construction"
                 }}
                 emptyState={{
-                    title: "No projects in progress found.",
-                    message: "Check back soon for updates."
+                    title: t('No projects in progress found'),
+                    message: t('Check back soon for updates.')
                 }}
             />
         </Suspense>
