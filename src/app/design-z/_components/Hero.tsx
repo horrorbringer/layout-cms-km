@@ -5,15 +5,16 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Phone, Building2, HardHat, Layout, Wrench, MapPin, Award } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage, getLocalizedText } from '../context/LanguageContext';
+import { homeData } from '../data/homeData';
 
 export default function Hero() {
-    const { t, language } = useLanguage();
+    const { t, language, fontClassName } = useLanguage();
     const { scrollY } = useScroll();
     const heroY = useTransform(scrollY, [0, 500], [0, 150]);
 
     return (
-        <header className="relative min-h-screen overflow-hidden bg-titan-navy">
+        <header className={`relative min-h-screen overflow-hidden bg-titan-navy ${fontClassName}`}>
             <motion.div style={{ y: heroY }} className="absolute inset-0">
                 <video
                     autoPlay
@@ -53,13 +54,11 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
                             className={`font-black text-white ${language === 'kh'
-                                    ? 'text-4xl md:text-6xl lg:text-7xl leading-[1.3] tracking-normal mb-6'
-                                    : 'text-4xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8'
+                                ? 'text-4xl md:text-6xl lg:text-7xl leading-[1.3] tracking-normal mb-6'
+                                : 'text-4xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8'
                                 }`}
                         >
-                            {t('WE BUILD')}
-                            <br />
-                            <span className="text-titan-red">{t('YOUR VISION')}</span>
+                            {getLocalizedText(homeData.hero.title, language)}
                         </motion.h1>
 
                         <motion.p
@@ -69,7 +68,7 @@ export default function Hero() {
                             className={`text-white/70 max-w-lg mb-10 ${language === 'kh' ? 'text-base md:text-lg leading-[1.6]' : 'text-lg md:text-xl leading-relaxed'
                                 }`}
                         >
-                            {t('Home Hero Body')}
+                            {getLocalizedText(homeData.hero.subtitle, language)}
                         </motion.p>
 
                         <motion.div
@@ -95,14 +94,10 @@ export default function Hero() {
                             transition={{ duration: 0.8, delay: 0.8 }}
                             className="flex gap-8 mt-12 pt-8 border-t border-white/20"
                         >
-                            {[
-                                { val: '150+', label: t('Projects') },
-                                { val: '25+', label: t('Years') },
-                                { val: '500+', label: t('Team') },
-                            ].map((stat, i) => (
+                            {homeData.stats.slice(0, 3).map((stat, i) => (
                                 <div key={i}>
-                                    <div className="text-4xl font-black text-titan-red">{stat.val}</div>
-                                    <div className="text-xs uppercase tracking-widest text-white/50 font-bold mt-1">{stat.label}</div>
+                                    <div className="text-4xl font-black text-titan-red">{getLocalizedText(stat.val, language)}</div>
+                                    <div className="text-xs uppercase tracking-widest text-white/50 font-bold mt-1">{getLocalizedText(stat.label, language)}</div>
                                 </div>
                             ))}
                         </motion.div>

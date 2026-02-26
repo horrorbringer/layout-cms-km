@@ -21,12 +21,17 @@ import {
     MapPin,
     ExternalLink,
     Briefcase,
-    Eye
+    Eye,
+    Award,
+    Circle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { aboutData } from '@/app/design-z/data/aboutData';
 import { serviceData } from '@/app/design-z/data/serviceData';
 import { serviceDetails, ServiceDetail as ServiceDetailType } from '@/app/design-z/data/serviceDetailData';
+import { contactData } from '@/app/design-z/data/contactData';
+import { homeData } from '@/app/design-z/data/homeData';
+import { jobData } from '@/app/design-z/data/jobData';
 import ServiceDetailEditor from './components/ServiceDetailEditor';
 
 // --- TYPES ---
@@ -94,23 +99,26 @@ function AdminContentEditor() {
 
     // --- STATE FOR CONTENT ---
     const [homeHero, setHomeHero] = useState({
-        title: "Building Excellence Since 1999",
-        subtitle: "With over 25 years of experience, we have established ourselves as Cambodia's most trusted partner."
+        title: typeof homeData.hero.title === 'string' ? homeData.hero.title : (homeData.hero.title.en || ''),
+        subtitle: typeof homeData.hero.subtitle === 'string' ? homeData.hero.subtitle : (homeData.hero.subtitle.en || '')
     });
 
-    const [stats, setStats] = useState([
-        { label: 'Safety First', val: 'Zero accidents', icon: ShieldCheck },
-        { label: 'ISO Certified', val: '9001:2015', icon: Trophy },
-        { label: 'On-Time', val: '98% Finished', icon: Clock },
-        { label: 'Quality', val: 'High Focus', icon: Target }
-    ]);
+    const [stats, setStats] = useState(() =>
+        homeData.stats.map(s => ({
+            label: typeof s.label === 'string' ? s.label : (s.label.en || ''),
+            val: typeof s.val === 'string' ? s.val : (s.val.en || ''),
+            iconName: s.iconName
+        }))
+    );
 
-    const [processSteps, setProcessSteps] = useState<ProcessStep[]>([
-        { id: '1', step: '01', title: 'Consultation', desc: 'Understanding your vision' },
-        { id: '2', step: '02', title: 'Planning', desc: 'Detailed blueprints' },
-        { id: '3', step: '03', title: 'Construction', desc: 'Expert execution' },
-        { id: '4', step: '04', title: 'Handover', desc: 'Quality inspection' },
-    ]);
+    const [processSteps, setProcessSteps] = useState<ProcessStep[]>(() =>
+        homeData.process.map(p => ({
+            id: p.id,
+            step: p.step,
+            title: typeof p.title === 'string' ? p.title : (p.title.en || ''),
+            desc: typeof p.desc === 'string' ? p.desc : (p.desc.en || '')
+        }))
+    );
 
     const [aboutStory, setAboutStory] = useState(() => {
         const story = aboutData.story;
@@ -156,26 +164,42 @@ function AdminContentEditor() {
     const [detailsMap, setDetailsMap] = useState<Record<string, ServiceDetail>>(serviceDetails);
     const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
 
-    const [jobs, setJobs] = useState<Job[]>([
-        { id: 'j1', title: 'Senior Site Engineer', loc: 'Phnom Penh', type: 'Full-time', date: 'Feb 2026' },
-        { id: 'j2', title: 'Project Manager', loc: 'Sihanoukville', type: 'Full-time', date: 'Jan 2026' },
-        { id: 'j3', title: 'Safety Officer', loc: 'Siem Reap', type: 'Contract', date: 'Feb 2026' }
-    ]);
+    const [jobs, setJobs] = useState<Job[]>(() =>
+        jobData.map(j => ({
+            id: j.id,
+            title: typeof j.title === 'string' ? j.title : (j.title.en || ''),
+            loc: j.loc,
+            type: j.type,
+            date: typeof j.postedDate === 'string' ? j.postedDate : (j.postedDate.en || '')
+        }))
+    );
 
-    const [testimonials, setTestimonials] = useState<Testimonial[]>([
-        { id: 't1', author: 'H.E. Minister of Economy', quote: "Kimmex delivered our project on time and exceeded our quality expectations.", role: 'Government' },
-        { id: 't2', author: 'Mr. Chen Wei', quote: "Working with Kimmex was a seamless experience. They understood our vision.", role: 'Vattanac Group' }
-    ]);
+    const [testimonials, setTestimonials] = useState<Testimonial[]>(() =>
+        homeData.testimonials.map(t => ({
+            id: t.id,
+            author: typeof t.author === 'string' ? t.author : (t.author.en || ''),
+            quote: typeof t.quote === 'string' ? t.quote : (t.quote.en || ''),
+            role: typeof t.role === 'string' ? t.role : (t.role.en || '')
+        }))
+    );
 
     const [contact, setContact] = useState({
-        address: "#123, Russian Blvd, Phnom Penh, Cambodia",
-        phone: "+855 23 999 999",
-        email: "info@kimmex.com",
-        socials: [
-            { label: 'Facebook', val: 'facebook.com/kimmex' },
-            { label: 'LinkedIn', val: 'linkedin.com/kimmex' },
-            { label: 'Instagram', val: 'instagram.com/kimmex' },
-        ]
+        address: {
+            en: contactData.address.en,
+            kh: contactData.address.kh || contactData.address.en
+        },
+        phone: contactData.phone.join(', '),
+        email: contactData.email.join(', '),
+        hours: {
+            en: contactData.hours.en,
+            kh: contactData.hours.kh || contactData.hours.en
+        },
+        googleMapsUrl: contactData.googleMapsUrl,
+        socials: {
+            facebook: contactData.socials.facebook,
+            linkedin: contactData.socials.linkedin,
+            instagram: contactData.socials.instagram,
+        }
     });
 
     useEffect(() => {
@@ -267,6 +291,94 @@ function AdminContentEditor() {
                     body: JSON.stringify({ fileName: 'serviceDetailData.ts', data: detailsMap })
                 });
                 if (!res2.ok) throw new Error('Failed to save serviceDetailData');
+            }
+
+            if (activeSection === 'home') {
+                const updatedHomeData = {
+                    hero: {
+                        title: { en: homeHero.title, kh: (typeof homeData.hero.title !== 'string' ? homeData.hero.title.kh : homeHero.title) || homeHero.title },
+                        subtitle: { en: homeHero.subtitle, kh: (typeof homeData.hero.subtitle !== 'string' ? homeData.hero.subtitle.kh : homeHero.subtitle) || homeHero.subtitle }
+                    },
+                    stats: stats.map((s, i) => {
+                        const orig = homeData.stats[i];
+                        return {
+                            label: { en: s.label, kh: (orig && typeof orig.label !== 'string' ? orig.label.kh : s.label) || s.label },
+                            val: { en: s.val, kh: (orig && typeof orig.val !== 'string' ? orig.val.kh : s.val) || s.val },
+                            iconName: s.iconName
+                        };
+                    }),
+                    process: processSteps.map((p, i) => {
+                        const orig = homeData.process[i];
+                        return {
+                            id: p.id,
+                            step: p.step,
+                            title: { en: p.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : p.title) || p.title },
+                            desc: { en: p.desc, kh: (orig && typeof orig.desc !== 'string' ? orig.desc.kh : p.desc) || p.desc },
+                            iconName: (orig && (orig as any).iconName) || 'Circle'
+                        };
+                    }),
+                    testimonials: testimonials.map((t, i) => {
+                        const orig = homeData.testimonials.find(ot => ot.id === t.id);
+                        return {
+                            id: t.id,
+                            quote: { en: t.quote, kh: (orig && typeof orig.quote !== 'string' ? orig.quote.kh : t.quote) || t.quote },
+                            author: { en: t.author, kh: (orig && typeof orig.author !== 'string' ? orig.author.kh : t.author) || t.author },
+                            role: { en: t.role, kh: (orig && typeof orig.role !== 'string' ? orig.role.kh : t.role) || t.role },
+                            rating: (orig && orig.rating) || 5
+                        };
+                    })
+                };
+
+                const response = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'homeData.ts', data: updatedHomeData })
+                });
+
+                if (!response.ok) throw new Error('Failed to save home content');
+            }
+
+            if (activeSection === 'careers') {
+                const updatedJobData = jobs.map((j) => {
+                    const orig = jobData.find(oj => oj.id === j.id);
+                    return {
+                        id: j.id,
+                        title: { en: j.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : j.title) || j.title },
+                        dept: (orig && orig.dept) || 'General',
+                        loc: j.loc,
+                        type: j.type,
+                        tags: (orig && orig.tags) || [{ en: 'Career', kh: 'អាជីព' }],
+                        salary: (orig && orig.salary) || '$1,000 - $2,000',
+                        experience: (orig && orig.experience) || '2+ Years',
+                        postedDate: { en: j.date, kh: (orig && typeof orig.postedDate !== 'string' ? orig.postedDate.kh : j.date) || j.date }
+                    };
+                });
+
+                const response = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'jobData.ts', data: updatedJobData })
+                });
+
+                if (!response.ok) throw new Error('Failed to save job content');
+            }
+
+            if (activeSection === 'contact') {
+                const updatedContactData = {
+                    address: contact.address,
+                    phone: contact.phone.split(',').map(p => p.trim()),
+                    email: contact.email.split(',').map(e => e.trim()),
+                    hours: contact.hours,
+                    googleMapsUrl: contact.googleMapsUrl,
+                    socials: contact.socials
+                };
+
+                const res = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'contactData.ts', data: updatedContactData })
+                });
+                if (!res.ok) throw new Error('Failed to save contactData');
             }
 
             alert('Changes saved successfully!');
@@ -404,7 +516,12 @@ function AdminContentEditor() {
                                             {stats.map((stat, i) => (
                                                 <div key={i} className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-3">
                                                     <div className="w-8 h-8 rounded-lg bg-white border border-slate-100 flex items-center justify-center text-indigo-600">
-                                                        <stat.icon size={16} />
+                                                        {stat.iconName === 'ShieldCheck' && <ShieldCheck size={16} />}
+                                                        {stat.iconName === 'Trophy' && <Trophy size={16} />}
+                                                        {stat.iconName === 'Clock' && <Clock size={16} />}
+                                                        {stat.iconName === 'Target' && <Target size={16} />}
+                                                        {stat.iconName === 'Award' && <Award size={16} />}
+                                                        {!['ShieldCheck', 'Trophy', 'Clock', 'Target', 'Award'].includes(stat.iconName) && <Type size={16} />}
                                                     </div>
                                                     <div className="space-y-1.5">
                                                         <input
@@ -716,60 +833,110 @@ function AdminContentEditor() {
 
                             {/* --- CONTACT --- */}
                             {activeSection === 'contact' && (
-                                <div className="space-y-8">
-                                    <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Contact Details</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div className="space-y-6">
+                                <div className="space-y-10">
+                                    <section className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Location & Schedule</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Office Address (EN)</label>
+                                                    <textarea
+                                                        rows={3}
+                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium resize-none"
+                                                        value={contact.address.en}
+                                                        onChange={(e) => setContact({ ...contact, address: { ...contact.address, en: e.target.value } })}
+                                                    />
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Office Address (KH)</label>
+                                                    <textarea
+                                                        rows={3}
+                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-siemreap resize-none"
+                                                        value={contact.address.kh}
+                                                        onChange={(e) => setContact({ ...contact, address: { ...contact.address, kh: e.target.value } })}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Working Hours (EN)</label>
+                                                    <input
+                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                                                        value={contact.hours.en}
+                                                        onChange={(e) => setContact({ ...contact, hours: { ...contact.hours, en: e.target.value } })}
+                                                    />
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Working Hours (KH)</label>
+                                                    <input
+                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-siemreap"
+                                                        value={contact.hours.kh}
+                                                        onChange={(e) => setContact({ ...contact, hours: { ...contact.hours, kh: e.target.value } })}
+                                                    />
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Google Maps URL</label>
+                                                    <input
+                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-mono text-xs"
+                                                        value={contact.googleMapsUrl}
+                                                        onChange={(e) => setContact({ ...contact, googleMapsUrl: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Communication</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-1.5">
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Office Address</label>
-                                                <textarea
-                                                    rows={3}
-                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium resize-none"
-                                                    value={contact.address}
-                                                    onChange={(e) => setContact({ ...contact, address: e.target.value })}
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Phone Numbers (comma separated)</label>
+                                                <input
+                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                                                    value={contact.phone}
+                                                    onChange={(e) => setContact({ ...contact, phone: e.target.value })}
                                                 />
                                             </div>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Phone</label>
-                                                    <input
-                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
-                                                        value={contact.phone}
-                                                        onChange={(e) => setContact({ ...contact, phone: e.target.value })}
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</label>
-                                                    <input
-                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
-                                                        value={contact.email}
-                                                        onChange={(e) => setContact({ ...contact, email: e.target.value })}
-                                                    />
-                                                </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Addresses (comma separated)</label>
+                                                <input
+                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                                                    value={contact.email}
+                                                    onChange={(e) => setContact({ ...contact, email: e.target.value })}
+                                                />
                                             </div>
                                         </div>
-                                        <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 h-fit">
-                                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">Social Links</h4>
-                                            <div className="space-y-4">
-                                                {contact.socials.map((s, i) => (
-                                                    <div key={i} className="space-y-1.5">
-                                                        <label className="text-[10px] font-bold text-slate-500">{s.label}</label>
-                                                        <div className="flex items-center gap-2 bg-white px-3 py-1.5 border border-slate-200 rounded-lg">
-                                                            <input
-                                                                className="w-full text-xs font-medium text-slate-900 outline-none"
-                                                                value={s.val}
-                                                                onChange={(e) => {
-                                                                    const newSocials = [...contact.socials];
-                                                                    newSocials[i].val = e.target.value;
-                                                                    setContact({ ...contact, socials: newSocials });
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                    </section>
+
+                                    <section className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Social Presence</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Facebook</label>
+                                                <input
+                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-xs"
+                                                    value={contact.socials.facebook}
+                                                    onChange={(e) => setContact({ ...contact, socials: { ...contact.socials, facebook: e.target.value } })}
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">LinkedIn</label>
+                                                <input
+                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-xs"
+                                                    value={contact.socials.linkedin}
+                                                    onChange={(e) => setContact({ ...contact, socials: { ...contact.socials, linkedin: e.target.value } })}
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Instagram</label>
+                                                <input
+                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-xs"
+                                                    value={contact.socials.instagram}
+                                                    onChange={(e) => setContact({ ...contact, socials: { ...contact.socials, instagram: e.target.value } })}
+                                                />
                                             </div>
                                         </div>
-                                    </div>
+                                    </section>
                                 </div>
                             )}
                         </motion.div>
