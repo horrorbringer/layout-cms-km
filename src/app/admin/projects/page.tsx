@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { projects as initialProjects } from '@/app/design-z/data/projectData';
+import { projectDetails } from '@/app/design-z/data/projectDetailData';
 import Link from 'next/link';
 import {
     Search,
@@ -42,16 +43,25 @@ export default function ProjectsAdmin() {
             const updatedProjects = projects.filter(p => p.id !== id);
             setProjects(updatedProjects);
 
+            const updatedDetails = { ...projectDetails };
+            delete updatedDetails[id];
+
             try {
-                const response = await fetch('/api/cms/save', {
+                const res1 = await fetch('/api/cms/save', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fileName: 'projectData.ts', data: updatedProjects }),
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to save project deletion');
-                }
+                if (!res1.ok) throw new Error('Failed to save projectData deletion');
+
+                const res2 = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'projectDetailData.ts', data: updatedDetails }),
+                });
+
+                if (!res2.ok) throw new Error('Failed to save projectDetailData deletion');
             } catch (error) {
                 console.error('Error deleting project:', error);
                 alert('Failed to save deletion. Reverting changes.');

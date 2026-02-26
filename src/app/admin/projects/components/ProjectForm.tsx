@@ -30,6 +30,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects as currentProjects } from '@/app/design-z/data/projectData';
+import { projectDetails as currentProjectDetails } from '@/app/design-z/data/projectDetailData';
 
 interface ProjectFormProps {
     initialData?: any;
@@ -95,40 +96,70 @@ export default function ProjectForm({ initialData, isEditing = false }: ProjectF
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            const finalId = formData.id || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-            const updatedProject = {
+            const finalId = formData.id || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+            // 1. Prepare data for projectData.ts
+            const updatedProjectSummary = {
                 id: finalId,
                 title: { en: formData.title, kh: initialData?.title?.kh || formData.title },
                 location: { en: formData.location, kh: initialData?.location?.kh || formData.location },
                 type: { en: formData.type, kh: initialData?.type?.kh || formData.type },
                 status: { en: formData.status, kh: initialData?.status?.kh || formData.status },
                 image: formData.image,
-                summary: { en: formData.summary, kh: initialData?.summary?.kh || formData.summary },
-                client: formData.client,
-                area: formData.area,
-                year: formData.year,
-                startDate: formData.startDate,
-                endDate: formData.endDate,
-                description: formData.description,
-                services: formData.services,
-                challenges: formData.challenges,
-                gallery: formData.gallery
+                summary: { en: formData.summary, kh: initialData?.summary?.kh || formData.summary }
             };
 
             let updatedProjects;
             if (isEditing) {
-                updatedProjects = currentProjects.map(p => p.id === initialData?.id ? updatedProject : p);
+                updatedProjects = currentProjects.map(p => p.id === initialData?.id ? updatedProjectSummary : p);
             } else {
-                updatedProjects = [updatedProject, ...currentProjects];
+                updatedProjects = [updatedProjectSummary, ...currentProjects];
             }
 
-            const response = await fetch('/api/cms/save', {
+            // 2. Prepare data for projectDetailData.ts
+            const updatedProjectDetail = {
+                title: { en: formData.title, kh: initialData?.title?.kh || formData.title },
+                subtitle: { en: formData.type || 'Government Office Building', kh: initialData?.subtitle?.kh || formData.type || 'អគារការិយាល័យរដ្ឋាភិបាល' },
+                location: { en: formData.location, kh: initialData?.location?.kh || formData.location },
+                client: { en: formData.client || '', kh: initialData?.client?.kh || formData.client || '' },
+                sector: { en: formData.type || 'Government', kh: initialData?.sector?.kh || formData.type || 'រដ្ឋាភិបាល' },
+                area: formData.area || '',
+                year: formData.year || '',
+                status: { en: formData.status, kh: initialData?.status?.kh || formData.status },
+                image: formData.image,
+                description: {
+                    background: { en: formData.description.background, kh: initialData?.description?.background?.kh || formData.description.background },
+                    objectives: { en: formData.description.objectives, kh: initialData?.description?.objectives?.kh || formData.description.objectives },
+                    concept: { en: formData.description.concept, kh: initialData?.description?.concept?.kh || formData.description.concept }
+                },
+                services: formData.services.map((s: string, i: number) => ({ en: s, kh: initialData?.services?.[i]?.kh || s })),
+                challenges: formData.challenges.map((c: string, i: number) => ({ en: c, kh: initialData?.challenges?.[i]?.kh || c })),
+                gallery: formData.gallery
+            };
+
+            const updatedDetailsMap = { ...currentProjectDetails };
+
+            // If editing and the ID changed, remove the old key
+            if (isEditing && initialData?.id && initialData.id !== finalId) {
+                delete updatedDetailsMap[initialData.id];
+            }
+
+            updatedDetailsMap[finalId] = updatedProjectDetail;
+
+            // 3. Save both via API sequentially
+            const res1 = await fetch('/api/cms/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ fileName: 'projectData.ts', data: updatedProjects })
             });
+            if (!res1.ok) throw new Error('Failed to save projectData');
 
-            if (!response.ok) throw new Error('Failed to save project');
+            const res2 = await fetch('/api/cms/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fileName: 'projectDetailData.ts', data: updatedDetailsMap })
+            });
+            if (!res2.ok) throw new Error('Failed to save projectDetailData');
 
             window.location.href = '/admin/projects';
         } catch (error) {

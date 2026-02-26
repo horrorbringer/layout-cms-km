@@ -3,6 +3,7 @@
 import React, { use } from 'react';
 import ProjectForm from '../components/ProjectForm';
 import { projects } from '@/app/design-z/data/projectData';
+import { projectDetails } from '@/app/design-z/data/projectDetailData';
 import { notFound } from 'next/navigation';
 
 export default function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
@@ -13,5 +14,8 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         notFound();
     }
 
-    return <ProjectForm initialData={project} isEditing={true} />;
+    const details = projectDetails[id] || {};
+    const mergedData = { ...project, ...details };
+
+    return <ProjectForm initialData={mergedData} isEditing={true} />;
 }
