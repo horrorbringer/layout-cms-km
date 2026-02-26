@@ -26,17 +26,18 @@ export default function TeamAdmin() {
     // Form State
     const [formData, setFormData] = useState<TeamMember>({
         name: '',
-        role: '',
+        role: { en: '', kh: '' },
         image: '',
-        bio: '',
+        bio: { en: '', kh: '' },
         experience: '',
-        location: '',
-        specialization: ''
+        location: { en: '', kh: '' },
+        specialization: { en: '', kh: '' }
     });
 
     const filteredMembers = members.filter(m =>
         m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.role.toLowerCase().includes(searchTerm.toLowerCase())
+        (m.role.en?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
+        (m.role.kh?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
     );
 
     const handleOpenModal = (member?: TeamMember) => {
@@ -47,12 +48,12 @@ export default function TeamAdmin() {
             setEditingMember(null);
             setFormData({
                 name: '',
-                role: '',
+                role: { en: '', kh: '' },
                 image: '',
-                bio: '',
+                bio: { en: '', kh: '' },
                 experience: '',
-                location: '',
-                specialization: ''
+                location: { en: '', kh: '' },
+                specialization: { en: '', kh: '' }
             });
         }
         setIsModalOpen(true);
@@ -166,10 +167,10 @@ export default function TeamAdmin() {
                                 <div className="flex items-center gap-2 mb-1">
                                     <h3 className="text-base font-bold text-slate-900 truncate">{member.name}</h3>
                                     <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold uppercase tracking-wider">
-                                        {member.specialization.split(',')[0]}
+                                        {member.specialization.en.split(',')[0]}
                                     </span>
                                 </div>
-                                <p className="text-sm text-slate-500 font-medium">{member.role}</p>
+                                <p className="text-sm text-slate-500 font-medium">{member.role.en}</p>
                             </div>
 
                             <div className="flex items-center gap-8 shrink-0">
@@ -179,7 +180,7 @@ export default function TeamAdmin() {
                                 </div>
                                 <div className="hidden md:flex items-center gap-2 text-slate-400">
                                     <MapPin size={14} />
-                                    <span className="text-xs font-semibold">{member.location}</span>
+                                    <span className="text-xs font-semibold">{member.location.en}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <button
@@ -235,8 +236,8 @@ export default function TeamAdmin() {
                                         <input
                                             required
                                             className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
-                                            value={formData.role}
-                                            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                            value={formData.role.en}
+                                            onChange={(e) => setFormData({ ...formData, role: { ...formData.role, en: e.target.value } })}
                                         />
                                     </div>
                                 </div>
@@ -246,8 +247,8 @@ export default function TeamAdmin() {
                                     <textarea
                                         rows={4}
                                         className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none"
-                                        value={formData.bio}
-                                        onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                                        value={formData.bio.en}
+                                        onChange={(e) => setFormData({ ...formData, bio: { ...formData.bio, en: e.target.value } })}
                                     />
                                 </div>
 
@@ -257,8 +258,8 @@ export default function TeamAdmin() {
                                         <input
                                             required
                                             className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
-                                            value={formData.specialization}
-                                            onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
+                                            value={formData.specialization.en}
+                                            onChange={(e) => setFormData({ ...formData, specialization: { ...formData.specialization, en: e.target.value } })}
                                         />
                                     </div>
                                     <div className="space-y-1.5">
@@ -266,8 +267,8 @@ export default function TeamAdmin() {
                                         <input
                                             required
                                             className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
-                                            value={formData.location}
-                                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                            value={formData.location.en}
+                                            onChange={(e) => setFormData({ ...formData, location: { ...formData.location, en: e.target.value } })}
                                         />
                                     </div>
                                 </div>

@@ -433,7 +433,6 @@ const dictionary: Translations = {
     'Operations': { en: 'Operations', kh: 'ប្រតិបត្តិការ' },
     'Design': { en: 'Design', kh: 'ការរចនា' },
     'Supply Chain': { en: 'Supply Chain', kh: 'ខ្សែសង្វាក់ផ្គត់ផ្គង់' },
-    'Quality & Safety': { en: 'Quality & Safety', kh: 'គុណភាព & សុវត្ថិភាព' },
     'Salary Range': { en: 'Salary Range', kh: 'ជួរប្រាក់ខែ' },
     'Experience': { en: 'Experience', kh: 'បទពិសោធន៍' },
     'Location': { en: 'Location', kh: 'ទីតាំង' },

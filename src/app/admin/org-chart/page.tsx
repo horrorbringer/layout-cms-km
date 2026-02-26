@@ -114,10 +114,13 @@ export default function OrgChartAdmin() {
                         />
                         <input
                             className="bg-transparent text-slate-500 border-none focus:ring-0 p-0 text-xs italic"
-                            value={node.role}
+                            value={typeof node.role === 'object' ? (node.role as any).en || '' : node.role as string || ''}
                             onChange={(e) => {
-                                if (depth === 0) updateRoot({ role: e.target.value });
-                                else updateNode(path, { role: e.target.value });
+                                const newRole = typeof node.role === 'object'
+                                    ? { ...(node.role as any), en: e.target.value }
+                                    : e.target.value;
+                                if (depth === 0) updateRoot({ role: newRole as any });
+                                else updateNode(path, { role: newRole as any });
                             }}
                             placeholder="Role"
                         />

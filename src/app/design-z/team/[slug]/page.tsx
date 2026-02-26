@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { ChevronLeft, Award } from 'lucide-react';
 
 import { teamMembers } from '@/app/design-z/data/teamData';
-import { useLanguage } from '@/app/design-z/context/LanguageContext';
+import { useLanguage, getLocalizedText } from '@/app/design-z/context/LanguageContext';
 
 function slugify(text: string) {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
@@ -60,10 +60,10 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                     >
                         <div className="flex flex-wrap gap-4 items-center mb-6">
                             <span className="px-4 py-1.5 rounded-full border border-white/20 text-white/60 text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
-                                {member.specialization}
+                                {getLocalizedText(member.specialization, language)}
                             </span>
                             <span className="px-4 py-1.5 rounded-full bg-titan-red text-white text-xs font-bold uppercase tracking-widest shadow-lg shadow-titan-red/20">
-                                {member.location}
+                                {getLocalizedText(member.location, language)}
                             </span>
                         </div>
 
@@ -76,7 +76,7 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                         <div className="flex items-center gap-6">
                             <div className="h-[2px] w-20 bg-titan-red"></div>
                             <p className="text-xl md:text-2xl text-white/70 font-bold uppercase tracking-widest">
-                                {member.role}
+                                {getLocalizedText(member.role, language)}
                             </p>
                         </div>
                     </motion.div>
@@ -133,7 +133,7 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                                 {t('Biography')}
                             </h3>
                             <p className="text-xl text-titan-navy/70 leading-relaxed font-light mb-12">
-                                {member.bio}
+                                {getLocalizedText(member.bio, language)}
                             </p>
 
                             <div className="grid md:grid-cols-2 gap-8 mb-16">

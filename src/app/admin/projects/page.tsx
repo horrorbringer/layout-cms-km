@@ -25,12 +25,15 @@ export default function ProjectsAdmin() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
 
-    const categories = ['All', ...new Set(projects.map(p => p.type))];
+    const categories = ['All', ...new Set(projects.map(p => p.type.en))];
 
     const filteredProjects = projects.filter(p => {
-        const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.location.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || p.type === selectedCategory;
+        const searchLower = searchTerm.toLowerCase();
+        const matchesSearch = (p.title.en?.toLowerCase().includes(searchLower) ?? false) ||
+            (p.title.kh?.toLowerCase().includes(searchLower) ?? false) ||
+            (p.location.en?.toLowerCase().includes(searchLower) ?? false) ||
+            (p.location.kh?.toLowerCase().includes(searchLower) ?? false);
+        const matchesCategory = selectedCategory === 'All' || p.type.en === selectedCategory;
         return matchesSearch && matchesCategory;
     });
 
@@ -76,8 +79,8 @@ export default function ProjectsAdmin() {
                             key={cat}
                             onClick={() => setSelectedCategory(cat)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${selectedCategory === cat
-                                    ? 'bg-indigo-600 text-white shadow-sm'
-                                    : 'bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                                ? 'bg-indigo-600 text-white shadow-sm'
+                                : 'bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-900'
                                 }`}
                         >
                             {cat}
@@ -101,14 +104,14 @@ export default function ProjectsAdmin() {
                             <div className="aspect-video relative overflow-hidden bg-slate-100">
                                 <Image
                                     src={project.image}
-                                    alt={project.title}
+                                    alt={project.title.en}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <div className="absolute top-3 left-3">
-                                    <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm border border-white/20 backdrop-blur-md ${project.status === 'Completed' ? 'bg-emerald-500/90 text-white' : 'bg-amber-500/90 text-white'
+                                    <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm border border-white/20 backdrop-blur-md ${project.status.en === 'Completed' ? 'bg-emerald-500/90 text-white' : 'bg-amber-500/90 text-white'
                                         }`}>
-                                        {project.status}
+                                        {project.status.en}
                                     </span>
                                 </div>
                                 <div className="absolute top-3 right-3 flex gap-2 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-200">
@@ -124,13 +127,13 @@ export default function ProjectsAdmin() {
                             <div className="p-5">
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="min-w-0">
-                                        <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">{project.type}</p>
+                                        <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">{project.type.en}</p>
                                         <h3 className="text-base font-bold text-slate-900 truncate group-hover:text-indigo-600 transition-colors">
-                                            {project.title}
+                                            {project.title.en}
                                         </h3>
                                         <div className="flex items-center gap-1.5 text-slate-400 mt-2">
                                             <MapPin size={12} />
-                                            <span className="text-[11px] font-semibold truncate">{project.location}</span>
+                                            <span className="text-[11px] font-semibold truncate">{project.location.en}</span>
                                         </div>
                                     </div>
                                     <button className="text-slate-300 hover:text-slate-600 p-1">
@@ -144,7 +147,7 @@ export default function ProjectsAdmin() {
                                         View Live
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(project.id, project.title)}
+                                        onClick={() => handleDelete(project.id, project.title.en)}
                                         className="text-[11px] font-bold text-slate-400 hover:text-red-500 flex items-center gap-1.5 transition-colors"
                                     >
                                         <Trash2 size={14} />
