@@ -1,0 +1,112 @@
+
+> temp_app@0.1.0 build
+> next build
+
+▲ Next.js 16.1.3 (Turbopack)
+- Environments: .env.local, .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.7s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/64) ...
+  Generating static pages using 7 workers (16/64) 
+  Generating static pages using 7 workers (32/64) 
+  Generating static pages using 7 workers (48/64) 
+✓ Generating static pages using 7 workers (64/64) in 589.3ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /admin
+├ ○ /admin/content
+├ ○ /admin/login
+├ ○ /admin/news
+├ ○ /admin/org-chart
+├ ○ /admin/projects
+├ ƒ /admin/projects/[id]
+├ ○ /admin/projects/new
+├ ○ /admin/settings
+├ ○ /admin/team
+├ ƒ /api/cms/save
+├ ○ /design-a
+├ ○ /design-a/about
+├ ○ /design-a/careers
+├ ƒ /design-a/careers/[id]
+├ ○ /design-a/contact
+├ ○ /design-a/documents
+├ ƒ /design-a/documents/[id]
+├ ○ /design-a/news
+├ ƒ /design-a/news/[id]
+├ ○ /design-a/projects
+├ ƒ /design-a/projects/[slug]
+├ ○ /design-a/projects/completed
+├ ○ /design-a/projects/implementation
+├ ○ /design-a/services
+├ ƒ /design-a/services/[id]
+├ ○ /design-x
+├ ○ /design-x/about
+├ ○ /design-x/careers
+├ ƒ /design-x/careers/[id]
+├ ○ /design-x/careers/apply
+├ ○ /design-x/contact
+├ ○ /design-x/documents
+├ ƒ /design-x/documents/[id]
+├ ○ /design-x/news
+├ ƒ /design-x/news/[id]
+├ ○ /design-x/projects
+├ ƒ /design-x/projects/[id]
+├ ○ /design-x/projects/completed
+├ ○ /design-x/projects/implementation
+├ ○ /design-x/services
+├ ƒ /design-x/services/[id]
+├ ƒ /design-x/team/[slug]
+├ ○ /design-y
+├ ○ /design-y/about
+├ ƒ /design-y/about/[id]
+├ ○ /design-y/careers
+├ ƒ /design-y/careers/[id]
+├ ○ /design-y/careers/apply
+├ ○ /design-y/contact
+├ ○ /design-y/documents
+├ ƒ /design-y/documents/[id]
+├ ○ /design-y/documents/view
+├ ○ /design-y/news
+├ ƒ /design-y/news/[id]
+├ ○ /design-y/organization
+├ ○ /design-y/projects
+├ ƒ /design-y/projects/[id]
+├ ○ /design-y/projects/completed
+├ ○ /design-y/projects/implementation
+├ ○ /design-y/services
+├ ƒ /design-y/services/[id]
+├ ○ /design-y/structure
+├ ○ /design-z
+├ ○ /design-z/about
+├ ƒ /design-z/about/milestone/[id]
+├ ○ /design-z/careers
+├ ƒ /design-z/careers/[id]
+├ ○ /design-z/careers/apply
+├ ○ /design-z/contact
+├ ○ /design-z/documents
+├ ƒ /design-z/documents/[id]
+├ ○ /design-z/news
+├ ƒ /design-z/news/[id]
+├ ○ /design-z/projects
+├ ƒ /design-z/projects/[id]
+├ ○ /design-z/projects/completed
+├ ○ /design-z/projects/implementation
+├ ○ /design-z/services
+├ ƒ /design-z/services/[id]
+├ ƒ /design-z/team/[slug]
+├ ○ /projects
+├ ƒ /projects/[slug]
+├ ○ /projects/completed
+└ ○ /projects/implementation
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,4 +1,4 @@
-       import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const { data, fileName } = await request.json();
 
         // Security check: only allow updating files in the data directory
-        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts'];
+        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts'];
         if (!allowedFiles.includes(fileName)) {
             return NextResponse.json({ error: 'Invalid file' }, { status: 400 });
         }
@@ -62,6 +62,20 @@ export type NewsItem = {
 };
 
 export const allNews: NewsItem[] = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'projectData.ts') {
+            content = `import { LocalizedString } from '../context/LanguageContext';
+
+export type Project = {
+    id: string;
+    title: LocalizedString;
+    location: LocalizedString;
+    type: LocalizedString;
+    status: LocalizedString;
+    image: string;
+    summary: LocalizedString;
+};
+
+export const projects: Project[] = ${JSON.stringify(data, null, 4)};`;
         }
 
         await fs.writeFile(filePath, content, 'utf8');

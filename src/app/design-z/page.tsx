@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { FadeInWhenVisible } from './_components/Animations';
 import UnifiedHero, { HeroMode } from './_components/UnifiedHero';
 import { allNews } from './data/newsData';
+import { projects as allProjects } from './data/projectData';
 import { useLanguage, getLocalizedText } from './context/LanguageContext';
 
 // --- CONFIGURATION ---
@@ -73,44 +74,7 @@ export default function DesignGenX() {
         }
     ];
 
-    const projects = [
-        {
-            id: 'mef',
-            name: { en: 'Ministry of Economy', kh: 'ក្រសួងសេដ្ឋកិច្ច និងហិរញ្ញវត្ថុ' },
-            loc: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' },
-            img: '/images/projects/Thumbnail-2.jpg',
-            cat: t('Government'),
-            year: '2023',
-            size: '45,000 sqm'
-        },
-        {
-            id: 'vattanac',
-            name: { en: 'Vattanac Capital Extension', kh: 'អគារពាណិជ្ជកម្ម វឌ្ឍនៈ (គម្រោងពង្រីក)' },
-            loc: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' },
-            img: '/images/projects/Thumbnail-2.jpg',
-            cat: t('Commercial'),
-            year: '2023',
-            size: '32,000 sqm'
-        },
-        {
-            id: 'kt-wtp',
-            name: { en: 'Khleang Toeuk WTP', kh: 'ស្ថានីយ៍ប្រព្រឹត្តិកម្មទឹកស្អាត ឃ្លាំងទឹក' },
-            loc: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' },
-            img: '/images/projects/Thumbnail-1.jpg',
-            cat: t('Infrastructure'),
-            year: '2024',
-            size: '120,000 sqm'
-        },
-        {
-            id: 'smart-grid-ph',
-            name: { en: 'Smart Grid Central', kh: 'បណ្តាញអគ្គិសនីឆ្លាតវៃ' },
-            loc: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' },
-            img: '/images/projects/Thumbnail-6.jpg',
-            cat: t('Systems'),
-            year: '2025',
-            size: 'Tech Hub'
-        },
-    ];
+    const projects = allProjects.slice(0, 4);
 
     const testimonials = [
         {
@@ -335,8 +299,8 @@ export default function DesignGenX() {
                                 <Link href={`/design-z/projects/${p.id}`} className="group block h-full">
                                     <div className="relative overflow-hidden rounded-2xl shadow-lg h-80 w-full">
                                         <Image
-                                            src={p.img}
-                                            alt={getLocalizedText(p.name, language)}
+                                            src={p.image}
+                                            alt={getLocalizedText(p.title, language)}
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                             sizes="(max-width: 768px) 100vw, 33vw"
@@ -346,16 +310,16 @@ export default function DesignGenX() {
                                         {/* Category Badge */}
                                         <div className="absolute top-4 left-4 z-20">
                                             <span className="bg-accent-orange text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded">
-                                                {p.cat}
+                                                {getLocalizedText(p.type, language)}
                                             </span>
                                         </div>
 
                                         {/* Project Info */}
                                         <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-                                            <h3 className="text-white text-2xl font-bold mb-2 group-hover:text-accent-orange transition-colors">{getLocalizedText(p.name, language)}</h3>
+                                            <h3 className="text-white text-2xl font-bold mb-2 group-hover:text-accent-orange transition-colors">{getLocalizedText(p.title, language)}</h3>
                                             <div className="flex items-center gap-4 text-white/60 text-sm">
-                                                <span className="flex items-center gap-1"><MapPin size={14} /> {getLocalizedText(p.loc, language)}</span>
-                                                <span className="flex items-center gap-1"><Calendar size={14} /> {p.year}</span>
+                                                <span className="flex items-center gap-1"><MapPin size={14} /> {getLocalizedText(p.location, language)}</span>
+                                                <span className="flex items-center gap-1"><CheckCircle2 size={14} /> {getLocalizedText(p.status, language)}</span>
                                             </div>
                                         </div>
 

@@ -29,6 +29,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { projects as currentProjects } from '@/app/design-z/data/projectData';
 
 interface ProjectFormProps {
     initialData?: any;
@@ -43,12 +44,12 @@ export default function ProjectForm({ initialData, isEditing = false }: ProjectF
         const data = initialData || {};
         return {
             id: data.id || '',
-            title: data.title || '',
-            location: data.location || '',
-            type: data.type || data.sector || 'Government Office Building',
-            status: data.status || 'Completed',
+            title: data.title?.en || data.title || '',
+            location: data.location?.en || data.location || '',
+            type: data.type?.en || data.type || data.sector || 'Government Office Building',
+            status: data.status?.en || data.status || 'Completed',
             image: data.image || '/images/projects/Thumbnail-1.jpg',
-            summary: data.summary || '',
+            summary: data.summary?.en || data.summary || '',
             client: data.client || '',
             area: data.area || '',
             year: data.year || '',
@@ -91,9 +92,50 @@ export default function ProjectForm({ initialData, isEditing = false }: ProjectF
         setFormData({ ...formData, [field]: updated });
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setIsSaving(true);
-        setTimeout(() => setIsSaving(false), 1000);
+        try {
+            const finalId = formData.id || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            const updatedProject = {
+                id: finalId,
+                title: { en: formData.title, kh: initialData?.title?.kh || formData.title },
+                location: { en: formData.location, kh: initialData?.location?.kh || formData.location },
+                type: { en: formData.type, kh: initialData?.type?.kh || formData.type },
+                status: { en: formData.status, kh: initialData?.status?.kh || formData.status },
+                image: formData.image,
+                summary: { en: formData.summary, kh: initialData?.summary?.kh || formData.summary },
+                client: formData.client,
+                area: formData.area,
+                year: formData.year,
+                startDate: formData.startDate,
+                endDate: formData.endDate,
+                description: formData.description,
+                services: formData.services,
+                challenges: formData.challenges,
+                gallery: formData.gallery
+            };
+
+            let updatedProjects;
+            if (isEditing) {
+                updatedProjects = currentProjects.map(p => p.id === initialData?.id ? updatedProject : p);
+            } else {
+                updatedProjects = [updatedProject, ...currentProjects];
+            }
+
+            const response = await fetch('/api/cms/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fileName: 'projectData.ts', data: updatedProjects })
+            });
+
+            if (!response.ok) throw new Error('Failed to save project');
+
+            window.location.href = '/admin/projects';
+        } catch (error) {
+            console.error('Save error:', error);
+            alert('Failed to save project!');
+            setIsSaving(false);
+        }
     };
 
     const tabs = [
