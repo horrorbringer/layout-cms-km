@@ -43,6 +43,7 @@ const sidebarItems: SidebarItem[] = [
     { id: 'projects', label: 'Projects', icon: Briefcase, href: '/admin/projects' },
     { id: 'team', label: 'Team Members', icon: Users, href: '/admin/team' },
     { id: 'news', label: 'News & Updates', icon: Newspaper, href: '/admin/news' },
+    { id: 'careers', label: 'Careers', icon: Briefcase, href: '/admin/careers' },
     {
         id: 'content',
         label: 'Site Content',

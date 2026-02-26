@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const { data, fileName } = await request.json();
 
         // Security check: only allow updating files in the data directory
-        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts', 'aboutData.ts', 'projectDetailData.ts', 'serviceData.ts', 'serviceDetailData.ts'];
+        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts', 'aboutData.ts', 'projectDetailData.ts', 'serviceData.ts', 'serviceDetailData.ts', 'careerData.ts'];
         if (!allowedFiles.includes(fileName)) {
             return NextResponse.json({ error: 'Invalid file' }, { status: 400 });
         }
@@ -165,6 +165,26 @@ export type ServiceDetail = {
 };
 
 export const serviceDetails: Record<string, ServiceDetail> = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'careerData.ts') {
+            content = `import { LocalizedString } from '../context/LanguageContext';
+
+export interface Job {
+    id: number;
+    title: LocalizedString;
+    dept: string;
+    loc: string;
+    type: string;
+    tags: LocalizedString[];
+    salary: string;
+    experience: string;
+    postedDate: LocalizedString;
+    summary: LocalizedString;
+    responsibilities: LocalizedString[];
+    requirements: LocalizedString[];
+    benefits: LocalizedString[];
+}
+
+export const allJobs: Job[] = ${JSON.stringify(data, null, 4)};`;
         }
 
         await fs.writeFile(filePath, content, 'utf8');
