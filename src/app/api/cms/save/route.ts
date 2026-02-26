@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const { data, fileName } = await request.json();
 
         // Security check: only allow updating files in the data directory
-        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts', 'aboutData.ts', 'projectDetailData.ts'];
+        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts', 'aboutData.ts', 'projectDetailData.ts', 'serviceData.ts', 'serviceDetailData.ts'];
         if (!allowedFiles.includes(fileName)) {
             return NextResponse.json({ error: 'Invalid file' }, { status: 400 });
         }
@@ -115,6 +115,56 @@ export type ProjectDetail = {
 };
 
 export const projectDetails: Record<string, ProjectDetail> = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'serviceData.ts') {
+            content = `import { LocalizedString } from '../context/LanguageContext';
+
+export interface ServiceFeature extends LocalizedString {}
+
+export interface Service {
+    id: string;
+    title: LocalizedString;
+    desc: LocalizedString;
+    image: string;
+    features: ServiceFeature[];
+}
+
+export interface ProcessStep {
+    id: string;
+    step: string;
+    title: LocalizedString;
+    desc: LocalizedString;
+}
+
+export interface Sector {
+    id: string;
+    title: LocalizedString;
+    image: string;
+}
+
+export interface ServiceData {
+    services: Service[];
+    process: ProcessStep[];
+    sectors: Sector[];
+}
+
+export const serviceData: ServiceData = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'serviceDetailData.ts') {
+            content = `import { LocalizedString } from '../context/LanguageContext';
+
+export type ServiceDetail = {
+    id: string;
+    title: LocalizedString;
+    subtitle: LocalizedString;
+    heroImage: string;
+    description: LocalizedString;
+    targetAudience: LocalizedString;
+    scopeOfWork: LocalizedString[];
+    process: { step: string; title: LocalizedString; desc: LocalizedString }[];
+    benefits: { title: LocalizedString; desc: LocalizedString }[];
+    relatedProjects: { id: string; title: LocalizedString; location: LocalizedString; category: LocalizedString; image: string }[];
+};
+
+export const serviceDetails: Record<string, ServiceDetail> = ${JSON.stringify(data, null, 4)};`;
         }
 
         await fs.writeFile(filePath, content, 'utf8');

@@ -25,6 +25,9 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { aboutData } from '@/app/design-z/data/aboutData';
+import { serviceData } from '@/app/design-z/data/serviceData';
+import { serviceDetails, ServiceDetail as ServiceDetailType } from '@/app/design-z/data/serviceDetailData';
+import ServiceDetailEditor from './components/ServiceDetailEditor';
 
 // --- TYPES ---
 interface ProcessStep {
@@ -54,6 +57,34 @@ interface Testimonial {
     quote: string;
     role: string;
 }
+
+interface ServiceFeatureItem {
+    en: string;
+    kh: string;
+}
+
+interface ServiceItem {
+    id: string;
+    title: string;
+    desc: string;
+    image: string;
+    features: ServiceFeatureItem[];
+}
+
+interface ProcessItem {
+    id: string;
+    step: string;
+    title: string;
+    desc: string;
+}
+
+interface SectorItem {
+    id: string;
+    title: string;
+    image: string;
+}
+
+interface ServiceDetail extends ServiceDetailType { }
 
 function AdminContentEditor() {
     const searchParams = useSearchParams();
@@ -94,6 +125,36 @@ function AdminContentEditor() {
             content: typeof v.content === 'string' ? v.content : (v.content.en || '')
         }));
     });
+
+    const [services, setServices] = useState<ServiceItem[]>(() =>
+        serviceData.services.map(s => ({
+            id: s.id,
+            title: typeof s.title === 'string' ? s.title : (s.title.en || ''),
+            desc: typeof s.desc === 'string' ? s.desc : (s.desc.en || ''),
+            image: s.image,
+            features: s.features.map((f: any) => ({ en: f.en || f, kh: f.kh || f.en || f }))
+        }))
+    );
+
+    const [processStepsService, setProcessStepsService] = useState<ProcessItem[]>(() =>
+        serviceData.process.map(p => ({
+            id: p.id,
+            step: p.step,
+            title: typeof p.title === 'string' ? p.title : (p.title.en || ''),
+            desc: typeof p.desc === 'string' ? p.desc : (p.desc.en || '')
+        }))
+    );
+
+    const [sectors, setSectors] = useState<SectorItem[]>(() =>
+        serviceData.sectors.map(s => ({
+            id: s.id,
+            title: typeof s.title === 'string' ? s.title : (s.title.en || ''),
+            image: s.image
+        }))
+    );
+
+    const [detailsMap, setDetailsMap] = useState<Record<string, ServiceDetail>>(serviceDetails);
+    const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
 
     const [jobs, setJobs] = useState<Job[]>([
         { id: 'j1', title: 'Senior Site Engineer', loc: 'Phnom Penh', type: 'Full-time', date: 'Feb 2026' },
@@ -161,6 +222,53 @@ function AdminContentEditor() {
 
                 if (!response.ok) throw new Error('Failed to save content');
             }
+
+            if (activeSection === 'services') {
+                const updatedServiceData = {
+                    services: services.map(s => {
+                        const orig = serviceData.services.find(o => o.id === s.id);
+                        return {
+                            id: s.id,
+                            title: { en: s.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : s.title) || s.title },
+                            desc: { en: s.desc, kh: (orig && typeof orig.desc !== 'string' ? orig.desc.kh : s.desc) || s.desc },
+                            image: s.image,
+                            features: s.features
+                        };
+                    }),
+                    process: processStepsService.map(p => {
+                        const orig = serviceData.process.find(o => o.id === p.id);
+                        return {
+                            id: p.id,
+                            step: p.step,
+                            title: { en: p.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : p.title) || p.title },
+                            desc: { en: p.desc, kh: (orig && typeof orig.desc !== 'string' ? orig.desc.kh : p.desc) || p.desc }
+                        };
+                    }),
+                    sectors: sectors.map(s => {
+                        const orig = serviceData.sectors.find(o => o.id === s.id);
+                        return {
+                            id: s.id,
+                            title: { en: s.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : s.title) || s.title },
+                            image: s.image
+                        };
+                    })
+                };
+
+                const res1 = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'serviceData.ts', data: updatedServiceData })
+                });
+                if (!res1.ok) throw new Error('Failed to save serviceData');
+
+                const res2 = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'serviceDetailData.ts', data: detailsMap })
+                });
+                if (!res2.ok) throw new Error('Failed to save serviceDetailData');
+            }
+
             alert('Changes saved successfully!');
         } catch (error) {
             console.error('Error saving:', error);
@@ -207,6 +315,21 @@ function AdminContentEditor() {
 
     const deleteTestimonial = (id: string) => {
         setTestimonials(testimonials.filter(t => t.id !== id));
+    };
+
+    const editServiceDetails = (id: string) => {
+        setEditingServiceId(id);
+    };
+
+    const closeServiceDetails = () => {
+        setEditingServiceId(null);
+    };
+
+    const updateServiceDetail = (updated: ServiceDetail) => {
+        setDetailsMap({
+            ...detailsMap,
+            [updated.id]: updated
+        });
     };
 
     return (
@@ -343,6 +466,131 @@ function AdminContentEditor() {
                                                         <button onClick={() => deleteProcessStep(p.id)} className="p-1.5 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
                                                             <Trash2 size={16} />
                                                         </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+                                </div>
+                            )}
+
+                            {/* --- SERVICES --- */}
+                            {activeSection === 'services' && (
+                                <div className="space-y-10">
+                                    <section id="services-list" className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Service Cards</h3>
+                                        <div className="space-y-6">
+                                            {services.map((svc, i) => (
+                                                <div key={svc.id} className="p-5 border border-slate-200 rounded-xl bg-slate-50/50 space-y-3">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Service {i + 1}</span>
+                                                        <button
+                                                            onClick={() => editServiceDetails(svc.id)}
+                                                            className="text-xs font-bold text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-all flex items-center gap-1.5"
+                                                        >
+                                                            <Eye size={14} /> Edit Detail Page
+                                                        </button>
+                                                    </div>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Title</label>
+                                                            <input
+                                                                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
+                                                                value={svc.title}
+                                                                onChange={(e) => {
+                                                                    const updated = [...services]; updated[i].title = e.target.value; setServices(updated);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Image Path</label>
+                                                            <input
+                                                                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
+                                                                value={svc.image}
+                                                                onChange={(e) => {
+                                                                    const updated = [...services]; updated[i].image = e.target.value; setServices(updated);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Description</label>
+                                                        <textarea
+                                                            rows={3}
+                                                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none resize-none"
+                                                            value={svc.desc}
+                                                            onChange={(e) => {
+                                                                const updated = [...services]; updated[i].desc = e.target.value; setServices(updated);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Features (comma-separated)</label>
+                                                        <input
+                                                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
+                                                            value={svc.features.map(f => f.en).join(', ')}
+                                                            onChange={(e) => {
+                                                                const updated = [...services];
+                                                                updated[i].features = e.target.value.split(',').map(f => ({ en: f.trim(), kh: f.trim() }));
+                                                                setServices(updated);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+
+                                    <section id="services-process" className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Working Process</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {processStepsService.map((p, i) => (
+                                                <div key={p.id} className="p-5 border border-slate-200 rounded-xl relative group">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">{p.step}</div>
+                                                        <div className="flex-1 space-y-1">
+                                                            <input
+                                                                className="w-full text-sm font-bold text-slate-900 bg-transparent outline-none focus:bg-slate-50 rounded px-1"
+                                                                value={p.title}
+                                                                onChange={(e) => {
+                                                                    const updated = [...processStepsService]; updated[i].title = e.target.value; setProcessStepsService(updated);
+                                                                }}
+                                                            />
+                                                            <input
+                                                                className="w-full text-xs text-slate-500 bg-transparent outline-none focus:bg-slate-50 rounded px-1"
+                                                                value={p.desc}
+                                                                onChange={(e) => {
+                                                                    const updated = [...processStepsService]; updated[i].desc = e.target.value; setProcessStepsService(updated);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+
+                                    <section id="services-sectors" className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Sectors We Serve</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            {sectors.map((sec, i) => (
+                                                <div key={sec.id} className="p-4 border border-slate-200 rounded-xl flex items-center gap-4 group">
+                                                    <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs shrink-0">{i + 1}</div>
+                                                    <div className="flex-1 space-y-1">
+                                                        <input
+                                                            className="w-full text-sm font-bold text-slate-900 bg-transparent outline-none"
+                                                            value={sec.title}
+                                                            onChange={(e) => {
+                                                                const updated = [...sectors]; updated[i].title = e.target.value; setSectors(updated);
+                                                            }}
+                                                        />
+                                                        <input
+                                                            className="w-full text-xs text-slate-400 font-mono bg-transparent outline-none"
+                                                            value={sec.image}
+                                                            onChange={(e) => {
+                                                                const updated = [...sectors]; updated[i].image = e.target.value; setSectors(updated);
+                                                            }}
+                                                        />
                                                     </div>
                                                 </div>
                                             ))}
@@ -528,6 +776,20 @@ function AdminContentEditor() {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Service Detail Modal Editor */}
+            <AnimatePresence>
+                {editingServiceId && detailsMap[editingServiceId] && (
+                    <ServiceDetailEditor
+                        detail={detailsMap[editingServiceId]}
+                        onClose={closeServiceDetails}
+                        onSave={(updated) => {
+                            updateServiceDetail(updated);
+                            closeServiceDetails();
+                        }}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }
