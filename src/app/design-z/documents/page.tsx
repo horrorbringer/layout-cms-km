@@ -6,72 +6,7 @@ import { FileText, Download, ChevronRight, Search, Database } from 'lucide-react
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage, getLocalizedText } from '../context/LanguageContext';
-
-interface LocalizedString { en: string; kh: string; }
-
-// Detailed Mock Data for Knowledge/Documents
-const documents = [
-    {
-        id: 1,
-        title: { en: 'Kimmex Engineering Standards 2026: High-Rise Structural Integrity', kh: 'ស្តង់ដារវិស្វកម្ម Kimmex ២០២៦: សុចរិតភាពរចនាសម្ព័ន្ធអាគារខ្ពស់' },
-        date: 'Jan 10, 2026',
-        category: 'Engineering',
-        size: '15.4 MB',
-        type: 'PDF',
-        description: { en: 'Comprehensive guidelines and technical specifications for structural steel and concrete reinforcement in high-rise developments greater than 40 floors.', kh: 'គោលការណ៍ណែនាំ និងលក្ខណៈបច្ចេកទេសសំរាប់ដែកថែប និងការពង្រឹងបេតុងក្នុងការអភិវឌ្ឍអាគារខ្ពស់ជាង ៤០ ជាន់។' },
-        image: '/images/projects/Thumbnail-1.jpg'
-    },
-    {
-        id: 2,
-        title: { en: 'Sustainable Materials Research: Green Concrete Viability', kh: 'ការស្រាវជ្រាវសម្ភារៈនិរន្តរ: ការអាចប្រើប្រាស់បេតុងបៃតង' },
-        date: 'Dec 15, 2025',
-        category: 'Research',
-        size: '4.2 MB',
-        type: 'PDF',
-        description: { en: 'Internal research findings on the cost-benefit analysis and long-term durability of recycled aggregate concrete in tropical climates.', kh: 'លទ្ធផលស្រាវជ្រាវផ្ទៃក្នុងស្ដីអំពីការវិភាគចំណូល-ចំណាយ និងភាពស្ថិតស្ថេររយៈពេលវែងនៃបេតុងចាក់ក្នុងអាកាសធាតុត្រូពិក។' },
-        image: '/images/projects/Thumbnail-8.jpg'
-    },
-    {
-        id: 3,
-        title: { en: 'Standard Operating Procedures (SOP): Heavy Machinery Safety', kh: 'នីតិវិធីប្រតិបត្តិការស្តង់ដារ (SOP): សុវត្ថិភាពម៉ាស៊ីនធ្ងន់' },
-        date: 'Nov 22, 2025',
-        category: 'Safety',
-        size: '12.8 MB',
-        type: 'PDF',
-        description: { en: 'Mandatory safety protocols for crane and excavator operators, including pre-start checks and emergency shutdown procedures.', kh: 'ពិធីការសុវត្ថិភាពចាំបាច់សំរាប់អ្នកបើកប្រវ័ញ្ច និងយន្ត្រករ ទាំងការត្រួតពិនិត្យមុនចាប់ផ្ដើម និងនីតិវិធីបិទអន្ត្រាយ។' },
-        image: '/images/projects/Thumbnail-6.jpg'
-    },
-    {
-        id: 4,
-        title: { en: 'Urban Planning Case Study: Phnom Penh 2030', kh: 'ករណីសិក្សាការរៀបចំទីក្រុង: ភ្នំពេញ ២០៣០' },
-        date: 'Oct 05, 2025',
-        category: 'Case Study',
-        size: '25 MB',
-        type: 'PDF',
-        description: { en: 'A forward-looking analysis of infrastructure needs for the expanding metropolitan area, prepared by Kimmex Strategy Division.', kh: 'ការវិភាគទស្សន៍ទ្រនិចអំពីតម្រូវការហេដ្ឋារចនាសម្ព័ន្ធសម្រាប់តំបន់ទីក្រុងកំពុងពង្រីក ដោយនាយកដ្ឋានយុទ្ធសាស្ត្ររបស់ Kimmex។' },
-        image: '/images/projects/Thumbnail-2.jpg'
-    },
-    {
-        id: 5,
-        title: { en: 'ISO 9001:2015 Quality Management Framework', kh: 'ក្របខ័ណ្ឌគ្រប់គ្រងគុណភាព ISO 9001:2015' },
-        date: 'Sep 12, 2025',
-        category: 'Corporate',
-        size: '3.5 MB',
-        type: 'PDF',
-        description: { en: 'Official documentation of our quality assurance processes, utilized across all project lifecycles.', kh: 'ឯកសាររបស់ការធានាគុណភាពផ្លូវការ ដែលត្រូវបានប្រើប្រាស់ក្នុងវដ្តជីវិតគម្រោងទាំងអស់។' },
-        image: '/images/projects/Thumbnail-5.jpg'
-    },
-    {
-        id: 6,
-        title: { en: 'Technical Specification: Solar Facade Integration', kh: 'លក្ខណៈបច្ចេកទេស: ការបញ្ចូលស្រាប់ព្រះអាទិត្យ' },
-        date: 'Aug 20, 2025',
-        category: 'Technical',
-        size: '8.1 MB',
-        type: 'PDF',
-        description: { en: 'Technical drawings and electrical specifications for integrating BIPV (Building Integrated Photovoltaics) into glass facades.', kh: 'គំនូររូបភាពបច្ចេកទេស និងលក្ខណៈអគ្គិសនីសម្រាប់ការបញ្ចូល BIPV (ថាមពលព្រះអាទិត្យបញ្ចូលក្នុងអគារ) ទៅក្នុងមុខអគារកញ្ចក់។' },
-        image: '/images/projects/Thumbnail-9.jpg'
-    }
-];
+import { allDocuments } from '../data/documentData';
 
 // category keys mapped to translation keys
 const categoryKeys = ['All Types', 'Engineering', 'Safety', 'Research', 'Corporate', 'Technical', 'Case Study'];
@@ -81,8 +16,8 @@ export default function DocCollectionPage() {
     const [activeCategory, setActiveCategory] = useState('All Types');
 
     const filteredDocs = activeCategory === 'All Types'
-        ? documents
-        : documents.filter(doc => doc.category === activeCategory);
+        ? allDocuments
+        : allDocuments.filter(doc => doc.category === activeCategory);
 
     return (
         <div className="bg-gray-50 min-h-screen font-sans text-titan-navy">
@@ -180,12 +115,12 @@ export default function DocCollectionPage() {
                             <span className="text-xs font-bold uppercase tracking-widest text-titan-navy-subtle">{t('Latest Release')}</span>
                         </div>
 
-                        <Link href={`/design-z/documents/${documents[0].id}`} className="group bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 grid grid-cols-1 lg:grid-cols-5 hover:shadow-2xl transition-all duration-300">
+                        <Link href={`/design-z/documents/${allDocuments[0].id}`} className="group bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 grid grid-cols-1 lg:grid-cols-5 hover:shadow-2xl transition-all duration-300">
                             <div className="lg:col-span-3 relative overflow-hidden aspect-video lg:aspect-auto">
                                 <div className="absolute inset-0 bg-titan-navy/10 group-hover:bg-titan-navy/0 transition-colors z-10"></div>
                                 <Image
-                                    src={documents[0].image}
-                                    alt={getLocalizedText(documents[0].title, language)}
+                                    src={allDocuments[0].image}
+                                    alt={getLocalizedText(allDocuments[0].title, language)}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
@@ -198,19 +133,19 @@ export default function DocCollectionPage() {
                             <div className="lg:col-span-2 p-8 md:p-12 flex flex-col justify-center bg-white relative">
                                 <div className="mb-6 flex flex-wrap gap-3">
                                     <span className="px-3 py-1 bg-titan-bg rounded-full text-[10px] font-bold uppercase tracking-wider text-titan-navy border border-gray-200">
-                                        {t(documents[0].category)}
+                                        {t(allDocuments[0].category)}
                                     </span>
                                     <span className="px-3 py-1 bg-titan-bg rounded-full text-[10px] font-bold uppercase tracking-wider text-titan-navy-subtle border border-gray-200">
-                                        {documents[0].type} • {documents[0].size}
+                                        {allDocuments[0].type} • {allDocuments[0].size}
                                     </span>
                                 </div>
                                 <h2 className={`font-black text-titan-navy mb-4 group-hover:text-titan-red transition-colors ${language === 'kh' ? 'text-xl md:text-2xl leading-[1.4]' : 'text-2xl md:text-3xl leading-tight'
                                     }`}>
-                                    {getLocalizedText(documents[0].title, language)}
+                                    {getLocalizedText(allDocuments[0].title, language)}
                                 </h2>
                                 <p className={`text-titan-navy-subtle mb-8 ${language === 'kh' ? 'text-sm leading-[1.8]' : 'leading-relaxed'
                                     }`}>
-                                    {getLocalizedText(documents[0].description, language)}
+                                    {getLocalizedText(allDocuments[0].description, language)}
                                 </p>
                                 <div className="mt-auto flex gap-4">
                                     <button className="flex-1 bg-titan-navy text-white py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors flex items-center justify-center gap-2 shadow-lg">
