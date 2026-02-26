@@ -24,6 +24,7 @@ import {
     Eye
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { aboutData } from '@/app/design-z/data/aboutData';
 
 // --- TYPES ---
 interface ProcessStep {
@@ -80,13 +81,19 @@ function AdminContentEditor() {
         { id: '4', step: '04', title: 'Handover', desc: 'Quality inspection' },
     ]);
 
-    const [aboutStory, setAboutStory] = useState("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time...");
+    const [aboutStory, setAboutStory] = useState(() => {
+        const story = aboutData.story;
+        if (typeof story === 'string') return story;
+        return story.en || '';
+    });
 
-    const [values, setValues] = useState<ValueItem[]>([
-        { id: 'v1', title: 'Vision', content: 'Building a better Cambodia through architecture.' },
-        { id: 'v2', title: 'Mission', content: 'Delivering excellence on-time and on-budget.' },
-        { id: 'v3', title: 'Values', content: 'Safety, Quality, Integrity, Sustainability.' }
-    ]);
+    const [values, setValues] = useState<ValueItem[]>(() => {
+        return aboutData.values.map(v => ({
+            id: v.id,
+            title: typeof v.title === 'string' ? v.title : (v.title.en || ''),
+            content: typeof v.content === 'string' ? v.content : (v.content.en || '')
+        }));
+    });
 
     const [jobs, setJobs] = useState<Job[]>([
         { id: 'j1', title: 'Senior Site Engineer', loc: 'Phnom Penh', type: 'Full-time', date: 'Feb 2026' },
@@ -121,11 +128,46 @@ function AdminContentEditor() {
         }
     }, [sectionParam]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setIsSaving(true);
-        setTimeout(() => {
+        try {
+            if (activeSection === 'about') {
+                const updatedAboutData = {
+                    story: {
+                        en: aboutStory,
+                        kh: (typeof aboutData.story !== 'string' ? aboutData.story.kh : aboutStory) || aboutStory
+                    },
+                    values: values.map(v => {
+                        const originalValue = aboutData.values.find(ov => ov.id === v.id);
+                        return {
+                            id: v.id,
+                            title: {
+                                en: v.title,
+                                kh: (originalValue && typeof originalValue.title !== 'string' ? originalValue.title.kh : v.title) || v.title
+                            },
+                            content: {
+                                en: v.content,
+                                kh: (originalValue && typeof originalValue.content !== 'string' ? originalValue.content.kh : v.content) || v.content
+                            }
+                        };
+                    })
+                };
+
+                const response = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'aboutData.ts', data: updatedAboutData })
+                });
+
+                if (!response.ok) throw new Error('Failed to save content');
+            }
+            alert('Changes saved successfully!');
+        } catch (error) {
+            console.error('Error saving:', error);
+            alert('Failed to save changes.');
+        } finally {
             setIsSaving(false);
-        }, 1000);
+        }
     };
 
     // --- HANDLERS ---
