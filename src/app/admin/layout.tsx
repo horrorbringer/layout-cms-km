@@ -19,7 +19,8 @@ import {
     PanelLeftOpen,
     ChevronDown,
     Chrome,
-    Newspaper
+    Newspaper,
+    FileText
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -43,6 +44,7 @@ const sidebarItems: SidebarItem[] = [
     { id: 'projects', label: 'Projects', icon: Briefcase, href: '/admin/projects' },
     { id: 'team', label: 'Team Members', icon: Users, href: '/admin/team' },
     { id: 'news', label: 'News & Updates', icon: Newspaper, href: '/admin/news' },
+    { id: 'documents', label: 'Doc Collection', icon: FileText, href: '/admin/documents' },
     {
         id: 'content',
         label: 'Site Content',
