@@ -24,6 +24,7 @@ import {
     MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LanguageProvider, useLanguage } from '../design-z/context/LanguageContext';
 
 interface SubItem {
     id: string;
@@ -90,7 +91,10 @@ const sidebarItems: SidebarItem[] = [
     { id: 'settings', label: 'Settings', icon: Settings, href: '/admin/settings' },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+
+
+function LayoutContent({ children }: { children: React.ReactNode }) {
+    const { t, language, setLanguage, fontClassName } = useLanguage();
     const pathname = usePathname();
     const router = useRouter();
     const [isLoaded, setIsLoaded] = useState(false);
@@ -145,7 +149,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     className={`w-full flex items-center justify-between py-1.5 px-2 rounded-md text-[13px] font-medium transition-colors ${isExpanded ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-900'
                                         }`}
                                 >
-                                    <span>{sub.label}</span>
+                                    <span>{t(sub.label)}</span>
                                     <ChevronDown size={14} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
                                 </button>
                             ) : (
@@ -156,7 +160,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                         : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                                         }`}
                                 >
-                                    {sub.label}
+                                    {t(sub.label)}
                                 </Link>
                             )}
                             <AnimatePresence>
@@ -173,7 +177,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (!isLoaded) return null;
 
     return (
-        <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
+        <div className={`min-h-screen bg-slate-50 flex text-slate-900 ${fontClassName}`}>
             {/* --- SIDEBAR --- */}
             <motion.aside
                 animate={{ width: isCollapsed ? 80 : 280 }}
@@ -187,7 +191,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         </div>
                         {!isCollapsed && (
                             <span className="text-lg font-bold tracking-tight text-slate-800">
-                                KIM MEX <span className="text-indigo-600 font-medium">CMS</span>
+                                {t('KIM MEX')} <span className="text-indigo-600 font-medium">{t('CMS')}</span>
                             </span>
                         )}
                     </div>
@@ -211,7 +215,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                             } ${isCollapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''}`}
                                     >
                                         <item.icon size={18} className={isActive ? 'text-indigo-600' : 'text-slate-400'} />
-                                        {!isCollapsed && <span>{item.label}</span>}
+                                        {!isCollapsed && <span>{t(item.label)}</span>}
                                     </Link>
                                 ) : (
                                     <div className="space-y-1">
@@ -223,7 +227,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                             <item.icon size={18} className={isExpanded && !isCollapsed ? 'text-indigo-600' : 'text-slate-400'} />
                                             {!isCollapsed && (
                                                 <>
-                                                    <span className="flex-1 text-left">{item.label}</span>
+                                                    <span className="flex-1 text-left">{t(item.label)}</span>
                                                     <ChevronDown size={14} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
                                                 </>
                                             )}
@@ -245,21 +249,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all"
                     >
                         {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-                        {!isCollapsed && <span>Collapse</span>}
+                        {!isCollapsed && <span>{t('Collapse')}</span>}
                     </button>
                     <Link
                         href="/design-z"
                         className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all"
                     >
                         <ExternalLink size={18} />
-                        {!isCollapsed && <span>View Website</span>}
+                        {!isCollapsed && <span>{t('View Website')}</span>}
                     </Link>
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-all mt-1"
                     >
                         <LogOut size={18} />
-                        {!isCollapsed && <span>Sign Out</span>}
+                        {!isCollapsed && <span>{t('Sign Out')}</span>}
                     </button>
                 </div>
             </motion.aside>
@@ -276,13 +280,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                             <input
                                 type="text"
-                                placeholder="Search..."
+                                placeholder={t('Search...')}
                                 className="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
                             />
                         </div>
                     </div>
 
                     <div className="flex items-center gap-4">
+                        {/* Language Switcher */}
+                        <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1 mr-2">
+                            <button
+                                onClick={() => setLanguage('en')}
+                                className={`px-2 py-1 rounded-md text-[10px] font-bold transition-all ${language === 'en' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                EN
+                            </button>
+                            <button
+                                onClick={() => setLanguage('kh')}
+                                className={`px-2 py-1 rounded-md text-[10px] font-bold transition-all ${language === 'kh' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                KH
+                            </button>
+                        </div>
+
                         <button className="relative p-2 text-slate-400 hover:text-slate-600 transition-colors">
                             <Bell size={20} />
                             <span className="absolute top-2 right-2 w-2 h-2 bg-indigo-600 rounded-full border-2 border-white"></span>
@@ -290,8 +310,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <div className="h-8 w-[1px] bg-slate-200 mx-2"></div>
                         <div className="flex items-center gap-3">
                             <div className="text-right hidden sm:block">
-                                <p className="text-sm font-semibold text-slate-900 leading-none">{user?.name || 'Admin User'}</p>
-                                <p className="text-xs text-slate-500 mt-1">Administrator</p>
+                                <p className="text-sm font-semibold text-slate-900 leading-none">{user?.name || t('Admin User')}</p>
+                                <p className="text-xs text-slate-500 mt-1">{t('Administrator')}</p>
                             </div>
                             <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500">
                                 <UserCircle size={24} />
@@ -306,5 +326,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </div>
             </main>
         </div>
+    );
+}
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <LanguageProvider>
+            <LayoutContent>{children}</LayoutContent>
+        </LanguageProvider>
     );
 }

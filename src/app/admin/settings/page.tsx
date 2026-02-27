@@ -13,7 +13,10 @@ import {
 } from 'lucide-react';
 import { configData as initialConfig, KhmerFontName } from '@/app/design-z/data/configData';
 
+import { useLanguage } from '@/app/design-z/context/LanguageContext';
+
 export default function SettingsAdmin() {
+    const { t, language } = useLanguage();
     const [khmerFont, setKhmerFont] = useState<KhmerFontName>(initialConfig.khmerFont);
     const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -46,18 +49,18 @@ export default function SettingsAdmin() {
     };
 
     const fonts: { name: KhmerFontName; label: string; desc: string }[] = [
-        { name: 'Siemreap', label: 'Siemreap', desc: 'Classic, clean Khmer font ideal for body text.' },
-        { name: 'Koulen', label: 'Koulen', desc: 'Bold, modern display font perfect for headings.' },
-        { name: 'Battambang', label: 'Battambang', desc: 'Clear and legible, great for both subheadings and body.' },
-        { name: 'System', label: 'System Default', desc: 'Uses the default operating system font for Khmer.' }
+        { name: 'Siemreap', label: 'Siemreap', desc: t('Classic, clean Khmer font ideal for body text.') },
+        { name: 'Koulen', label: 'Koulen', desc: t('Bold, modern display font perfect for headings.') },
+        { name: 'Battambang', label: 'Battambang', desc: t('Clear and legible, great for both subheadings and body.') },
+        { name: 'System', label: t('System Default'), desc: t('Uses the default operating system font for Khmer.') }
     ];
 
     return (
         <div className="space-y-8 max-w-4xl pb-20">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">System Settings</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage your account preferences and site-wide configuration.</p>
+                    <h1 className="text-2xl font-bold text-slate-900">{t('System Settings')}</h1>
+                    <p className="text-sm text-slate-500 mt-1">{t('Manage your account preferences and site-wide configuration.')}</p>
                 </div>
                 <button
                     onClick={handleSave}
@@ -74,7 +77,7 @@ export default function SettingsAdmin() {
                     ) : (
                         <Save size={16} />
                     )}
-                    {saveStatus === 'success' ? 'Settings Saved' : isSaving ? 'Saving...' : 'Save Changes'}
+                    {saveStatus === 'success' ? t('Settings Saved') : isSaving ? t('Saving...') : t('Save Changes')}
                 </button>
             </div>
 
@@ -83,13 +86,13 @@ export default function SettingsAdmin() {
                 <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                     <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center gap-3">
                         <Type size={18} className="text-slate-400" />
-                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Localization & Typography</h3>
+                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">{t('Localization & Typography')}</h3>
                     </div>
                     <div className="p-8">
                         <div className="space-y-6">
                             <div>
-                                <h4 className="text-sm font-bold text-slate-900 mb-2">Khmer Font Family</h4>
-                                <p className="text-xs text-slate-500 mb-6">Choose the primary font for Khmer (KH) language content across the website.</p>
+                                <h4 className="text-sm font-bold text-slate-900 mb-2">{t('Khmer Font Family')}</h4>
+                                <p className="text-xs text-slate-500 mb-6">{t('Choose the primary font for Khmer (KH) language content across the website.')}</p>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     {fonts.map((font) => (
@@ -127,11 +130,11 @@ export default function SettingsAdmin() {
                     </div>
                 </section>
 
-                {/* Profile Section */}
+                {/* Account Profile Section */}
                 <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden opacity-60">
                     <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center gap-3">
                         <UserCircle size={18} className="text-slate-400" />
-                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Account Profile</h3>
+                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">{t('Account Profile')}</h3>
                     </div>
                     <div className="p-8 pointer-events-none">
                         <div className="flex items-center gap-6 mb-8 pb-8 border-b border-slate-100">
@@ -139,23 +142,23 @@ export default function SettingsAdmin() {
                                 <User size={32} />
                             </div>
                             <div className="space-y-2">
-                                <button className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700">Change Photo</button>
+                                <button className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700">{t('Change Photo')}</button>
                                 <p className="text-[10px] text-slate-400 uppercase font-black">JPG or PNG, max 2MB</p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Display Name</label>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('Display Name')}</label>
                                 <input
                                     type="text"
-                                    defaultValue="Admin User"
+                                    defaultValue={t('Admin User')}
                                     disabled
                                     className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium outline-none"
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('Email Address')}</label>
                                 <input
                                     type="email"
                                     defaultValue="admin@kimmex.com.kh"
@@ -171,13 +174,13 @@ export default function SettingsAdmin() {
                 <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden opacity-60">
                     <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center gap-3">
                         <SettingsIcon size={18} className="text-slate-400" />
-                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">CMS Configuration</h3>
+                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">{t('CMS Configuration')}</h3>
                     </div>
                     <div className="p-8 space-y-8 divide-y divide-slate-100 pointer-events-none">
                         <div className="flex items-center justify-between gap-8">
                             <div>
-                                <h4 className="text-sm font-bold text-slate-900">Auto-save Content</h4>
-                                <p className="text-xs text-slate-500 mt-1">Automatically save changes while editing projects and site content.</p>
+                                <h4 className="text-sm font-bold text-slate-900">{t('Auto-save Content')}</h4>
+                                <p className="text-xs text-slate-500 mt-1">{t('Automatically save changes while editing projects and site content.')}</p>
                             </div>
                             <div className="w-10 h-5 bg-indigo-600 rounded-full relative">
                                 <div className="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm" />
@@ -186,8 +189,8 @@ export default function SettingsAdmin() {
 
                         <div className="flex items-center justify-between gap-8 pt-8">
                             <div>
-                                <h4 className="text-sm font-bold text-slate-900">Maintenance Mode</h4>
-                                <p className="text-xs text-slate-500 mt-1">Redirect all public traffic to a holding page during major updates.</p>
+                                <h4 className="text-sm font-bold text-slate-900">{t('Maintenance Mode')}</h4>
+                                <p className="text-xs text-slate-500 mt-1">{t('Redirect all public traffic to a holding page during major updates.')}</p>
                             </div>
                             <div className="w-10 h-5 bg-slate-200 rounded-full relative">
                                 <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm" />
@@ -203,12 +206,12 @@ export default function SettingsAdmin() {
                             <AlertCircle size={20} />
                         </div>
                         <div>
-                            <h4 className="text-sm font-bold text-red-900">Critical Actions</h4>
-                            <p className="text-xs text-red-700/70 mt-1 leading-relaxed">Resetting the database will permanently clear all project data.</p>
+                            <h4 className="text-sm font-bold text-red-900">{t('Critical Actions')}</h4>
+                            <p className="text-xs text-red-700/70 mt-1 leading-relaxed">{t('Resetting the database will permanently clear all project data.')}</p>
                         </div>
                     </div>
                     <button disabled className="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-bold opacity-50 cursor-not-allowed shadow-sm whitespace-nowrap">
-                        Reset System
+                        {t('Reset System')}
                     </button>
                 </section>
             </div>

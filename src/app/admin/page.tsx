@@ -15,14 +15,15 @@ import {
     MoreVertical
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import { useLanguage, getLocalizedText } from '@/app/design-z/context/LanguageContext';
 import { projects } from '@/app/design-z/data/projectData';
 import { teamMembers } from '@/app/design-z/data/teamData';
 
 export default function AdminDashboard() {
+    const { t, language } = useLanguage();
     const totalProjects = projects.length;
     const activeTeam = teamMembers.length;
-    const completedProjects = projects.filter(p => p.status.en === 'Completed' || p.status.en === 'បានបញ្ចប់').length;
+    const completedProjects = projects.filter(p => getLocalizedText(p.status, 'en') === 'Completed' || getLocalizedText(p.status, 'kh') === 'បានបញ្ចប់').length;
     const pendingProjects = totalProjects - completedProjects;
 
     const stats = [
@@ -33,14 +34,14 @@ export default function AdminDashboard() {
     ];
 
     const recentProjects = projects.slice(0, 3).map((p, index) => ({
-        title: p.title.en || 'Untitled',
-        category: p.type.en || 'N/A',
-        status: p.status.en || 'Pending',
-        date: index === 0 ? '2 hours ago' : index === 1 ? '5 hours ago' : '1 day ago'
+        title: getLocalizedText(p.title, language) || 'Untitled',
+        category: getLocalizedText(p.type, language) || 'N/A',
+        status: getLocalizedText(p.status, language) || 'Pending',
+        date: index === 0 ? t('2 hours ago') : index === 1 ? t('5 hours ago') : t('1 day ago')
     }));
 
     const typeDistribution = projects.reduce((acc, p) => {
-        let type = p.type.en || 'Other';
+        let type = getLocalizedText(p.type, 'en') || 'Other';
         if (type.includes('Government')) type = 'Government';
         else if (type.includes('Water') || type.includes('Infrastructure') || type.includes('Slope')) type = 'Infrastructure';
         else if (type.includes('Public')) type = 'Public Service';
@@ -56,17 +57,18 @@ export default function AdminDashboard() {
             percentage: Math.round((count / Math.max(1, totalProjects)) * 100),
             colorClass: i === 0 ? 'bg-indigo-500' : i === 1 ? 'bg-blue-500' : 'bg-emerald-500'
         }));
+
     return (
         <div className="space-y-8">
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Dashboard Overview</h1>
-                    <p className="text-sm text-slate-500 mt-1">Key metrics and recent activity for KIM MEX CMS.</p>
+                    <h1 className="text-2xl font-bold text-slate-900">{t('Dashboard Overview')}</h1>
+                    <p className="text-sm text-slate-500 mt-1">{t('Key metrics and recent activity for KIM MEX CMS.')}</p>
                 </div>
                 <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm active:scale-[0.98]">
                     <Plus size={18} />
-                    New Project
+                    {t('New Project')}
                 </button>
             </div>
 
@@ -94,7 +96,7 @@ export default function AdminDashboard() {
                             </div>
                         </div>
                         <div>
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{stat.label}</p>
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t(stat.label)}</p>
                             <h3 className="text-3xl font-bold text-slate-900 mt-1 leading-none">{stat.value}</h3>
                         </div>
                     </motion.div>
@@ -106,17 +108,17 @@ export default function AdminDashboard() {
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                            <h3 className="font-bold text-slate-900">Recent Projects</h3>
-                            <button className="text-xs font-bold text-indigo-600 hover:text-indigo-700">View All Projects</button>
+                            <h3 className="font-bold text-slate-900">{t('Recent Projects')}</h3>
+                            <button className="text-xs font-bold text-indigo-600 hover:text-indigo-700">{t('View All Projects')}</button>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="bg-slate-50/50">
-                                        <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Project Details</th>
-                                        <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Category</th>
-                                        <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</th>
-                                        <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Activity</th>
+                                        <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('Project Details')}</th>
+                                        <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('Category')}</th>
+                                        <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('Status')}</th>
+                                        <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">{t('Activity')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
@@ -132,8 +134,8 @@ export default function AdminDashboard() {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
-                                                    <div className={`w-1.5 h-1.5 rounded-full ${project.status === 'Completed' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                                                    <span className={`text-xs font-semibold ${project.status === 'Completed' ? 'text-emerald-700' : 'text-amber-700'}`}>
+                                                    <div className={`w-1.5 h-1.5 rounded-full ${project.status === 'Completed' || project.status === 'បានបញ្ចប់' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                                                    <span className={`text-xs font-semibold ${project.status === 'Completed' || project.status === 'បានបញ្ចប់' ? 'text-emerald-700' : 'text-amber-700'}`}>
                                                         {project.status}
                                                     </span>
                                                 </div>
@@ -153,7 +155,7 @@ export default function AdminDashboard() {
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="font-bold text-slate-900">Project Distribution</h3>
+                            <h3 className="font-bold text-slate-900">{t('Project Distribution')}</h3>
                             <button className="p-1 hover:bg-slate-50 rounded text-slate-400"><MoreVertical size={16} /></button>
                         </div>
 
@@ -161,7 +163,7 @@ export default function AdminDashboard() {
                             {topTypes.map((type, i) => (
                                 <div key={i} className="space-y-2">
                                     <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
-                                        <span className="text-slate-500">{type.name}</span>
+                                        <span className="text-slate-500">{t(type.name)}</span>
                                         <span className="text-slate-900">{type.percentage}%</span>
                                     </div>
                                     <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
@@ -177,8 +179,8 @@ export default function AdminDashboard() {
                                     <TrendingUp size={18} />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Monthly Growth</p>
-                                    <p className="text-sm font-bold text-slate-900">+12.5% vs last month</p>
+                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{t('Monthly Growth')}</p>
+                                    <p className="text-sm font-bold text-slate-900">+12.5% {t('vs last month')}</p>
                                 </div>
                             </div>
                         </div>
@@ -191,12 +193,12 @@ export default function AdminDashboard() {
                                 <TrendingUp size={16} className="text-indigo-400" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-sm">System Status</h4>
-                                <p className="text-xs text-slate-400 leading-relaxed mt-1">All systems operational. Content cache synced.</p>
+                                <h4 className="font-bold text-sm">{t('System Status')}</h4>
+                                <p className="text-xs text-slate-400 leading-relaxed mt-1">{t('All systems operational. Content cache synced.')}</p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-                                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Live Sync Active</span>
+                                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">{t('Live Sync Active')}</span>
                             </div>
                         </div>
                     </div>
