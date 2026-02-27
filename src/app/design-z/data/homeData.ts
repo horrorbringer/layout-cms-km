@@ -38,50 +38,50 @@ export const homeData: HomeData = {
         }
     },
     "stats": [
-        {
-            "label": {
-                "en": "Safety First",
-                "kh": "សុវត្ថិភាពជាចម្បង"
-            },
-            "val": {
-                "en": "Zero accident policy",
-                "kh": "គោលនយោបាយគ្រោះថ្នាក់សូន្យ"
-            },
-            "iconName": "ShieldCheck"
-        },
-        {
-            "label": {
-                "en": "ISO Certified",
-                "kh": "វិញ្ញាបនបត្រ ISO"
-            },
-            "val": {
-                "en": "9001:2015 standards",
-                "kh": "ស្តង់ដារ ៩០០១:២០១៥"
-            },
-            "iconName": "Award"
-        },
-        {
-            "label": {
-                "en": "On-Time Delivery",
-                "kh": "ការប្រគល់ជូនទាន់ពេល"
-            },
-            "val": {
-                "en": "98% completion rate",
-                "kh": "អត្រាបញ្ចប់ ៩៨%"
-            },
-            "iconName": "Clock"
-        },
-        {
-            "label": {
-                "en": "Quality Focus",
-                "kh": "ផ្តោតលើគុណភាព"
-            },
-            "val": {
-                "en": "Exceeding expectations",
-                "kh": "លើសពីការរំពឹងទុក"
-            },
-            "iconName": "Target"
-        }
+        // {
+        //     "label": {
+        //         "en": "Safety First",
+        //         "kh": "សុវត្ថិភាពជាចម្បង"
+        //     },
+        //     "val": {
+        //         "en": "Zero accident policy",
+        //         "kh": "គោលនយោបាយគ្រោះថ្នាក់សូន្យ"
+        //     },
+        //     "iconName": "ShieldCheck"
+        // },
+        // {
+        //     "label": {
+        //         "en": "ISO Certified",
+        //         "kh": "វិញ្ញាបនបត្រ ISO"
+        //     },
+        //     "val": {
+        //         "en": "9001:2015 standards",
+        //         "kh": "ស្តង់ដារ ៩០០១:២០១៥"
+        //     },
+        //     "iconName": "Award"
+        // },
+        // {
+        //     "label": {
+        //         "en": "On-Time Delivery",
+        //         "kh": "ការប្រគល់ជូនទាន់ពេល"
+        //     },
+        //     "val": {
+        //         "en": "98% completion rate",
+        //         "kh": "អត្រាបញ្ចប់ ៩៨%"
+        //     },
+        //     "iconName": "Clock"
+        // },
+        // {
+        //     "label": {
+        //         "en": "Quality Focus",
+        //         "kh": "ផ្តោតលើគុណភាព"
+        //     },
+        //     "val": {
+        //         "en": "Exceeding expectations",
+        //         "kh": "លើសពីការរំពឹងទុក"
+        //     },
+        //     "iconName": "Target"
+        // }
     ],
     "process": [
         {

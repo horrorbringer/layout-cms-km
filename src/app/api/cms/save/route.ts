@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
         let content = '';
         if (fileName === 'configData.ts') {
-            content = `export type KhmerFontName = 'Siemreap' | 'Koulen' | 'Battambang';
+            content = `export type KhmerFontName = 'Siemreap' | 'Koulen' | 'Battambang' | 'System';
 
 export interface ConfigData {
     khmerFont: KhmerFontName;

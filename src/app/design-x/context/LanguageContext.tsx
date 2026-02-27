@@ -338,7 +338,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguage] = useState<Language>('en');
+    const [language, setLanguage] = useState<Language>('kh');
 
     const t = (key: string): string => {
         // Remove trailing/leading spaces for lookup
@@ -353,6 +353,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         switch (configData.khmerFont) {
             case 'Koulen': return koulen.className;
             case 'Battambang': return battambang.className;
+            case 'System': return 'font-sans';
             case 'Siemreap':
             default: return siemreap.className;
         }
