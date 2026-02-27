@@ -48,7 +48,8 @@ export default function SettingsAdmin() {
     const fonts: { name: KhmerFontName; label: string; desc: string }[] = [
         { name: 'Siemreap', label: 'Siemreap', desc: 'Classic, clean Khmer font ideal for body text.' },
         { name: 'Koulen', label: 'Koulen', desc: 'Bold, modern display font perfect for headings.' },
-        { name: 'Battambang', label: 'Battambang', desc: 'Clear and legible, great for both subheadings and body.' }
+        { name: 'Battambang', label: 'Battambang', desc: 'Clear and legible, great for both subheadings and body.' },
+        { name: 'System', label: 'System Default', desc: 'Uses the default operating system font for Khmer.' }
     ];
 
     return (
@@ -62,8 +63,8 @@ export default function SettingsAdmin() {
                     onClick={handleSave}
                     disabled={isSaving}
                     className={`flex items-center gap-2 px-6 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm ${saveStatus === 'success' ? 'bg-green-500 text-white' :
-                            saveStatus === 'error' ? 'bg-red-500 text-white' :
-                                'bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50'
+                        saveStatus === 'error' ? 'bg-red-500 text-white' :
+                            'bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50'
                         }`}
                 >
                     {isSaving ? (
@@ -90,14 +91,14 @@ export default function SettingsAdmin() {
                                 <h4 className="text-sm font-bold text-slate-900 mb-2">Khmer Font Family</h4>
                                 <p className="text-xs text-slate-500 mb-6">Choose the primary font for Khmer (KH) language content across the website.</p>
 
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     {fonts.map((font) => (
                                         <div
                                             key={font.name}
                                             onClick={() => setKhmerFont(font.name)}
                                             className={`relative p-5 rounded-xl border-2 cursor-pointer transition-all ${khmerFont === font.name
-                                                    ? 'border-indigo-600 bg-indigo-50/30'
-                                                    : 'border-slate-100 bg-slate-50 hover:border-slate-200'
+                                                ? 'border-indigo-600 bg-indigo-50/30'
+                                                : 'border-slate-100 bg-slate-50 hover:border-slate-200'
                                                 }`}
                                         >
                                             {khmerFont === font.name && (
