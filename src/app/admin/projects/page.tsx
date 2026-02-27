@@ -21,25 +21,35 @@ import {
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useLanguage, getLocalizedText } from '@/app/design-z/context/LanguageContext';
+
 export default function ProjectsAdmin() {
+    const { t, language } = useLanguage();
     const [projects, setProjects] = useState(initialProjects);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
 
-    const categories = ['All', ...new Set(projects.map(p => p.type.en))];
+    const categories = ['All', ...new Set(projects.map(p => getLocalizedText(p.type, 'en')))];
 
     const filteredProjects = projects.filter(p => {
         const searchLower = searchTerm.toLowerCase();
-        const matchesSearch = (p.title.en?.toLowerCase().includes(searchLower) ?? false) ||
-            (p.title.kh?.toLowerCase().includes(searchLower) ?? false) ||
-            (p.location.en?.toLowerCase().includes(searchLower) ?? false) ||
-            (p.location.kh?.toLowerCase().includes(searchLower) ?? false);
-        const matchesCategory = selectedCategory === 'All' || p.type.en === selectedCategory;
+        const titleEn = getLocalizedText(p.title, 'en')?.toLowerCase() || '';
+        const titleKh = getLocalizedText(p.title, 'kh')?.toLowerCase() || '';
+        const locEn = getLocalizedText(p.location, 'en')?.toLowerCase() || '';
+        const locKh = getLocalizedText(p.location, 'kh')?.toLowerCase() || '';
+
+        const matchesSearch = titleEn.includes(searchLower) ||
+            titleKh.includes(searchLower) ||
+            locEn.includes(searchLower) ||
+            locKh.includes(searchLower);
+
+        const typeEn = getLocalizedText(p.type, 'en');
+        const matchesCategory = selectedCategory === 'All' || typeEn === selectedCategory;
         return matchesSearch && matchesCategory;
     });
 
     const handleDelete = async (id: string, title: string) => {
-        if (confirm(`Are you sure you want to delete ${title}?`)) {
+        if (confirm(`${t('Are you sure you want to delete')} ${title}?`)) {
             const updatedProjects = projects.filter(p => p.id !== id);
             setProjects(updatedProjects);
 
@@ -75,15 +85,15 @@ export default function ProjectsAdmin() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Project Portfolio</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage architectural assets and infrastructure projects.</p>
+                    <h1 className="text-2xl font-bold text-slate-900">{t('Project Portfolio')}</h1>
+                    <p className="text-sm text-slate-500 mt-1">{t('Manage architectural assets and infrastructure projects.')}</p>
                 </div>
                 <Link
                     href="/admin/projects/new"
                     className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
                 >
                     <Plus size={18} />
-                    Add Project
+                    {t('Add Project')}
                 </Link>
             </div>
 
@@ -93,7 +103,7 @@ export default function ProjectsAdmin() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                     <input
                         type="text"
-                        placeholder="Search projects..."
+                        placeholder={t('Search projects...')}
                         className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -104,13 +114,13 @@ export default function ProjectsAdmin() {
                     {categories.map(cat => (
                         <button
                             key={cat}
-                            onClick={() => setSelectedCategory(cat)}
+                            onClick={() => setSelectedCategory(cat || 'Other')}
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${selectedCategory === cat
                                 ? 'bg-indigo-600 text-white shadow-sm'
                                 : 'bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-900'
                                 }`}
                         >
-                            {cat}
+                            {cat === 'All' ? t('All') : t(cat || 'Other')}
                         </button>
                     ))}
                 </div>
@@ -131,14 +141,14 @@ export default function ProjectsAdmin() {
                             <div className="aspect-video relative overflow-hidden bg-slate-100">
                                 <Image
                                     src={project.image}
-                                    alt={project.title.en}
+                                    alt={getLocalizedText(project.title, language) || ''}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <div className="absolute top-3 left-3">
-                                    <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm border border-white/20 backdrop-blur-md ${project.status.en === 'Completed' ? 'bg-emerald-500/90 text-white' : 'bg-amber-500/90 text-white'
+                                    <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm border border-white/20 backdrop-blur-md ${(getLocalizedText(project.status, 'en') === 'Completed' || getLocalizedText(project.status, 'kh') === 'បានបញ្ចប់') ? 'bg-emerald-500/90 text-white' : 'bg-amber-500/90 text-white'
                                         }`}>
-                                        {project.status.en}
+                                        {getLocalizedText(project.status, language)}
                                     </span>
                                 </div>
                                 <div className="absolute top-3 right-3 flex gap-2 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-200">
@@ -154,13 +164,13 @@ export default function ProjectsAdmin() {
                             <div className="p-5">
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="min-w-0">
-                                        <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">{project.type.en}</p>
+                                        <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">{t(getLocalizedText(project.type, 'en') || 'Other')}</p>
                                         <h3 className="text-base font-bold text-slate-900 truncate group-hover:text-indigo-600 transition-colors">
-                                            {project.title.en}
+                                            {getLocalizedText(project.title, language)}
                                         </h3>
                                         <div className="flex items-center gap-1.5 text-slate-400 mt-2">
                                             <MapPin size={12} />
-                                            <span className="text-[11px] font-semibold truncate">{project.location.en}</span>
+                                            <span className="text-[11px] font-semibold truncate">{getLocalizedText(project.location, language)}</span>
                                         </div>
                                     </div>
                                     <button className="text-slate-300 hover:text-slate-600 p-1">
@@ -171,14 +181,14 @@ export default function ProjectsAdmin() {
                                 <div className="flex items-center justify-between pt-5 mt-5 border-t border-slate-50">
                                     <button className="text-[11px] font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-1.5 transition-colors">
                                         <ExternalLink size={14} />
-                                        View Live
+                                        {t('View Live')}
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(project.id, project.title.en)}
+                                        onClick={() => handleDelete(project.id, getLocalizedText(project.title, language) || '')}
                                         className="text-[11px] font-bold text-slate-400 hover:text-red-500 flex items-center gap-1.5 transition-colors"
                                     >
                                         <Trash2 size={14} />
-                                        Remove
+                                        {t('Remove')}
                                     </button>
                                 </div>
                             </div>
@@ -192,8 +202,8 @@ export default function ProjectsAdmin() {
                     <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mx-auto mb-4">
                         <Search size={32} />
                     </div>
-                    <p className="text-lg font-bold text-slate-900">No projects found.</p>
-                    <p className="text-sm text-slate-500 mt-1">Adjust your filters or search terms.</p>
+                    <p className="text-lg font-bold text-slate-900">{t('No projects found.')}</p>
+                    <p className="text-sm text-slate-500 mt-1">{t('Adjust your filters or search terms.')}</p>
                 </div>
             )}
         </div>
