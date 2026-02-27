@@ -40,7 +40,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             label: t('Services'), href: '/design-z/services',
             children: [
                 { label: t('Design & Build'), href: '/design-z/services/design-build', desc: t('Full lifecycle solutions') },
-                { label: t('Building Renovation'), href: '/design-z/services/renovation', desc: t('Revitalize existing structures') },
+                { label: t('Construction'), href: '/design-z/services/construction', desc: t('Revitalize existing structures') },
                 { label: t('Project Management'), href: '/design-z/services/project-management', desc: t('Oversight & control') }
             ]
         },
@@ -480,7 +480,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             <div className="px-5 pb-5">
                                 <p className="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-3">{t('Categories')}</p>
                                 <div className="flex flex-wrap gap-2">
-                                    {['Commercial', 'Infrastructure', 'Industrial', 'Renovation', 'Government'].map(tag => (
+                                    {['Commercial', 'Infrastructure', 'Industrial', 'Construction', 'Government'].map(tag => (
                                         <span key={tag} className="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-accent-orange hover:text-white transition-all">
                                             {t(tag)}
                                         </span>

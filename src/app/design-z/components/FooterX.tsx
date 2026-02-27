@@ -73,12 +73,11 @@ export default function FooterX() {
                         </h4>
                         <ul className="space-y-4 text-sm text-white/50">
                             {[
-                                { label: t('General Construction'), href: '/design-z/services/general-construction' },
                                 { label: t('Design & Build'), href: '/design-z/services/design-build' },
-                                { label: t('MEP Engineering'), href: '/design-z/services/mep' },
-                                { label: t('Steel Structure'), href: '/design-z/services/steel' },
-                                { label: t('Renovation'), href: '/design-z/services/renovation' },
-                                { label: t('Project Management'), href: '/design-z/services/project-management' }
+                                { label: t('Construction'), href: '/design-z/services/construction' },
+                                { label: t('Project Management'), href: '/design-z/services/project-management' },
+                                { label: t('Infrastructure'), href: '/design-z/services/infrastructure' },
+                                { label: t('MEP Systems'), href: '/design-z/services/systems' }
                             ].map((item, i) => (
                                 <li key={i}>
                                     <Link href={item.href} className="flex items-center gap-2 hover:text-accent-orange transition-all group">

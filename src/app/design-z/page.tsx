@@ -52,15 +52,15 @@ export default function DesignGenX() {
             stat: '100%'
         },
         {
-            title: t('Renovation'),
-            desc: { en: 'Revitalizing existing structures to meet modern standards and aesthetics.', kh: 'ការកែលម្អគម្រោងចាស់ៗឲ្យកាន់តែស្រស់ស្អាត និងស្របតាមស្តង់ដារទំនើប។' },
-            icon: Ruler,
+            title: t('Construction'),
+            desc: { en: 'World-class building and civil engineering solutions for all sectors.', kh: 'ដំណោះស្រាយវិស្វកម្មស៊ីវិល និងសំណង់កម្រិតពិភពលោកសម្រាប់គ្រប់វិស័យ។' },
+            icon: Hammer,
             features: [
-                { en: 'Structural Strengthening', kh: 'ការពង្រឹងរចនាសម្ព័ន្ធ' },
-                { en: 'Facade Upgrades', kh: 'ការកែលម្អមុខអគារ' },
-                { en: 'MEP Retrofitting', kh: 'ការជួសជុលប្រព័ន្ធ MEP' }
+                { en: 'Civil Engineering', kh: 'វិស្វកម្មស៊ីវិល' },
+                { en: 'Building Structure', kh: 'រចនាសម្ព័ន្ធអគារ' },
+                { en: 'MEP Systems', kh: 'ប្រព័ន្ធទឹក ភ្លើង និងម៉ាស៊ីន (MEP)' }
             ],
-            stat: '40+'
+            stat: '150+'
         },
         {
             title: t('Systems'),
