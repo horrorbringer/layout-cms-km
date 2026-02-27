@@ -117,7 +117,7 @@ export default function CareersPage() {
     const [isApplyOpen, setIsApplyOpen] = useState(false);
 
     return (
-        <div className="bg-gray-50 min-h-screen font-sans text-titan-navy relative">
+        <div className="bg-gray-50 min-h-screen text-titan-navy relative">
             {/* --- HERO SECTION --- */}
             <section className="relative h-[80vh] bg-titan-navy flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">

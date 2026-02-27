@@ -22,7 +22,7 @@ export default function GeneralApplicationPage() {
     };
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy relative">
+        <div className="bg-white min-h-screen text-titan-navy relative">
             {/* --- HEADER BACKGROUND SPACER --- */}
             <div className="absolute top-0 left-0 w-full h-32 bg-titan-navy z-0"></div>
 

@@ -80,7 +80,7 @@ export default function DocCollectionPage() {
         : documents.filter(doc => doc.category === activeCategory);
 
     return (
-        <div className="bg-gray-50 min-h-screen font-sans text-titan-navy">
+        <div className="bg-gray-50 min-h-screen text-titan-navy">
             {/* --- HERO --- */}
             <section className="bg-titan-navy pt-40 pb-32 px-6 relative overflow-hidden">
                 <div className="absolute inset-0">

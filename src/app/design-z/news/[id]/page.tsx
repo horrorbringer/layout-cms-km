@@ -20,7 +20,7 @@ export default function NewsDetailPage() {
     const currentRelated = allNews.filter(n => n.id !== article.id).slice(0, 3);
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
 
             {/* --- HERO SECTION (Dark) --- */}
             <div className="relative pt-[140px] pb-32 px-6 bg-[#0B1221] overflow-hidden">

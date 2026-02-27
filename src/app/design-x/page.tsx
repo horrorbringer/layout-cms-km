@@ -7,36 +7,39 @@ import Image from 'next/image';
 import { FadeInWhenVisible } from './_components/Animations';
 import UnifiedHero, { HeroMode } from './_components/UnifiedHero';
 
+import { useLanguage } from './context/LanguageContext';
+
 export default function DesignGenX() {
+    const { t, language, fontClassName } = useLanguage();
     const [heroMode, setHeroMode] = React.useState<HeroMode>('video');
 
     const services = [
         {
-            title: 'Design & Build',
-            desc: 'End-to-end solutions from concept to completion with integrated design and construction.',
+            title: t('Design & Build'),
+            desc: t('Full lifecycle solutions'),
             icon: PenTool,
-            features: ['Conceptual Design', 'Structural Engineering', 'Interior Design'],
+            features: [t('Conceptual Design'), t('Structural Engineering'), t('Interior Design')],
             stat: '50+'
         },
         {
-            title: 'Infrastructure',
-            desc: 'Building the backbone of communities with bridges, roads, and utilities.',
+            title: t('Infrastructure'),
+            desc: t('Building the backbone'),
             icon: Layout,
-            features: ['Roads & Bridges', 'Water Treatment', 'Public Works'],
+            features: [t('Roads & Bridges'), t('Water Treatment'), t('Public Works')],
             stat: '30+'
         },
         {
-            title: 'Project Management',
-            desc: 'Rigorous oversight ensuring on-time, on-budget delivery for every client.',
+            title: t('Project Management'),
+            desc: t('Strategic oversight & control'),
             icon: Users,
-            features: ['Cost Control', 'Quality Assurance', 'Safety Compliance'],
+            features: [t('Cost Control'), t('Quality Assurance'), t('Safety Compliance')],
             stat: '100%'
         },
         {
-            title: 'Renovation',
-            desc: 'Revitalizing existing structures to meet modern standards and aesthetics.',
+            title: t('Renovation'),
+            desc: t('Revitalizing structures'),
             icon: Ruler,
-            features: ['Structural Strengthening', 'Facade Upgrades', 'MEP Retrofitting'],
+            features: [t('Structural Strengthening'), t('Facade Upgrades'), t('MEP Retrofitting')],
             stat: '40+'
         }
     ];
@@ -44,28 +47,28 @@ export default function DesignGenX() {
     const projects = [
         {
             id: 'mef',
-            name: 'Ministry of Economy',
-            loc: 'Phnom Penh',
+            name: t('Ministry of Economy'),
+            loc: t('Phnom Penh'),
             img: '/images/projects/Thumbnail-2.jpg',
-            cat: 'Government',
+            cat: t('Government'),
             year: '2023',
             size: '45,000 sqm'
         },
         {
             id: 'vattanac',
-            name: 'Vattanac Capital Extension',
-            loc: 'Phnom Penh',
+            name: t('Vattanac Capital Extension'),
+            loc: t('Phnom Penh'),
             img: '/images/projects/Thumbnail-2.jpg',
-            cat: 'Commercial',
+            cat: t('Commercial'),
             year: '2023',
             size: '32,000 sqm'
         },
         {
             id: 'kt-wtp',
-            name: 'Khleang Toeuk WTP',
-            loc: 'Phnom Penh',
+            name: t('Khleang Toeuk WTP'),
+            loc: t('Phnom Penh'),
             img: '/images/projects/Thumbnail-1.jpg',
-            cat: 'Infrastructure',
+            cat: t('Infrastructure'),
             year: '2024',
             size: '120,000 sqm'
         },
@@ -73,19 +76,19 @@ export default function DesignGenX() {
 
     const testimonials = [
         {
-            quote: "Kimmex delivered our project on time and exceeded our quality expectations. Their professionalism is unmatched.",
+            quote: t('Home Testimonials Desc'),
             author: "H.E. Minister of Economy",
-            role: "Government Client",
+            role: t('Government Client'),
             rating: 5
         },
         {
-            quote: "Working with Kimmex was a seamless experience. They understood our vision and brought it to life perfectly.",
+            quote: t('Slide 2 Desc'),
             author: "Mr. Chen Wei",
             role: "CEO, Vattanac Group",
             rating: 5
         },
         {
-            quote: "The attention to safety and quality standards sets Kimmex apart from other contractors in Cambodia.",
+            quote: t('Exceeding expectations'),
             author: "Dr. Sarah Johnson",
             role: "World Bank Representative",
             rating: 5
@@ -93,7 +96,7 @@ export default function DesignGenX() {
     ];
 
     return (
-        <>
+        <div className={fontClassName}>
             <UnifiedHero mode={heroMode} onToggle={(mode) => setHeroMode(mode)} />
 
             {/* === WHY CHOOSE US === */}
@@ -102,20 +105,20 @@ export default function DesignGenX() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <FadeInWhenVisible>
                             <div>
-                                <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">Why Choose Kimmex</span>
+                                <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">{t('Why Choose Kimmex')}</span>
                                 <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6 leading-tight">
-                                    Building Excellence Since <span className="text-accent-orange">1999</span>
+                                    {t('Building Excellence Since')} <span className="text-accent-orange">1999</span>
                                 </h2>
                                 <p className="text-titan-navy/60 text-lg mb-8">
-                                    With over 25 years of experience, we have established ourselves as Cambodia&apos;s most trusted construction partner, delivering projects that stand the test of time.
+                                    {t('Experience Desc')}
                                 </p>
 
                                 <div className="grid grid-cols-2 gap-6">
                                     {[
-                                        { icon: ShieldCheck, title: 'Safety First', desc: 'Zero accident policy' },
-                                        { icon: Award, title: 'ISO Certified', desc: '9001:2015 standards' },
-                                        { icon: Clock, title: 'On-Time Delivery', desc: '98% completion rate' },
-                                        { icon: Target, title: 'Quality Focus', desc: 'Exceeding expectations' },
+                                        { icon: ShieldCheck, title: t('Safety First'), desc: t('Zero accident policy') },
+                                        { icon: Award, title: t('ISO Certified'), desc: t('9001:2015 standards') },
+                                        { icon: Clock, title: t('On-Time Delivery'), desc: t('98% completion rate') },
+                                        { icon: Target, title: t('Quality Focus'), desc: t('Exceeding expectations') },
                                     ].map((item, i) => (
                                         <div key={i} className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
                                             <div className="w-12 h-12 bg-accent-orange/10 rounded-lg flex items-center justify-center shrink-0">
@@ -130,7 +133,7 @@ export default function DesignGenX() {
                                 </div>
 
                                 <Link href="/design-x/about" className="inline-flex items-center gap-2 mt-8 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
-                                    Learn More About Us <ArrowRight size={16} />
+                                    {t('Learn More About Us')} <ArrowRight size={16} />
                                 </Link>
                             </div>
                         </FadeInWhenVisible>
@@ -141,7 +144,7 @@ export default function DesignGenX() {
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg">
                                         <Image
                                             src="/images/projects/Thumbnail-4.jpg"
-                                            alt="Construction Site"
+                                            alt={t('Construction Site')}
                                             fill
                                             className="object-cover"
                                             sizes="(max-width: 768px) 100vw, 25vw"
@@ -150,7 +153,7 @@ export default function DesignGenX() {
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg mt-8">
                                         <Image
                                             src="/images/projects/Thumbnail-5.jpg"
-                                            alt="Team Meeting"
+                                            alt={t('Team Meeting')}
                                             fill
                                             className="object-cover"
                                             sizes="(max-width: 768px) 100vw, 25vw"
@@ -159,7 +162,7 @@ export default function DesignGenX() {
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg -mt-8">
                                         <Image
                                             src="/images/projects/Thumbnail-6.jpg"
-                                            alt="Architecture"
+                                            alt={t('Architecture')}
                                             fill
                                             className="object-cover"
                                             sizes="(max-width: 768px) 100vw, 25vw"
@@ -168,7 +171,7 @@ export default function DesignGenX() {
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg">
                                         <Image
                                             src="/images/projects/Thumbnail-7.jpg"
-                                            alt="Building"
+                                            alt={t('Building')}
                                             fill
                                             className="object-cover"
                                             sizes="(max-width: 768px) 100vw, 25vw"
@@ -177,9 +180,9 @@ export default function DesignGenX() {
                                 </div>
 
                                 {/* Experience Badge */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent-orange text-white p-6 rounded-2xl shadow-xl text-center z-10">
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent-orange text-white p-6 rounded-2xl shadow-xl text-center z-10 min-w-32">
                                     <div className="text-5xl font-black">25+</div>
-                                    <div className="text-sm uppercase tracking-widest mt-1">Years of Excellence</div>
+                                    <div className="text-sm uppercase tracking-widest mt-1">{t('Years of Excellence')}</div>
                                 </div>
                             </div>
                         </FadeInWhenVisible>
@@ -192,9 +195,9 @@ export default function DesignGenX() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <FadeInWhenVisible>
                         <div className="text-center max-w-2xl mx-auto mb-16">
-                            <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">Our Services</span>
-                            <h2 className="text-4xl font-black text-titan-navy mb-4">Comprehensive Construction Solutions</h2>
-                            <p className="text-titan-navy/50 text-lg">From design to completion, we offer end-to-end construction services tailored to your needs.</p>
+                            <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">{t('Our Services')}</span>
+                            <h2 className="text-4xl font-black text-titan-navy mb-4">{t('Comprehensive Construction Solutions')}</h2>
+                            <p className="text-titan-navy/50 text-lg">{t('From design to completion')}</p>
                         </div>
                     </FadeInWhenVisible>
 
@@ -227,7 +230,7 @@ export default function DesignGenX() {
                     <FadeInWhenVisible>
                         <div className="text-center mt-12">
                             <Link href="/design-x/services" className="inline-flex items-center gap-2 bg-titan-navy text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-accent-orange transition-all rounded-lg">
-                                View All Services <ArrowRight size={16} />
+                                {t('View All Services')} <ArrowRight size={16} />
                             </Link>
                         </div>
                     </FadeInWhenVisible>
@@ -239,9 +242,9 @@ export default function DesignGenX() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <FadeInWhenVisible>
                         <div className="text-center max-w-2xl mx-auto mb-16">
-                            <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">Our Process</span>
-                            <h2 className="text-4xl font-black text-white mb-4">How We Work</h2>
-                            <p className="text-white/50 text-lg">A streamlined approach ensuring quality, efficiency, and transparency at every stage.</p>
+                            <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">{t('Our Process')}</span>
+                            <h2 className="text-4xl font-black text-white mb-4">{t('How We Work')}</h2>
+                            <p className="text-white/50 text-lg">{t('A streamlined approach')}</p>
                         </div>
                     </FadeInWhenVisible>
 
@@ -250,10 +253,10 @@ export default function DesignGenX() {
                         <div className="hidden md:block absolute top-16 left-[12%] right-[12%] h-[2px] bg-accent-orange/30 z-0"></div>
 
                         {[
-                            { step: '01', title: 'Consultation', desc: 'Understanding your vision and requirements', icon: Target },
-                            { step: '02', title: 'Planning', desc: 'Detailed blueprints and project timeline', icon: PenTool },
-                            { step: '03', title: 'Construction', desc: 'Expert execution with safety first', icon: Hammer },
-                            { step: '04', title: 'Handover', desc: 'Quality inspection and delivery', icon: Trophy }
+                            { step: '01', title: t('Consultation'), desc: t('Consultation Desc'), icon: Target },
+                            { step: '02', title: t('Planning'), desc: t('Planning Desc'), icon: PenTool },
+                            { step: '03', title: t('Construction'), desc: t('Construction Desc'), icon: Hammer },
+                            { step: '04', title: t('Handover'), desc: t('Handover Desc'), icon: Trophy }
                         ].map((s, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
                                 <div className="relative z-10 flex flex-col items-center text-center group">
@@ -276,11 +279,11 @@ export default function DesignGenX() {
                     <FadeInWhenVisible>
                         <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                             <div>
-                                <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">Our Portfolio</span>
-                                <h2 className="text-4xl font-black text-titan-navy">Featured Projects</h2>
+                                <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">{t('Our Portfolio')}</span>
+                                <h2 className="text-4xl font-black text-titan-navy">{t('Featured Projects')}</h2>
                             </div>
                             <Link href="/design-x/projects" className="mt-6 md:mt-0 inline-flex items-center gap-2 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
-                                View All Projects <ArrowRight size={16} />
+                                {t('View All Projects')} <ArrowRight size={16} />
                             </Link>
                         </div>
                     </FadeInWhenVisible>
@@ -332,30 +335,30 @@ export default function DesignGenX() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <FadeInWhenVisible>
                         <div className="text-center max-w-2xl mx-auto mb-16">
-                            <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">Testimonials</span>
-                            <h2 className="text-4xl font-black text-titan-navy mb-4">What Our Clients Say</h2>
-                            <p className="text-titan-navy/50 text-lg">Trusted by government ministries, international organizations, and leading corporations.</p>
+                            <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">{t('Testimonials')}</span>
+                            <h2 className="text-4xl font-black text-titan-navy mb-4">{t('What Our Clients Say')}</h2>
+                            <p className="text-titan-navy/50 text-lg">{t('Home Testimonials Desc')}</p>
                         </div>
                     </FadeInWhenVisible>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {testimonials.map((t, i) => (
+                        {testimonials.map((t_item, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
                                 <div className="bg-gray-50 p-8 rounded-2xl relative h-full flex flex-col">
                                     <Quote className="text-accent-orange/20 absolute top-6 right-6" size={48} />
                                     <div className="flex gap-1 mb-4">
-                                        {[...Array(t.rating)].map((_, idx) => (
+                                        {[...Array(t_item.rating)].map((_, idx) => (
                                             <Star key={idx} className="text-accent-orange fill-accent-orange" size={18} />
                                         ))}
                                     </div>
-                                    <p className="text-titan-navy/70 mb-6 relative z-10 leading-relaxed flex-grow">&ldquo;{t.quote}&rdquo;</p>
+                                    <p className="text-titan-navy/70 mb-6 relative z-10 leading-relaxed flex-grow">&ldquo;{t_item.quote}&rdquo;</p>
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 bg-titan-navy rounded-full flex items-center justify-center text-white font-bold shrink-0">
-                                            {t.author.charAt(0)}
+                                            {t_item.author.charAt(0)}
                                         </div>
                                         <div>
-                                            <div className="font-bold text-titan-navy">{t.author}</div>
-                                            <div className="text-sm text-titan-navy/50">{t.role}</div>
+                                            <div className="font-bold text-titan-navy">{t_item.author}</div>
+                                            <div className="text-sm text-titan-navy/50">{t_item.role}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -371,20 +374,20 @@ export default function DesignGenX() {
                     <FadeInWhenVisible>
                         <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                             <div>
-                                <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">News & Updates</span>
-                                <h2 className="text-4xl font-black text-titan-navy">Latest Insights</h2>
+                                <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">{t('News & Updates')}</span>
+                                <h2 className="text-4xl font-black text-titan-navy">{t('Latest Insights')}</h2>
                             </div>
                             <Link href="/design-x/news" className="mt-6 md:mt-0 inline-flex items-center gap-2 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
-                                View All News <ArrowRight size={16} />
+                                {t('View All News')} <ArrowRight size={16} />
                             </Link>
                         </div>
                     </FadeInWhenVisible>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
-                            { title: 'Kimmex Awarded New Government Contract', date: 'Jan 15, 2026', cat: 'Corporate', img: '/images/projects/Thumbnail-8.jpg' },
-                            { title: 'Sustainability Goals 2030 Achieved Early', date: 'Dec 20, 2025', cat: 'Environment', img: '/images/projects/Thumbnail-9.jpg' },
-                            { title: 'Annual Charity Gala for Education', date: 'Nov 10, 2025', cat: 'CSR', img: '/images/projects/Thumbnail.jpg' }
+                            { title: t('Kimmex Awarded New Government Contract'), date: 'Jan 15, 2026', cat: t('Corporate'), img: '/images/projects/Thumbnail-8.jpg' },
+                            { title: t('Sustainability Goals 2030 Achieved Early'), date: 'Dec 20, 2025', cat: t('Environment'), img: '/images/projects/Thumbnail-9.jpg' },
+                            { title: t('Annual Charity Gala for Education'), date: 'Nov 10, 2025', cat: t('CSR'), img: '/images/projects/Thumbnail.jpg' }
                         ].map((news, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
                                 <div className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
@@ -404,7 +407,7 @@ export default function DesignGenX() {
                                         </div>
                                         <h3 className="text-xl font-bold text-titan-navy group-hover:text-accent-orange transition-colors leading-tight mb-4">{news.title}</h3>
                                         <span className="text-sm font-bold text-accent-orange flex items-center gap-2 mt-auto">
-                                            Read More <ArrowRight size={14} />
+                                            {t('Read More')} <ArrowRight size={14} />
                                         </span>
                                     </div>
                                 </div>
@@ -420,15 +423,15 @@ export default function DesignGenX() {
                     <FadeInWhenVisible>
                         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
                             <div className="text-center lg:text-left">
-                                <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Ready to Start Your Project?</h2>
-                                <p className="text-white/80 text-lg max-w-xl">Contact us today for a free consultation and let&apos;s build something extraordinary together.</p>
+                                <h2 className="text-4xl md:text-5xl font-black text-white mb-4">{t('Ready to Start Your Project?')}</h2>
+                                <p className="text-white/80 text-lg max-w-xl">{t('Home CTA Desc')}</p>
                             </div>
                             <div className="flex flex-wrap gap-4">
                                 <Link href="/design-x/contact" className="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg flex items-center gap-2">
-                                    Get Free Quote <ArrowRight size={16} />
+                                    {t('Get Free Quote')} <ArrowRight size={16} />
                                 </Link>
                                 <a href="tel:+85523999999" className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-titan-navy transition-all rounded-lg flex items-center gap-2">
-                                    <Phone size={16} /> Call Now
+                                    <Phone size={16} /> {t('Call Now')}
                                 </a>
                             </div>
                         </div>
@@ -441,19 +444,19 @@ export default function DesignGenX() {
                 <div className="max-w-[1400px] mx-auto px-6 mb-12">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                         <div>
-                            <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-2 block">Our Partners</span>
+                            <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-2 block">{t('Our Partners')}</span>
                             <h2 className="text-3xl md:text-4xl font-black text-white">
-                                Trusted By Leading Institutions
+                                {t('Trusted By Leading Institutions')}
                             </h2>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-center px-6 py-3 bg-white/10 rounded-lg">
                                 <div className="text-2xl font-black text-accent-orange">50+</div>
-                                <div className="text-[10px] uppercase tracking-widest text-white/60 font-bold">Partners</div>
+                                <div className="text-[10px] uppercase tracking-widest text-white/60 font-bold">{t('Partners')}</div>
                             </div>
                             <div className="text-center px-6 py-3 bg-white/10 rounded-lg">
                                 <div className="text-2xl font-black text-accent-orange">25+</div>
-                                <div className="text-[10px] uppercase tracking-widest text-white/60 font-bold">Years Trust</div>
+                                <div className="text-[10px] uppercase tracking-widest text-white/60 font-bold">{t('Years Trust')}</div>
                             </div>
                         </div>
                     </div>
@@ -507,6 +510,9 @@ export default function DesignGenX() {
                     </div>
                 </div>
             </section>
-        </>
+            <div className={`mt-12 text-center text-gray-400 text-xs font-bold uppercase tracking-widest ${language === 'kh' ? 'font-siemreap' : ''}`}>
+                {t('© 2026 Kimmex Construction • Internal Development Build')}
+            </div>
+        </div>
     );
 }

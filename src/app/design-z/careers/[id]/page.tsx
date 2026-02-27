@@ -59,8 +59,9 @@ export default function CareerDetailPage() {
                                 </h1>
                                 <div className="flex flex-wrap gap-4 text-sm font-bold uppercase tracking-wide text-white/90">
                                     <span className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg border border-white/10 backdrop-blur-sm"><Briefcase size={16} className="text-titan-red" /> {t(job.dept)}</span>
-                                    <span className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg border border-white/10 backdrop-blur-sm"><MapPin size={16} className="text-titan-red" /> {t(job.loc)}</span>
-                                    <span className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg border border-white/10 backdrop-blur-sm"><Clock size={16} className="text-titan-red" /> {t(job.type)}</span>
+                                    <span className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg border border-white/10 backdrop-blur-sm"><MapPin size={16} className="text-titan-red" /> {getLocalizedText(job.loc, language)}</span>
+                                    <span className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg border border-white/10 backdrop-blur-sm"><Clock size={16} className="text-titan-red" /> {getLocalizedText(job.type, language)}</span>
+
                                 </div>
                             </div>
 

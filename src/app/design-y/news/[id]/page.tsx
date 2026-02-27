@@ -90,7 +90,7 @@ export default function NewsDetailPage() {
     const currentRelated = relatedNews.filter(n => n.id !== article.id);
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
 
             {/* --- ARTICLE HEADER --- */}
             <div className="bg-white pt-42 pb-8 px-6 md:px-12 max-w-[1000px] mx-auto">

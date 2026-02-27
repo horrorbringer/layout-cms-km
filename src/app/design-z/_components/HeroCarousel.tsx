@@ -8,7 +8,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, Phone } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function HeroCarousel() {
-    const { t, language } = useLanguage();
+    const { t, language, fontClassName } = useLanguage();
 
     const slides = [
         {
@@ -100,7 +100,7 @@ export default function HeroCarousel() {
     };
 
     return (
-        <header className="relative h-screen min-h-[700px] overflow-hidden bg-titan-navy text-white">
+        <header className={`relative h-screen min-h-[700px] overflow-hidden bg-titan-navy text-white ${fontClassName}`}>
             <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                     key={current}
@@ -147,8 +147,8 @@ export default function HeroCarousel() {
                             <motion.h1
                                 variants={contentVariants}
                                 className={`font-black mb-6 ${language === 'kh'
-                                        ? 'text-4xl md:text-6xl leading-[1.3] tracking-normal'
-                                        : 'text-5xl md:text-7xl leading-[1.1] tracking-tight'
+                                    ? 'text-4xl md:text-6xl leading-[1.3] tracking-normal'
+                                    : 'text-5xl md:text-7xl leading-[1.1] tracking-tight'
                                     }`}
                             >
                                 {slides[current].title}

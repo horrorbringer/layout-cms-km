@@ -35,7 +35,7 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
     const focusAreas = [t('Strategic Planning'), t('Operational Excellence'), t('Team Development'), t('Sustainability')];
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
             {/* === PROFESSIONAL HERO SECTION === */}
             <div className="relative bg-titan-navy min-h-[500px] flex flex-col justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>

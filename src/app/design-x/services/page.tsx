@@ -89,7 +89,7 @@ export default function ServicesPage() {
     ];
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
 
             {/* === HERO SECTION === */}
             <section ref={heroRef} className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-titan-navy">

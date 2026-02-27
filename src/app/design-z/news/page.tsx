@@ -59,7 +59,7 @@ export default function NewsPage() {
     const gridNews = filteredNews.filter(n => n.id !== activeFeaturedNews.id);
 
     return (
-        <div className="bg-gray-50/50 min-h-screen font-sans text-titan-navy pb-24">
+        <div className="bg-gray-50/50 min-h-screen text-titan-navy pb-24">
 
             {/* --- HERO BANNER (Top) --- */}
             <div className="relative pt-[120px] pb-20 px-6 bg-[#0B1221] border-b border-white/10 overflow-hidden">

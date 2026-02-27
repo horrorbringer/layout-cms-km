@@ -1,14 +1,26 @@
 'use client';
 
 import React, { createContext, useContext, useState } from 'react';
-import { Siemreap } from 'next/font/google';
+import { Siemreap, Koulen, Battambang } from 'next/font/google';
+import { configData } from '../data/configData';
 
-// Configure Khmer Font
-const khmerFont = Siemreap({
+// Configure Khmer Fonts
+const siemreap = Siemreap({
     weight: '400',
     subsets: ['khmer'],
     display: 'swap',
-    variable: '--font-siemreap',
+});
+
+const koulen = Koulen({
+    weight: '400',
+    subsets: ['khmer'],
+    display: 'swap',
+});
+
+const battambang = Battambang({
+    weight: ['400', '700'],
+    subsets: ['khmer'],
+    display: 'swap',
 });
 
 export type Language = 'en' | 'kh';
@@ -31,7 +43,6 @@ const dictionary: Translations = {
     'Design & Build': { en: 'Design & Build', kh: 'រចនា & សាងសង់' },
     'Infrastructure': { en: 'Infrastructure', kh: 'ហេដ្ឋារចនាសម្ព័ន្ធ' },
     'Project Management': { en: 'Project Management', kh: 'គ្រប់គ្រងគម្រោង' },
-    'Renovation': { en: 'Renovation', kh: 'ការកែលម្អ' },
     'Systems': { en: 'Systems', kh: 'ប្រព័ន្ធបច្ចេកទេស' },
     'Projects': { en: 'Projects', kh: 'គម្រោង' },
     'Done Projects': { en: 'Completed Projects', kh: 'គម្រោងបានបញ្ចប់' },
@@ -111,6 +122,9 @@ const dictionary: Translations = {
     'Terms of Service': { en: 'Terms of Service', kh: 'លក្ខខណ្ឌប្រើប្រាស់' },
     'All rights reserved': { en: 'All rights reserved', kh: 'រក្សាសិទ្ធិគ្រប់យ៉ាង' },
     'Phnom Penh, Cambodia': { en: 'Phnom Penh, Cambodia', kh: 'ភ្នំពេញ, កម្ពុជា' },
+    'Cinematic': { en: 'Cinematic', kh: 'ភាពយន្ត' },
+    'Gallery': { en: 'Gallery', kh: 'វិចិត្រសាល' },
+    'Construction & Investment': { en: 'Construction & Investment', kh: 'សំណង់ & វិនិយោគ' },
     'Footer Desc': {
         en: 'Engineering the future of Cambodia since 1999. Delivering excellence in high-rise, infrastructure, and industrial construction with unwavering commitment to quality and safety.',
         kh: 'កសាងអនាគតរបស់កម្ពុជាតាំងពីឆ្នាំ ១៩៩៩។ ផ្តល់ជូននូវឧត្តមភាពក្នុងការសាងសង់អគារខ្ពស់ ហេដ្ឋារចនាសម្ព័ន្ធ និងឧស្សាហកម្ម ដោយមានការប្តេជ្ញាចិត្តខ្ពស់ចំពោះគុណភាព និងសុវត្ថិភាព។'
@@ -514,7 +528,18 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         return dictionary[lookupKey]?.[language] || key;
     };
 
-    const fontClassName = language === 'kh' ? khmerFont.className : 'font-sans';
+    const getFontClassName = () => {
+        if (language !== 'kh') return 'font-sans';
+
+        switch (configData.khmerFont) {
+            case 'Koulen': return koulen.className;
+            case 'Battambang': return battambang.className;
+            case 'Siemreap':
+            default: return siemreap.className;
+        }
+    };
+
+    const fontClassName = getFontClassName();
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage, t, fontClassName }}>

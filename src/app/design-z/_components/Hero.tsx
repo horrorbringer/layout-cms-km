@@ -126,7 +126,7 @@ export default function Hero() {
                                     <span className="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-none mb-3">{t('Featured Project')}</span>
                                     <h3 className="text-white text-3xl font-bold">{t('Ministry of Economy')}</h3>
                                     <p className="text-white/60 text-sm mt-2 flex items-center gap-2">
-                                        <MapPin size={14} /> {language === 'kh' ? 'ភ្នំពេញ, ប្រទេសកម្ពុជា' : 'Phnom Penh, Cambodia'}
+                                        <MapPin size={14} /> {t('Phnom Penh, Cambodia')}
                                     </p>
                                 </div>
                             </div>

@@ -75,7 +75,7 @@ export default function ProjectListingPage({
     });
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy relative overflow-hidden ">
+        <div className="bg-white min-h-screen text-titan-navy relative overflow-hidden ">
 
             {/* --- HERO SECTION --- */}
             <section className="relative h-[60vh] bg-titan-navy flex items-center justify-center overflow-hidden ">

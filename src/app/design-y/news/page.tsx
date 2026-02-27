@@ -75,7 +75,7 @@ const headlines = [
 
 export default function NewsPage() {
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
 
             {/* --- HEADER --- */}
             <div className="bg-titan-bg/50 pt-42 pb-12 border-b border-titan-navy/10">

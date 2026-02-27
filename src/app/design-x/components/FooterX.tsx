@@ -77,7 +77,7 @@ export default function FooterX() {
                                 { label: t('Design & Build'), href: '/design-x/services/design-build' },
                                 { label: t('MEP Engineering'), href: '/design-x/services/mep-engineering' },
                                 { label: t('Steel Structure'), href: '/design-x/services/steel-structure' },
-                                { label: t('Renovation'), href: '/design-x/services/renovation' },
+                                { label: t('Construction'), href: '/design-x/services/construction' },
                                 { label: t('Project Management'), href: '/design-x/services/project-management' }
                             ].map((item, i) => (
                                 <li key={i}>

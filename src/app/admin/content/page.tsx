@@ -33,34 +33,35 @@ import { contactData } from '@/app/design-z/data/contactData';
 import { homeData } from '@/app/design-z/data/homeData';
 import { jobData } from '@/app/design-z/data/jobData';
 import ServiceDetailEditor from './components/ServiceDetailEditor';
+import { LocalizedString } from '@/app/design-z/context/LanguageContext';
 
 // --- TYPES ---
 interface ProcessStep {
     id: string;
     step: string;
-    title: string;
-    desc: string;
+    title: LocalizedString;
+    desc: LocalizedString;
 }
 
 interface ValueItem {
     id: string;
-    title: string;
-    content: string;
+    title: LocalizedString;
+    content: LocalizedString;
 }
 
 interface Job {
     id: string;
-    title: string;
-    loc: string;
-    type: string;
-    date: string;
+    title: LocalizedString;
+    loc: LocalizedString;
+    type: LocalizedString;
+    date: LocalizedString;
 }
 
 interface Testimonial {
     id: string;
-    author: string;
-    quote: string;
-    role: string;
+    author: LocalizedString;
+    quote: LocalizedString;
+    role: LocalizedString;
 }
 
 interface ServiceFeatureItem {
@@ -70,8 +71,8 @@ interface ServiceFeatureItem {
 
 interface ServiceItem {
     id: string;
-    title: string;
-    desc: string;
+    title: LocalizedString;
+    desc: LocalizedString;
     image: string;
     features: ServiceFeatureItem[];
 }
@@ -79,14 +80,20 @@ interface ServiceItem {
 interface ProcessItem {
     id: string;
     step: string;
-    title: string;
-    desc: string;
+    title: LocalizedString;
+    desc: LocalizedString;
 }
 
 interface SectorItem {
     id: string;
-    title: string;
+    title: LocalizedString;
     image: string;
+}
+
+interface StatItem {
+    label: LocalizedString;
+    val: LocalizedString;
+    iconName: string;
 }
 
 interface ServiceDetail extends ServiceDetailType { }
@@ -95,18 +102,19 @@ function AdminContentEditor() {
     const searchParams = useSearchParams();
     const sectionParam = searchParams.get('section') || 'home';
     const [activeSection, setActiveSection] = useState(sectionParam);
+    const [editLang, setEditLang] = useState<'en' | 'kh'>('en');
     const [isSaving, setIsSaving] = useState(false);
 
     // --- STATE FOR CONTENT ---
-    const [homeHero, setHomeHero] = useState({
-        title: typeof homeData.hero.title === 'string' ? homeData.hero.title : (homeData.hero.title.en || ''),
-        subtitle: typeof homeData.hero.subtitle === 'string' ? homeData.hero.subtitle : (homeData.hero.subtitle.en || '')
-    });
+    const [homeHero, setHomeHero] = useState(() => ({
+        title: typeof homeData.hero.title === 'string' ? { en: homeData.hero.title, kh: homeData.hero.title } : homeData.hero.title,
+        subtitle: typeof homeData.hero.subtitle === 'string' ? { en: homeData.hero.subtitle, kh: homeData.hero.subtitle } : homeData.hero.subtitle
+    }));
 
-    const [stats, setStats] = useState(() =>
+    const [stats, setStats] = useState<StatItem[]>(() =>
         homeData.stats.map(s => ({
-            label: typeof s.label === 'string' ? s.label : (s.label.en || ''),
-            val: typeof s.val === 'string' ? s.val : (s.val.en || ''),
+            label: typeof s.label === 'string' ? { en: s.label, kh: s.label } : s.label,
+            val: typeof s.val === 'string' ? { en: s.val, kh: s.val } : s.val,
             iconName: s.iconName
         }))
     );
@@ -115,30 +123,30 @@ function AdminContentEditor() {
         homeData.process.map(p => ({
             id: p.id,
             step: p.step,
-            title: typeof p.title === 'string' ? p.title : (p.title.en || ''),
-            desc: typeof p.desc === 'string' ? p.desc : (p.desc.en || '')
+            title: typeof p.title === 'string' ? { en: p.title, kh: p.title } : p.title,
+            desc: typeof p.desc === 'string' ? { en: p.desc, kh: p.desc } : p.desc
         }))
     );
 
-    const [aboutStory, setAboutStory] = useState(() => {
+    const [aboutStory, setAboutStory] = useState<LocalizedString>(() => {
         const story = aboutData.story;
-        if (typeof story === 'string') return story;
-        return story.en || '';
+        if (typeof story === 'string') return { en: story, kh: story };
+        return story;
     });
 
     const [values, setValues] = useState<ValueItem[]>(() => {
         return aboutData.values.map(v => ({
             id: v.id,
-            title: typeof v.title === 'string' ? v.title : (v.title.en || ''),
-            content: typeof v.content === 'string' ? v.content : (v.content.en || '')
+            title: typeof v.title === 'string' ? { en: v.title, kh: v.title } : v.title,
+            content: typeof v.content === 'string' ? { en: v.content, kh: v.content } : v.content
         }));
     });
 
     const [services, setServices] = useState<ServiceItem[]>(() =>
         serviceData.services.map(s => ({
             id: s.id,
-            title: typeof s.title === 'string' ? s.title : (s.title.en || ''),
-            desc: typeof s.desc === 'string' ? s.desc : (s.desc.en || ''),
+            title: typeof s.title === 'string' ? { en: s.title, kh: s.title } : s.title,
+            desc: typeof s.desc === 'string' ? { en: s.desc, kh: s.desc } : s.desc,
             image: s.image,
             features: s.features.map((f: any) => ({ en: f.en || f, kh: f.kh || f.en || f }))
         }))
@@ -148,15 +156,15 @@ function AdminContentEditor() {
         serviceData.process.map(p => ({
             id: p.id,
             step: p.step,
-            title: typeof p.title === 'string' ? p.title : (p.title.en || ''),
-            desc: typeof p.desc === 'string' ? p.desc : (p.desc.en || '')
+            title: typeof p.title === 'string' ? { en: p.title, kh: p.title } : p.title,
+            desc: typeof p.desc === 'string' ? { en: p.desc, kh: p.desc } : p.desc
         }))
     );
 
     const [sectors, setSectors] = useState<SectorItem[]>(() =>
         serviceData.sectors.map(s => ({
             id: s.id,
-            title: typeof s.title === 'string' ? s.title : (s.title.en || ''),
+            title: typeof s.title === 'string' ? { en: s.title, kh: s.title } : s.title,
             image: s.image
         }))
     );
@@ -167,19 +175,19 @@ function AdminContentEditor() {
     const [jobs, setJobs] = useState<Job[]>(() =>
         jobData.map(j => ({
             id: j.id,
-            title: typeof j.title === 'string' ? j.title : (j.title.en || ''),
-            loc: j.loc,
-            type: j.type,
-            date: typeof j.postedDate === 'string' ? j.postedDate : (j.postedDate.en || '')
+            title: typeof j.title === 'string' ? { en: j.title, kh: j.title } : j.title,
+            loc: typeof j.loc === 'string' ? { en: j.loc, kh: j.loc } : j.loc,
+            type: typeof j.type === 'string' ? { en: j.type, kh: j.type } : j.type,
+            date: typeof j.postedDate === 'string' ? { en: j.postedDate, kh: j.postedDate } : j.postedDate
         }))
     );
 
     const [testimonials, setTestimonials] = useState<Testimonial[]>(() =>
         homeData.testimonials.map(t => ({
             id: t.id,
-            author: typeof t.author === 'string' ? t.author : (t.author.en || ''),
-            quote: typeof t.quote === 'string' ? t.quote : (t.quote.en || ''),
-            role: typeof t.role === 'string' ? t.role : (t.role.en || '')
+            author: typeof t.author === 'string' ? { en: t.author, kh: t.author } : t.author,
+            quote: typeof t.quote === 'string' ? { en: t.quote, kh: t.quote } : t.quote,
+            role: typeof t.role === 'string' ? { en: t.role, kh: t.role } : t.role
         }))
     );
 
@@ -218,24 +226,8 @@ function AdminContentEditor() {
         try {
             if (activeSection === 'about') {
                 const updatedAboutData = {
-                    story: {
-                        en: aboutStory,
-                        kh: (typeof aboutData.story !== 'string' ? aboutData.story.kh : aboutStory) || aboutStory
-                    },
-                    values: values.map(v => {
-                        const originalValue = aboutData.values.find(ov => ov.id === v.id);
-                        return {
-                            id: v.id,
-                            title: {
-                                en: v.title,
-                                kh: (originalValue && typeof originalValue.title !== 'string' ? originalValue.title.kh : v.title) || v.title
-                            },
-                            content: {
-                                en: v.content,
-                                kh: (originalValue && typeof originalValue.content !== 'string' ? originalValue.content.kh : v.content) || v.content
-                            }
-                        };
-                    })
+                    story: aboutStory,
+                    values: values
                 };
 
                 const response = await fetch('/api/cms/save', {
@@ -249,33 +241,9 @@ function AdminContentEditor() {
 
             if (activeSection === 'services') {
                 const updatedServiceData = {
-                    services: services.map(s => {
-                        const orig = serviceData.services.find(o => o.id === s.id);
-                        return {
-                            id: s.id,
-                            title: { en: s.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : s.title) || s.title },
-                            desc: { en: s.desc, kh: (orig && typeof orig.desc !== 'string' ? orig.desc.kh : s.desc) || s.desc },
-                            image: s.image,
-                            features: s.features
-                        };
-                    }),
-                    process: processStepsService.map(p => {
-                        const orig = serviceData.process.find(o => o.id === p.id);
-                        return {
-                            id: p.id,
-                            step: p.step,
-                            title: { en: p.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : p.title) || p.title },
-                            desc: { en: p.desc, kh: (orig && typeof orig.desc !== 'string' ? orig.desc.kh : p.desc) || p.desc }
-                        };
-                    }),
-                    sectors: sectors.map(s => {
-                        const orig = serviceData.sectors.find(o => o.id === s.id);
-                        return {
-                            id: s.id,
-                            title: { en: s.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : s.title) || s.title },
-                            image: s.image
-                        };
-                    })
+                    services,
+                    process: processStepsService,
+                    sectors
                 };
 
                 const res1 = await fetch('/api/cms/save', {
@@ -295,38 +263,10 @@ function AdminContentEditor() {
 
             if (activeSection === 'home') {
                 const updatedHomeData = {
-                    hero: {
-                        title: { en: homeHero.title, kh: (typeof homeData.hero.title !== 'string' ? homeData.hero.title.kh : homeHero.title) || homeHero.title },
-                        subtitle: { en: homeHero.subtitle, kh: (typeof homeData.hero.subtitle !== 'string' ? homeData.hero.subtitle.kh : homeHero.subtitle) || homeHero.subtitle }
-                    },
-                    stats: stats.map((s, i) => {
-                        const orig = homeData.stats[i];
-                        return {
-                            label: { en: s.label, kh: (orig && typeof orig.label !== 'string' ? orig.label.kh : s.label) || s.label },
-                            val: { en: s.val, kh: (orig && typeof orig.val !== 'string' ? orig.val.kh : s.val) || s.val },
-                            iconName: s.iconName
-                        };
-                    }),
-                    process: processSteps.map((p, i) => {
-                        const orig = homeData.process[i];
-                        return {
-                            id: p.id,
-                            step: p.step,
-                            title: { en: p.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : p.title) || p.title },
-                            desc: { en: p.desc, kh: (orig && typeof orig.desc !== 'string' ? orig.desc.kh : p.desc) || p.desc },
-                            iconName: (orig && (orig as any).iconName) || 'Circle'
-                        };
-                    }),
-                    testimonials: testimonials.map((t, i) => {
-                        const orig = homeData.testimonials.find(ot => ot.id === t.id);
-                        return {
-                            id: t.id,
-                            quote: { en: t.quote, kh: (orig && typeof orig.quote !== 'string' ? orig.quote.kh : t.quote) || t.quote },
-                            author: { en: t.author, kh: (orig && typeof orig.author !== 'string' ? orig.author.kh : t.author) || t.author },
-                            role: { en: t.role, kh: (orig && typeof orig.role !== 'string' ? orig.role.kh : t.role) || t.role },
-                            rating: (orig && orig.rating) || 5
-                        };
-                    })
+                    hero: homeHero,
+                    stats: stats,
+                    process: processSteps,
+                    testimonials: testimonials
                 };
 
                 const response = await fetch('/api/cms/save', {
@@ -335,22 +275,19 @@ function AdminContentEditor() {
                     body: JSON.stringify({ fileName: 'homeData.ts', data: updatedHomeData })
                 });
 
-                if (!response.ok) throw new Error('Failed to save home content');
+                if (!response.ok) throw new Error('Failed to save content');
             }
 
             if (activeSection === 'careers') {
-                const updatedJobData = jobs.map((j) => {
+                const updatedJobData = jobs.map(j => {
                     const orig = jobData.find(oj => oj.id === j.id);
                     return {
+                        ...orig,
                         id: j.id,
-                        title: { en: j.title, kh: (orig && typeof orig.title !== 'string' ? orig.title.kh : j.title) || j.title },
-                        dept: (orig && orig.dept) || 'General',
+                        title: j.title,
                         loc: j.loc,
                         type: j.type,
-                        tags: (orig && orig.tags) || [{ en: 'Career', kh: 'អាជីព' }],
-                        salary: (orig && orig.salary) || '$1,000 - $2,000',
-                        experience: (orig && orig.experience) || '2+ Years',
-                        postedDate: { en: j.date, kh: (orig && typeof orig.postedDate !== 'string' ? orig.postedDate.kh : j.date) || j.date }
+                        postedDate: j.date
                     };
                 });
 
@@ -360,11 +297,12 @@ function AdminContentEditor() {
                     body: JSON.stringify({ fileName: 'jobData.ts', data: updatedJobData })
                 });
 
-                if (!response.ok) throw new Error('Failed to save job content');
+                if (!response.ok) throw new Error('Failed to save content');
             }
 
             if (activeSection === 'contact') {
                 const updatedContactData = {
+                    ...contactData,
                     address: contact.address,
                     phone: contact.phone.split(',').map(p => p.trim()),
                     email: contact.email.split(',').map(e => e.trim()),
@@ -396,8 +334,8 @@ function AdminContentEditor() {
         setProcessSteps([...processSteps, {
             id: Date.now().toString(),
             step: nextStep,
-            title: 'New Process Step',
-            desc: 'Step description'
+            title: { en: 'New Process Step', kh: 'ជំហានថ្មី' },
+            desc: { en: 'Step description', kh: 'ការពិពណ៌នា' }
         }]);
     };
 
@@ -406,7 +344,7 @@ function AdminContentEditor() {
     };
 
     const addValue = () => {
-        setValues([...values, { id: Date.now().toString(), title: 'New Value', content: 'Value content' }]);
+        setValues([...values, { id: Date.now().toString(), title: { en: 'New Value', kh: 'គុណតម្លៃថ្មី' }, content: { en: 'Value content', kh: 'មាតិកា' } }]);
     };
 
     const deleteValue = (id: string) => {
@@ -414,7 +352,13 @@ function AdminContentEditor() {
     };
 
     const addJob = () => {
-        setJobs([...jobs, { id: Date.now().toString(), title: 'Open Position', loc: 'Phnom Penh', type: 'Full-time', date: 'Feb 2026' }]);
+        setJobs([...jobs, {
+            id: Date.now().toString(),
+            title: { en: 'Open Position', kh: 'មុខតំណែងទំនេរ' },
+            loc: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' },
+            type: { en: 'Full-time', kh: 'ពេញម៉ោង' },
+            date: { en: 'Feb 2026', kh: 'កុម្ភៈ ២០២៦' }
+        }]);
     };
 
     const deleteJob = (id: string) => {
@@ -422,7 +366,7 @@ function AdminContentEditor() {
     };
 
     const addTestimonial = () => {
-        setTestimonials([...testimonials, { id: Date.now().toString(), author: 'Client Name', quote: 'Experience shared here...', role: 'Organization' }]);
+        setTestimonials([...testimonials, { id: Date.now().toString(), author: { en: 'Client Name', kh: 'ឈ្មោះអតិថិជន' }, quote: { en: 'Experience shared here...', kh: 'បទពិសោធន៍...' }, role: { en: 'Organization', kh: 'ស្ថាប័ន' } }]);
     };
 
     const deleteTestimonial = (id: string) => {
@@ -470,9 +414,28 @@ function AdminContentEditor() {
 
             {/* Content Area */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Section:</span>
-                    <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">{activeSection}</span>
+                <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Section:</span>
+                        <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">{activeSection}</span>
+                    </div>
+
+                    <div className="flex items-center bg-slate-200/50 p-1 rounded-lg border border-slate-200">
+                        <button
+                            onClick={() => setEditLang('en')}
+                            className={`px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${editLang === 'en' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                                }`}
+                        >
+                            English (EN)
+                        </button>
+                        <button
+                            onClick={() => setEditLang('kh')}
+                            className={`px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${editLang === 'kh' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                                }`}
+                        >
+                            Khmer (KH)
+                        </button>
+                    </div>
                 </div>
 
                 <div className="p-8">
@@ -491,20 +454,20 @@ function AdminContentEditor() {
                                         <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Hero Section</h3>
                                         <div className="grid grid-cols-1 gap-6">
                                             <div className="space-y-1.5">
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Main Headline</label>
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Main Headline ({editLang.toUpperCase()})</label>
                                                 <input
-                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
-                                                    value={homeHero.title}
-                                                    onChange={(e) => setHomeHero({ ...homeHero, title: e.target.value })}
+                                                    className={`w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                    value={homeHero.title[editLang]}
+                                                    onChange={(e) => setHomeHero({ ...homeHero, title: { ...homeHero.title, [editLang]: e.target.value } })}
                                                 />
                                             </div>
                                             <div className="space-y-1.5">
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Hero Description</label>
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Hero Description ({editLang.toUpperCase()})</label>
                                                 <textarea
                                                     rows={3}
-                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium resize-none"
-                                                    value={homeHero.subtitle}
-                                                    onChange={(e) => setHomeHero({ ...homeHero, subtitle: e.target.value })}
+                                                    className={`w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium resize-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                    value={homeHero.subtitle[editLang]}
+                                                    onChange={(e) => setHomeHero({ ...homeHero, subtitle: { ...homeHero.subtitle, [editLang]: e.target.value } })}
                                                 />
                                             </div>
                                         </div>
@@ -525,20 +488,20 @@ function AdminContentEditor() {
                                                     </div>
                                                     <div className="space-y-1.5">
                                                         <input
-                                                            className="w-full bg-transparent text-sm font-bold text-slate-900 outline-none border-b border-transparent focus:border-slate-300"
-                                                            value={stat.label}
+                                                            className={`w-full bg-transparent text-sm font-bold text-slate-900 outline-none border-b border-transparent focus:border-slate-300 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={stat.label[editLang]}
                                                             onChange={(e) => {
                                                                 const newStats = [...stats];
-                                                                newStats[i].label = e.target.value;
+                                                                newStats[i].label = { ...newStats[i].label, [editLang]: e.target.value };
                                                                 setStats(newStats);
                                                             }}
                                                         />
                                                         <input
-                                                            className="w-full bg-transparent text-xs text-slate-500 outline-none border-b border-transparent focus:border-slate-300"
-                                                            value={stat.val}
+                                                            className={`w-full bg-transparent text-xs text-slate-500 outline-none border-b border-transparent focus:border-slate-300 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={stat.val[editLang]}
                                                             onChange={(e) => {
                                                                 const newStats = [...stats];
-                                                                newStats[i].val = e.target.value;
+                                                                newStats[i].val = { ...newStats[i].val, [editLang]: e.target.value };
                                                                 setStats(newStats);
                                                             }}
                                                         />
@@ -562,20 +525,20 @@ function AdminContentEditor() {
                                                         <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">{p.step}</div>
                                                         <div className="flex-1 space-y-1">
                                                             <input
-                                                                className="w-full text-sm font-bold text-slate-900 bg-transparent outline-none focus:bg-slate-50 rounded px-1"
-                                                                value={p.title}
+                                                                className={`w-full text-sm font-bold text-slate-900 bg-transparent outline-none focus:bg-slate-50 rounded px-1 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={p.title[editLang]}
                                                                 onChange={(e) => {
                                                                     const newSteps = [...processSteps];
-                                                                    newSteps[i].title = e.target.value;
+                                                                    newSteps[i].title = { ...newSteps[i].title, [editLang]: e.target.value };
                                                                     setProcessSteps(newSteps);
                                                                 }}
                                                             />
                                                             <input
-                                                                className="w-full text-xs text-slate-500 bg-transparent outline-none focus:bg-slate-50 rounded px-1"
-                                                                value={p.desc}
+                                                                className={`w-full text-xs text-slate-500 bg-transparent outline-none focus:bg-slate-50 rounded px-1 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={p.desc[editLang]}
                                                                 onChange={(e) => {
                                                                     const newSteps = [...processSteps];
-                                                                    newSteps[i].desc = e.target.value;
+                                                                    newSteps[i].desc = { ...newSteps[i].desc, [editLang]: e.target.value };
                                                                     setProcessSteps(newSteps);
                                                                 }}
                                                             />
@@ -583,6 +546,61 @@ function AdminContentEditor() {
                                                         <button onClick={() => deleteProcessStep(p.id)} className="p-1.5 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
                                                             <Trash2 size={16} />
                                                         </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+
+                                    <section id="testimonials" className="space-y-4">
+                                        <div className="flex items-center justify-between border-b pb-2">
+                                            <h3 className="text-lg font-bold text-slate-900">Testimonials</h3>
+                                            <button onClick={addTestimonial} className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                                                <Plus size={14} /> Add Testimonial
+                                            </button>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            {testimonials.map((t, i) => (
+                                                <div key={t.id} className="p-5 border border-slate-200 rounded-xl relative group bg-white shadow-sm hover:border-slate-300 transition-colors">
+                                                    <button onClick={() => deleteTestimonial(t.id)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                    <div className="flex items-center gap-1 text-amber-400 mb-3">
+                                                        {[...Array(5)].map((_, i) => <Award key={i} size={14} fill="currentColor" />)}
+                                                    </div>
+                                                    <textarea
+                                                        className={`w-full text-sm italic text-slate-600 bg-transparent outline-none mb-4 resize-none h-24 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={t.quote[editLang]}
+                                                        onChange={(e) => {
+                                                            const updated = [...testimonials];
+                                                            updated[i].quote = { ...updated[i].quote, [editLang]: e.target.value };
+                                                            setTestimonials(updated);
+                                                        }}
+                                                    />
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                                                            <Quote size={20} />
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <input
+                                                                className={`w-full text-sm font-bold text-slate-900 bg-transparent outline-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={t.author[editLang]}
+                                                                onChange={(e) => {
+                                                                    const updated = [...testimonials];
+                                                                    updated[i].author = { ...updated[i].author, [editLang]: e.target.value };
+                                                                    setTestimonials(updated);
+                                                                }}
+                                                            />
+                                                            <input
+                                                                className={`w-full text-xs text-slate-500 bg-transparent outline-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={t.role[editLang]}
+                                                                onChange={(e) => {
+                                                                    const updated = [...testimonials];
+                                                                    updated[i].role = { ...updated[i].role, [editLang]: e.target.value };
+                                                                    setTestimonials(updated);
+                                                                }}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))}
@@ -610,12 +628,14 @@ function AdminContentEditor() {
                                                     </div>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         <div className="space-y-1.5">
-                                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Title</label>
+                                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Title ({editLang.toUpperCase()})</label>
                                                             <input
-                                                                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
-                                                                value={svc.title}
+                                                                className={`w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={svc.title[editLang]}
                                                                 onChange={(e) => {
-                                                                    const updated = [...services]; updated[i].title = e.target.value; setServices(updated);
+                                                                    const updated = [...services];
+                                                                    updated[i].title = { ...updated[i].title, [editLang]: e.target.value };
+                                                                    setServices(updated);
                                                                 }}
                                                             />
                                                         </div>
@@ -631,24 +651,33 @@ function AdminContentEditor() {
                                                         </div>
                                                     </div>
                                                     <div className="space-y-1.5">
-                                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Description</label>
+                                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Description ({editLang.toUpperCase()})</label>
                                                         <textarea
                                                             rows={3}
-                                                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none resize-none"
-                                                            value={svc.desc}
+                                                            className={`w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none resize-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={svc.desc[editLang]}
                                                             onChange={(e) => {
-                                                                const updated = [...services]; updated[i].desc = e.target.value; setServices(updated);
+                                                                const updated = [...services];
+                                                                updated[i].desc = { ...updated[i].desc, [editLang]: e.target.value };
+                                                                setServices(updated);
                                                             }}
                                                         />
                                                     </div>
                                                     <div className="space-y-1.5">
-                                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Features (comma-separated)</label>
+                                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Features ({editLang.toUpperCase()}, comma-separated)</label>
                                                         <input
-                                                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
-                                                            value={svc.features.map(f => f.en).join(', ')}
+                                                            className={`w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={svc.features.map(f => f[editLang] || f.en).join(', ')}
                                                             onChange={(e) => {
+                                                                const vals = e.target.value.split(',').map(v => v.trim());
                                                                 const updated = [...services];
-                                                                updated[i].features = e.target.value.split(',').map(f => ({ en: f.trim(), kh: f.trim() }));
+                                                                updated[i].features = vals.map((v, idx) => {
+                                                                    const existing = updated[i].features[idx];
+                                                                    return {
+                                                                        en: editLang === 'en' ? v : (existing?.en || v),
+                                                                        kh: editLang === 'kh' ? v : (existing?.kh || v)
+                                                                    };
+                                                                });
                                                                 setServices(updated);
                                                             }}
                                                         />
@@ -667,17 +696,21 @@ function AdminContentEditor() {
                                                         <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">{p.step}</div>
                                                         <div className="flex-1 space-y-1">
                                                             <input
-                                                                className="w-full text-sm font-bold text-slate-900 bg-transparent outline-none focus:bg-slate-50 rounded px-1"
-                                                                value={p.title}
+                                                                className={`w-full text-sm font-bold text-slate-900 bg-transparent outline-none focus:bg-slate-50 rounded px-1 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={p.title[editLang]}
                                                                 onChange={(e) => {
-                                                                    const updated = [...processStepsService]; updated[i].title = e.target.value; setProcessStepsService(updated);
+                                                                    const updated = [...processStepsService];
+                                                                    updated[i].title = { ...updated[i].title, [editLang]: e.target.value };
+                                                                    setProcessStepsService(updated);
                                                                 }}
                                                             />
                                                             <input
-                                                                className="w-full text-xs text-slate-500 bg-transparent outline-none focus:bg-slate-50 rounded px-1"
-                                                                value={p.desc}
+                                                                className={`w-full text-xs text-slate-500 bg-transparent outline-none focus:bg-slate-50 rounded px-1 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={p.desc[editLang]}
                                                                 onChange={(e) => {
-                                                                    const updated = [...processStepsService]; updated[i].desc = e.target.value; setProcessStepsService(updated);
+                                                                    const updated = [...processStepsService];
+                                                                    updated[i].desc = { ...updated[i].desc, [editLang]: e.target.value };
+                                                                    setProcessStepsService(updated);
                                                                 }}
                                                             />
                                                         </div>
@@ -695,10 +728,12 @@ function AdminContentEditor() {
                                                     <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs shrink-0">{i + 1}</div>
                                                     <div className="flex-1 space-y-1">
                                                         <input
-                                                            className="w-full text-sm font-bold text-slate-900 bg-transparent outline-none"
-                                                            value={sec.title}
+                                                            className={`w-full text-sm font-bold text-slate-900 bg-transparent outline-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={sec.title[editLang]}
                                                             onChange={(e) => {
-                                                                const updated = [...sectors]; updated[i].title = e.target.value; setSectors(updated);
+                                                                const updated = [...sectors];
+                                                                updated[i].title = { ...updated[i].title, [editLang]: e.target.value };
+                                                                setSectors(updated);
                                                             }}
                                                         />
                                                         <input
@@ -722,12 +757,12 @@ function AdminContentEditor() {
                                     <section id="story" className="space-y-4">
                                         <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Our Story</h3>
                                         <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">Corporate Narrative</label>
+                                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">Corporate Narrative ({editLang.toUpperCase()})</label>
                                             <textarea
                                                 rows={8}
-                                                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium leading-relaxed"
-                                                value={aboutStory}
-                                                onChange={(e) => setAboutStory(e.target.value)}
+                                                className={`w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium leading-relaxed ${editLang === 'kh' ? 'font-siemreap text-lg' : ''}`}
+                                                value={aboutStory[editLang]}
+                                                onChange={(e) => setAboutStory({ ...aboutStory, [editLang]: e.target.value })}
                                             />
                                         </div>
                                     </section>
@@ -746,20 +781,20 @@ function AdminContentEditor() {
                                                         <Trash2 size={14} />
                                                     </button>
                                                     <input
-                                                        className="w-full text-base font-bold text-slate-900 bg-transparent outline-none mb-3"
-                                                        value={v.title}
+                                                        className={`w-full text-base font-bold text-slate-900 bg-transparent outline-none mb-3 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={v.title[editLang]}
                                                         onChange={(e) => {
                                                             const newVals = [...values];
-                                                            newVals[i].title = e.target.value;
+                                                            newVals[i].title = { ...newVals[i].title, [editLang]: e.target.value };
                                                             setValues(newVals);
                                                         }}
                                                     />
                                                     <textarea
-                                                        className="w-full text-sm text-slate-500 bg-transparent outline-none h-32 resize-none"
-                                                        value={v.content}
+                                                        className={`w-full text-sm text-slate-500 bg-transparent outline-none h-32 resize-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={v.content[editLang]}
                                                         onChange={(e) => {
                                                             const newVals = [...values];
-                                                            newVals[i].content = e.target.value;
+                                                            newVals[i].content = { ...newVals[i].content, [editLang]: e.target.value };
                                                             setValues(newVals);
                                                         }}
                                                     />
@@ -786,11 +821,11 @@ function AdminContentEditor() {
                                                     <div className="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs">{i + 1}</div>
                                                     <div>
                                                         <input
-                                                            className="text-base font-bold text-slate-900 bg-transparent outline-none w-80"
-                                                            value={job.title}
+                                                            className={`text-base font-bold text-slate-900 bg-transparent outline-none w-80 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={job.title[editLang]}
                                                             onChange={(e) => {
                                                                 const newJobs = [...jobs];
-                                                                newJobs[i].title = e.target.value;
+                                                                newJobs[i].title = { ...newJobs[i].title, [editLang]: e.target.value };
                                                                 setJobs(newJobs);
                                                             }}
                                                         />
@@ -798,11 +833,23 @@ function AdminContentEditor() {
                                                             <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                                                                 <MapPin size={12} />
                                                                 <input
-                                                                    className="bg-transparent outline-none w-24"
-                                                                    value={job.loc}
+                                                                    className={`bg-transparent outline-none w-24 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                    value={job.loc[editLang]}
                                                                     onChange={(e) => {
                                                                         const newJobs = [...jobs];
-                                                                        newJobs[i].loc = e.target.value;
+                                                                        newJobs[i].loc = { ...newJobs[i].loc, [editLang]: e.target.value };
+                                                                        setJobs(newJobs);
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                                                                <Briefcase size={12} />
+                                                                <input
+                                                                    className={`bg-transparent outline-none w-24 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                    value={job.type[editLang]}
+                                                                    onChange={(e) => {
+                                                                        const newJobs = [...jobs];
+                                                                        newJobs[i].type = { ...newJobs[i].type, [editLang]: e.target.value };
                                                                         setJobs(newJobs);
                                                                     }}
                                                                 />
@@ -810,11 +857,11 @@ function AdminContentEditor() {
                                                             <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                                                                 <Calendar size={12} />
                                                                 <input
-                                                                    className="bg-transparent outline-none w-24"
-                                                                    value={job.date}
+                                                                    className={`bg-transparent outline-none w-24 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                    value={job.date[editLang]}
                                                                     onChange={(e) => {
                                                                         const newJobs = [...jobs];
-                                                                        newJobs[i].date = e.target.value;
+                                                                        newJobs[i].date = { ...newJobs[i].date, [editLang]: e.target.value };
                                                                         setJobs(newJobs);
                                                                     }}
                                                                 />
@@ -839,39 +886,22 @@ function AdminContentEditor() {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-4">
                                                 <div className="space-y-1.5">
-                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Office Address (EN)</label>
+                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Office Address ({editLang.toUpperCase()})</label>
                                                     <textarea
                                                         rows={3}
-                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium resize-none"
-                                                        value={contact.address.en}
-                                                        onChange={(e) => setContact({ ...contact, address: { ...contact.address, en: e.target.value } })}
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Office Address (KH)</label>
-                                                    <textarea
-                                                        rows={3}
-                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-siemreap resize-none"
-                                                        value={contact.address.kh}
-                                                        onChange={(e) => setContact({ ...contact, address: { ...contact.address, kh: e.target.value } })}
+                                                        className={`w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none ${editLang === 'kh' ? 'font-siemreap' : 'font-medium'}`}
+                                                        value={contact.address[editLang]}
+                                                        onChange={(e) => setContact({ ...contact, address: { ...contact.address, [editLang]: e.target.value } })}
                                                     />
                                                 </div>
                                             </div>
                                             <div className="space-y-4">
                                                 <div className="space-y-1.5">
-                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Working Hours (EN)</label>
+                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Working Hours ({editLang.toUpperCase()})</label>
                                                     <input
-                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
-                                                        value={contact.hours.en}
-                                                        onChange={(e) => setContact({ ...contact, hours: { ...contact.hours, en: e.target.value } })}
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Working Hours (KH)</label>
-                                                    <input
-                                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-siemreap"
-                                                        value={contact.hours.kh}
-                                                        onChange={(e) => setContact({ ...contact, hours: { ...contact.hours, kh: e.target.value } })}
+                                                        className={`w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all ${editLang === 'kh' ? 'font-siemreap' : 'font-medium'}`}
+                                                        value={contact.hours[editLang]}
+                                                        onChange={(e) => setContact({ ...contact, hours: { ...contact.hours, [editLang]: e.target.value } })}
                                                     />
                                                 </div>
                                                 <div className="space-y-1.5">
@@ -949,6 +979,7 @@ function AdminContentEditor() {
                 {editingServiceId && detailsMap[editingServiceId] && (
                     <ServiceDetailEditor
                         detail={detailsMap[editingServiceId]}
+                        editLang={editLang}
                         onClose={closeServiceDetails}
                         onSave={(updated) => {
                             updateServiceDetail(updated);

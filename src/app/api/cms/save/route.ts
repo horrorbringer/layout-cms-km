@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const { data, fileName } = await request.json();
 
         // Security check: only allow updating files in the data directory
-        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts', 'aboutData.ts', 'projectDetailData.ts', 'serviceData.ts', 'serviceDetailData.ts', 'documentData.ts', 'contactData.ts', 'messagesData.ts', 'homeData.ts', 'jobData.ts'];
+        const allowedFiles = ['orgChartData.ts', 'teamData.ts', 'newsData.ts', 'projectData.ts', 'aboutData.ts', 'projectDetailData.ts', 'serviceData.ts', 'serviceDetailData.ts', 'documentData.ts', 'contactData.ts', 'messagesData.ts', 'homeData.ts', 'jobData.ts', 'configData.ts'];
         if (!allowedFiles.includes(fileName)) {
             return NextResponse.json({ error: 'Invalid file' }, { status: 400 });
         }
@@ -15,7 +15,15 @@ export async function POST(request: Request) {
         const filePath = path.join(process.cwd(), 'src/app/design-z/data', fileName);
 
         let content = '';
-        if (fileName === 'orgChartData.ts') {
+        if (fileName === 'configData.ts') {
+            content = `export type KhmerFontName = 'Siemreap' | 'Koulen' | 'Battambang';
+
+export interface ConfigData {
+    khmerFont: KhmerFontName;
+}
+
+export const configData: ConfigData = ${JSON.stringify(data, null, 4)};`;
+        } else if (fileName === 'orgChartData.ts') {
             content = `export interface OrgNode {
     name: string;
     role: string;
@@ -247,12 +255,16 @@ export interface Job {
     id: string;
     title: LocalizedString;
     dept: string;
-    loc: string;
-    type: string;
+    loc: LocalizedString;
+    type: LocalizedString;
     tags: LocalizedString[];
     salary: string;
     experience: string;
     postedDate: LocalizedString;
+    summary: LocalizedString;
+    responsibilities: LocalizedString[];
+    requirements: LocalizedString[];
+    benefits: LocalizedString[];
 }
 
 export const jobData: Job[] = ${JSON.stringify(data, null, 4)};`;

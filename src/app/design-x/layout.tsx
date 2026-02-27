@@ -40,7 +40,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             label: t('Services'), href: '/design-x/services',
             children: [
                 { label: t('Design & Build'), href: '/design-x/services/design-build', desc: t('Full lifecycle solutions') },
-                { label: t('Building Renovation'), href: '/design-x/services/renovation', desc: t('Revitalize existing structures') },
+                { label: t('Construction'), href: '/design-x/services/construction', desc: t('Revitalize existing structures') },
                 { label: t('Project Management'), href: '/design-x/services/project-management', desc: t('Oversight & control') },
                 { label: t('Consultants'), href: '/design-x/services/consultants', desc: t('Expert advisory services') }
             ]
@@ -301,7 +301,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="lg:hidden bg-white border-b border-gray-100 shadow-xl overflow-hidden"
+                            className={`lg:hidden bg-white border-b border-gray-100 shadow-xl overflow-hidden ${fontClassName}`}
                         >
                             <div className="max-h-[70vh] overflow-y-auto">
                                 <div className="p-4 space-y-1">
@@ -479,7 +479,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             <div className="px-5 pb-5">
                                 <p className="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-3">{t('Categories')}</p>
                                 <div className="flex flex-wrap gap-2">
-                                    {['Commercial', 'Infrastructure', 'Industrial', 'Renovation', 'Government'].map(tag => (
+                                    {['Commercial', 'Infrastructure', 'Industrial', t('Construction'), 'Government'].map(tag => (
                                         <span key={tag} className="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-accent-orange hover:text-white transition-all">
                                             {tag}
                                         </span>

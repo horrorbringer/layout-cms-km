@@ -30,7 +30,7 @@ export default function CompletedProjectsPage() {
     });
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy relative">
+        <div className="bg-white min-h-screen text-titan-navy relative">
             {/* --- HEADER BACKDROP --- */}
             <div className="absolute top-0 left-0 w-full h-32 bg-titan-navy z-0"></div>
 

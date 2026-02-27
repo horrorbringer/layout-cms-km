@@ -6,36 +6,39 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ChevronLeft, ChevronRight, Phone } from 'lucide-react';
 
-const slides = [
-    {
-        id: 1,
-        image: '/images/projects/Thumbnail-1.jpg',
-        subtitle: 'Government Infrastructure',
-        title: 'Ministry of Economy',
-        desc: 'A landmark of modern governance and architectural excellence in the heart of Phnom Penh.',
-        link: '/design-x/projects/1'
-    },
-    {
-        id: 2,
-        image: '/images/projects/Thumbnail-2.jpg',
-        subtitle: 'Commercial Excellence',
-        title: 'Vattanac Capital Extension',
-        desc: 'Pushing the boundaries of vertical design and engineering for Cambodia’s premium business hub.',
-        link: '/design-x/projects/2'
-    },
-    {
-        id: 3,
-        image: '/images/projects/Thumbnail-3.jpg',
-        subtitle: 'National Development',
-        title: 'Sihanoukville Deep Sea Port',
-        desc: 'Building the gateway to global trade with robust maritime infrastructure.',
-        link: '/design-x/projects/3'
-    }
-];
+import { useLanguage } from '../context/LanguageContext';
 
 export default function HeroCarousel() {
+    const { t, language, fontClassName } = useLanguage();
     const [current, setCurrent] = useState(0);
     const [direction, setDirection] = useState(0);
+
+    const slides = [
+        {
+            id: 1,
+            image: '/images/projects/Thumbnail-1.jpg',
+            subtitle: t('Government'),
+            title: t('Ministry of Economy'),
+            desc: t('Slide 1 Desc'),
+            link: '/design-x/projects/mef'
+        },
+        {
+            id: 2,
+            image: '/images/projects/Thumbnail-2.jpg',
+            subtitle: t('Commercial'),
+            title: t('Vattanac Capital Extension'),
+            desc: t('Slide 2 Desc'),
+            link: '/design-x/projects/vattanac'
+        },
+        {
+            id: 3,
+            image: '/images/projects/Thumbnail-3.jpg',
+            subtitle: t('Infrastructure'),
+            title: t('Khleang Toeuk WTP'),
+            desc: t('Slide 3 Desc'),
+            link: '/design-x/projects/kt-wtp'
+        }
+    ];
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -97,7 +100,7 @@ export default function HeroCarousel() {
     };
 
     return (
-        <header className="relative h-screen min-h-[700px] overflow-hidden bg-titan-navy text-white">
+        <header className={`relative h-screen min-h-[700px] overflow-hidden bg-titan-navy text-white ${fontClassName}`}>
             <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                     key={current}
@@ -143,7 +146,7 @@ export default function HeroCarousel() {
 
                             <motion.h1
                                 variants={contentVariants}
-                                className="text-5xl md:text-7xl font-black leading-[1.1] mb-6 tracking-tight"
+                                className={`text-5xl md:text-7xl font-black leading-[1.1] mb-6 tracking-tight ${language === 'kh' ? 'text-6xl md:text-8xl' : ''}`}
                             >
                                 {slides[current].title}
                             </motion.h1>
@@ -160,12 +163,12 @@ export default function HeroCarousel() {
                                 className="flex flex-wrap gap-4"
                             >
                                 <Link href={slides[current].link} className="group bg-accent-orange text-white px-8 py-4 font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-titan-navy transition-all duration-300 flex items-center gap-3 rounded">
-                                    <span>View Project</span>
+                                    <span>{t('View Project')}</span>
                                     <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
                                 </Link>
                                 <Link href="/design-x/contact" className="group border-2 border-white text-white px-8 py-4 font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-titan-navy transition-all duration-300 flex items-center gap-3 rounded">
                                     <Phone size={18} />
-                                    <span>Contact Us</span>
+                                    <span>{t('Contact Us')}</span>
                                 </Link>
                             </motion.div>
                         </motion.div>
@@ -211,11 +214,11 @@ export default function HeroCarousel() {
                 <div className="flex gap-12">
                     <div>
                         <div className="text-3xl font-black text-white">25+</div>
-                        <div className="text-[10px] text-accent-orange uppercase tracking-widest font-bold">Years Exp</div>
+                        <div className="text-[10px] text-accent-orange uppercase tracking-widest font-bold">{t('Years Trust')}</div>
                     </div>
                     <div>
                         <div className="text-3xl font-black text-white">150+</div>
-                        <div className="text-[10px] text-accent-orange uppercase tracking-widest font-bold">Projects</div>
+                        <div className="text-[10px] text-accent-orange uppercase tracking-widest font-bold">{t('Projects')}</div>
                     </div>
                 </div>
             </div>

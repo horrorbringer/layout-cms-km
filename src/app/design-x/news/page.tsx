@@ -146,7 +146,7 @@ export default function NewsPage() {
     });
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
             {/* --- HERO --- */}
             <section className="relative h-[70vh] bg-titan-navy flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">

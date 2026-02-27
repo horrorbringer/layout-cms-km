@@ -37,7 +37,7 @@ export default function ProjectDetailPage() {
     }, []);
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy relative">
+        <div className="bg-white min-h-screen text-titan-navy relative">
             {/* --- ADMIN QUICK EDIT --- */}
             {isAdmin && (
                 <div className="fixed bottom-8 right-8 z-[100]">

@@ -22,7 +22,7 @@ export default function ProjectDetailTechnical() {
     const heroY = useTransform(scrollY, [0, 500], [0, 200]);
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy selection:bg-titan-red selection:text-white">
+        <div className="bg-white min-h-screen text-titan-navy selection:bg-titan-red selection:text-white">
 
             {/* --- HERO: IMMERSIVE ARCHITECTURAL --- */}
             <header className="relative h-screen w-full overflow-hidden">

@@ -4,8 +4,8 @@ export interface Job {
     id: string;
     title: LocalizedString;
     dept: string;
-    loc: string;
-    type: string;
+    loc: LocalizedString;
+    type: LocalizedString;
     tags: LocalizedString[];
     salary: string;
     experience: string;
@@ -21,8 +21,8 @@ export const jobData: Job[] = [
         id: '1',
         title: { en: 'Senior Civil Engineer', kh: 'វិស្វករស៊ីវិលជាន់ខ្ពស់' },
         dept: 'Engineering',
-        loc: 'Phnom Penh',
-        type: 'Full-time',
+        loc: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' },
+        type: { en: 'Full-time', kh: 'ពេញម៉ោង' },
         tags: [{ en: 'Construction', kh: 'សំណង់' }, { en: 'Planning', kh: 'ផែនការ' }],
         salary: '$2,500 - $3,500',
         experience: '5+ Years',
@@ -56,8 +56,8 @@ export const jobData: Job[] = [
         id: '2',
         title: { en: 'Site Manager', kh: 'អ្នកគ្រប់គ្រងទីតាំង' },
         dept: 'Operations',
-        loc: 'Sihanoukville',
-        type: 'Contract',
+        loc: { en: 'Sihanoukville', kh: 'ព្រះសីហនុ' },
+        type: { en: 'Contract', kh: 'កិច្ចសន្យា' },
         tags: [{ en: 'Management', kh: 'គ្រប់គ្រង' }, { en: 'On-site', kh: 'នៅទីតាំង' }],
         salary: '$1,800 - $2,500',
         experience: '3-5 Years',
@@ -86,8 +86,8 @@ export const jobData: Job[] = [
         id: '3',
         title: { en: 'Architectural Designer', kh: 'អ្នករចនាស្ថាបត្យកម្ម' },
         dept: 'Design',
-        loc: 'Phnom Penh',
-        type: 'Full-time',
+        loc: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' },
+        type: { en: 'Full-time', kh: 'ពេញម៉ោង' },
         tags: [{ en: 'Creativity', kh: 'ភាពច្នៃប្រឌិត' }, { en: 'CAD', kh: 'CAD' }],
         salary: '$1,200 - $1,800',
         experience: '2+ Years',
