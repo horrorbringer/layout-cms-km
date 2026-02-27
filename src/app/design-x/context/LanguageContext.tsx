@@ -352,10 +352,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
         switch (configData.khmerFont) {
             case 'Koulen': return koulen.className;
-            case 'Battambang': return battambang.className;
+            case 'Siemreap': return siemreap.className;
             case 'System': return 'font-sans';
-            case 'Siemreap':
-            default: return siemreap.className;
+            case 'Battambang':
+            default: return battambang.className;
         }
     };
 

@@ -5,5 +5,5 @@ export interface ConfigData {
 }
 
 export const configData: ConfigData = {
-    "khmerFont": "Siemreap"
+    "khmerFont": "Battambang"
 };
