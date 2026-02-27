@@ -79,7 +79,7 @@ export default function CareerDetailPage() {
     };
 
     return (
-        <div className="bg-gray-50 min-h-screen font-sans text-titan-navy relative">
+        <div className="bg-gray-50 min-h-screen text-titan-navy relative">
             {/* --- HERO / HEADER --- */}
             <section className="relative h-[60vh] bg-titan-navy flex items-end overflow-hidden pb-12">
                 <div className="absolute inset-0">

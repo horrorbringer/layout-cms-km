@@ -105,7 +105,7 @@ export default function NewsDetailPage() {
     const currentRelated = relatedNews.filter(n => n.id !== article.id).slice(0, 3);
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
 
             {/* --- HEADER --- */}
             <header className="bg-white border-b border-gray-100 sticky top-0 z-50">

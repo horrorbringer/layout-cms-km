@@ -139,7 +139,7 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
     }
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
             {/* === PROFESSIONAL HERO SECTION === */}
             <div className="relative bg-titan-navy min-h-[500px] flex flex-col justify-center overflow-hidden">
                 {/* Background Elements */}

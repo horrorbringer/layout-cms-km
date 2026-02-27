@@ -122,7 +122,7 @@ export default function OrganizationPage() {
     const [searchTerm, setSearchTerm] = useState('');
 
     return (
-        <div className="bg-titan-bg min-h-screen font-sans text-titan-navy selection:bg-titan-red selection:text-white pb-32">
+        <div className="bg-titan-bg min-h-screen text-titan-navy selection:bg-titan-red selection:text-white pb-32">
 
             {/* Background Utilities */}
             <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"

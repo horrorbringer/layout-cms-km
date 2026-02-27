@@ -60,7 +60,8 @@ export default function CareersPage() {
     const filteredJobs = allJobs.filter(job => {
         const deptLabel = t(job.dept);
         if (filterDept !== t('All Departments') && deptLabel !== filterDept) return false;
-        if (filterLoc !== t('All Locations') && job.loc !== filterLoc) return false;
+        const jobLocLabel = language === 'kh' ? job.loc.kh : job.loc.en;
+        if (filterLoc !== t('All Locations') && jobLocLabel !== filterLoc) return false;
         const titleEn = job.title.en.toLowerCase();
         const titleKh = (job.title.kh || '').toLowerCase();
         if (searchQuery && !titleEn.includes(searchQuery.toLowerCase()) && !titleKh.includes(searchQuery.toLowerCase())) return false;
@@ -374,7 +375,7 @@ export default function CareersPage() {
                                                 <span className="text-[10px] text-gray-400 font-medium ml-2">{language === 'kh' ? job.postedDate.kh : job.postedDate.en}</span>
                                             </div>
                                             <span className="text-[10px] font-black uppercase tracking-widest text-titan-navy/40 bg-gray-50 px-2 py-1 rounded">
-                                                {t(job.type)}
+                                                {language === 'kh' ? job.type.kh : job.type.en}
                                             </span>
                                         </div>
 
@@ -398,7 +399,7 @@ export default function CareersPage() {
                                             <div>
                                                 <span className="block text-[10px] font-black uppercase tracking-widest text-titan-navy/40 mb-1">{t('Location')}</span>
                                                 <div className="flex items-center gap-2 text-titan-navy-subtle text-xs font-bold">
-                                                    <MapPin size={12} /> {job.loc}
+                                                    <MapPin size={12} /> {language === 'kh' ? job.loc.kh : job.loc.en}
                                                 </div>
                                             </div>
                                             <div>

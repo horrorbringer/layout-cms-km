@@ -62,7 +62,7 @@ export default function DocumentDetailPage() {
     };
 
     return (
-        <div className="bg-gray-50 min-h-screen font-sans text-titan-navy">
+        <div className="bg-gray-50 min-h-screen text-titan-navy">
             {/* --- PDF MODAL --- */}
             <AnimatePresence>
                 {isPdfOpen && (

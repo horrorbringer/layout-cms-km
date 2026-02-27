@@ -17,7 +17,7 @@ export default function DesignYProjects() {
         : allProjects.filter(p => p.type === filterCategory);
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy selection:bg-titan-red selection:text-white">
+        <div className="bg-white min-h-screen text-titan-navy selection:bg-titan-red selection:text-white">
 
             {/* --- HEADER --- */}
             <div className="pt-40 pb-20 px-6 border-b border-titan-navy/10 bg-titan-bg relative overflow-hidden">

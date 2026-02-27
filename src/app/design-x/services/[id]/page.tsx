@@ -202,7 +202,7 @@ export default function ServiceDetailPage() {
     const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
 
             {/* === 1. PARALLAX HERO === */}
             <section ref={heroRef} className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">

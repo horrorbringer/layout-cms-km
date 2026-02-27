@@ -499,7 +499,7 @@ export default function AboutPage() {
     ];
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy overflow-x-hidden">
+        <div className="bg-white min-h-screen text-titan-navy overflow-x-hidden">
 
             <AnimatePresence>
                 {selectedMember && (

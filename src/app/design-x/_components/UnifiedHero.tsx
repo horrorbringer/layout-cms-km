@@ -13,9 +13,12 @@ interface UnifiedHeroProps {
     onToggle?: (mode: HeroMode) => void;
 }
 
+import { useLanguage } from '../context/LanguageContext';
+
 export default function UnifiedHero({ mode = 'carousel', onToggle }: UnifiedHeroProps) {
+    const { t, fontClassName } = useLanguage();
     return (
-        <div className="relative">
+        <div className={`relative ${fontClassName}`}>
             {/* Premium Mode Switcher (Sliding Pill) - Right Aligned like Design Z */}
             <div className="absolute top-[130px] right-12 z-[60] hidden lg:block">
                 <div className="relative bg-titan-navy/40 backdrop-blur-xl border border-white/10 p-1.5 rounded-full flex items-center shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
@@ -35,7 +38,7 @@ export default function UnifiedHero({ mode = 'carousel', onToggle }: UnifiedHero
                         className={`relative z-10 flex items-center justify-center gap-2 w-[120px] py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500 ${mode === 'video' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
                     >
                         <Play size={12} fill={mode === 'video' ? 'currentColor' : 'none'} className="mb-0.5" />
-                        Cinematic
+                        {t('Cinematic')}
                     </button>
 
                     <button
@@ -43,7 +46,7 @@ export default function UnifiedHero({ mode = 'carousel', onToggle }: UnifiedHero
                         className={`relative z-10 flex items-center justify-center gap-2 w-[120px] py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500 ${mode === 'carousel' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
                     >
                         <ImageIcon size={12} className="mb-0.5" />
-                        Gallery
+                        {t('Gallery')}
                     </button>
                 </div>
             </div>

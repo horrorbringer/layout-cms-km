@@ -21,7 +21,7 @@ export default function FooterY() {
     };
 
     return (
-        <footer className="bg-titan-navy text-white relative overflow-hidden font-sans border-t-[20px] border-titan-red">
+        <footer className="bg-titan-navy text-white relative overflow-hidden border-t-[20px] border-titan-red">
 
             {/* --- BIG CTA SECTION --- */}
             <div className="border-b border-white/10">

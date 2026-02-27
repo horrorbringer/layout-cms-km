@@ -274,7 +274,7 @@ function DocumentList() {
 
 export default function DocumentsPage() {
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className="bg-white min-h-screen text-titan-navy">
             {/* Header */}
             <div className="pt-32 pb-12 bg-titan-bg relative overflow-hidden border-b border-titan-navy/10">
                 <div className="absolute inset-0 z-0 opacity-[0.03]"

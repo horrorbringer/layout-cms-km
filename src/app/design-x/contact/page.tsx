@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 export default function ContactPage() {
     return (
-        <div className="bg-gray-50 min-h-screen font-sans text-titan-navy relative">
+        <div className="bg-gray-50 min-h-screen text-titan-navy relative">
             {/* --- HERO --- */}
             <section className="relative h-[60vh] bg-titan-navy flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">

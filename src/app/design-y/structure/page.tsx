@@ -235,7 +235,7 @@ export default function StructurePage() {
     const [searchTerm, setSearchTerm] = useState('');
 
     return (
-        <div className="bg-titan-bg min-h-screen font-sans text-titan-navy overflow-hidden flex flex-col">
+        <div className="bg-titan-bg min-h-screen text-titan-navy overflow-hidden flex flex-col">
 
             {/* Background Grid */}
             <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"

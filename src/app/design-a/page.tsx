@@ -303,7 +303,7 @@ export default function DesignA_ContainerNav() {
             label: 'Services', href: '/design-a/services',
             children: [
                 { label: 'Design & Build', href: '/design-a/services/design-build', desc: 'Full lifecycle solutions' },
-                { label: 'Building Renovation', href: '/design-a/services/renovation', desc: 'Revitalize existing structures' },
+                { label: 'Construction', href: '/design-a/services/construction', desc: 'Revitalize existing structures' },
                 { label: 'Project Management', href: '/design-a/services/project-management', desc: 'Oversight & control' },
                 { label: 'Consultants', href: '/design-a/services/consultants', desc: 'Expert advisory services' }
             ]
@@ -349,7 +349,7 @@ export default function DesignA_ContainerNav() {
     ];
 
     return (
-        <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 font-sans text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
+        <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
 
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
@@ -486,7 +486,7 @@ export default function DesignA_ContainerNav() {
                         />
                         <FeatureCard
                             index={2}
-                            title="Renovation"
+                            title="Construction"
                             desc="Modernizing existing structures with structural integrity."
                             icon={Zap}
                         />

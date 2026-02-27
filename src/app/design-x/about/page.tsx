@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'fra
 import { Target, Eye, Flag, Shield, Award, Users, TrendingUp, Heart, Lightbulb, Handshake, Clock, CheckCircle2, Building2, HardHat, Quote, X, Mail, Linkedin, ArrowRight, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage } from '../context/LanguageContext';
 
 // Animation wrapper component
 function FadeInWhenVisible({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -63,6 +64,7 @@ function AnimatedCounter({ value, suffix = '', label }: { value: number; suffix?
 
 // Modal Component for Member Details
 function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: boolean; onClose: () => void }) {
+    const { t } = useLanguage();
     if (!isOpen || !member) return null;
 
     return (
@@ -107,7 +109,7 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                     <div className="absolute bottom-6 left-6 right-6">
                         <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1.5 rounded-full text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">
                             <Shield size={10} className="text-titan-red animate-pulse" />
-                            Verified Leadership
+                            {t('Verified Leadership')}
                         </div>
                     </div>
                 </div>
@@ -120,22 +122,22 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                     </div>
 
                     <div className="mb-8 md:mb-12 relative">
-                        <span className="text-titan-red font-black uppercase tracking-[0.3em] text-[10px] block mb-3">{member.role}</span>
+                        <span className="text-titan-red font-black uppercase tracking-[0.3em] text-[10px] block mb-3">{t(member.role)}</span>
                         <h3 className="text-3xl md:text-5xl font-black text-titan-navy uppercase leading-[1.1] tracking-tighter">
-                            {member.name}
+                            {t(member.name)}
                         </h3>
                         <div className="w-16 md:w-20 h-1.5 bg-titan-red mt-6 rounded-full"></div>
                     </div>
 
                     <div className="flex-grow">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-4 italic">Executive Biography</h4>
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-4 italic">{t('Executive Biography')}</h4>
                         <div className="space-y-4 md:space-y-6 text-titan-navy/80 leading-relaxed font-medium">
                             {member.bio ? (
-                                <p className="text-base md:text-lg leading-relaxed">{member.bio}</p>
+                                <p className="text-base md:text-lg leading-relaxed">{t(member.bio)}</p>
                             ) : (
                                 <>
                                     <p className="text-base md:text-lg leading-relaxed">
-                                       Test Jira An integral part of KIM MEX Construction, {member.name.split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {member.role.toLowerCase()} division.
+                                        KIM MEX Construction, {t(member.name).split('.').pop()?.trim()} brings specialized expertise and a results-driven approach to the {t(member.role).toLowerCase()} division.
                                     </p>
                                     <p className="text-sm md:text-base">
                                         Focused on operational efficiency and upholding our core values of excellence and safety, they play a vital role in delivering landmark projects across the Kingdom.
@@ -151,8 +153,8 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                                 <Users size={18} />
                             </div>
                             <div className="text-[10px] md:text-[11px] leading-tight">
-                                <div className="font-bold text-titan-navy uppercase">Directorate</div>
-                                <div className="text-titan-navy/40 font-bold">KIMMEX GROUP</div>
+                                <div className="font-bold text-titan-navy uppercase">{t('Directorate')}</div>
+                                <div className="text-titan-navy/40 font-bold uppercase">{t('KIMMEX GROUP')}</div>
                             </div>
                         </div>
 
@@ -161,7 +163,7 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
                                 href={`/design-x/team/${member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}`}
                                 className="w-full sm:w-auto px-10 py-3.5 bg-titan-navy text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-titan-red transition-all text-center shadow-lg shadow-titan-navy/10 active:scale-95"
                             >
-                                Full Biography
+                                {t('Full Biography')}
                             </Link>
                         </div>
                     </div>
@@ -173,6 +175,7 @@ function MemberDetailModal({ member, isOpen, onClose }: { member: any; isOpen: b
 
 // Team Member Card Component
 function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO?: boolean; onClick?: (member: any) => void }) {
+    const { t } = useLanguage();
     return (
         <div
             className="flex flex-col items-center group relative z-10 w-full cursor-pointer"
@@ -183,7 +186,7 @@ function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO
             `}>
                 <Image
                     src={member.image}
-                    alt={member.name}
+                    alt={t(member.name)}
                     fill
                     className="object-cover object-top transition-transform duration-700 group-hover:scale-110"
                 />
@@ -197,10 +200,10 @@ function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO
             </div>
             <div className="text-center px-2">
                 <h3 className={`font-bold text-titan-navy uppercase tracking-tight transition-colors duration-300 group-hover:text-titan-red ${isCEO ? 'text-2xl mb-1' : 'text-sm lg:text-base mb-1'}`}>
-                    {member.name}
+                    {t(member.name)}
                 </h3>
                 <p className={`text-accent-orange font-bold uppercase tracking-[0.1em] ${isCEO ? 'text-sm' : 'text-[10px] lg:text-[11px]'}`}>
-                    {member.role}
+                    {t(member.role)}
                 </p>
             </div>
         </div>
@@ -209,6 +212,7 @@ function TeamMemberCard({ member, isCEO = false, onClick }: { member: any; isCEO
 
 // Team Member Row Card (Mobile View - Horizontal / Vertical Tree)
 function TeamMemberRowCard({ member, onClick }: { member: any; onClick?: (member: any) => void }) {
+    const { t } = useLanguage();
     return (
         <div
             className="flex items-center gap-4 bg-white p-3 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group w-full"
@@ -217,14 +221,14 @@ function TeamMemberRowCard({ member, onClick }: { member: any; onClick?: (member
             <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border-2 border-gray-50">
                 <Image
                     src={member.image}
-                    alt={member.name}
+                    alt={t(member.name)}
                     fill
                     className="object-cover transition-transform group-hover:scale-110"
                 />
             </div>
             <div className="flex-grow">
-                <h4 className="text-[13px] font-bold text-titan-navy uppercase tracking-tight leading-tight group-hover:text-titan-red transition-colors">{member.name}</h4>
-                <p className="text-[9px] text-accent-orange font-bold uppercase tracking-wider mt-1">{member.role}</p>
+                <h4 className="text-[13px] font-bold text-titan-navy uppercase tracking-tight leading-tight group-hover:text-titan-red transition-colors">{t(member.name)}</h4>
+                <p className="text-[9px] text-accent-orange font-bold uppercase tracking-wider mt-1">{t(member.role)}</p>
             </div>
             <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-titan-red/10 group-hover:text-titan-red transition-all">
                 <ArrowRight size={14} />
@@ -234,7 +238,6 @@ function TeamMemberRowCard({ member, onClick }: { member: any; onClick?: (member
 }
 
 // Language context hook (placeholder for export found in layout, assuming direct import or use)
-import { useLanguage } from '../context/LanguageContext';
 
 export default function AboutPage() {
     const heroRef = useRef(null);
@@ -251,44 +254,46 @@ export default function AboutPage() {
         setSelectedMember(member);
     };
 
+    const { t, language, fontClassName } = useLanguage();
+
     const coreValues = [
-        { icon: Shield, title: 'Integrity', desc: 'We uphold the highest ethical standards in every project and relationship.' },
-        { icon: Award, title: 'Excellence', desc: 'We strive for perfection in every beam, brick, and blueprint we deliver.' },
-        { icon: Handshake, title: 'Partnership', desc: 'We build lasting relationships with clients, partners, and communities.' },
-        { icon: Lightbulb, title: 'Innovation', desc: 'We embrace new technologies and methods to deliver better solutions.' },
-        { icon: Heart, title: 'Safety First', desc: 'We prioritize the wellbeing of our team and everyone on our sites.' },
-        { icon: TrendingUp, title: 'Growth', desc: 'We continuously improve and invest in our people and capabilities.' },
+        { icon: Shield, title: t('Integrity'), desc: t('We uphold the highest ethical standards in every project and relationship.') },
+        { icon: Award, title: t('Excellence'), desc: t('We strive for perfection in every beam, brick, and blueprint we deliver.') },
+        { icon: Handshake, title: t('Partnership'), desc: t('We build lasting relationships with clients, partners, and communities.') },
+        { icon: Lightbulb, title: t('Innovation'), desc: t('We embrace new technologies and methods to deliver better solutions.') },
+        { icon: Heart, title: t('Safety First'), desc: t('We prioritize the wellbeing of our team and everyone on our sites.') },
+        { icon: TrendingUp, title: t('Growth'), desc: t('We continuously improve and invest in our people and capabilities.') },
     ];
 
     const milestones = [
         {
             year: '1999',
-            title: 'Foundation',
-            desc: 'KIM MEX Construction was established with a vision to redefine Cambodia\'s skyline. Starting with a humble team of 10 engineers, we laid the first stone of our legacy.',
+            title: t('Foundation'),
+            desc: t('KIM MEX Construction was established with a vision to redefine Cambodia\'s skyline. Starting with a humble team of 10 engineers, we laid the first stone of our legacy.'),
             image: '/images/projects/Thumbnail-1.jpg'
         },
         {
             year: '2005',
-            title: 'First Major Project',
-            desc: 'Completed our first government infrastructure project, establishing our reputation for quality and reliability in the public sector.',
+            title: t('First Major Project'),
+            desc: t('Completed our first government infrastructure project, establishing our reputation for quality and reliability in the public sector.'),
             image: '/images/projects/Thumbnail-2.jpg'
         },
         {
             year: '2012',
-            title: 'Major Expansion',
-            desc: 'Following successful commercial projects in Phnom Penh, we expanded operations to Siem Reap and Sihanoukville, securing contracts for major hotel resorts.',
+            title: t('Major Expansion'),
+            desc: t('Following successful commercial projects in Phnom Penh, we expanded operations to Siem Reap and Sihanoukville, securing contracts for major hotel resorts.'),
             image: '/images/projects/Thumbnail-3.jpg'
         },
         {
             year: '2018',
-            title: 'ISO Certification',
-            desc: 'Our commitment to excellence was recognized with ISO 9001:2015 accreditation, validating our rigorous Quality Management Systems and safety protocols.',
+            title: t('ISO Certification'),
+            desc: t('Our commitment to excellence was recognized with ISO 9001:2015 accreditation, validating our rigorous Quality Management Systems and safety protocols.'),
             image: '/images/projects/Thumbnail-5.jpg'
         },
         {
             year: '2023',
-            title: 'National Recognition',
-            desc: 'Awarded "Top Infrastructure Partner" by the Ministry of Public Works for our contribution to national road development projects.',
+            title: t('National Recognition'),
+            desc: t('Awarded "Top Infrastructure Partner" by the Ministry of Public Works for our contribution to national road development projects.'),
             image: '/images/projects/Thumbnail-8.jpg'
         }
     ];
@@ -297,7 +302,7 @@ export default function AboutPage() {
         name: 'Okhna. TOUCH KIM',
         role: 'Chief Executive Officer',
         image: '/images/team-leadership-professional/touch_kim.jpg',
-        bio: 'Okhna Touch Kim founded KIM MEX Construction in 1999 with a vision to revolutionize the Cambodian construction landscape. With over 25 years of leadership, he has steered the company from a small team of engineers to a premier national contractor. His philosophy of "Integrity in every build" continues to drive the company\'s success.'
+        bio: 'CEO Quote Desc'
     };
 
     const managersL2 = [
@@ -305,31 +310,31 @@ export default function AboutPage() {
             name: 'Mr. PAUCH BUNPHEAKDEY',
             role: 'Deputy General Manager',
             image: '/images/team-leadership-professional/pauch_bunpheakdey.jpg',
-            bio: 'As Deputy General Manager, Mr. Pauch ensures operational excellence across all departments. He brings over 18 years of experience in construction management and strategic planning.'
+            bio: 'Deputy General Manager Bio'
         },
         {
             name: 'Mr. LENG VANNARITH',
             role: 'Finance Director',
             image: '/images/team-leadership-professional/leng_vannarith.jpg',
-            bio: 'Mr. Leng overlooks the financial health of KIM MEX, ensuring sustainable growth and robust fiscal policies that allow for ambitious project undertakings.'
+            bio: 'Finance Director Bio'
         },
         {
             name: 'Mr. OUNG CHAKNORA',
             role: 'Senior Project Manager',
             image: '/images/team-leadership-professional/oung_chaknora.jpg',
-            bio: 'Leading our largest developments, Mr. Oung is known for his rigorous attention to detail and ability to deliver complex high-rise projects ahead of schedule.'
+            bio: 'Senior Project Manager Bio'
         },
         {
             name: 'Mr. SUM ROTANA',
             role: 'Project Manager',
             image: '/images/team-leadership-professional/sum_rotana.jpg',
-            bio: 'Mr. Sum specializes in commercial and industrial projects, coordinating diverse teams to ensure safety and quality standards are met at every stage.'
+            bio: 'Project Manager Bio'
         },
         {
             name: 'Mr. KRAI KEAK',
             role: 'MEP Operation Manager',
             image: '/images/team-leadership-professional/krai_keak.jpg',
-            bio: 'Overseeing Mechanical, Electrical, and Plumbing operations, Mr. Krai ensures that the vital systems of our buildings function perfectly and efficiently.'
+            bio: 'MEP Operation Manager Bio'
         },
     ];
 
@@ -338,30 +343,30 @@ export default function AboutPage() {
             name: 'Mr. CHHUNDY RYTA',
             role: 'Deputy Architect Manager',
             image: '/images/team-leadership-professional/chhundy_ryta.jpg',
-            bio: 'Mr. Chhundy brings creative vision to life, working closely with clients to translate their dreams into structural reality while strictly adhering to codes.'
+            bio: 'Deputy Architect Manager Bio'
         },
         {
             name: 'Mr. TOUCH PUTHEANY',
             role: 'MEP Design Manager',
             image: '/images/team-leadership-professional/touch_putheany.jpg',
-            bio: 'Leading the MEP design team, Mr. Touch focuses on sustainable and energy-efficient system designs for modern infrastructure.'
+            bio: 'MEP Design Manager Bio'
         },
         {
             name: 'Mr. RY KEN',
             role: 'Deputy QS Manager',
             image: '/images/team-leadership-professional/ry_ken.jpg',
-            bio: 'With precision and expertise, Mr. Ry manages quantity surveying, ensuring accurate cost estimation and resource management for all projects.'
+            bio: 'Deputy QS Manager Bio'
         },
         {
             name: 'Mr. HONG BUNNA',
             role: 'Warehouse Manager',
             image: '/images/team-leadership-professional/hong_bunna.jpg',
-            bio: 'Mr. Hong manages logistics and inventory, ensuring that materials are available on-site exactly when needed to maintain project timelines.'
+            bio: 'Warehouse Manager Bio'
         },
     ];
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy">
+        <div className={`bg-white min-h-screen text-titan-navy ${fontClassName}`}>
 
             {/* === HERO SECTION === */}
             <section ref={heroRef} className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">
@@ -369,7 +374,7 @@ export default function AboutPage() {
                 <motion.div style={{ y: heroY }} className="absolute inset-0">
                     <Image
                         src="/images/projects/Thumbnail-6.jpg"
-                        alt="Construction Site"
+                        alt={t('Construction Site')}
                         width={1920}
                         height={1200}
                         className="w-full h-[120%] object-cover"
@@ -393,7 +398,7 @@ export default function AboutPage() {
                         className="flex items-center justify-center gap-4 mb-6"
                     >
                         <div className="w-12 h-[2px] bg-titan-red"></div>
-                        <span className="text-titan-red font-bold uppercase tracking-[0.2em] text-sm">Est. 1999</span>
+                        <span className="text-titan-red font-bold uppercase tracking-[0.2em] text-sm">{t('Est. 1999')}</span>
                         <div className="w-12 h-[2px] bg-titan-red"></div>
                     </motion.div>
 
@@ -403,9 +408,9 @@ export default function AboutPage() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-[0.95]"
                     >
-                        BUILDING
+                        {t('BUILDING')}
                         <br />
-                        <span className="text-titan-red">CAMBODIA&apos;S FUTURE</span>
+                        <span className="text-titan-red">{t("CAMBODIA'S FUTURE")}</span>
                     </motion.h1>
 
                     <motion.p
@@ -414,7 +419,7 @@ export default function AboutPage() {
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed"
                     >
-                        For over 25 years, KIM MEX Construction has been at the forefront of Cambodia&apos;s infrastructure development, transforming visions into landmarks.
+                        {t('About Hero Desc')}
                     </motion.p>
                 </motion.div>
 
@@ -439,10 +444,10 @@ export default function AboutPage() {
             <section className="bg-titan-navy py-16 border-t border-white/10">
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                        <AnimatedCounter value={25} suffix="+" label="Years Experience" />
-                        <AnimatedCounter value={150} suffix="+" label="Projects Completed" />
-                        <AnimatedCounter value={500} suffix="+" label="Team Members" />
-                        <AnimatedCounter value={98} suffix="%" label="Client Satisfaction" />
+                        <AnimatedCounter value={25} suffix="+" label={t('Years Experience')} />
+                        <AnimatedCounter value={150} suffix="+" label={t('Projects Completed')} />
+                        <AnimatedCounter value={500} suffix="+" label={t('Team Members')} />
+                        <AnimatedCounter value={98} suffix="%" label={t('Client Satisfaction')} />
                     </div>
                 </div>
             </section>
@@ -460,7 +465,7 @@ export default function AboutPage() {
                                         <div className="relative h-48 w-full rounded-2xl shadow-lg overflow-hidden">
                                             <Image
                                                 src="/images/projects/Thumbnail-4.jpg"
-                                                alt="Construction"
+                                                alt={t('Construction')}
                                                 fill
                                                 className="object-cover"
                                             />
@@ -505,50 +510,50 @@ export default function AboutPage() {
                         {/* Right: Content */}
                         <FadeInWhenVisible delay={0.2}>
                             <div>
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Who We Are</span>
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Who We Are')}</span>
                                 <h2 className="text-4xl md:text-5xl font-black text-titan-navy mb-6 leading-tight">
-                                    Cambodia&apos;s Premier <span className="text-titan-red">Construction Partner</span>
+                                    {t("Cambodia's Premier")} <span className="text-titan-red">{t('Construction Partner')}</span>
                                 </h2>
                                 <p className="text-titan-navy/60 text-lg leading-relaxed mb-8">
-                                    Since 1999, KIM MEX Construction has been a cornerstone of Cambodia&apos;s infrastructure development. We are more than builders; we are partners in national progress, dedicated to delivering excellence in every beam, brick, and blueprint.
+                                    {t('Who We Are Desc')}
                                 </p>
 
                                 <div className="space-y-4">
                                     {[
                                         {
                                             icon: Flag,
-                                            title: 'Our Mission',
-                                            desc: 'To bridge the gap between concept and reality through exceptional engineering and safety.',
-                                            detail: 'At KIM MEX, we are dedicated to transforming complex challenges into structural realities. Our mission goes beyond building; it\'s about creating value for our stakeholders and the nation.',
+                                            title: t('Our Mission'),
+                                            desc: t('To bridge the gap between concept and reality through exceptional engineering and safety.'),
+                                            detail: t('At KIM MEX, we are dedicated to transforming complex challenges into structural realities. Our mission goes beyond building; it\'s about creating value for our stakeholders and the nation.'),
                                             points: [
-                                                'Prioritizing safety in every structural phase.',
-                                                'Implementing sustainable building practices.',
-                                                'Delivering unmatched precision and quality.',
-                                                'Cultivating long-term client partnerships.'
+                                                t('Prioritizing safety in every structural phase.'),
+                                                t('Implementing sustainable building practices.'),
+                                                t('Delivering unmatched precision and quality.'),
+                                                t('Cultivating long-term client partnerships.')
                                             ]
                                         },
                                         {
                                             icon: Eye,
-                                            title: 'Our Vision',
-                                            desc: 'To be the most trusted and innovative construction partner in Cambodia.',
-                                            detail: 'We envision a skyline defined by innovation and architectural brilliance. Our vision is to set the benchmark for construction excellence in Southeast Asia, leading with technology.',
+                                            title: t('Our Vision'),
+                                            desc: t('To be the most trusted and innovative construction partner in Cambodia.'),
+                                            detail: t('We envision a skyline defined by innovation and architectural brilliance. Our vision is to set the benchmark for construction excellence in Southeast Asia, leading with technology.'),
                                             points: [
-                                                'Global recognition for engineering excellence.',
-                                                'Pioneering smart construction technologies.',
-                                                'Shaping the future of urban living.',
-                                                'Becoming the most trusted name in real estate.'
+                                                t('Global recognition for engineering excellence.'),
+                                                t('Pioneering smart construction technologies.'),
+                                                t('Shaping the future of urban living.'),
+                                                t('Becoming the most trusted name in real estate.')
                                             ]
                                         },
                                         {
                                             icon: Target,
-                                            title: 'Our Goal',
-                                            desc: 'To complete every project on time and within budget with zero-accident safety.',
-                                            detail: 'Success for us is measured by the safety of our team and the satisfaction of our clients. We strive for excellence through meticulous planning and execution.',
+                                            title: t('Our Goal'),
+                                            desc: t('To complete every project on time and within budget with zero-accident safety.'),
+                                            detail: t('Success for us is measured by the safety of our team and the satisfaction of our clients. We strive for excellence through meticulous planning and execution.'),
                                             points: [
-                                                'Achieving 100% on-time project completion.',
-                                                'Maintaining a strict zero-accident safety record.',
-                                                'Expanding our footprint into renewable infrastructure.',
-                                                'Investing in professional growth of our staff.'
+                                                t('Achieving 100% on-time project completion.'),
+                                                t('Maintaining a strict zero-accident safety record.'),
+                                                t('Expanding our footprint into renewable infrastructure.'),
+                                                t('Investing in professional growth of our staff.')
                                             ]
                                         },
                                     ].map((item, i) => (
@@ -635,15 +640,15 @@ export default function AboutPage() {
                             <div className="lg:col-span-7 bg-gray-50 p-8 md:p-12 rounded-2xl relative">
                                 <Quote className="text-titan-navy mb-6" size={48} strokeWidth={1.5} />
 
-                                <h3 className="text-xl md:text-2xl font-bold text-titan-navy mb-6">Message From CEO</h3>
+                                <h3 className="text-xl md:text-2xl font-bold text-titan-navy mb-6">{t('Message From CEO')}</h3>
 
                                 <blockquote className="text-lg md:text-xl text-titan-navy/80 italic leading-loose mb-10 font-serif">
-                                    &ldquo;At KIM MEX, we believe that construction is not just about concrete and steel, but about building current and future dreams. Our commitment to integrity and quality has been the cornerstone of our success for over 20 years. We look forward to continuing to build the foundations of Cambodia&apos;s growth.&rdquo;
+                                    &ldquo;{t('CEO Quote Desc')}&rdquo;
                                 </blockquote>
 
                                 <div>
-                                    <div className="text-titan-navy font-black text-xl uppercase mb-1">Okhna. TOUCH KIM</div>
-                                    <div className="text-titan-navy/60 text-xs font-bold uppercase tracking-widest">Chief Executive Officer</div>
+                                    <div className="text-titan-navy font-black text-xl uppercase mb-1">{t('Okhna. TOUCH KIM')}</div>
+                                    <div className="text-titan-navy/60 text-xs font-bold uppercase tracking-widest">{t('Chief Executive Officer')}</div>
                                 </div>
                             </div>
 
@@ -657,8 +662,8 @@ export default function AboutPage() {
                 <div className="max-w-[1400px] mx-auto">
                     <FadeInWhenVisible>
                         <div className="text-center mb-16">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">What Drives Us</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">Our Core Values</h2>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('What Drives Us')}</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">{t('Our Core Values')}</h2>
                         </div>
                     </FadeInWhenVisible>
 
@@ -683,8 +688,8 @@ export default function AboutPage() {
                 <div className="max-w-[1200px] mx-auto">
                     <FadeInWhenVisible>
                         <div className="text-center mb-16">
-                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our Journey</span>
-                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">Company Milestones</h2>
+                            <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Our Journey')}</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-titan-navy">{t('Company Milestones')}</h2>
                         </div>
                     </FadeInWhenVisible>
 
@@ -731,7 +736,7 @@ export default function AboutPage() {
                 <div className="max-w-[1400px] mx-auto text-center">
                     <FadeInWhenVisible>
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl font-black text-titan-navy uppercase mb-16 tracking-tight">Organization Structure</h2>
+                            <h2 className="text-4xl font-black text-titan-navy uppercase mb-16 tracking-tight">{t('Organization Structure')}</h2>
                         </div>
                     </FadeInWhenVisible>
 
@@ -811,20 +816,20 @@ export default function AboutPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <FadeInWhenVisible>
                             <div>
-                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">Our Standards</span>
+                                <span className="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{t('Our Standards')}</span>
                                 <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                                    Quality & Safety <span className="text-titan-red">First</span>
+                                    {t('Quality & Safety')} <span className="text-titan-red uppercase">{t('First')}</span>
                                 </h2>
                                 <p className="text-white/60 text-lg leading-relaxed mb-10">
-                                    We implement rigorous Quality Assurance (QA) and Quality Control (QC) protocols on every site. Our safety record is a testament to our commitment to our workforce and our clients.
+                                    {t('QA/QC Desc')}
                                 </p>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     {[
-                                        { icon: Shield, title: 'ISO 9001:2015', desc: 'Quality Management Certified' },
-                                        { icon: Award, title: 'Zero Accidents', desc: 'Safety record policy' },
-                                        { icon: CheckCircle2, title: '100% Compliance', desc: 'Building code adherence' },
-                                        { icon: Clock, title: 'On-Time Delivery', desc: '98% completion rate' },
+                                        { icon: Shield, title: 'ISO 9001:2015', desc: t('Quality Management Certified') },
+                                        { icon: Award, title: t('Zero Accidents'), desc: t('Safety record policy') },
+                                        { icon: CheckCircle2, title: t('100% Compliance'), desc: t('Building code adherence') },
+                                        { icon: Clock, title: t('On-Time Delivery'), desc: t('98% completion rate') },
                                     ].map((item, i) => (
                                         <div key={i} className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
                                             <div className="w-12 h-12 bg-titan-red/20 rounded-lg flex items-center justify-center text-titan-red shrink-0">
@@ -856,8 +861,8 @@ export default function AboutPage() {
                                             <CheckCircle2 className="text-green-600" size={28} />
                                         </div>
                                         <div>
-                                            <div className="text-2xl font-black text-titan-navy">ISO</div>
-                                            <div className="text-sm text-titan-navy/50">9001:2015 Certified</div>
+                                            <div className="text-2xl font-black text-titan-navy">{t('ISO')}</div>
+                                            <div className="text-sm text-titan-navy/50">{t('9001:2015 Certified')}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -871,16 +876,16 @@ export default function AboutPage() {
             <section className="py-20 px-6 bg-titan-red">
                 <div className="max-w-[1200px] mx-auto text-center">
                     <FadeInWhenVisible>
-                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Ready to Build Together?</h2>
+                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6">{t('Ready to Build Together?')}</h2>
                         <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                            Partner with Cambodia&apos;s most trusted construction company for your next project.
+                            {t('CTA Desc')}
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
                             <Link href="/design-x/contact" className="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg">
-                                Contact Us
+                                {t('Contact Us')}
                             </Link>
                             <Link href="/design-x/projects" className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-titan-navy transition-all rounded-lg">
-                                View Projects
+                                {t('View Projects')}
                             </Link>
                         </div>
                     </FadeInWhenVisible>

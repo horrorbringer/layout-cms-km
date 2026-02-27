@@ -119,7 +119,7 @@ export default function ProjectDetailPage() {
         : 'Back to Implementation';
 
     return (
-        <div className="bg-white min-h-screen font-sans text-titan-navy relative">
+        <div className="bg-white min-h-screen text-titan-navy relative">
             {/* --- HERO SECTION --- */}
             <section className="relative h-[70vh] bg-titan-navy flex items-end">
                 <div className="absolute inset-0">

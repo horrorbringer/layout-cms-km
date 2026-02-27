@@ -75,7 +75,7 @@ const DesignCard = ({
 
 export default function LandingPage() {
     return (
-        <div className="min-h-screen bg-[#FAFAFA] text-gray-900 font-sans selection:bg-gray-900 selection:text-white flex flex-col items-center justify-center p-6 md:p-12">
+        <div className="min-h-screen bg-[#FAFAFA] text-gray-900 selection:bg-gray-900 selection:text-white flex flex-col items-center justify-center p-6 md:p-12">
 
             <div className="text-center max-w-2xl mx-auto mb-16 md:mb-24">
                 <motion.div

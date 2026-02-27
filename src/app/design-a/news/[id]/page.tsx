@@ -293,7 +293,7 @@ export default function NewsDetailDesignAPage() {
     ];
 
     return (
-        <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 font-sans text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
+        <div className="bg-white md:bg-[#E5E5E5] min-h-screen md:p-6 text-titan-navy selection:bg-titan-navy selection:text-white transition-colors duration-500">
             
             {/* --- MAIN CONTAINER --- */}
             <div className="bg-white rounded-none md:rounded-[3rem] min-h-[calc(100vh-3rem)] shadow-none md:shadow-2xl overflow-hidden relative mx-auto max-w-[1920px]">
