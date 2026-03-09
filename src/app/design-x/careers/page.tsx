@@ -314,7 +314,7 @@ export default function CareersPage() {
 
                                     <div className="flex items-center gap-4 w-full md:w-auto">
                                         <div className="hidden md:flex gap-2">
-                                            {job.tags.map(tag => (
+                                            {job.tags?.map(tag => (
                                                 <span key={tag} className="px-3 py-1 bg-gray-50 text-xs font-bold text-titan-navy-subtle rounded-full border border-gray-100">
                                                     {tag}
                                                 </span>

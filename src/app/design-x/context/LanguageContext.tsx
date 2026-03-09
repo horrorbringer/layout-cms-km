@@ -338,9 +338,10 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguage] = useState<Language>('kh');
+    const [language, setLanguage] = useState<Language>('en');
 
     const t = (key: string): string => {
+        if (!key) return '';
         // Remove trailing/leading spaces for lookup
         const lookupKey = key.trim();
         // Return translation or original key if not found

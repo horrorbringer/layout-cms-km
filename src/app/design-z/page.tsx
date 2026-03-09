@@ -1,96 +1,168 @@
-'use client';
-
-import React from 'react';
-import { ArrowRight, ShieldCheck, Trophy, PenTool, Layout, Ruler, Users, Hammer, CheckCircle2, Phone, Clock, Award, Target, Quote, Star, MapPin, Calendar } from 'lucide-react';
+import {
+    ArrowRight, ShieldCheck, Trophy, PenTool, Layout, Ruler, Users, Hammer,
+    CheckCircle2, Phone, Clock, Award, Target, Quote, Star, MapPin,
+    Calendar, MessageSquare, HardHat, Shield, Search
+} from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FadeInWhenVisible } from './_components/Animations';
-import UnifiedHero, { HeroMode } from './_components/UnifiedHero';
-import { allNews } from './data/newsData';
-import { projects as allProjects } from './data/projectData';
+import HomeHeroWrapper from './_components/HomeHeroWrapper';
+import { useLanguage } from './context/LanguageContext';
 import { homeData } from './data/homeData';
-import { useLanguage, getLocalizedText } from './context/LanguageContext';
+import prisma from '@/lib/prisma';
 
 // --- CONFIGURATION ---
-// Change this to 'video' or 'carousel' to switch the hero style
-export default function DesignGenX() {
-    const { language, t } = useLanguage();
-    const [heroMode, setHeroMode] = React.useState<HeroMode>('video');
+export default async function DesignGenX() {
+    // Determine language (default to 'en' for server component if LanguageContext isn't available server-side)
+    const language: 'en' | 'kh' = 'en';
 
-    const services = [
-        {
-            title: t('Design & Build'),
-            desc: { en: 'End-to-end solutions from concept to completion with integrated design and construction.', kh: 'ការផ្តល់ដំណោះស្រាយពេញលេញពីរចនាបថគំរូរហូតដល់ការសាងសង់បញ្ចប់ជាមួយគ្នាយ៉ាងល្អឥតខ្ចោះ។' },
-            icon: PenTool,
-            features: [
-                { en: 'Conceptual Design', kh: 'រូបគំនូសព្រាងការរចនា' },
-                { en: 'Structural Engineering', kh: 'ការគូសប្លង់គ្រឿងបង្គុំ' },
-                { en: 'Interior Design', kh: 'ការរចនា និងតុបតែងផ្នែកខាងក្នុង' }
-            ],
-            stat: '50+'
-        },
-        {
-            title: t('Infrastructure'),
-            desc: { en: 'Building the backbone of communities with bridges, roads, and utilities.', kh: 'ការសាងសង់ហេដ្ឋារចនាសម្ព័ន្ធសហគមន៍ដូចជា ស្ពាន ផ្លូវថ្នល់ និង​ប្រព័ន្ធអាគារនានា។' },
-            icon: Layout,
-            features: [
-                { en: 'Roads & Bridges', kh: 'ផ្លូវ និងស្ពាន' },
-                { en: 'Water Treatment', kh: 'ប្រព័ន្ធចម្រោះទឹកស្អាត' },
-                { en: 'Public Works', kh: 'ការដ្ឋានសាធារណការ' }
-            ],
-            stat: '30+'
-        },
-        {
-            title: t('Project Management'),
-            desc: { en: 'Rigorous oversight ensuring on-time, on-budget delivery for every client.', kh: 'ការត្រួតពិនិត្យយ៉ាងប្រុងប្រយ័ត្ន ដើម្បីធានាបាននូវការប្រគល់ជូនទាន់ពេលវេលា និងតាមថវិកាដែលបានគ្រោងទុក។' },
-            icon: Users,
-            features: [
-                { en: 'Cost Control', kh: 'ការគ្រប់គ្រងតម្លៃ' },
-                { en: 'Quality Assurance', kh: 'ការធានាគុណភាព' },
-                { en: 'Safety Compliance', kh: 'ការអនុលោមតាមសុវត្ថិភាព' }
-            ],
-            stat: '100%'
-        },
-        {
-            title: t('Construction'),
-            desc: { en: 'World-class building and civil engineering solutions for all sectors.', kh: 'ដំណោះស្រាយវិស្វកម្មស៊ីវិល និងសំណង់កម្រិតពិភពលោកសម្រាប់គ្រប់វិស័យ។' },
-            icon: Hammer,
-            features: [
-                { en: 'Civil Engineering', kh: 'វិស្វកម្មស៊ីវិល' },
-                { en: 'Building Structure', kh: 'រចនាសម្ព័ន្ធអគារ' },
-                { en: 'MEP Systems', kh: 'ប្រព័ន្ធទឹក ភ្លើង និងម៉ាស៊ីន (MEP)' }
-            ],
-            stat: '150+'
-        },
-        {
-            title: t('Systems'),
-            desc: { en: 'Smart building technologies and advanced MEP integration for modern hubs.', kh: 'បច្ចេកវិទ្យាអាគារឆ្លាតវៃ និងការភ្ជាប់ប្រព័ន្ធអនុវត្ត MEP កម្រិតយន្តសម្រាប់មជ្ឈមណ្ឌលទំនើប។' },
-            icon: Target,
-            features: [
-                { en: 'Smart Grid Control', kh: 'ការគ្រប់គ្រងបណ្តាញឆ្លាតវៃ' },
-                { en: 'Advanced MEP', kh: 'ប្រព័ន្ធ MEP កម្រិតយន្ត' },
-                { en: 'Building Automation', kh: 'ស្វ័យប្រវត្តិកម្មអគារ' }
-            ],
-            stat: '20+'
-        }
-    ];
-
-    const projects = allProjects.slice(0, 4);
-
-    const testimonials = homeData.testimonials;
-
-    const statsMapping = (label: string) => {
-        const icons: any = { ShieldCheck, Trophy, Clock, Target, Award, Hammer, PenTool };
-        const iconName = homeData.stats.find(s => getLocalizedText(s.label, 'en') === label)?.iconName || 'ShieldCheck';
-        return icons[iconName] || ShieldCheck;
+    const dictionary: Record<string, any> = {
+        'About Kimmex': 'About Kimmex',
+        'Experience & Excellence': 'Experience & Excellence',
+        'Experience Desc': 'Over 25 years of excellence in building the future of Cambodia.',
+        'Testimonials': 'Testimonials',
+        'What Our Clients Say': 'What Our Clients Say',
+        'Home Testimonials Desc': 'We build relationships, not just structures.',
+        'Build with Purpose': 'Build with Purpose',
+        'Our Professional Process': 'Our Professional Process',
+        'Years of Excellence': 'Years of Excellence',
+        'Learn More About Us': 'Learn More About Us',
+        'Our Services': 'Our Services',
+        'Comprehensive Construction Solutions': 'Comprehensive Construction Solutions',
+        'From design to completion': 'From design to completion',
+        'View All Services': 'View All Services',
+        'Our Process': 'Our Process',
+        'How We Work': 'How We Work',
+        'A streamlined approach': 'A streamlined approach',
+        'Our Portfolio': 'Our Portfolio',
+        'Featured Projects': 'Featured Projects',
+        'View All Projects': 'View All Projects',
+        'News & Updates': 'News & Updates',
+        'Latest Insights': 'Latest Insights',
+        'View All News': 'View All News',
+        'Read Story': 'Read Story',
+        'Ready to Start Your Project?': 'Ready to Start Your Project?',
+        'Home CTA Desc': 'Contact us today for a free consultation and quote on your next big project.',
+        'Get Free Quote': 'Get Free Quote',
+        'Call Now': 'Call Now',
+        'Our Partners': 'Our Partners',
+        'Trusted By Leading Institutions': 'Trusted By Leading Institutions',
+        'Partners': 'Partners',
+        'Years Trust': 'Years Trust',
     };
 
-    const processIcons: any = { Target, PenTool, Hammer, Trophy };
+    const t = (key: string) => dictionary[key] || key;
 
+    // Server-side safe localizer
+    const getLocalText = (obj: any, lang: 'en' | 'kh') => {
+        if (!obj) return '';
+        if (typeof obj === 'string') return obj;
+        return obj[lang] || obj.en || '';
+    };
+
+    // Fetch dynamic data from Prisma
+    const projectsEntry = await prisma.project.findMany({
+        take: 3,
+        orderBy: { createdAt: 'desc' }
+    });
+
+    const allNewsEntry = await prisma.newsArticle.findMany({
+        take: 3,
+        orderBy: { publishedAt: 'desc' }
+    });
+
+    const projectCounts = await prisma.project.groupBy({
+        by: ['status'],
+        _count: { _all: true }
+    });
+
+    const totalProjectCount = projectCounts.reduce((acc, curr) => acc + curr._count._all, 0);
+    const completedCount = projectCounts.find(p => p.status === 'COMPLETED')?._count._all || 0;
+    const ongoingCount = totalProjectCount - completedCount;
+
+    const testimonialsEntry = await prisma.testimonial.findMany({
+        where: { isFeatured: true },
+        take: 10,
+        orderBy: { createdAt: 'desc' }
+    });
+
+    const heroSettings = await prisma.systemSetting.findUnique({ where: { key: 'home_hero' } });
+    const companyStats = await prisma.systemSetting.findUnique({ where: { key: 'company_stats' } });
+    const homeProcess = await prisma.systemSetting.findUnique({ where: { key: 'home_process' } });
+
+    // Helper to map DB category to frontend filter category
+    const mapCategory = (cat: string) => {
+        const mapping: Record<string, string> = {
+            'GOVERNMENT_OFFICE': 'Government Office Building',
+            'WATER_TREATMENT': 'Water Treatment Plant',
+            'SLOP_CONSTRUCTION': 'Slope Construction',
+            'SYSTEMS': 'Systems',
+            'INFRASTRUCTURE': 'Infrastructure',
+            'GOVERNMENT': 'Government',
+            'PRIVATE_BUILDING': 'Private Building',
+            'PUBLIC_SERVICE': 'Public Service'
+        };
+        return mapping[cat] || cat;
+    };
+
+    // Map Prisma models exactly to original frontend interface structure
+    const mappedProjects = projectsEntry.map(p => ({
+        id: p.slug,
+        title: { en: p.title, kh: p.titleKm || p.title },
+        location: { en: p.location || '', kh: p.locationKm || p.location || '' },
+        type: { en: mapCategory(p.category), kh: mapCategory(p.category) },
+        status: { en: p.status, kh: p.status },
+        image: p.heroImage || '/images/projects/Thumbnail-1.jpg',
+        summary: { en: p.description || '', kh: p.descriptionKm || p.description || '' }
+    }));
+
+    const allNews = allNewsEntry.map(n => ({
+        id: n.slug,
+        title: { en: n.title, kh: n.titleKm || n.title },
+        category: n.category || 'Updates',
+        date: { en: n.publishedAt ? new Date(n.publishedAt).toLocaleDateString('en-US') : '', kh: '' },
+        image: n.coverImage || '/images/projects/Thumbnail-1.jpg',
+    }));
+
+    const testimonials = testimonialsEntry.length > 0
+        ? testimonialsEntry.map(t => ({
+            id: t.id,
+            quote: { en: t.content, kh: t.contentKm || t.content },
+            author: { en: t.clientName, kh: t.clientNameKm || t.clientName },
+            role: { en: t.clientRole || '', kh: t.clientRoleKm || t.clientRole || '' },
+            rating: t.rating || 5
+        }))
+        : homeData.testimonials;
+
+    const servicesEntry = await prisma.service.findMany({
+        where: { isActive: true },
+        orderBy: { orderIndex: 'asc' }
+    });
+
+    const services = servicesEntry.map(s => ({
+        title: s.title,
+        desc: { en: s.summary || '', kh: s.summary || '' },
+        icon: PenTool,
+        features: s.features.map(f => ({ en: f, kh: f })),
+        stat: 'New'
+    }));
+
+    const statusIcons: any = {
+        ShieldCheck, Trophy, Clock, Target, Award, Hammer, PenTool,
+        Users, Shield, Search, Layout, CheckCircle2, MessageSquare, HardHat
+    };
+
+    const getIcon = (name: string, label: string) => {
+        return statusIcons[name] || statusIcons[label] || Award;
+    };
+
+    const companyStatsValue = companyStats?.value as any[];
+    const stats = (companyStatsValue && companyStatsValue.length > 0) ? companyStatsValue : homeData.stats;
+    const processes = (homeProcess?.value as any[]) || homeData.process;
 
     return (
         <>
-            <UnifiedHero mode={heroMode} onToggle={(mode) => setHeroMode(mode)} />
+            <HomeHeroWrapper initialData={heroSettings?.value} />
 
             {/* === WHY CHOOSE US === */}
             <section className="py-24 bg-gray-50">
@@ -109,17 +181,24 @@ export default function DesignGenX() {
                                 </p>
 
                                 <div className="grid grid-cols-2 gap-4">
-                                    {homeData.stats.map((item, i) => {
-                                        const Icon = processIcons[item.iconName] || statsMapping(getLocalizedText(item.label, 'en')) || Award;
+                                    {stats.map((item: any, i: number) => {
+                                        const Icon = getIcon(item.iconName || item.icon, getLocalText(item.label, 'en'));
                                         return (
-                                            <div key={i} className="group bg-white p-8 rounded-xl border border-gray-100 relative overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-2">
-                                                <div className="absolute top-0 left-0 w-1 h-full bg-gray-100 group-hover:bg-accent-orange transition-colors duration-500"></div>
-                                                <div className="ml-4">
-                                                    <div className="w-14 h-14 bg-gray-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent-orange group-hover:text-white transition-all duration-300">
-                                                        <Icon size={24} className="text-titan-navy group-hover:text-white transition-colors" />
+                                            <div key={i} className="group bg-white p-6 rounded-2xl border border-gray-100 relative overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1">
+                                                <div className={`absolute top-0 right-0 w-24 h-24 ${item.bg || 'bg-gray-50'} opacity-10 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700`}></div>
+                                                <div className="flex flex-col gap-4">
+                                                    <div className={`w-12 h-12 ${item.bg || 'bg-gray-50'} ${item.color || 'text-titan-navy'} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                                                        <Icon size={24} />
                                                     </div>
-                                                    <h3 className="text-xl font-black text-titan-navy mb-3 group-hover:text-accent-orange transition-colors">{getLocalizedText(item.label, language)}</h3>
-                                                    <p className="text-titan-navy/60 text-sm leading-relaxed">{getLocalizedText(item.val, language)}</p>
+                                                    <div>
+                                                        <div className="text-3xl font-black text-titan-navy mb-1 flex items-baseline gap-1">
+                                                            {getLocalText(item.value, language)}
+                                                            <span className="text-accent-orange text-sm font-bold">+</span>
+                                                        </div>
+                                                        <h3 className="text-xs font-bold text-titan-navy/40 uppercase tracking-widest group-hover:text-titan-navy/60 transition-colors">
+                                                            {getLocalText(item.label, language)}
+                                                        </h3>
+                                                    </div>
                                                 </div>
                                             </div>
                                         );
@@ -136,44 +215,18 @@ export default function DesignGenX() {
                             <div className="relative">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg">
-                                        <Image
-                                            src="/images/projects/Thumbnail-4.jpg"
-                                            alt="Construction Site"
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 768px) 100vw, 25vw"
-                                        />
+                                        <Image src="/images/projects/Thumbnail-4.jpg" alt="Construction Site" fill className="object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
                                     </div>
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg mt-8 md:mt-0">
-                                        <Image
-                                            src="/images/projects/Thumbnail-5.jpg"
-                                            alt="Team Meeting"
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 768px) 100vw, 25vw"
-                                        />
+                                        <Image src="/images/projects/Thumbnail-5.jpg" alt="Team Meeting" fill className="object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
                                     </div>
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg -mt-8 md:mt-0">
-                                        <Image
-                                            src="/images/projects/Thumbnail-6.jpg"
-                                            alt="Architecture"
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 768px) 100vw, 25vw"
-                                        />
+                                        <Image src="/images/projects/Thumbnail-6.jpg" alt="Architecture" fill className="object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
                                     </div>
                                     <div className="relative h-64 w-full rounded-2xl overflow-hidden shadow-lg">
-                                        <Image
-                                            src="/images/projects/Thumbnail-7.jpg"
-                                            alt="Building"
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 768px) 100vw, 25vw"
-                                        />
+                                        <Image src="/images/projects/Thumbnail-7.jpg" alt="Building" fill className="object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
                                     </div>
                                 </div>
-
-                                {/* Experience Badge */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent-orange text-white p-6 rounded-2xl shadow-xl text-center z-10 w-32 h-32 flex flex-col items-center justify-center">
                                     <div className="text-4xl font-black">25+</div>
                                     <div className="text-xs uppercase tracking-widest mt-1">{t('Years of Excellence')}</div>
@@ -208,11 +261,11 @@ export default function DesignGenX() {
                                         </div>
                                     </div>
                                     <h3 className="text-2xl font-black text-titan-navy group-hover:text-accent-orange transition-colors mb-4 uppercase tracking-tighter">{s.title}</h3>
-                                    <p className="text-titan-navy/60 mb-8 text-sm leading-relaxed">{getLocalizedText(s.desc, language)}</p>
+                                    <p className="text-titan-navy/60 mb-8 text-sm leading-relaxed">{getLocalText(s.desc, language)}</p>
                                     <ul className="space-y-3 pt-8 border-t border-gray-100">
                                         {s.features.map((f, idx) => (
                                             <li key={idx} className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-titan-navy/40 group-hover:text-titan-navy/80 transition-colors">
-                                                <div className="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-150 transition-transform"></div> {getLocalizedText(f, language)}
+                                                <div className="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-150 transition-transform"></div> {getLocalText(f, language)}
                                             </li>
                                         ))}
                                     </ul>
@@ -243,11 +296,10 @@ export default function DesignGenX() {
                     </FadeInWhenVisible>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-                        {/* Connecting Line */}
                         <div className="hidden md:block absolute top-[4.5rem] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent z-0"></div>
 
-                        {homeData.process.map((s, i) => {
-                            const Icon = processIcons[s.iconName] || Target;
+                        {processes.map((s: any, i: number) => {
+                            const Icon = getIcon(s.iconName || s.icon, getLocalText(s.title, 'en'));
                             return (
                                 <FadeInWhenVisible key={i} delay={i * 0.1}>
                                     <div className="relative z-10 flex flex-col items-center text-center group">
@@ -255,8 +307,8 @@ export default function DesignGenX() {
                                             <Icon className="text-accent-orange mb-2 group-hover:text-white group-hover:scale-110 transition-all duration-300" size={32} />
                                             <span className="text-xl font-black text-white/40 group-hover:text-white transition-colors">{s.step}</span>
                                         </div>
-                                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-accent-orange transition-colors">{getLocalizedText(s.title, language)}</h3>
-                                        <p className="text-sm text-white/50 max-w-[200px] leading-relaxed group-hover:text-white/80 transition-colors">{getLocalizedText(s.desc, language)}</p>
+                                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-accent-orange transition-colors">{getLocalText(s.title, language)}</h3>
+                                        <p className="text-sm text-white/50 max-w-[200px] leading-relaxed group-hover:text-white/80 transition-colors">{getLocalText(s.desc, language)}</p>
                                     </div>
                                 </FadeInWhenVisible>
                             );
@@ -281,36 +333,30 @@ export default function DesignGenX() {
                     </FadeInWhenVisible>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {projects.map((p, i) => (
+                        {mappedProjects.map((p, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
                                 <Link href={`/design-z/projects/${p.id}`} className="group block h-full">
                                     <div className="relative overflow-hidden rounded-2xl shadow-lg h-80 w-full">
                                         <Image
                                             src={p.image}
-                                            alt={getLocalizedText(p.title, language)}
+                                            alt={getLocalText(p.title, language)}
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                             sizes="(max-width: 768px) 100vw, 33vw"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent z-10"></div>
-
-                                        {/* Category Badge */}
                                         <div className="absolute top-4 left-4 z-20">
                                             <span className="bg-accent-orange text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded">
-                                                {getLocalizedText(p.type, language)}
+                                                {getLocalText(p.type, language)}
                                             </span>
                                         </div>
-
-                                        {/* Project Info */}
                                         <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-                                            <h3 className="text-white text-2xl font-bold mb-2 group-hover:text-accent-orange transition-colors">{getLocalizedText(p.title, language)}</h3>
+                                            <h3 className="text-white text-2xl font-bold mb-2 group-hover:text-accent-orange transition-colors">{getLocalText(p.title, language)}</h3>
                                             <div className="flex items-center gap-4 text-white/60 text-sm">
-                                                <span className="flex items-center gap-1"><MapPin size={14} /> {getLocalizedText(p.location, language)}</span>
-                                                <span className="flex items-center gap-1"><CheckCircle2 size={14} /> {getLocalizedText(p.status, language)}</span>
+                                                <span className="flex items-center gap-1"><MapPin size={14} /> {getLocalText(p.location, language)}</span>
+                                                <span className="flex items-center gap-1"><CheckCircle2 size={14} /> {getLocalText(p.status, language)}</span>
                                             </div>
                                         </div>
-
-                                        {/* Hover Arrow */}
                                         <div className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0 z-20">
                                             <ArrowRight size={18} className="text-titan-navy" />
                                         </div>
@@ -343,14 +389,14 @@ export default function DesignGenX() {
                                             <Star key={idx} className="text-accent-orange fill-accent-orange" size={18} />
                                         ))}
                                     </div>
-                                    <p className="text-titan-navy/70 mb-6 relative z-10 leading-relaxed flex-grow">&ldquo;{getLocalizedText(t.quote, language)}&rdquo;</p>
+                                    <p className="text-titan-navy/70 mb-6 relative z-10 leading-relaxed flex-grow">&ldquo;{getLocalText(t.quote, language)}&rdquo;</p>
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 bg-titan-navy rounded-full flex items-center justify-center text-white font-bold shrink-0">
-                                            {getLocalizedText(t.author, language).charAt(0)}
+                                            {getLocalText(t.author, language).charAt(0)}
                                         </div>
                                         <div>
-                                            <div className="font-bold text-titan-navy">{getLocalizedText(t.author, language)}</div>
-                                            <div className="text-sm text-titan-navy/50">{getLocalizedText(t.role, language)}</div>
+                                            <div className="font-bold text-titan-navy">{getLocalText(t.author, language)}</div>
+                                            <div className="text-sm text-titan-navy/50">{getLocalText(t.role, language)}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -376,24 +422,18 @@ export default function DesignGenX() {
                     </FadeInWhenVisible>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {allNews.slice(0, 3).map((news, i) => (
+                        {allNews.map((news, i) => (
                             <FadeInWhenVisible key={i} delay={i * 0.1}>
                                 <Link href={`/design-z/news/${news.id}`} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
                                     <div className="aspect-[16/10] relative overflow-hidden">
                                         <div className="absolute top-4 left-4 bg-accent-orange text-white text-xs font-bold uppercase px-3 py-1 z-10 rounded">{news.category}</div>
-                                        <Image
-                                            src={news.image}
-                                            alt={getLocalizedText(news.title, language)}
-                                            fill
-                                            className="object-cover group-hover:scale-105 transition-transform duration-700"
-                                            sizes="(max-width: 768px) 100vw, 33vw"
-                                        />
+                                        <Image src={news.image} alt={getLocalText(news.title, language)} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 768px) 100vw, 33vw" />
                                     </div>
                                     <div className="p-6 flex flex-col flex-grow">
                                         <div className="text-xs font-bold uppercase tracking-widest text-titan-navy/40 mb-3 flex items-center gap-2">
-                                            <Calendar size={14} /> {getLocalizedText(news.date, language)}
+                                            <Calendar size={14} /> {getLocalText(news.date, language)}
                                         </div>
-                                        <h3 className="text-xl font-bold text-titan-navy group-hover:text-accent-orange transition-colors leading-tight mb-4">{getLocalizedText(news.title, language)}</h3>
+                                        <h3 className="text-xl font-bold text-titan-navy group-hover:text-accent-orange transition-colors leading-tight mb-4">{getLocalText(news.title, language)}</h3>
                                         <span className="text-sm font-bold text-accent-orange flex items-center gap-2 mt-auto">
                                             {t('Read Story')} <ArrowRight size={14} />
                                         </span>
@@ -418,7 +458,7 @@ export default function DesignGenX() {
                                 <Link href="/design-z/contact" className="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg flex items-center gap-2">
                                     {t('Get Free Quote')} <ArrowRight size={16} />
                                 </Link>
-                                <a href="tel:+85523999999" className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-titan-navy transition-all rounded-lg flex items-center gap-2">
+                                <a href="tel:+85523999888" className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-titan-navy transition-all rounded-lg flex items-center gap-2">
                                     <Phone size={16} /> {t('Call Now')}
                                 </a>
                             </div>
@@ -433,9 +473,7 @@ export default function DesignGenX() {
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                         <div>
                             <span className="text-accent-orange font-bold uppercase tracking-widest text-sm mb-2 block">{t('Our Partners')}</span>
-                            <h2 className="text-3xl md:text-4xl font-black text-white">
-                                {t('Trusted By Leading Institutions')}
-                            </h2>
+                            <h2 className="text-3xl md:text-4xl font-black text-white">{t('Trusted By Leading Institutions')}</h2>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-center px-6 py-3 bg-white/10 rounded-lg">
@@ -450,23 +488,13 @@ export default function DesignGenX() {
                     </div>
                 </div>
 
-                {/* Marquee Row 1 */}
                 <div className="relative mb-6">
                     <div className="flex animate-marquee">
                         {[...Array(2)].map((_, setIndex) => (
                             <div key={setIndex} className="flex shrink-0">
                                 {[1, 2, 3, 4, 5, 6].map((num) => (
-                                    <div
-                                        key={`${setIndex}-${num}`}
-                                        className="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative"
-                                    >
-                                        <Image
-                                            src={`/patner/${num}.png`}
-                                            alt={`Partner ${num}`}
-                                            fill
-                                            className="object-contain opacity-70 hover:opacity-100 transition-opacity p-2"
-                                            sizes="200px"
-                                        />
+                                    <div key={`${setIndex}-${num}`} className="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative">
+                                        <Image src={`/patner/${num}.png`} alt={`Partner ${num}`} fill className="object-contain opacity-70 hover:opacity-100 transition-opacity p-2" sizes="200px" />
                                     </div>
                                 ))}
                             </div>
@@ -474,23 +502,13 @@ export default function DesignGenX() {
                     </div>
                 </div>
 
-                {/* Marquee Row 2 */}
                 <div className="relative">
                     <div className="flex animate-marquee-reverse">
                         {[...Array(2)].map((_, setIndex) => (
                             <div key={setIndex} className="flex shrink-0">
                                 {[7, 9, 10, 11, 1, 2].map((num) => (
-                                    <div
-                                        key={`${setIndex}-${num}`}
-                                        className="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative"
-                                    >
-                                        <Image
-                                            src={`/patner/${num}.png`}
-                                            alt={`Partner ${num}`}
-                                            fill
-                                            className="object-contain opacity-70 hover:opacity-100 transition-opacity p-2"
-                                            sizes="200px"
-                                        />
+                                    <div key={`${setIndex}-${num}`} className="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative">
+                                        <Image src={`/patner/${num}.png`} alt={`Partner ${num}`} fill className="object-contain opacity-70 hover:opacity-100 transition-opacity p-2" sizes="200px" />
                                     </div>
                                 ))}
                             </div>

@@ -34,7 +34,7 @@ export default function Hero() {
             <div className="absolute top-48 right-24 w-32 h-32 border-2 border-white/10 rounded-full hidden lg:block"></div>
 
             {/* Main Content */}
-            <div className="relative z-10 min-h-screen max-w-[1400px] mx-auto px-6 flex items-center pt-32 pb-24">
+            <div className="relative z-10 min-h-[100dvh] max-w-[1400px] mx-auto px-6 flex items-center pt-32 pb-40 md:pb-24">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
                     <div>
                         <motion.div
@@ -44,9 +44,6 @@ export default function Hero() {
                             className="flex items-center gap-4 mb-6"
                         >
                             <div className="w-16 h-1 bg-titan-red"></div>
-                            <span className="text-titan-red font-bold tracking-[0.2em] uppercase text-sm">
-                                {t('Since 1999')}
-                            </span>
                         </motion.div>
 
                         <motion.h1
@@ -55,7 +52,7 @@ export default function Hero() {
                             transition={{ duration: 0.8, delay: 0.2 }}
                             className={`font-black text-white ${language === 'kh'
                                 ? 'text-4xl md:text-6xl lg:text-7xl leading-[1.3] tracking-normal mb-6'
-                                : 'text-4xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8'
+                                : 'text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8'
                                 }`}
                         >
                             {getLocalizedText(homeData.hero.title, language)}
@@ -96,7 +93,6 @@ export default function Hero() {
                         >
                             {homeData.stats.slice(0, 3).map((stat, i) => (
                                 <div key={i}>
-                                    <div className="text-4xl font-black text-titan-red">{getLocalizedText(stat.val, language)}</div>
                                     <div className="text-xs uppercase tracking-widest text-white/50 font-bold mt-1">{getLocalizedText(stat.label, language)}</div>
                                 </div>
                             ))}
@@ -157,7 +153,7 @@ export default function Hero() {
             <motion.div
                 animate={{ y: [0, 10, 0] }}
                 transition={{ repeat: Infinity, duration: 2 }}
-                className="absolute bottom-24 left-1/2 -translate-x-1/2 text-white flex flex-col items-center gap-2 cursor-pointer z-20"
+                className="absolute bottom-32 md:bottom-24 left-1/2 -translate-x-1/2 text-white flex flex-col items-center gap-2 cursor-pointer z-20"
             >
                 <span className="text-[10px] uppercase tracking-widest font-bold text-white/60">{t('Scroll')}</span>
                 <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
@@ -170,21 +166,26 @@ export default function Hero() {
             </motion.div>
 
             {/* Bottom Service Tags */}
-            <div className="absolute bottom-0 left-0 right-0 bg-white z-20">
-                <div className="max-w-[1400px] mx-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-4">
+            <div className="absolute bottom-0 left-0 right-0 bg-white z-20 overflow-hidden">
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                    .hide-scrollbar::-webkit-scrollbar { display: none; }
+                    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+                `}} />
+                <div className="max-w-[1400px] mx-auto overflow-x-auto hide-scrollbar snap-x snap-mandatory">
+                    <div className="flex md:grid md:grid-cols-4 min-w-max md:min-w-0">
                         {[
                             { icon: Building2, label: t('Commercial'), desc: t('High-rise & Office') },
                             { icon: HardHat, label: t('Industrial'), desc: t('Factory & Warehouse') },
                             { icon: Layout, label: t('Infrastructure'), desc: t('Roads & Bridges') },
                             { icon: Wrench, label: t('Management'), desc: t('Strategic Oversight') },
                         ].map((item, i) => (
-                            <Link href="/design-z/services" key={i} className="group px-6 py-8 border-r border-gray-100 last:border-r-0 hover:bg-titan-navy transition-all cursor-pointer">
+                            <Link href="/design-z/services" key={i} className="group px-6 py-6 md:py-8 border-r border-gray-100 last:border-r-0 hover:bg-titan-navy transition-all cursor-pointer flex-1 w-[260px] md:w-auto shrink-0 snap-start">
                                 <div className="flex items-center gap-4">
-                                    <item.icon size={28} className="text-titan-red group-hover:text-white transition-colors" />
-                                    <div>
-                                        <div className="font-black text-titan-navy uppercase text-xs tracking-wider group-hover:text-white transition-colors">{item.label}</div>
-                                        <div className="text-[10px] uppercase font-bold text-titan-navy/30 group-hover:text-white/40 transition-colors">{item.desc}</div>
+                                    <item.icon size={28} className="text-titan-red group-hover:text-white transition-colors shrink-0" />
+                                    <div className="min-w-0">
+                                        <div className="font-black text-titan-navy uppercase text-xs tracking-wider group-hover:text-white transition-colors truncate">{item.label}</div>
+                                        <div className="text-[10px] uppercase font-bold text-titan-navy/30 group-hover:text-white/40 transition-colors truncate">{item.desc}</div>
                                     </div>
                                 </div>
                             </Link>

@@ -2,11 +2,12 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Send, Facebook, Linkedin, Instagram, MessageSquare } from 'lucide-react';
+import { MapPin, Phone, Mail, Send, Facebook, Linkedin, Instagram, MessageSquare, Youtube } from 'lucide-react';
 import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 
 import { contactData } from '../data/contactData';
+import { footerData } from '../data/footerData';
 
 export default function ContactPage() {
     const { t, language } = useLanguage();
@@ -84,7 +85,8 @@ export default function ContactPage() {
                                     <div>
                                         <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Visit Us')}</span>
                                         <p className="text-titan-navy-subtle leading-relaxed whitespace-pre-line">
-                                            {getLocalized(contactData.address)}
+                                            {getLocalized(footerData.contact.addressLine1)}<br />
+                                            {getLocalized(footerData.contact.addressLocation)}
                                         </p>
                                     </div>
                                 </div>
@@ -95,9 +97,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Call Us')}</span>
-                                        {contactData.phone.map((p, i) => (
-                                            <p key={i} className="text-titan-navy-subtle">{p}</p>
-                                        ))}
+                                        <a href={`tel:${footerData.contact.phone.replace(/\s+/g, '')}`} className="text-titan-navy-subtle hover:text-titan-red transition-colors">{footerData.contact.phone}</a>
                                         <p className="text-titan-navy-subtle text-sm mt-1">{getLocalized(contactData.hours)}</p>
                                     </div>
                                 </div>
@@ -108,9 +108,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <span className="block font-bold text-titan-navy text-sm uppercase tracking-wide mb-1">{t('Email Us')}</span>
-                                        {contactData.email.map((e, i) => (
-                                            <p key={i} className="text-titan-navy-subtle">{e}</p>
-                                        ))}
+                                        <a href={`mailto:${footerData.contact.email}`} className="text-titan-navy-subtle hover:text-titan-red transition-colors">{footerData.contact.email}</a>
                                     </div>
                                 </div>
                             </div>
@@ -119,22 +117,33 @@ export default function ContactPage() {
                             <div className="mt-10 pt-8 border-t border-gray-100">
                                 <h4 className="font-bold text-titan-navy mb-4 text-xs uppercase tracking-widest">{t('Connect With Us')}</h4>
                                 <div className="flex gap-3">
-                                    <a href={contactData.socials.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
-                                        <Facebook size={18} />
-                                    </a>
-                                    <a href={contactData.socials.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
-                                        <Linkedin size={18} />
-                                    </a>
-                                    <a href={contactData.socials.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
-                                        <Instagram size={18} />
-                                    </a>
+                                    {footerData.social.facebook && (
+                                        <a href={footerData.social.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                            <Facebook size={18} />
+                                        </a>
+                                    )}
+                                    {footerData.social.linkedin && (
+                                        <a href={footerData.social.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                            <Linkedin size={18} />
+                                        </a>
+                                    )}
+                                    {footerData.social.youtube && (
+                                        <a href={footerData.social.youtube} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                            <Youtube size={18} />
+                                        </a>
+                                    )}
+                                    {footerData.social.instagram && (
+                                        <a href={footerData.social.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 flex items-center justify-center rounded-lg text-titan-navy hover:bg-titan-navy hover:text-white transition-all duration-300">
+                                            <Instagram size={18} />
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
                         {/* Interactive Map Card */}
                         <a
-                            href={contactData.googleMapsUrl}
+                            href={footerData.contact.mapLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block bg-white p-2 rounded-2xl shadow-lg border border-gray-100 h-64 relative group cursor-pointer overflow-hidden"

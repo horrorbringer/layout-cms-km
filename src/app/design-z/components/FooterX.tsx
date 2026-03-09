@@ -4,10 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Facebook, Linkedin, Youtube, Instagram, MapPin, Phone, Mail, HardHat } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage, getLocalizedText } from '../context/LanguageContext';
+import { footerData } from '../data/footerData';
 
 export default function FooterX() {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const currentYear = new Date().getFullYear();
 
     return (
@@ -24,21 +25,29 @@ export default function FooterX() {
                             </div>
                         </div>
                         <p className="text-white/50 text-sm leading-relaxed max-w-xs">
-                            {t('Footer Desc')}
+                            {getLocalizedText(footerData.description as any, language)}
                         </p>
                         <div className="flex gap-3 pt-2">
-                            <a href="https://facebook.com/kimmex" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
-                                <Facebook size={16} />
-                            </a>
-                            <a href="https://linkedin.com/company/kimmex" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
-                                <Linkedin size={16} />
-                            </a>
-                            <a href="https://youtube.com/@kimmex" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
-                                <Youtube size={16} />
-                            </a>
-                            <a href="https://instagram.com/kimmex" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
-                                <Instagram size={16} />
-                            </a>
+                            {footerData.social.facebook && (
+                                <a href={footerData.social.facebook} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                                    <Facebook size={16} />
+                                </a>
+                            )}
+                            {footerData.social.linkedin && (
+                                <a href={footerData.social.linkedin} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                                    <Linkedin size={16} />
+                                </a>
+                            )}
+                            {footerData.social.youtube && (
+                                <a href={footerData.social.youtube} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                                    <Youtube size={16} />
+                                </a>
+                            )}
+                            {footerData.social.instagram && (
+                                <a href={footerData.social.instagram} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                                    <Instagram size={16} />
+                                </a>
+                            )}
                         </div>
                     </div>
 
@@ -98,18 +107,22 @@ export default function FooterX() {
                         <ul className="space-y-6 text-sm text-white/50">
                             <li className="flex gap-4">
                                 <MapPin size={20} className="text-accent-orange shrink-0" />
-                                <a href="https://maps.google.com/?q=KIMMEX+MONIVONG" target="_blank" rel="noopener noreferrer" className="hover:text-accent-orange transition-colors">
-                                    #123 Monivong Blvd, Boeung Keng Kang 1,<br />
-                                    {t('Phnom Penh, Cambodia')}
+                                <a href={footerData.contact.mapLink} target="_blank" rel="noopener noreferrer" className="hover:text-accent-orange transition-colors">
+                                    {getLocalizedText(footerData.contact.addressLine1 as any, language)}<br />
+                                    {getLocalizedText(footerData.contact.addressLocation as any, language)}
                                 </a>
                             </li>
                             <li className="flex gap-4 items-center">
                                 <Phone size={20} className="text-accent-orange shrink-0" />
-                                <a href="tel:+85523999888" className="hover:text-accent-orange transition-colors">+855 23 999 888</a>
+                                <a href={`tel:${footerData.contact.phone.replace(/\s+/g, '')}`} className="hover:text-accent-orange transition-colors">
+                                    {footerData.contact.phone}
+                                </a>
                             </li>
                             <li className="flex gap-4 items-center">
                                 <Mail size={20} className="text-accent-orange shrink-0" />
-                                <a href="mailto:info@kimmex.com.kh" className="hover:text-accent-orange transition-colors">info@kimmex.com.kh</a>
+                                <a href={`mailto:${footerData.contact.email}`} className="hover:text-accent-orange transition-colors">
+                                    {footerData.contact.email}
+                                </a>
                             </li>
                         </ul>
                     </div>

@@ -11,9 +11,10 @@ export type HeroMode = 'video' | 'carousel';
 interface UnifiedHeroProps {
     mode?: HeroMode;
     onToggle?: (mode: HeroMode) => void;
+    initialData?: any;
 }
 
-export default function UnifiedHero({ mode = 'carousel', onToggle }: UnifiedHeroProps) {
+export default function UnifiedHero({ mode = 'carousel', onToggle, initialData }: UnifiedHeroProps) {
     return (
         <div className="relative">
             {/* Premium Mode Switcher (Sliding Pill) - Moved to Right to avoid overlap */}
@@ -47,7 +48,7 @@ export default function UnifiedHero({ mode = 'carousel', onToggle }: UnifiedHero
             </div>
 
             {/* Mobile Mode Switcher - Moved to Right Corner */}
-            <div className="absolute top-[100px] right-6 z-[60] lg:hidden">
+            <div className="absolute top-[140px] right-6 z-[60] lg:hidden">
                 <div className="relative bg-titan-navy/60 backdrop-blur-lg border border-white/20 p-1 rounded-full flex items-center shadow-2xl origin-right">
                     <motion.div
                         className="absolute h-[calc(100%-8px)] rounded-full bg-titan-red"
@@ -82,7 +83,7 @@ export default function UnifiedHero({ mode = 'carousel', onToggle }: UnifiedHero
                     transition={{ duration: 0.8, ease: "easeInOut" }}
                     className="w-full"
                 >
-                    {mode === 'video' ? <HeroVideo /> : <HeroCarousel />}
+                    {mode === 'video' ? <HeroVideo /> : <HeroCarousel initialData={initialData} />}
                 </motion.div>
             </AnimatePresence>
         </div>

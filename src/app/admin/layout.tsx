@@ -21,10 +21,15 @@ import {
     Chrome,
     Newspaper,
     FileText,
-    MessageSquare
+    MessageSquare,
+    Menu,
+    X
 } from 'lucide-react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { LanguageProvider, useLanguage } from '../design-z/context/LanguageContext';
+import { ToastProvider } from './_context/ToastContext';
+import { ConfirmProvider } from './_context/ConfirmContext';
 
 interface SubItem {
     id: string;
@@ -86,6 +91,7 @@ const sidebarItems: SidebarItem[] = [
             { id: 'testimonials', label: 'Testimonials', href: '/admin/content?section=testimonials' },
             { id: 'org-chart', label: 'Org Chart (Design Z)', href: '/admin/org-chart' },
             { id: 'contact', label: 'Contact Info', href: '/admin/content?section=contact' },
+            { id: 'footer', label: 'Footer Settings', href: '/admin/footer' },
         ]
     },
     { id: 'settings', label: 'Settings', icon: Settings, href: '/admin/settings' },
@@ -101,6 +107,19 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<{ name: string, role: string, email: string } | null>(null);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [expandedItems, setExpandedItems] = useState<string[]>(['content']);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 1024);
+            if (window.innerWidth < 1024) {
+                setIsCollapsed(true);
+            }
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     useEffect(() => {
         const checkAuth = () => {
@@ -178,10 +197,27 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
     return (
         <div className={`min-h-screen bg-slate-50 flex text-slate-900 ${fontClassName}`}>
+            {/* Mobile Overlay */}
+            <AnimatePresence>
+                {isMobile && !isCollapsed && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsCollapsed(true)}
+                        className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden"
+                    />
+                )}
+            </AnimatePresence>
+
             {/* --- SIDEBAR --- */}
             <motion.aside
-                animate={{ width: isCollapsed ? 80 : 280 }}
-                className="bg-white border-r border-slate-200 flex flex-col fixed inset-y-0 z-50 overflow-hidden"
+                animate={{
+                    width: isCollapsed && !isMobile ? 80 : 280,
+                    x: isMobile ? (isCollapsed ? '-100%' : '0%') : '0%'
+                }}
+                transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
+                className="bg-white border-r border-slate-200 flex flex-col fixed inset-y-0 z-50 overflow-hidden shadow-xl lg:shadow-none"
             >
                 {/* Brand Section */}
                 <div className="h-16 flex items-center px-6 border-b border-slate-50">
@@ -195,6 +231,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             </span>
                         )}
                     </div>
+                    {isMobile && !isCollapsed && (
+                        <button onClick={() => setIsCollapsed(true)} className="p-2 text-slate-500 hover:bg-slate-50 rounded-lg">
+                            <X size={20} />
+                        </button>
+                    )}
                 </div>
 
                 {/* Navigation */}
@@ -212,20 +253,21 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                         className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${isActive
                                             ? 'bg-indigo-50 text-indigo-700'
                                             : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                                            } ${isCollapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''}`}
+                                            } ${isCollapsed && !isMobile ? 'justify-center px-0 h-10 w-10 mx-auto' : ''}`}
+                                        onClick={() => { if (isMobile) setIsCollapsed(true); }}
                                     >
                                         <item.icon size={18} className={isActive ? 'text-indigo-600' : 'text-slate-400'} />
-                                        {!isCollapsed && <span>{t(item.label)}</span>}
+                                        {(!isCollapsed || isMobile) && <span>{t(item.label)}</span>}
                                     </Link>
                                 ) : (
                                     <div className="space-y-1">
                                         <button
                                             onClick={() => !isCollapsed && toggleExpanded(item.id)}
-                                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${isExpanded && !isCollapsed ? 'text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                                                } ${isCollapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''}`}
+                                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${isExpanded && (!isCollapsed || isMobile) ? 'text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                                } ${isCollapsed && !isMobile ? 'justify-center px-0 h-10 w-10 mx-auto' : ''}`}
                                         >
-                                            <item.icon size={18} className={isExpanded && !isCollapsed ? 'text-indigo-600' : 'text-slate-400'} />
-                                            {!isCollapsed && (
+                                            <item.icon size={18} className={isExpanded && (!isCollapsed || isMobile) ? 'text-indigo-600' : 'text-slate-400'} />
+                                            {(!isCollapsed || isMobile) && (
                                                 <>
                                                     <span className="flex-1 text-left">{t(item.label)}</span>
                                                     <ChevronDown size={14} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
@@ -233,7 +275,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                             )}
                                         </button>
                                         <AnimatePresence>
-                                            {hasSub && isExpanded && !isCollapsed && renderSubItems(item.subItems!)}
+                                            {hasSub && isExpanded && (!isCollapsed || isMobile) && renderSubItems(item.subItems!)}
                                         </AnimatePresence>
                                     </div>
                                 )}
@@ -244,13 +286,15 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
                 {/* Sidebar Footer */}
                 <div className="p-4 border-t border-slate-100 flex flex-col gap-1">
-                    <button
-                        onClick={() => setIsCollapsed(!isCollapsed)}
-                        className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all"
-                    >
-                        {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-                        {!isCollapsed && <span>{t('Collapse')}</span>}
-                    </button>
+                    {!isMobile && (
+                        <button
+                            onClick={() => setIsCollapsed(!isCollapsed)}
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all"
+                        >
+                            {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+                            {!isCollapsed && <span>{t('Collapse')}</span>}
+                        </button>
+                    )}
                     <Link
                         href="/design-z"
                         className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all"
@@ -263,20 +307,25 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                         className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-all mt-1"
                     >
                         <LogOut size={18} />
-                        {!isCollapsed && <span>{t('Sign Out')}</span>}
+                        {(!isCollapsed || isMobile) && <span>{t('Sign Out')}</span>}
                     </button>
                 </div>
             </motion.aside>
 
             {/* --- MAIN CONTENT --- */}
             <main
-                className="flex-1 flex flex-col min-w-0"
-                style={{ marginLeft: isCollapsed ? '80px' : '280px' }}
+                className="flex-1 flex flex-col min-w-0 transition-all duration-300"
+                style={{ marginLeft: isMobile ? '0px' : (isCollapsed ? '80px' : '280px') }}
             >
                 {/* Header */}
-                <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-40 px-8 flex items-center justify-between">
-                    <div className="flex items-center gap-3 flex-1 max-w-md">
-                        <div className="w-full relative">
+                <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-30 px-4 md:px-8 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 flex-1">
+                        {isMobile && (
+                            <button onClick={() => setIsCollapsed(false)} className="p-2 -ml-2 text-slate-500 hover:bg-slate-50 rounded-lg shrink-0">
+                                <Menu size={20} />
+                            </button>
+                        )}
+                        <div className="w-full relative max-w-md hidden md:block">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                             <input
                                 type="text"
@@ -321,7 +370,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                 </header>
 
                 {/* Page Content */}
-                <div className="p-8 max-w-7xl mx-auto w-full">
+                <div className="p-4 md:p-8 max-w-7xl mx-auto w-full overflow-x-hidden">
                     {children}
                 </div>
             </main>
@@ -332,7 +381,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
         <LanguageProvider>
-            <LayoutContent>{children}</LayoutContent>
+            <ToastProvider>
+                <ConfirmProvider>
+                    <LayoutContent>{children}</LayoutContent>
+                </ConfirmProvider>
+            </ToastProvider>
         </LanguageProvider>
     );
 }

@@ -1,0 +1,7 @@
+prisma/seed.ts(178,17): error TS2322: Type 'string[]' is not assignable to type 'string'.
+prisma/seed.ts(179,17): error TS2322: Type 'string[]' is not assignable to type 'string'.
+src/app/admin/projects/[id]/page.tsx(36,32): error TS2339: Property 'startDate' does not exist on type 'ProjectDetail'.
+src/app/admin/projects/[id]/page.tsx(37,30): error TS2339: Property 'endDate' does not exist on type 'ProjectDetail'.
+src/app/admin/projects/[id]/page.tsx(64,34): error TS2339: Property 'startDate' does not exist on type 'ProjectDetail'.
+src/app/admin/projects/[id]/page.tsx(65,32): error TS2339: Property 'endDate' does not exist on type 'ProjectDetail'.
+src/app/design-z/projects/[id]/_components/ProjectDetailView.tsx(8,47): error TS2307: Cannot find module '../../context/LanguageContext' or its corresponding type declarations.

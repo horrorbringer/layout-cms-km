@@ -1,0 +1,407 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole   @default(EDITOR)
+  password      String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  accounts      Account[]
+  auditLogs     AuditLog[]
+  sessions      Session[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  entity    String
+  entityId  String
+  details   String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model Employee {
+  id               String        @id @default(cuid())
+  email            String?       @unique
+  phone            String?
+  image            String?
+  bio              String?
+  experience       String?
+  location         String?
+  specialization   String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  bioKm            String?
+  locationKm       String?
+  name             String
+  role             String?
+  roleKm           String?
+  specializationKm String?
+  articles         NewsArticle[]
+  orgUnits         OrgUnit[]
+
+  @@map("employees")
+}
+
+model Department {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  documents   Document[]
+  jobs        JobPosting[]
+  orgUnits    OrgUnit[]
+
+  @@map("departments")
+}
+
+model OrgUnit {
+  id           String      @id @default(cuid())
+  title        String
+  type         OrgUnitType @default(STAFF)
+  parentId     String?
+  employeeId   String?
+  departmentId String?
+  orderIndex   Int         @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  department   Department? @relation(fields: [departmentId], references: [id])
+  employee     Employee?   @relation(fields: [employeeId], references: [id])
+  parent       OrgUnit?    @relation("OrgHierarchy", fields: [parentId], references: [id])
+  children     OrgUnit[]   @relation("OrgHierarchy")
+
+  @@map("org_units")
+}
+
+model Project {
+  id             String          @id @default(cuid())
+  title          String
+  titleKm        String?
+  slug           String          @unique
+  category       ProjectCategory
+  status         ProjectStatus   @default(ONGOING)
+  location       String?
+  locationKm     String?
+  client         String?
+  completionDate DateTime?
+  description    String?
+  descriptionKm  String?
+  heroImage      String?
+  isFeatured     Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  gallery        ProjectImage[]
+
+  @@map("projects")
+}
+
+model ProjectImage {
+  id        String  @id @default(cuid())
+  url       String
+  caption   String?
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_images")
+}
+
+model Service {
+  id            String   @id @default(cuid())
+  title         String
+  titleKm       String?
+  slug          String   @unique
+  icon          String?
+  summary       String?
+  summaryKm     String?
+  description   String
+  descriptionKm String?
+  image         String?
+  features      String[]
+  orderIndex    Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("services")
+}
+
+model Partner {
+  id         String      @id @default(cuid())
+  name       String
+  logoUrl    String
+  website    String?
+  type       PartnerType @default(CLIENT)
+  orderIndex Int         @default(0)
+
+  @@map("partners")
+}
+
+model Testimonial {
+  id           String   @id @default(cuid())
+  clientName   String
+  clientNameKm String?
+  clientRole   String?
+  clientRoleKm String?
+  company      String?
+  content      String
+  contentKm    String?
+  rating       Int      @default(5)
+  image        String?
+  isFeatured   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  orderIndex   Int      @default(0)
+
+  @@map("testimonials")
+}
+
+model NewsArticle {
+  id              String       @id @default(cuid())
+  title           String
+  titleKm         String?
+  slug            String       @unique
+  excerpt         String?
+  excerptKm       String?
+  content         String
+  contentKm       String?
+  coverImage      String?
+  publishedAt     DateTime     @default(now())
+  category        NewsCategory
+  tags            String[]
+  authorId        String?
+  isFeatured      Boolean      @default(false)
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  authorName      String?
+  authorNameKm    String?
+  gallery         String[]
+  isTrending      Boolean      @default(false)
+  readTime        String?
+  readTimeKm      String?
+  year            String?
+  author          Employee?    @relation(fields: [authorId], references: [id])
+
+  @@map("news_articles")
+}
+
+model Document {
+  id            String           @id @default(cuid())
+  title         String
+  description   String?
+  fileUrl       String
+  fileSize      String?
+  fileType      String?
+  thumbnailUrl  String?
+  category      DocumentCategory
+  departmentId  String?
+  isPublic      Boolean          @default(true)
+  downloadCount Int              @default(0)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  department    Department?      @relation(fields: [departmentId], references: [id])
+
+  @@map("documents")
+}
+
+model JobPosting {
+  id                 String           @id @default(cuid())
+  title              String
+  titleKm            String?
+  slug               String           @unique
+  departmentId       String?
+  location           String           @default("Phnom Penh")
+  locationKm         String?
+  type               JobType          @default(FULL_TIME)
+  summary            String?
+  summaryKm          String?
+  requirements       String?
+  requirementsKm     String?
+  benefits           String?
+  benefitsKm         String?
+  isActive           Boolean          @default(true)
+  closingDate        DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  experience         String?          @default("2-3 Years")
+  experienceKm       String?
+  salary             String?          @default("Negotiable")
+  salaryKm           String?
+  responsibilities   String?
+  responsibilitiesKm String?
+  applications       JobApplication[]
+  department         Department?      @relation(fields: [departmentId], references: [id])
+
+  @@map("job_postings")
+}
+
+model JobApplication {
+  id            String            @id @default(cuid())
+  jobId         String
+  applicantName String
+  email         String
+  phone         String
+  resumeUrl     String
+  coverLetter   String?
+  status        ApplicationStatus @default(PENDING)
+  submittedAt   DateTime          @default(now())
+  job           JobPosting        @relation(fields: [jobId], references: [id])
+
+  @@map("job_applications")
+}
+
+model Inquiry {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  status    InquiryStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  subject   String?
+
+  @@map("inquiries")
+}
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum OrgUnitType {
+  DIRECTOR
+  MANAGER
+  STAFF
+  DEPARTMENT_HEAD
+}
+
+enum ProjectCategory {
+  GOVERNMENT
+  PUBLIC_SERVICE
+  PRIVATE
+  INFRASTRUCTURE
+  WATER_TREATMENT
+  SYSTEMS
+  GOVERNMENT_OFFICE
+  SLOP_CONSTRUCTION
+  PRIVATE_BUILDING
+}
+
+enum ProjectStatus {
+  COMPLETED
+  ONGOING
+}
+
+enum PartnerType {
+  CLIENT
+  PARTNER
+  GOVERNMENT
+}
+
+enum NewsCategory {
+  CORPORATE
+  ENVIRONMENT
+  CSR
+  INDUSTRY
+  ANNOUNCEMENT
+  Updates
+  Awards
+  Safety
+  Sustainability
+  Culture
+  Community
+  Innovation
+  Systems
+}
+
+enum DocumentCategory {
+  ANNUAL_REPORT
+  COMPANY_PROFILE
+  POLICY
+  MANUAL
+  CERTIFICATE
+  PRESS_KIT
+  OTHER
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  INTERNSHIP
+  CONTRACT
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  INTERVIEW
+  OFFERED
+  REJECTED
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CLOSED
+}

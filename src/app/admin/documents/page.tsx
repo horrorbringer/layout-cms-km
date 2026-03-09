@@ -14,13 +14,18 @@ import {
     Database
 } from 'lucide-react';
 import Image from 'next/image';
+import ImageUpload from '@/app/admin/_components/ImageUpload';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from '@/app/admin/_context/ToastContext';
+import { useConfirm } from '@/app/admin/_context/ConfirmContext';
 
 export default function DocumentsAdmin() {
     const [docs, setDocs] = useState<Document[]>(initialDocs);
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingDoc, setEditingDoc] = useState<Document | null>(null);
+    const { showToast } = useToast();
+    const { confirm } = useConfirm();
 
     // Form State
     const emptyLocalized = () => ({ en: '', kh: '' });
@@ -78,21 +83,28 @@ export default function DocumentsAdmin() {
                 })
             });
             if (!res.ok) throw new Error('Failed to save');
-            alert('Documents updated successfully!');
+            showToast('Documents updated successfully!', 'success');
         } catch (error) {
             console.error('Failed to persist document changes:', error);
-            alert('Error saving changes.');
+            showToast('Error saving changes.', 'error');
         }
     };
 
     const handleDelete = async (id: number) => {
-        if (confirm(`Are you sure you want to delete this document?`)) {
+        const isConfirmed = await confirm({
+            title: 'Delete Document',
+            message: 'Are you sure you want to delete this document? It will be removed from the public collection.',
+            confirmText: 'Delete',
+            type: 'danger'
+        });
+
+        if (isConfirmed) {
             const newDocsList = docs.filter(d => d.id !== id);
             setDocs(newDocsList);
 
             // Persistent save
             try {
-                await fetch('/api/cms/save', {
+                const res = await fetch('/api/cms/save', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -100,8 +112,11 @@ export default function DocumentsAdmin() {
                         fileName: 'documentData.ts'
                     })
                 });
+                if (!res.ok) throw new Error('Failed to save');
+                showToast('Document deleted successfully', 'success');
             } catch (error) {
                 console.error('Failed to persist document deletion:', error);
+                showToast('Error deleting document', 'error');
             }
         }
     };
@@ -296,15 +311,18 @@ export default function DocumentsAdmin() {
                                         </div>
                                     </div>
 
-                                    {/* Media */}
                                     <div className="space-y-6 pt-6 border-t border-slate-100">
                                         <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Media & Date</h3>
-                                        <div className="grid grid-cols-2 gap-6">
+                                        <div className="grid grid-cols-2 gap-6 items-start">
                                             <div className="space-y-1.5">
-                                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Featured Image Path</label>
-                                                <input className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm outline-none" placeholder="/images/projects/..." value={formData.image} onChange={e => setFormData({ ...formData, image: e.target.value })} />
+                                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Featured Image</label>
+                                                <ImageUpload
+                                                    value={formData.image || ''}
+                                                    onChange={(url) => setFormData({ ...formData, image: url })}
+                                                    description="Optional cover image for the document."
+                                                />
                                             </div>
-                                            <div className="space-y-1.5">
+                                            <div className="space-y-1.5 pt-1.5">
                                                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Publish Date</label>
                                                 <input required className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm outline-none" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} />
                                             </div>

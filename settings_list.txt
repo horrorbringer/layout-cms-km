@@ -1,0 +1,10 @@
+       key        
+------------------
+ home_hero
+ about_story
+ company_stats
+ about_values
+ about_milestones
+ home_process
+(6 rows)
+

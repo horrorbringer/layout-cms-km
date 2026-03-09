@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Phone, Facebook, Linkedin, Youtube, Search, ArrowRight, ChevronDown, Menu, X, Mail, MapPin, Globe, Shield } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Phone, Facebook, Linkedin, Youtube, Instagram, Search, ArrowRight, ChevronDown, Menu, X, Mail, MapPin, Globe, Shield } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import FooterX from './components/FooterX';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { footerData } from './data/footerData';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
     const { t, language, setLanguage, fontClassName } = useLanguage();
@@ -25,6 +27,15 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     const [isSearchOpen, setIsSearchOpen] = React.useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
     const [expandedMobileItem, setExpandedMobileItem] = React.useState<number | null>(null);
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const router = useRouter();
+
+    const handleSearch = (query: string) => {
+        if (!query.trim()) return;
+        setIsSearchOpen(false);
+        setSearchQuery('');
+        router.push(`/design-z/projects?search=${encodeURIComponent(query.trim())}`);
+    };
 
     // Navigation Items (Dynamic based on language)
     const navItems = [
@@ -106,16 +117,17 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             <header className="fixed top-0 left-0 w-full z-[100]">
                 {/* --- TOP BAR --- */}
                 <div className={`bg-titan-navy text-white ${textTopBar} tracking-wide font-medium transition-all duration-500 overflow-hidden ${isScrolled ? 'h-0 opacity-0' : 'h-10 opacity-100'}`}>
-                    <div className="max-w-[1600px] mx-auto px-6 h-full flex justify-between items-center">
-                        <div className="flex gap-6 items-center">
-                            <span className="flex items-center gap-2 hover:text-accent-orange cursor-pointer transition">
-                                <Phone size={12} className="text-accent-orange" />
-                                +855 23 999 999
-                            </span>
-                            <span className="hidden md:flex items-center gap-2 hover:text-accent-orange cursor-pointer transition">
+                    <div className="max-w-[1600px] mx-auto px-2 sm:px-6 h-full flex justify-between items-center">
+                        <div className="flex gap-2 sm:gap-6 items-center">
+                            <a href={`tel:${footerData.contact.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1.5 hover:text-accent-orange cursor-pointer transition whitespace-nowrap">
+                                <Phone size={12} className="text-accent-orange shrink-0" />
+                                <span className="text-[10px] sm:hidden">{footerData.contact.phone.substring(0, 6)}...</span>
+                                <span className="hidden sm:inline">{footerData.contact.phone}</span>
+                            </a>
+                            <a href={`mailto:${footerData.contact.email}`} className="hidden md:flex items-center gap-2 hover:text-accent-orange cursor-pointer transition">
                                 <Mail size={12} className="text-accent-orange" />
-                                info@kimmex.com.kh
-                            </span>
+                                {footerData.contact.email}
+                            </a>
                         </div>
                         <div className="flex gap-4 items-center">
                             <div className="hidden sm:flex items-center gap-2 text-white/60">
@@ -123,21 +135,32 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 <span>{t('Phnom Penh, Cambodia')}</span>
                             </div>
                             <div className="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
-                            <div className="flex gap-2">
-                                <a href="#" className="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
-                                    <Facebook size={12} />
-                                </a>
-                                <a href="#" className="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
-                                    <Linkedin size={12} />
-                                </a>
-                                <a href="#" className="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
-                                    <Youtube size={12} />
-                                </a>
+                            <div className="hidden sm:flex gap-2">
+                                {footerData.social.facebook && (
+                                    <a href={footerData.social.facebook} target="_blank" rel="noopener noreferrer" className="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                                        <Facebook size={12} />
+                                    </a>
+                                )}
+                                {footerData.social.linkedin && (
+                                    <a href={footerData.social.linkedin} target="_blank" rel="noopener noreferrer" className="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                                        <Linkedin size={12} />
+                                    </a>
+                                )}
+                                {footerData.social.youtube && (
+                                    <a href={footerData.social.youtube} target="_blank" rel="noopener noreferrer" className="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                                        <Youtube size={12} />
+                                    </a>
+                                )}
+                                {footerData.social.instagram && (
+                                    <a href={footerData.social.instagram} target="_blank" rel="noopener noreferrer" className="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                                        <Instagram size={12} />
+                                    </a>
+                                )}
                             </div>
 
                             {/* ADMIN DASHBOARD */}
                             <div className="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
-                            <Link href="/admin" className="flex items-center gap-2 px-2 py-1 bg-white/10 hover:bg-accent-orange rounded transition-colors group">
+                            <Link href="/admin" className="hidden sm:flex items-center gap-2 px-2 py-1 bg-white/10 hover:bg-accent-orange rounded transition-colors group">
                                 <Shield size={10} className="text-accent-orange group-hover:text-white" />
                                 <span className="text-[9px] font-bold">ADMIN</span>
                             </Link>
@@ -380,13 +403,13 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 {/* Mobile Contact Info */}
                                 <div className="p-4 bg-gray-50 border-t border-gray-100">
                                     <div className="flex flex-col gap-2 text-sm">
-                                        <a href="tel:+85523999999" className="flex items-center gap-2 text-titan-navy/70">
+                                        <a href={`tel:${footerData.contact.phone.replace(/\s+/g, '')}`} className="flex items-center gap-2 text-titan-navy/70">
                                             <Phone size={14} className="text-accent-orange" />
-                                            +855 23 999 999
+                                            {footerData.contact.phone}
                                         </a>
-                                        <a href="mailto:info@kimmex.com.kh" className="flex items-center gap-2 text-titan-navy/70">
+                                        <a href={`mailto:${footerData.contact.email}`} className="flex items-center gap-2 text-titan-navy/70">
                                             <Mail size={14} className="text-accent-orange" />
-                                            info@kimmex.com.kh
+                                            {footerData.contact.email}
                                         </a>
                                     </div>
                                     {/* Mobile Language Switcher */}
@@ -441,14 +464,17 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 <input
                                     autoFocus
                                     type="text"
+                                    value={searchQuery}
+                                    onChange={e => setSearchQuery(e.target.value)}
+                                    onKeyDown={e => e.key === 'Enter' && handleSearch(searchQuery)}
                                     placeholder={t('Search...')}
                                     className="w-full bg-transparent pl-14 pr-24 py-5 text-lg font-medium text-titan-navy outline-none placeholder:text-titan-navy/30 border-b border-gray-100"
                                 />
                                 <button
-                                    onClick={() => setIsSearchOpen(false)}
+                                    onClick={() => searchQuery.trim() ? handleSearch(searchQuery) : setIsSearchOpen(false)}
                                     className="absolute right-4 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-titan-navy/50 hover:text-accent-orange transition-colors bg-gray-100 rounded-md"
                                 >
-                                    ESC
+                                    {searchQuery.trim() ? <Search size={14} /> : 'ESC'}
                                 </button>
                             </div>
 
@@ -481,7 +507,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 <p className="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-3">{t('Categories')}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {['Commercial', 'Infrastructure', 'Industrial', 'Construction', 'Government'].map(tag => (
-                                        <span key={tag} className="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-accent-orange hover:text-white transition-all">
+                                        <span
+                                            key={tag}
+                                            onClick={() => handleSearch(tag)}
+                                            className="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-accent-orange hover:text-white transition-all"
+                                        >
                                             {t(tag)}
                                         </span>
                                     ))}

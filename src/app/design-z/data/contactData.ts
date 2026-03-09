@@ -15,7 +15,7 @@ export interface ContactData {
 
 export const contactData: ContactData = {
     "address": {
-        "en": "#56, Street 315, Boeng Kak 1,\nTuol Kouk, Phnom Penh, Cambodia",
+        "en": "#56, Street 315, Boeng Kak 1,\nTuol Kouk, Phnom Penh, Cambodia ",
         "kh": "#៥៦ ផ្លូវ ៣១៥ សង្កាត់បឹងកក់ ១\nខណ្ឌទួលគោក រាជធានីភ្នំពេញ កម្ពុជា"
     },
     "phone": [
@@ -26,12 +26,12 @@ export const contactData: ContactData = {
         "sales@kimmex.com"
     ],
     "hours": {
-        "en": "Mon - Sat, 8am - 5pm",
+        "en": "Mon - Sat, 8am - 5:30pm",
         "kh": "ច័ន្ទ - សៅរ៍ ម៉ោង ៨ព្រឹក - ៥ល្ងាច"
     },
     "googleMapsUrl": "https://maps.google.com/?q=KIM+MEX+Construction",
     "socials": {
-        "facebook": "#",
+        "facebook": "https://www.facebook.com/kimmex168/?locale=km_KH",
         "linkedin": "#",
         "instagram": "#"
     }

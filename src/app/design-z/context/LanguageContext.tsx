@@ -272,9 +272,19 @@ const dictionary: Translations = {
 
     // News categories (used with t() in filter tabs)
     'Project Updates': { en: 'Project Updates', kh: 'ព័ត៌មានបច្ចុប្បន្ន​គម្រោង' },
+    'Project Updates Filter': { en: 'Project Updates', kh: 'ព័ត៌មានបច្ចុប្បន្ន​គម្រោង' },
+    'Updates': { en: 'Project Updates', kh: 'ព័ត៌មានបច្ចុប្បន្ន​គម្រោង' },
     'Awards': { en: 'Awards', kh: 'រង្វាន់' },
     'Sustainability': { en: 'Sustainability', kh: 'និរន្តរភាព' },
     'Culture': { en: 'Culture', kh: 'វប្បធម៌' },
+    'Community': { en: 'Community', kh: 'សហគមន៍' },
+    'Announcement': { en: 'Announcement', kh: 'សេចក្តីប្រកាស' },
+    'ANNOUNCEMENT': { en: 'Announcement', kh: 'សេចក្តីប្រកាស' },
+    'Industry': { en: 'Industry', kh: 'ឧស្សាហកម្ម' },
+    'INDUSTRY': { en: 'Industry', kh: 'ឧស្សាហកម្ម' },
+    'CSR': { en: 'CSR', kh: 'ទំនួលខុសត្រូវសង្គម' },
+    'ENVIRONMENT': { en: 'Environment', kh: 'បរិស្ថាន' },
+    'CORPORATE': { en: 'Corporate', kh: 'ក្រុមហ៊ុន' },
 
     // === HOME PAGE HERO & CAROUSEL ===
     'Home Hero Body': { en: 'Cambodia\'s premier construction company delivering world-class infrastructure, commercial buildings, and government projects with precision and excellence.', kh: 'ក្រុមហ៊ុនសំណង់ឈានមុខគេរបស់កម្ពុជាដែលផ្ដល់ជូននូវហេដ្ឋារចនាសម្ព័ន្ធកម្រិតពិភពលោក អាគារពាណិជ្ជកម្ម និងគម្រោងរដ្ឋាភិបាលប្រកបដោយភាពច្បាស់លាស់ និងភាពល្អឥតខ្ចោះ។' },
@@ -464,8 +474,11 @@ const dictionary: Translations = {
     'General Application Sub': { en: "Tell us about yourself and we'll reach out when the right opportunity arises.", kh: 'ប្រាប់យើងអំពីខ្លួនអ្នក ហើយយើងនឹងទំនាក់ទំនងនៅពេលមានឱកាសសមស្រប។' },
     'Back to Careers': { en: 'Back to Careers', kh: 'ត្រឡប់ទៅទំព័រអាជីព' },
     'Role Overview': { en: 'Role Overview', kh: 'ទិដ្ឋភាពទូទៅនៃតួនាទី' },
+    'Job Description': { en: 'Job Description', kh: 'ការពិពណ៌នាការងារ' },
     'Key Responsibilities': { en: 'Key Responsibilities', kh: 'ការទទួលខុសត្រូវសំខាន់ៗ' },
+    'Job Responsibility': { en: 'Job Responsibility', kh: 'ការទទួលខុសត្រូវលើការងារ' },
     'Qualifications': { en: 'Qualifications', kh: 'លក្ខណៈសម្បត្តិ' },
+    'Job Requirement': { en: 'Job Requirement', kh: 'តម្រូវការការងារ' },
     'Benefits & Perks': { en: 'Benefits & Perks', kh: 'អត្ថប្រយោជន៍ និងការលើកទឹកចិត្ត' },
     'Join us as a': { en: 'Join us as a', kh: 'ចូលរួមជាមួយយើងជា' },
     'Share': { en: 'Share', kh: 'ចែករំលែក' },
@@ -573,6 +586,19 @@ const dictionary: Translations = {
     'No projects found.': { en: 'No projects found.', kh: 'រកមិនឃើញគម្រោងទេ។' },
     'Adjust your filters or search terms.': { en: 'Adjust your filters or search terms.', kh: 'កែសម្រួលការចម្រាញ់ ឬពាក្យស្វែងរករបស់អ្នក។' },
     'Are you sure you want to delete': { en: 'Are you sure you want to delete', kh: 'តើអ្នកប្រាកដថាចង់លុប' },
+    'Team Management': { en: 'Team Management', kh: 'ការគ្រប់គ្រងក្រុមការងារ' },
+    'Manage leadership profiles and operational staff.': { en: 'Manage leadership profiles and operational staff.', kh: 'គ្រប់គ្រងប្រវត្តិរូបថ្នាក់ដឹកនាំ និងបុគ្គលិកប្រតិបត្តិការ។' },
+    'Add Member': { en: 'Add Member', kh: 'បន្ថែមសមាជិក' },
+    'Search team...': { en: 'Search team...', kh: 'ស្វែងរកក្រុមការងារ...' },
+    'Members Total': { en: 'Members Total', kh: 'សមាជិកសរុប' },
+    'Edit Profile': { en: 'Edit Profile', kh: 'កែសម្រួលប្រវត្តិរូប' },
+    'Add New Member': { en: 'Add New Member', kh: 'បន្ថែមសមាជិកថ្មី' },
+    'Profile Photo': { en: 'Profile Photo', kh: 'រូបថតប្រវត្តិរូប' },
+    'Professional Bio': { en: 'Professional Bio', kh: 'ប្រវត្តិសង្ខេបវិជ្ជាជីវៈ' },
+    'Save Profile': { en: 'Save Profile', kh: 'រក្សាទុកប្រវត្តិរូប' },
+    'Remove Team Member': { en: 'Remove Team Member', kh: 'លុបសមាជិកក្រុម' },
+    'Are you sure you want to remove': { en: 'Are you sure you want to remove', kh: 'តើអ្នកប្រាកដថាចង់លុប' },
+    'This action cannot be undone.': { en: 'This action cannot be undone.', kh: 'សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។' },
 };
 
 interface LanguageContextType {
@@ -585,9 +611,10 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguage] = useState<Language>('kh');
+    const [language, setLanguage] = useState<Language>('en');
 
     const t = (key: string): string => {
+        if (!key) return '';
         // Remove trailing/leading spaces for lookup
         const lookupKey = key.trim();
         // Return translation or original key if not found

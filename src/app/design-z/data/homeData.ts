@@ -7,7 +7,7 @@ export interface HomeData {
     };
     stats: {
         label: LocalizedString;
-        val: LocalizedString;
+        value: LocalizedString;
         iconName: string;
     }[];
     process: {
@@ -15,21 +15,21 @@ export interface HomeData {
         step: string;
         title: LocalizedString;
         desc: LocalizedString;
-        iconName: string;
+        iconName?: string;
     }[];
     testimonials: {
         id: string;
         quote: LocalizedString;
         author: LocalizedString;
         role: LocalizedString;
-        rating: number;
+        rating?: number;
     }[];
 }
 
 export const homeData: HomeData = {
     "hero": {
         "title": {
-            "en": "Building Excellence Since 1955",
+            "en": "Building Excellence Since 1998",
             "kh": "ការកសាងឧត្តមភាពចាប់តាំងពីឆ្នាំ ១៩៩៩"
         },
         "subtitle": {
@@ -38,64 +38,63 @@ export const homeData: HomeData = {
         }
     },
     "stats": [
-        // {
-        //     "label": {
-        //         "en": "Safety First",
-        //         "kh": "សុវត្ថិភាពជាចម្បង"
-        //     },
-        //     "val": {
-        //         "en": "Zero accident policy",
-        //         "kh": "គោលនយោបាយគ្រោះថ្នាក់សូន្យ"
-        //     },
-        //     "iconName": "ShieldCheck"
-        // },
-        // {
-        //     "label": {
-        //         "en": "ISO Certified",
-        //         "kh": "វិញ្ញាបនបត្រ ISO"
-        //     },
-        //     "val": {
-        //         "en": "9001:2015 standards",
-        //         "kh": "ស្តង់ដារ ៩០០១:២០១៥"
-        //     },
-        //     "iconName": "Award"
-        // },
-        // {
-        //     "label": {
-        //         "en": "On-Time Delivery",
-        //         "kh": "ការប្រគល់ជូនទាន់ពេល"
-        //     },
-        //     "val": {
-        //         "en": "98% completion rate",
-        //         "kh": "អត្រាបញ្ចប់ ៩៨%"
-        //     },
-        //     "iconName": "Clock"
-        // },
-        // {
-        //     "label": {
-        //         "en": "Quality Focus",
-        //         "kh": "ផ្តោតលើគុណភាព"
-        //     },
-        //     "val": {
-        //         "en": "Exceeding expectations",
-        //         "kh": "លើសពីការរំពឹងទុក"
-        //     },
-        //     "iconName": "Target"
-        // }
+        {
+            "label": {
+                "en": "Years Experience",
+                "kh": "ឆ្នាំនៃបទពិសោធន៍"
+            },
+            "value": {
+                "en": "25",
+                "kh": "២៥"
+            },
+            "iconName": "Trophy"
+        },
+        {
+            "label": {
+                "en": "Projects Completed",
+                "kh": "គម្រោងដែលបានបញ្ចប់"
+            },
+            "value": {
+                "en": "150",
+                "kh": "១៥០"
+            },
+            "iconName": "ShieldCheck"
+        },
+        {
+            "label": {
+                "en": "Ongoing Projects",
+                "kh": "គម្រោងកំពុងសាងសង់"
+            },
+            "value": {
+                "en": "12",
+                "kh": "១២"
+            },
+            "iconName": "Hammer"
+        },
+        {
+            "label": {
+                "en": "Professional Team",
+                "kh": "ក្រុមការងារជំនាញ"
+            },
+            "value": {
+                "en": "500",
+                "kh": "៥០០"
+            },
+            "iconName": "Users"
+        }
     ],
     "process": [
         {
             "id": "1",
             "step": "01",
             "title": {
-                "en": "Consultation",
+                "en": "Consultion",
                 "kh": "ការពិគ្រោះយោបល់"
             },
             "desc": {
                 "en": "Understanding your vision and project requirements.",
                 "kh": "ការយល់ដឹងពីចក្ខុវិស័យ និងតម្រូវការគម្រោងរបស់អ្នក។"
-            },
-            "iconName": "Target"
+            }
         },
         {
             "id": "2",
@@ -107,8 +106,7 @@ export const homeData: HomeData = {
             "desc": {
                 "en": "Detailed blueprints and strategic project mapping.",
                 "kh": "ប្លង់លម្អិត និងការរៀបចំផែនទីគម្រោងយុទ្ធសាស្ត្រ។"
-            },
-            "iconName": "PenTool"
+            }
         },
         {
             "id": "3",
@@ -120,8 +118,7 @@ export const homeData: HomeData = {
             "desc": {
                 "en": "Expert execution with high-quality standards.",
                 "kh": "ការអនុវត្តដោយអ្នកជំនាញដែលមានស្តង់ដារគុណភាពខ្ពស់។"
-            },
-            "iconName": "Hammer"
+            }
         },
         {
             "id": "4",
@@ -133,58 +130,54 @@ export const homeData: HomeData = {
             "desc": {
                 "en": "Final quality inspection and project completion.",
                 "kh": "ការត្រួតពិនិត្យគុណភាពចុងក្រោយ និងការបញ្ចប់គម្រោង។"
-            },
-            "iconName": "Trophy"
+            }
         }
     ],
     "testimonials": [
         {
             "id": "t1",
-            "quote": {
-                "en": "Kimmex delivered our project on time and exceeded our quality expectations. Their professionalism is unmatched.",
-                "kh": "Kimmex បានប្រគល់គម្រោងរបស់យើងទាន់ពេលវេលា និងលើសពីការរំពឹងទុករបស់យើង។ វិជ្ជាជីវៈរបស់ពួកគេគឺមិនអាចប្រៀបផ្ទឹមបានទេ។"
-            },
             "author": {
                 "en": "H.E. Minister of Economy",
                 "kh": "ឯកឧត្តម រដ្ឋមន្ត្រីក្រសួងសេដ្ឋកិច្ច"
             },
+            "quote": {
+                "en": "Kimmex delivered our project on time and exceeded our quality expectations. Their professionalism is unmatched.",
+                "kh": "Kimmex បានប្រគល់គម្រោងរបស់យើងទាន់ពេលវេលា និងលើសពីការរំពឹងទុករបស់យើង។ វិជ្ជាជីវៈរបស់ពួកគេគឺមិនអាចប្រៀបផ្ទឹមបានទេ។"
+            },
             "role": {
                 "en": "Government Client",
                 "kh": "ស្ថាប័នរដ្ឋាភិបាល"
-            },
-            "rating": 5
+            }
         },
         {
             "id": "t2",
-            "quote": {
-                "en": "Working with Kimmex was a seamless experience. They understood our vision and brought it to life perfectly.",
-                "kh": "ការធ្វើការជាមួយ Kimmex គឺជាបទពិសោធន៍ដ៏រលូនមួយ។ ពួកគេយល់ពីចក្ខុវិស័យរបស់យើង និងធ្វើអោយវាក្លាយជាការពិត។"
-            },
             "author": {
                 "en": "Mr. Chen Wei",
                 "kh": "លោក Chen Wei"
             },
+            "quote": {
+                "en": "Working with Kimmex was a seamless experience. They understood our vision and brought it to life perfectly.",
+                "kh": "ការធ្វើការជាមួយ Kimmex គឺជាបទពិសោធន៍ដ៏រលូនមួយ។ ពួកគេយល់ពីចក្ខុវិស័យរបស់យើង និងធ្វើអោយវាក្លាយជាការពិត។"
+            },
             "role": {
                 "en": "CEO, Vattanac Group",
                 "kh": "អគ្គនាយកសម្ព័ន្ធ វឌ្ឍនៈ"
-            },
-            "rating": 5
+            }
         },
         {
             "id": "t3",
-            "quote": {
-                "en": "The attention to safety and quality standards sets Kimmex apart from other contractors in Cambodia.",
-                "kh": "ការយកចិត្តទុកដាក់លើស្តង់ដារសុវត្ថិភាព និងគុណភាព ធ្វើឲ្យ Kimmex មានភាពលេចធ្លោជាងក្រុមហ៊ុនម៉ៅការដទៃនៅក្នុងប្រទេសកម្ពុជា។"
-            },
             "author": {
                 "en": "Dr. Sarah Johnson",
                 "kh": "បណ្ឌិត Sarah Johnson"
             },
+            "quote": {
+                "en": "The attention to safety and quality standards sets Kimmex apart from other contractors in Cambodia.",
+                "kh": "ការយកចិត្តទុកដាក់លើស្តង់ដារសុវត្ថិភាព និងគុណភាព ធ្វើឲ្យ Kimmex មានភាពលេចធ្លោជាងក្រុមហ៊ុនម៉ៅការដទៃនៅក្នុងប្រទេសកម្ពុជា។"
+            },
             "role": {
                 "en": "World Bank Representative",
                 "kh": "តំណាងធនាគារពិភពលោក"
-            },
-            "rating": 5
+            }
         }
     ]
 };

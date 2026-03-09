@@ -1,0 +1,1 @@
+src/app/api/cms/save/route.ts(505,29): error TS2322: Type '{ title: any; titleKm: any; slug: any; summary: any; summaryKm: any; icon: any; features: any; isActive: true; }' is not assignable to type '(Without<ServiceCreateInput, ServiceUncheckedCreateInput> & ServiceUncheckedCreateInput) | (Without<...> & ServiceCreateInput)'.

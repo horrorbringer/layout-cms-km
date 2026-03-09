@@ -23,7 +23,9 @@ import {
     Briefcase,
     Eye,
     Award,
-    Circle
+    Circle,
+    Upload,
+    Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { aboutData } from '@/app/design-z/data/aboutData';
@@ -32,8 +34,16 @@ import { serviceDetails, ServiceDetail as ServiceDetailType } from '@/app/design
 import { contactData } from '@/app/design-z/data/contactData';
 import { homeData } from '@/app/design-z/data/homeData';
 import { jobData } from '@/app/design-z/data/jobData';
+import { careerContent, CareerContent } from '@/app/design-z/data/careerContent';
+import { milestones as staticMilestones, Milestone as MilestoneType } from '@/app/design-z/data/milestonesData';
 import ServiceDetailEditor from './components/ServiceDetailEditor';
+import JobEditor from './components/JobEditor';
 import { LocalizedString } from '@/app/design-z/context/LanguageContext';
+
+import ActionDropdown from '../_components/ActionDropdown';
+import { useToast } from '@/app/admin/_context/ToastContext';
+import { useConfirm } from '@/app/admin/_context/ConfirmContext';
+import { useLanguage } from '@/app/design-z/context/LanguageContext';
 
 // --- TYPES ---
 interface ProcessStep {
@@ -55,6 +65,13 @@ interface Job {
     loc: LocalizedString;
     type: LocalizedString;
     date: LocalizedString;
+    dept: string;
+    summary: LocalizedString;
+    salary: LocalizedString;
+    experience: LocalizedString;
+    responsibilities: LocalizedString[];
+    requirements: LocalizedString[];
+    benefits: LocalizedString[];
 }
 
 interface Testimonial {
@@ -92,9 +109,11 @@ interface SectorItem {
 
 interface StatItem {
     label: LocalizedString;
-    val: LocalizedString;
+    value: LocalizedString;
     iconName: string;
 }
+
+interface Milestone extends MilestoneType { }
 
 interface ServiceDetail extends ServiceDetailType { }
 
@@ -105,6 +124,11 @@ function AdminContentEditor() {
     const [editLang, setEditLang] = useState<'en' | 'kh'>('en');
     const [isSaving, setIsSaving] = useState(false);
 
+    const { showToast } = useToast();
+    const { confirm } = useConfirm();
+    const { language } = useLanguage();
+    const [uploadingId, setUploadingId] = useState<string | null>(null);
+
     // --- STATE FOR CONTENT ---
     const [homeHero, setHomeHero] = useState(() => ({
         title: typeof homeData.hero.title === 'string' ? { en: homeData.hero.title, kh: homeData.hero.title } : homeData.hero.title,
@@ -114,7 +138,7 @@ function AdminContentEditor() {
     const [stats, setStats] = useState<StatItem[]>(() =>
         homeData.stats.map(s => ({
             label: typeof s.label === 'string' ? { en: s.label, kh: s.label } : s.label,
-            val: typeof s.val === 'string' ? { en: s.val, kh: s.val } : s.val,
+            value: typeof s.value === 'string' ? { en: s.value, kh: s.value } : s.value,
             iconName: s.iconName
         }))
     );
@@ -171,16 +195,78 @@ function AdminContentEditor() {
 
     const [detailsMap, setDetailsMap] = useState<Record<string, ServiceDetail>>(serviceDetails);
     const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
+    const [editingJobId, setEditingJobId] = useState<string | null>(null);
 
     const [jobs, setJobs] = useState<Job[]>(() =>
         jobData.map(j => ({
             id: j.id,
-            title: typeof j.title === 'string' ? { en: j.title, kh: j.title } : j.title,
-            loc: typeof j.loc === 'string' ? { en: j.loc, kh: j.loc } : j.loc,
-            type: typeof j.type === 'string' ? { en: j.type, kh: j.type } : j.type,
-            date: typeof j.postedDate === 'string' ? { en: j.postedDate, kh: j.postedDate } : j.postedDate
+            title: typeof j.title === 'string' ? { en: j.title, kh: j.title } : (j.title || { en: '', kh: '' }),
+            loc: typeof j.loc === 'string' ? { en: j.loc, kh: j.loc } : (j.loc || { en: '', kh: '' }),
+            type: typeof j.type === 'string' ? { en: j.type, kh: j.type } : (j.type || { en: '', kh: '' }),
+            date: typeof j.postedDate === 'string' ? { en: j.postedDate, kh: j.postedDate } : (j.postedDate || { en: '', kh: '' }),
+            dept: j.dept || 'Operations',
+            summary: typeof j.summary === 'string' ? { en: j.summary, kh: j.summary } : (j.summary || { en: '', kh: '' }),
+            salary: typeof j.salary === 'string' ? { en: j.salary, kh: j.salary } : (j.salary || { en: 'Negotiable', kh: 'ចរចា' }),
+            experience: typeof j.experience === 'string' ? { en: j.experience, kh: j.experience } : (j.experience || { en: '2+ Years', kh: '២+ ឆ្នាំ' }),
+            responsibilities: (j.responsibilities || []).map(r => typeof r === 'string' ? { en: r, kh: r } : r),
+            requirements: (j.requirements || []).map(r => typeof r === 'string' ? { en: r, kh: r } : r),
+            benefits: (j.benefits || []).map(b => typeof b === 'string' ? { en: b, kh: b } : b)
         }))
     );
+
+    const [careerMain, setCareerMain] = useState<CareerContent>(careerContent);
+
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                const res = await fetch('/api/cms/jobs');
+                const data = await res.json();
+                if (data.jobs) {
+                    const dbJobSlugs = new Set(data.jobs.map((j: any) => j.id));
+
+                    // Start with transformed DB jobs
+                    const updatedJobs = data.jobs.map((j: any) => {
+                        const staticJob = jobData.find((sj: any) => sj.id === j.id);
+                        return {
+                            id: j.id,
+                            title: j.title || staticJob?.title || { en: '', kh: '' },
+                            loc: j.loc || staticJob?.loc || { en: '', kh: '' },
+                            type: j.type || staticJob?.type || { en: '', kh: '' },
+                            date: j.postedDate || staticJob?.postedDate || { en: '', kh: '' },
+                            dept: j.dept || staticJob?.dept || 'Operations',
+                            summary: j.summary || staticJob?.summary || { en: '', kh: '' },
+                            salary: j.salary || staticJob?.salary || { en: 'Negotiable', kh: 'ចរចា' },
+                            experience: j.experience || staticJob?.experience || { en: '2+ Years', kh: '២+ ឆ្នាំ' },
+                            responsibilities: (j.responsibilities && j.responsibilities.length > 0) ? j.responsibilities : (staticJob?.responsibilities || []),
+                            requirements: (j.requirements && j.requirements.length > 0) ? j.requirements : (staticJob?.requirements || []),
+                            benefits: (j.benefits && j.benefits.length > 0) ? j.benefits : (staticJob?.benefits || [])
+                        };
+                    });
+
+                    // Add static jobs that are NOT in DB
+                    const onlyInStatic = jobData.filter(sj => !dbJobSlugs.has(sj.id)).map(j => ({
+                        id: j.id,
+                        title: typeof j.title === 'string' ? { en: j.title, kh: j.title } : (j.title || { en: '', kh: '' }),
+                        loc: typeof j.loc === 'string' ? { en: j.loc, kh: j.loc } : (j.loc || { en: '', kh: '' }),
+                        type: typeof j.type === 'string' ? { en: j.type, kh: j.type } : (j.type || { en: '', kh: '' }),
+                        date: typeof (j as any).postedDate === 'string' ? { en: (j as any).postedDate, kh: (j as any).postedDate } : ((j as any).postedDate || { en: '', kh: '' }),
+                        dept: j.dept || 'Operations',
+                        summary: typeof j.summary === 'string' ? { en: j.summary, kh: j.summary } : (j.summary || { en: '', kh: '' }),
+                        salary: typeof j.salary === 'string' ? { en: j.salary, kh: j.salary } : (j.salary || { en: 'Negotiable', kh: 'ចរចា' }),
+                        experience: typeof j.experience === 'string' ? { en: j.experience, kh: j.experience } : (j.experience || { en: '2+ Years', kh: '២+ ឆ្នាំ' }),
+                        responsibilities: (j.responsibilities || []).map(r => typeof r === 'string' ? { en: r, kh: r } : r),
+                        requirements: (j.requirements || []).map(r => typeof r === 'string' ? { en: r, kh: r } : r),
+                        benefits: (j.benefits || []).map(b => typeof b === 'string' ? { en: b, kh: b } : b)
+                    }));
+
+                    setJobs([...updatedJobs, ...onlyInStatic]);
+                }
+            } catch (err) {
+                console.error('Fetch jobs failed:', err);
+            }
+        };
+        fetchJobs();
+    }, []);
 
     const [testimonials, setTestimonials] = useState<Testimonial[]>(() =>
         homeData.testimonials.map(t => ({
@@ -188,6 +274,16 @@ function AdminContentEditor() {
             author: typeof t.author === 'string' ? { en: t.author, kh: t.author } : t.author,
             quote: typeof t.quote === 'string' ? { en: t.quote, kh: t.quote } : t.quote,
             role: typeof t.role === 'string' ? { en: t.role, kh: t.role } : t.role
+        }))
+    );
+
+    const [milestones, setMilestones] = useState<Milestone[]>(() =>
+        staticMilestones.map(m => ({
+            year: m.year,
+            title: typeof m.title === 'string' ? { en: m.title, kh: m.title } : m.title,
+            desc: typeof m.desc === 'string' ? { en: m.desc, kh: m.desc } : m.desc,
+            image: m.image,
+            projects: m.projects?.map(p => typeof p === 'string' ? { en: p, kh: p } : p) || []
         }))
     );
 
@@ -230,13 +326,19 @@ function AdminContentEditor() {
                     values: values
                 };
 
-                const response = await fetch('/api/cms/save', {
+                const res1 = await fetch('/api/cms/save', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fileName: 'aboutData.ts', data: updatedAboutData })
                 });
 
-                if (!response.ok) throw new Error('Failed to save content');
+                const res2 = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'milestonesData.ts', data: milestones })
+                });
+
+                if (!res1.ok || !res2.ok) throw new Error('Failed to save content');
             }
 
             if (activeSection === 'services') {
@@ -261,7 +363,7 @@ function AdminContentEditor() {
                 if (!res2.ok) throw new Error('Failed to save serviceDetailData');
             }
 
-            if (activeSection === 'home') {
+            if (activeSection === 'home' || activeSection === 'testimonials') {
                 const updatedHomeData = {
                     hero: homeHero,
                     stats: stats,
@@ -287,7 +389,14 @@ function AdminContentEditor() {
                         title: j.title,
                         loc: j.loc,
                         type: j.type,
-                        postedDate: j.date
+                        postedDate: j.date,
+                        dept: j.dept,
+                        summary: j.summary,
+                        salary: j.salary,
+                        experience: j.experience,
+                        responsibilities: j.responsibilities,
+                        requirements: j.requirements,
+                        benefits: j.benefits
                     };
                 });
 
@@ -297,7 +406,15 @@ function AdminContentEditor() {
                     body: JSON.stringify({ fileName: 'jobData.ts', data: updatedJobData })
                 });
 
-                if (!response.ok) throw new Error('Failed to save content');
+                if (!response.ok) throw new Error('Failed to save job listings');
+
+                const careerRes = await fetch('/api/cms/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileName: 'careerContent.ts', data: careerMain })
+                });
+
+                if (!careerRes.ok) throw new Error('Failed to save career content');
             }
 
             if (activeSection === 'contact') {
@@ -319,10 +436,10 @@ function AdminContentEditor() {
                 if (!res.ok) throw new Error('Failed to save contactData');
             }
 
-            alert('Changes saved successfully!');
+            showToast('Changes saved successfully!', 'success');
         } catch (error) {
             console.error('Error saving:', error);
-            alert('Failed to save changes.');
+            showToast('Failed to save changes.', 'error');
         } finally {
             setIsSaving(false);
         }
@@ -340,7 +457,18 @@ function AdminContentEditor() {
     };
 
     const deleteProcessStep = (id: string) => {
-        setProcessSteps(processSteps.filter(s => s.id !== id));
+        setProcessSteps(processSteps.filter(s => s.id !== id).map((s, i) => ({
+            ...s,
+            step: (i + 1).toString().padStart(2, '0')
+        })));
+    };
+
+    const addStat = () => {
+        setStats([...stats, { label: { en: 'New Stat', kh: 'ស្ថិតិថ្មី' }, value: { en: '0+', kh: '០+' }, iconName: 'Award' }]);
+    };
+
+    const deleteStat = (index: number) => {
+        setStats(stats.filter((_, i) => i !== index));
     };
 
     const addValue = () => {
@@ -352,25 +480,57 @@ function AdminContentEditor() {
     };
 
     const addJob = () => {
-        setJobs([...jobs, {
-            id: Date.now().toString(),
-            title: { en: 'Open Position', kh: 'មុខតំណែងទំនេរ' },
+        const id = Date.now().toString();
+        const today = new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        const newJob: Job = {
+            id,
+            title: { en: 'New Position', kh: 'មុខតំណែងថ្មី' },
             loc: { en: 'Phnom Penh', kh: 'ភ្នំពេញ' },
             type: { en: 'Full-time', kh: 'ពេញម៉ោង' },
-            date: { en: 'Feb 2026', kh: 'កុម្ភៈ ២០២៦' }
-        }]);
+            date: { en: today, kh: today },
+            dept: 'Operations',
+            summary: { en: 'Add job description here.', kh: 'បន្ថែមការពិពណ៌នាការងារនៅទីនេះ។' },
+            salary: { en: 'Negotiable', kh: 'ចរចា' },
+            experience: { en: '2+ Years', kh: '២+ ឆ្នាំ' },
+            responsibilities: [{ en: 'Key responsibility here...', kh: 'ការទទួលខុសត្រូវសំខាន់...' }],
+            requirements: [{ en: 'Key qualification here...', kh: 'លក្ខណៈសម្បត្តិសំខាន់...' }],
+            benefits: [{ en: 'Key benefit here...', kh: 'អត្ថប្រយោជន៍សំខាន់...' }]
+        };
+        setJobs([...jobs, newJob]);
+        setEditingJobId(id);
+        showToast('New position added. Please configure details.', 'info');
     };
 
-    const deleteJob = (id: string) => {
-        setJobs(jobs.filter(j => j.id !== id));
+    const deleteJob = async (id: string, nameen: string) => {
+        const isConfirmed = await confirm({
+            title: 'Delete Position',
+            message: `Are you sure you want to delete the position "${nameen}"? This will be removed from the list but won't be permanent until you click "Save Changes".`,
+            confirmText: 'Delete',
+            type: 'danger'
+        });
+
+        if (isConfirmed) {
+            setJobs(prev => prev.filter(j => j.id !== id));
+            showToast('Position removed from list.', 'success');
+        }
     };
 
     const addTestimonial = () => {
         setTestimonials([...testimonials, { id: Date.now().toString(), author: { en: 'Client Name', kh: 'ឈ្មោះអតិថិជន' }, quote: { en: 'Experience shared here...', kh: 'បទពិសោធន៍...' }, role: { en: 'Organization', kh: 'ស្ថាប័ន' } }]);
     };
 
-    const deleteTestimonial = (id: string) => {
-        setTestimonials(testimonials.filter(t => t.id !== id));
+    const deleteTestimonial = async (id: string, authorEn: string) => {
+        const isConfirmed = await confirm({
+            title: 'Delete Testimonial',
+            message: `Are you sure you want to delete the testimonial from "${authorEn}"?`,
+            confirmText: 'Delete',
+            type: 'danger'
+        });
+
+        if (isConfirmed) {
+            setTestimonials(prev => prev.filter(t => t.id !== id));
+            showToast('Testimonial removed from list.', 'success');
+        }
     };
 
     const editServiceDetails = (id: string) => {
@@ -381,11 +541,147 @@ function AdminContentEditor() {
         setEditingServiceId(null);
     };
 
+    const addService = () => {
+        const id = 'svc-' + Date.now();
+        const newSvc: ServiceItem = {
+            id,
+            title: { en: 'New Service', kh: 'សេវាកម្មថ្មី' },
+            desc: { en: 'Brief description of the service offering.', kh: 'ការពិពណ៌នាសង្ខេបអំពីសេវាកម្ម។' },
+            image: '/images/projects/Thumbnail-1.jpg',
+            features: [
+                { en: 'Key Feature 1', kh: 'លក្ខណៈពិសេសទី ១' }
+            ]
+        };
+        setServices([...services, newSvc]);
+
+        const newDetail: ServiceDetail = {
+            id,
+            title: { en: 'New Service', kh: 'សេវាកម្មថ្មី' },
+            subtitle: { en: 'Professional excellence in every project.', kh: 'ឧត្តមភាពវិជ្ជាជីវៈក្នុងគ្រប់គម្រោង។' },
+            heroImage: '/images/projects/Thumbnail-1.jpg',
+            description: { en: '<p>Detailed description goes here...</p>', kh: '<p>ការពិពណ៌នាលម្អិតនៅទីនេះ...</p>' },
+            targetAudience: { en: '<p>Who is this for?</p>', kh: '<p>តើនេះសម្រាប់អ្នកណា?</p>' },
+            scopeOfWork: [
+                { en: 'Initial Planning', kh: 'ការរៀបចំផែនការដំបូង' },
+                { en: 'Technical Implementation', kh: 'ការអនុវត្តតាមបច្ចេកទេស' }
+            ],
+            process: [
+                { step: '01', title: { en: 'Consultation', kh: 'ការប្រឹក្សា' }, desc: { en: 'Meeting needs.', kh: 'ការឆ្លើយតបតម្រូវការ។' } }
+            ],
+            benefits: [
+                { title: { en: 'Quality Assurance', kh: 'ការធានាគុណភាព' }, desc: { en: 'Top tier results.', kh: 'លទ្ធផលល្អបំផុត។' } }
+            ],
+            relatedProjects: []
+        };
+        setDetailsMap(prev => ({ ...prev, [id]: newDetail }));
+        showToast('New service added. Please configure it.', 'info');
+    };
+
+    const deleteService = async (id: string, name: string) => {
+        const isConfirmed = await confirm({
+            title: 'Delete Service',
+            message: `Are you sure you want to delete ${name}? All related details will be removed.`,
+            confirmText: 'Delete',
+            type: 'danger'
+        });
+
+        if (isConfirmed) {
+            setServices(services.filter(s => s.id !== id));
+            const newDetails = { ...detailsMap };
+            delete newDetails[id];
+            setDetailsMap(newDetails);
+            showToast('Service removed.', 'success');
+        }
+    };
+
+    const addSector = () => {
+        const newSec: SectorItem = {
+            id: 'sec-' + Date.now(),
+            title: { en: 'New Sector', kh: 'វិស័យថ្មី' },
+            image: '/images/projects/Thumbnail-1.jpg'
+        };
+        setSectors([...sectors, newSec]);
+        showToast('Sector added.', 'success');
+    };
+
+    const deleteSector = (id: string) => {
+        setSectors(sectors.filter(s => s.id !== id));
+        showToast('Sector removed.', 'info');
+    };
+
+    const addMilestone = () => {
+        setMilestones([...milestones, {
+            year: new Date().getFullYear().toString(),
+            title: { en: 'New Milestone', kh: 'សមិទ្ធិផលថ្មី' },
+            desc: { en: 'Milestone description...', kh: 'ការពិពណ៌នា...' },
+            image: '/images/projects/Thumbnail-1.jpg',
+            projects: []
+        }]);
+        showToast('Milestone added.', 'success');
+    };
+
+    const deleteMilestone = (index: number) => {
+        setMilestones(milestones.filter((_, i) => i !== index));
+        showToast('Milestone removed.', 'info');
+    };
+
+    const addGlobalProcessStep = () => {
+        const newStep: ProcessItem = {
+            id: 'p-' + Date.now(),
+            step: (processStepsService.length + 1).toString().padStart(2, '0'),
+            title: { en: 'New Process Step', kh: 'ជំហានថ្មី' },
+            desc: { en: 'Description of the global process.', kh: 'ការពិពណ៌នាអំពីដំណើរការ។' }
+        };
+        setProcessStepsService([...processStepsService, newStep]);
+        showToast('Process step added.', 'success');
+    };
+
+    const deleteGlobalProcessStep = (id: string) => {
+        setProcessStepsService(processStepsService.filter(p => p.id !== id).map((p, i) => ({
+            ...p,
+            step: (i + 1).toString().padStart(2, '0')
+        })));
+        showToast('Process step removed.', 'info');
+    };
+
     const updateServiceDetail = (updated: ServiceDetail) => {
         setDetailsMap({
             ...detailsMap,
             [updated.id]: updated
         });
+    };
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, serviceId: string, index: number) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const id = `svc-img-${serviceId}`;
+        setUploadingId(id);
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const res = await fetch('/api/cms/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!res.ok) throw new Error('Upload failed');
+
+            const data = await res.json();
+            if (data.url) {
+                const updated = [...services];
+                updated[index].image = data.url;
+                setServices(updated);
+                showToast('Image uploaded and updated!', 'success');
+            }
+        } catch (error) {
+            console.error('Upload failed:', error);
+            showToast('Failed to upload image.', 'error');
+        } finally {
+            setUploadingId(null);
+        }
     };
 
     return (
@@ -414,13 +710,31 @@ function AdminContentEditor() {
 
             {/* Content Area */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Section:</span>
-                        <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">{activeSection}</span>
+                        <div className="relative">
+                            <select
+                                value={activeSection}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    window.history.pushState(null, '', `/admin/content?section=${val}`);
+                                    setActiveSection(val);
+                                }}
+                                className="appearance-none bg-white border border-slate-200 text-indigo-700 text-sm font-bold uppercase tracking-wider rounded-lg outline-none pl-4 pr-10 py-2 hover:border-indigo-300 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm w-full md:w-auto"
+                            >
+                                <option value="home">🏠 Home Page</option>
+                                <option value="about">📖 About Us</option>
+                                <option value="services">⚙️ Services</option>
+                                <option value="careers">💼 Careers & Jobs</option>
+                                <option value="testimonials">⭐ Testimonials</option>
+                                <option value="contact">📞 Contact Info</option>
+                            </select>
+                            <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 rotate-90 pointer-events-none" size={16} />
+                        </div>
                     </div>
 
-                    <div className="flex items-center bg-slate-200/50 p-1 rounded-lg border border-slate-200">
+                    <div className="flex items-center bg-slate-200/50 p-1 rounded-lg border border-slate-200 w-fit">
                         <button
                             onClick={() => setEditLang('en')}
                             className={`px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${editLang === 'en' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
@@ -438,7 +752,7 @@ function AdminContentEditor() {
                     </div>
                 </div>
 
-                <div className="p-8">
+                <div className="p-8 pb-32">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeSection}
@@ -474,10 +788,18 @@ function AdminContentEditor() {
                                     </section>
 
                                     <section id="why" className="space-y-4">
-                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Core Statistics</h3>
+                                        <div className="flex items-center justify-between border-b pb-2">
+                                            <h3 className="text-lg font-bold text-slate-900">Core Statistics</h3>
+                                            <button onClick={addStat} className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors">
+                                                <Plus size={14} /> Add Stat
+                                            </button>
+                                        </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                             {stats.map((stat, i) => (
-                                                <div key={i} className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-3">
+                                                <div key={i} className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-3 relative group">
+                                                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <ActionDropdown onDelete={() => deleteStat(i)} />
+                                                    </div>
                                                     <div className="w-8 h-8 rounded-lg bg-white border border-slate-100 flex items-center justify-center text-indigo-600">
                                                         {stat.iconName === 'ShieldCheck' && <ShieldCheck size={16} />}
                                                         {stat.iconName === 'Trophy' && <Trophy size={16} />}
@@ -489,7 +811,7 @@ function AdminContentEditor() {
                                                     <div className="space-y-1.5">
                                                         <input
                                                             className={`w-full bg-transparent text-sm font-bold text-slate-900 outline-none border-b border-transparent focus:border-slate-300 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                            value={stat.label[editLang]}
+                                                            value={stat.label[editLang] || ''}
                                                             onChange={(e) => {
                                                                 const newStats = [...stats];
                                                                 newStats[i].label = { ...newStats[i].label, [editLang]: e.target.value };
@@ -498,10 +820,10 @@ function AdminContentEditor() {
                                                         />
                                                         <input
                                                             className={`w-full bg-transparent text-xs text-slate-500 outline-none border-b border-transparent focus:border-slate-300 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                            value={stat.val[editLang]}
+                                                            value={stat.value[editLang] || ''}
                                                             onChange={(e) => {
                                                                 const newStats = [...stats];
-                                                                newStats[i].val = { ...newStats[i].val, [editLang]: e.target.value };
+                                                                newStats[i].value = { ...newStats[i].value, [editLang]: e.target.value };
                                                                 setStats(newStats);
                                                             }}
                                                         />
@@ -514,13 +836,16 @@ function AdminContentEditor() {
                                     <section id="process" className="space-y-4">
                                         <div className="flex items-center justify-between border-b pb-2">
                                             <h3 className="text-lg font-bold text-slate-900">Working Process</h3>
-                                            <button onClick={addProcessStep} className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                                            <button onClick={addProcessStep} className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1.5 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors">
                                                 <Plus size={14} /> Add Step
                                             </button>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {processSteps.map((p, i) => (
                                                 <div key={p.id} className="p-5 border border-slate-200 rounded-xl relative group">
+                                                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <ActionDropdown onDelete={() => deleteProcessStep(p.id)} />
+                                                    </div>
                                                     <div className="flex items-center gap-4">
                                                         <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">{p.step}</div>
                                                         <div className="flex-1 space-y-1">
@@ -543,9 +868,6 @@ function AdminContentEditor() {
                                                                 }}
                                                             />
                                                         </div>
-                                                        <button onClick={() => deleteProcessStep(p.id)} className="p-1.5 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
-                                                            <Trash2 size={16} />
-                                                        </button>
                                                     </div>
                                                 </div>
                                             ))}
@@ -562,10 +884,10 @@ function AdminContentEditor() {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             {testimonials.map((t, i) => (
                                                 <div key={t.id} className="p-5 border border-slate-200 rounded-xl relative group bg-white shadow-sm hover:border-slate-300 transition-colors">
-                                                    <button onClick={() => deleteTestimonial(t.id)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
-                                                        <Trash2 size={14} />
-                                                    </button>
-                                                    <div className="flex items-center gap-1 text-amber-400 mb-3">
+                                                    <div className="absolute top-2 right-2">
+                                                        <ActionDropdown onDelete={() => deleteTestimonial(t.id, t.author.en)} />
+                                                    </div>
+                                                    <div className="flex items-center gap-1 text-amber-400 mb-3 mt-4">
                                                         {[...Array(5)].map((_, i) => <Award key={i} size={14} fill="currentColor" />)}
                                                     </div>
                                                     <textarea
@@ -613,25 +935,38 @@ function AdminContentEditor() {
                             {activeSection === 'services' && (
                                 <div className="space-y-10">
                                     <section id="services-list" className="space-y-4">
-                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Service Cards</h3>
+                                        <div className="flex items-center justify-between border-b pb-2">
+                                            <h3 className="text-lg font-bold text-slate-900">Service Cards</h3>
+                                            <button
+                                                onClick={addService}
+                                                className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-50 px-3 py-1.5 rounded-lg"
+                                            >
+                                                <Plus size={14} /> Add New Service
+                                            </button>
+                                        </div>
                                         <div className="space-y-6">
                                             {services.map((svc, i) => (
-                                                <div key={svc.id} className="p-5 border border-slate-200 rounded-xl bg-slate-50/50 space-y-3">
+                                                <div key={svc.id} className="p-5 border border-slate-200 rounded-xl bg-slate-50/50 space-y-3 relative">
                                                     <div className="flex items-center justify-between">
                                                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Service {i + 1}</span>
-                                                        <button
-                                                            onClick={() => editServiceDetails(svc.id)}
-                                                            className="text-xs font-bold text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-all flex items-center gap-1.5"
-                                                        >
-                                                            <Eye size={14} /> Edit Detail Page
-                                                        </button>
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                onClick={() => editServiceDetails(svc.id)}
+                                                                className="text-xs font-bold text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-all flex items-center gap-1.5 shadow-sm"
+                                                            >
+                                                                <Eye size={14} /> Edit Detail Page
+                                                            </button>
+                                                            <ActionDropdown
+                                                                onDelete={() => deleteService(svc.id, svc.title[editLang] || svc.title.en)}
+                                                            />
+                                                        </div>
                                                     </div>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         <div className="space-y-1.5">
                                                             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Title ({editLang.toUpperCase()})</label>
                                                             <input
                                                                 className={`w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                                value={svc.title[editLang]}
+                                                                value={svc.title[editLang] || ''}
                                                                 onChange={(e) => {
                                                                     const updated = [...services];
                                                                     updated[i].title = { ...updated[i].title, [editLang]: e.target.value };
@@ -639,15 +974,40 @@ function AdminContentEditor() {
                                                                 }}
                                                             />
                                                         </div>
-                                                        <div className="space-y-1.5">
-                                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Image Path</label>
-                                                            <input
-                                                                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
-                                                                value={svc.image}
-                                                                onChange={(e) => {
-                                                                    const updated = [...services]; updated[i].image = e.target.value; setServices(updated);
-                                                                }}
-                                                            />
+                                                        <div className="space-y-1.5 flex flex-col">
+                                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Service Image</label>
+                                                            <div className="flex gap-2">
+                                                                <div className="relative flex-1 group/img">
+                                                                    <input
+                                                                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-mono focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none pr-10"
+                                                                        value={svc.image}
+                                                                        onChange={(e) => {
+                                                                            const updated = [...services]; updated[i].image = e.target.value; setServices(updated);
+                                                                        }}
+                                                                    />
+                                                                    {svc.image && (
+                                                                        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded border border-slate-200 overflow-hidden shadow-sm">
+                                                                            <img src={svc.image} className="w-full h-full object-cover" alt="" />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                <label className="shrink-0">
+                                                                    <div className={`flex items-center gap-2 px-3 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-all cursor-pointer shadow-sm ${uploadingId === `svc-img-${svc.id}` ? 'opacity-50 pointer-events-none' : ''}`}>
+                                                                        {uploadingId === `svc-img-${svc.id}` ? (
+                                                                            <Loader2 size={14} className="animate-spin" />
+                                                                        ) : (
+                                                                            <Upload size={14} />
+                                                                        )}
+                                                                        {uploadingId === `svc-img-${svc.id}` ? 'Uploading...' : 'Upload'}
+                                                                    </div>
+                                                                    <input
+                                                                        type="file"
+                                                                        className="hidden"
+                                                                        accept="image/*"
+                                                                        onChange={(e) => handleFileUpload(e, svc.id, i)}
+                                                                    />
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div className="space-y-1.5">
@@ -655,7 +1015,7 @@ function AdminContentEditor() {
                                                         <textarea
                                                             rows={3}
                                                             className={`w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none resize-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                            value={svc.desc[editLang]}
+                                                            value={svc.desc[editLang] || ''}
                                                             onChange={(e) => {
                                                                 const updated = [...services];
                                                                 updated[i].desc = { ...updated[i].desc, [editLang]: e.target.value };
@@ -688,16 +1048,30 @@ function AdminContentEditor() {
                                     </section>
 
                                     <section id="services-process" className="space-y-4">
-                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Working Process</h3>
+                                        <div className="flex items-center justify-between border-b pb-2">
+                                            <h3 className="text-lg font-bold text-slate-900">Working Process</h3>
+                                            <button
+                                                onClick={addGlobalProcessStep}
+                                                className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-50 px-3 py-1.5 rounded-lg"
+                                            >
+                                                <Plus size={14} /> Add Step
+                                            </button>
+                                        </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {processStepsService.map((p, i) => (
                                                 <div key={p.id} className="p-5 border border-slate-200 rounded-xl relative group">
+                                                    <button
+                                                        onClick={() => deleteGlobalProcessStep(p.id)}
+                                                        className="absolute top-2 right-2 p-1 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
                                                     <div className="flex items-center gap-4">
                                                         <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">{p.step}</div>
                                                         <div className="flex-1 space-y-1">
                                                             <input
                                                                 className={`w-full text-sm font-bold text-slate-900 bg-transparent outline-none focus:bg-slate-50 rounded px-1 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                                value={p.title[editLang]}
+                                                                value={p.title[editLang] || ''}
                                                                 onChange={(e) => {
                                                                     const updated = [...processStepsService];
                                                                     updated[i].title = { ...updated[i].title, [editLang]: e.target.value };
@@ -706,7 +1080,7 @@ function AdminContentEditor() {
                                                             />
                                                             <input
                                                                 className={`w-full text-xs text-slate-500 bg-transparent outline-none focus:bg-slate-50 rounded px-1 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                                value={p.desc[editLang]}
+                                                                value={p.desc[editLang] || ''}
                                                                 onChange={(e) => {
                                                                     const updated = [...processStepsService];
                                                                     updated[i].desc = { ...updated[i].desc, [editLang]: e.target.value };
@@ -721,28 +1095,77 @@ function AdminContentEditor() {
                                     </section>
 
                                     <section id="services-sectors" className="space-y-4">
-                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Sectors We Serve</h3>
+                                        <div className="flex items-center justify-between border-b pb-2">
+                                            <h3 className="text-lg font-bold text-slate-900">Sectors We Serve</h3>
+                                            <button
+                                                onClick={addSector}
+                                                className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-50 px-3 py-1.5 rounded-lg"
+                                            >
+                                                <Plus size={14} /> Add Sector
+                                            </button>
+                                        </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                             {sectors.map((sec, i) => (
-                                                <div key={sec.id} className="p-4 border border-slate-200 rounded-xl flex items-center gap-4 group">
+                                                <div key={sec.id} className="p-4 border border-slate-200 rounded-xl flex items-center gap-4 group relative">
+                                                    <button
+                                                        onClick={() => deleteSector(sec.id)}
+                                                        className="absolute top-2 right-2 p-1 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
                                                     <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs shrink-0">{i + 1}</div>
                                                     <div className="flex-1 space-y-1">
                                                         <input
                                                             className={`w-full text-sm font-bold text-slate-900 bg-transparent outline-none ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                            value={sec.title[editLang]}
+                                                            value={sec.title[editLang] || ''}
                                                             onChange={(e) => {
                                                                 const updated = [...sectors];
                                                                 updated[i].title = { ...updated[i].title, [editLang]: e.target.value };
                                                                 setSectors(updated);
                                                             }}
                                                         />
-                                                        <input
-                                                            className="w-full text-xs text-slate-400 font-mono bg-transparent outline-none"
-                                                            value={sec.image}
-                                                            onChange={(e) => {
-                                                                const updated = [...sectors]; updated[i].image = e.target.value; setSectors(updated);
-                                                            }}
-                                                        />
+                                                        <div className="flex flex-col gap-1">
+                                                            <div className="flex items-center gap-2 group/img relative">
+                                                                <input
+                                                                    className="w-full text-[10px] text-slate-400 font-mono bg-transparent outline-none focus:text-indigo-600 transition-colors pr-6"
+                                                                    value={sec.image}
+                                                                    onChange={(e) => {
+                                                                        const updated = [...sectors]; updated[i].image = e.target.value; setSectors(updated);
+                                                                    }}
+                                                                />
+                                                                {sec.image && (
+                                                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded border border-slate-200 overflow-hidden">
+                                                                        <img src={sec.image} className="w-full h-full object-cover" alt="" />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            <label className="flex items-center gap-1 text-[10px] text-indigo-600 font-bold cursor-pointer hover:text-indigo-700 w-fit">
+                                                                {uploadingId === `sec-img-${sec.id}` ? <Loader2 size={10} className="animate-spin" /> : <Upload size={10} />}
+                                                                {uploadingId === `sec-img-${sec.id}` ? 'Uploading...' : 'Upload Image'}
+                                                                <input
+                                                                    type="file"
+                                                                    className="hidden"
+                                                                    accept="image/*"
+                                                                    onChange={async (e) => {
+                                                                        const file = e.target.files?.[0];
+                                                                        if (!file) return;
+                                                                        const id = `sec-img-${sec.id}`;
+                                                                        setUploadingId(id);
+                                                                        try {
+                                                                            const formData = new FormData();
+                                                                            formData.append('file', file);
+                                                                            const res = await fetch('/api/cms/upload', { method: 'POST', body: formData });
+                                                                            const data = await res.json();
+                                                                            if (data.url) {
+                                                                                const updated = [...sectors]; updated[i].image = data.url; setSectors(updated);
+                                                                                showToast('Sector image updated!', 'success');
+                                                                            }
+                                                                        } catch (err) { showToast('Upload failed', 'error'); }
+                                                                        finally { setUploadingId(null); }
+                                                                    }}
+                                                                />
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))}
@@ -777,9 +1200,9 @@ function AdminContentEditor() {
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                             {values.map((v, i) => (
                                                 <div key={v.id} className="p-5 border border-slate-200 rounded-xl relative group bg-white shadow-sm hover:border-slate-300 transition-colors">
-                                                    <button onClick={() => deleteValue(v.id)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
-                                                        <Trash2 size={14} />
-                                                    </button>
+                                                    <div className="absolute top-2 right-2">
+                                                        <ActionDropdown onDelete={() => deleteValue(v.id)} />
+                                                    </div>
                                                     <input
                                                         className={`w-full text-base font-bold text-slate-900 bg-transparent outline-none mb-3 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
                                                         value={v.title[editLang]}
@@ -802,76 +1225,438 @@ function AdminContentEditor() {
                                             ))}
                                         </div>
                                     </section>
-                                </div>
-                            )}
 
-                            {/* --- CAREERS --- */}
-                            {activeSection === 'careers' && (
-                                <div className="space-y-6">
-                                    <div className="flex items-center justify-between border-b pb-4">
-                                        <h3 className="text-lg font-bold text-slate-900">Job Listings</h3>
-                                        <button onClick={addJob} className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition-colors">
-                                            Post New Position
-                                        </button>
-                                    </div>
-                                    <div className="grid grid-cols-1 gap-4">
-                                        {jobs.map((job, i) => (
-                                            <div key={job.id} className="p-4 border border-slate-200 rounded-xl flex items-center justify-between hover:bg-slate-50 transition-colors">
-                                                <div className="flex items-center gap-6">
-                                                    <div className="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs">{i + 1}</div>
-                                                    <div>
-                                                        <input
-                                                            className={`text-base font-bold text-slate-900 bg-transparent outline-none w-80 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                            value={job.title[editLang]}
-                                                            onChange={(e) => {
-                                                                const newJobs = [...jobs];
-                                                                newJobs[i].title = { ...newJobs[i].title, [editLang]: e.target.value };
-                                                                setJobs(newJobs);
-                                                            }}
-                                                        />
-                                                        <div className="flex gap-4 mt-1">
-                                                            <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                                                                <MapPin size={12} />
+                                    <section id="milestones" className="space-y-4">
+                                        <div className="flex items-center justify-between border-b pb-2">
+                                            <h3 className="text-lg font-bold text-slate-900">Project Milestones</h3>
+                                            <button onClick={addMilestone} className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                                                <Plus size={14} /> Add Milestone
+                                            </button>
+                                        </div>
+                                        <div className="space-y-6">
+                                            {milestones.map((m, i) => (
+                                                <div key={i} className="p-6 border border-slate-200 rounded-xl bg-white shadow-sm space-y-4 relative group">
+                                                    <div className="absolute top-4 right-4">
+                                                        <ActionDropdown onDelete={() => deleteMilestone(i)} />
+                                                    </div>
+                                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                                        <div className="md:col-span-1 space-y-4">
+                                                            <div>
+                                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Year/Period</label>
                                                                 <input
-                                                                    className={`bg-transparent outline-none w-24 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                                    value={job.loc[editLang]}
+                                                                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded lg outline-none focus:border-indigo-500 text-sm font-bold"
+                                                                    value={m.year}
                                                                     onChange={(e) => {
-                                                                        const newJobs = [...jobs];
-                                                                        newJobs[i].loc = { ...newJobs[i].loc, [editLang]: e.target.value };
-                                                                        setJobs(newJobs);
+                                                                        const updated = [...milestones]; updated[i].year = e.target.value; setMilestones(updated);
                                                                     }}
                                                                 />
                                                             </div>
-                                                            <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                                                                <Briefcase size={12} />
+                                                            <div className="space-y-1.5 overflow-hidden">
+                                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Image</label>
+                                                                <div className="relative aspect-video rounded-lg overflow-hidden border border-slate-200 bg-slate-100 mb-2">
+                                                                    {m.image ? <img src={m.image} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><ImageIcon className="text-slate-300" /></div>}
+                                                                </div>
                                                                 <input
-                                                                    className={`bg-transparent outline-none w-24 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                                    value={job.type[editLang]}
+                                                                    className="w-full text-[10px] font-mono p-1.5 border border-slate-200 rounded mb-2 overflow-hidden text-ellipsis"
+                                                                    value={m.image}
                                                                     onChange={(e) => {
-                                                                        const newJobs = [...jobs];
-                                                                        newJobs[i].type = { ...newJobs[i].type, [editLang]: e.target.value };
-                                                                        setJobs(newJobs);
+                                                                        const updated = [...milestones]; updated[i].image = e.target.value; setMilestones(updated);
+                                                                    }}
+                                                                />
+                                                                <label className="flex items-center justify-center gap-2 w-full py-2 bg-slate-900 text-white text-[11px] font-bold rounded cursor-pointer hover:bg-slate-800 transition-all">
+                                                                    <Upload size={14} /> Upload Image
+                                                                    <input type="file" className="hidden" accept="image/*" onChange={async (e) => {
+                                                                        const file = e.target.files?.[0]; if (!file) return;
+                                                                        const formData = new FormData(); formData.append('file', file);
+                                                                        const res = await fetch('/api/cms/upload', { method: 'POST', body: formData });
+                                                                        const data = await res.json();
+                                                                        if (data.url) {
+                                                                            const updated = [...milestones]; updated[i].image = data.url; setMilestones(updated);
+                                                                            showToast('Milestone image updated!', 'success');
+                                                                        }
+                                                                    }} />
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div className="md:col-span-3 space-y-4">
+                                                            <div>
+                                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Title ({editLang})</label>
+                                                                <input
+                                                                    className={`w-full p-2 bg-slate-50 border border-slate-200 rounded lg outline-none focus:border-indigo-500 font-bold ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                    value={m.title[editLang] || ''}
+                                                                    onChange={(e) => {
+                                                                        const updated = [...milestones]; updated[i].title = { ...updated[i].title, [editLang]: e.target.value }; setMilestones(updated);
                                                                     }}
                                                                 />
                                                             </div>
-                                                            <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                                                                <Calendar size={12} />
-                                                                <input
-                                                                    className={`bg-transparent outline-none w-24 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
-                                                                    value={job.date[editLang]}
+                                                            <div>
+                                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Description ({editLang})</label>
+                                                                <textarea
+                                                                    rows={3}
+                                                                    className={`w-full p-2 bg-slate-50 border border-slate-200 rounded lg outline-none focus:border-indigo-500 text-sm ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                    value={m.desc[editLang] || ''}
                                                                     onChange={(e) => {
-                                                                        const newJobs = [...jobs];
-                                                                        newJobs[i].date = { ...newJobs[i].date, [editLang]: e.target.value };
-                                                                        setJobs(newJobs);
+                                                                        const updated = [...milestones]; updated[i].desc = { ...updated[i].desc, [editLang]: e.target.value }; setMilestones(updated);
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Associated Projects ({editLang}, comma-separated)</label>
+                                                                <input
+                                                                    className={`w-full p-2 bg-slate-50 border border-slate-200 rounded lg outline-none focus:border-indigo-500 text-sm ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                    value={m.projects?.map(p => p[editLang] || p.en).join(', ') || ''}
+                                                                    onChange={(e) => {
+                                                                        const vals = e.target.value.split(',').map(v => v.trim());
+                                                                        const updated = [...milestones];
+                                                                        updated[i].projects = vals.map((v, idx) => {
+                                                                            const existing = updated[i].projects?.[idx];
+                                                                            return {
+                                                                                en: editLang === 'en' ? v : (existing?.en || v),
+                                                                                kh: editLang === 'kh' ? v : (existing?.kh || v)
+                                                                            };
+                                                                        });
+                                                                        setMilestones(updated);
                                                                     }}
                                                                 />
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button onClick={() => deleteJob(job.id)} className="p-2 text-slate-300 hover:text-red-500">
-                                                    <Trash2 size={18} />
-                                                </button>
+                                            ))}
+                                        </div>
+                                    </section>
+                                </div>
+                            )}
+
+                            {/* --- CAREERS --- */}
+                            {activeSection === 'careers' && (
+                                <div className="space-y-10">
+                                    {/* Hero Section */}
+                                    <section className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Careers Hero Section</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Tagline ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.hero.tagline[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, hero: { ...careerMain.hero, tagline: { ...careerMain.hero.tagline, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Headline Line 1 ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.hero.title1[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, hero: { ...careerMain.hero, title1: { ...careerMain.hero.title1, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Headline Line 2 ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.hero.title2[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, hero: { ...careerMain.hero, title2: { ...careerMain.hero.title2, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Subtext ({editLang})</label>
+                                                <textarea
+                                                    rows={6}
+                                                    className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                    value={careerMain.hero.subtext[editLang] || ''}
+                                                    onChange={(e) => setCareerMain({ ...careerMain, hero: { ...careerMain.hero, subtext: { ...careerMain.hero.subtext, [editLang]: e.target.value } } })}
+                                                />
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    {/* Stats Section */}
+                                    <section className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Careers Key Stats</h3>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                                            <div>
+                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Team Size</label>
+                                                <input
+                                                    className="w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500"
+                                                    value={careerMain.stats.teamMembers}
+                                                    onChange={(e) => setCareerMain({ ...careerMain, stats: { ...careerMain.stats, teamMembers: e.target.value } })}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Projects</label>
+                                                <input
+                                                    className="w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500"
+                                                    value={careerMain.stats.activeProjects}
+                                                    onChange={(e) => setCareerMain({ ...careerMain, stats: { ...careerMain.stats, activeProjects: e.target.value } })}
+                                                />
+                                            </div>
+                                            <div className="md:col-span-2 space-y-3">
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Award Title ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.stats.awardTitle[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, stats: { ...careerMain.stats, awardTitle: { ...careerMain.stats.awardTitle, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    {/* Why Join Section */}
+                                    <section className="space-y-4">
+                                        <div className="flex items-center justify-between border-b pb-2">
+                                            <h3 className="text-lg font-bold text-slate-900">Why Choose Kimmex? Section</h3>
+                                        </div>
+                                        <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Section Title ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.whyJoin.title[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, whyJoin: { ...careerMain.whyJoin, title: { ...careerMain.whyJoin.title, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Section Subtext ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.whyJoin.subtext[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, whyJoin: { ...careerMain.whyJoin, subtext: { ...careerMain.whyJoin.subtext, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                {careerMain.whyJoin.cards.map((card, idx) => (
+                                                    <div key={card.id} className="p-4 bg-white border border-slate-200 rounded-lg space-y-3 relative">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400">{idx + 1}</div>
+                                                            <input
+                                                                className={`text-xs font-bold text-slate-900 bg-transparent outline-none flex-1 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={card.title[editLang] || ''}
+                                                                onChange={(e) => {
+                                                                    const newCards = [...careerMain.whyJoin.cards];
+                                                                    newCards[idx].title = { ...newCards[idx].title, [editLang]: e.target.value };
+                                                                    setCareerMain({ ...careerMain, whyJoin: { ...careerMain.whyJoin, cards: newCards } });
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <textarea
+                                                            rows={3}
+                                                            className={`w-full text-[11px] text-slate-500 bg-transparent outline-none resize-none border-t pt-2 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={card.desc[editLang] || ''}
+                                                            onChange={(e) => {
+                                                                const newCards = [...careerMain.whyJoin.cards];
+                                                                newCards[idx].desc = { ...newCards[idx].desc, [editLang]: e.target.value };
+                                                                setCareerMain({ ...careerMain, whyJoin: { ...careerMain.whyJoin, cards: newCards } });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    {/* Hiring Process Section */}
+                                    <section className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Hiring Process Section</h3>
+                                        <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Tagline ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.process.tagline[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, process: { ...careerMain.process, tagline: { ...careerMain.process.tagline, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Headline ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.process.title[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, process: { ...careerMain.process, title: { ...careerMain.process.title, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Subtext ({editLang})</label>
+                                                    <input
+                                                        className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                        value={careerMain.process.subtext[editLang] || ''}
+                                                        onChange={(e) => setCareerMain({ ...careerMain, process: { ...careerMain.process, subtext: { ...careerMain.process.subtext, [editLang]: e.target.value } } })}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                                {careerMain.process.steps.map((step, idx) => (
+                                                    <div key={idx} className="p-4 bg-white border border-slate-200 rounded-lg space-y-3">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-xs font-black text-indigo-600 border border-indigo-100">{step.step}</div>
+                                                            <input
+                                                                className={`text-xs font-bold text-slate-900 bg-transparent outline-none flex-1 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={step.title[editLang] || ''}
+                                                                onChange={(e) => {
+                                                                    const newSteps = [...careerMain.process.steps];
+                                                                    newSteps[idx].title = { ...newSteps[idx].title, [editLang]: e.target.value };
+                                                                    setCareerMain({ ...careerMain, process: { ...careerMain.process, steps: newSteps } });
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <textarea
+                                                            rows={3}
+                                                            className={`w-full text-[11px] text-slate-500 bg-transparent outline-none resize-none border-t pt-2 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={step.desc[editLang] || ''}
+                                                            onChange={(e) => {
+                                                                const newSteps = [...careerMain.process.steps];
+                                                                newSteps[idx].desc = { ...newSteps[idx].desc, [editLang]: e.target.value };
+                                                                setCareerMain({ ...careerMain, process: { ...careerMain.process, steps: newSteps } });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section className="space-y-4">
+                                        <h3 className="text-lg font-bold text-slate-900 border-b pb-2">Listings Header (Current Openings)</h3>
+                                        <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4">
+                                            <div>
+                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Section Headline ({editLang})</label>
+                                                <input
+                                                    className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                    value={careerMain.openings.title[editLang] || ''}
+                                                    onChange={(e) => setCareerMain({ ...careerMain, openings: { ...careerMain.openings, title: { ...careerMain.openings.title, [editLang]: e.target.value } } })}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] uppercase text-slate-400 font-bold mb-1 block">Section Subtext ({editLang})</label>
+                                                <input
+                                                    className={`w-full p-2 bg-white border border-slate-200 rounded lg outline-none focus:border-indigo-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                    value={careerMain.openings.subtext[editLang] || ''}
+                                                    onChange={(e) => setCareerMain({ ...careerMain, openings: { ...careerMain.openings, subtext: { ...careerMain.openings.subtext, [editLang]: e.target.value } } })}
+                                                />
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <div className="flex items-center justify-between border-b pb-4">
+                                        <h3 className="text-lg font-bold text-slate-900">Individual job Listings</h3>
+                                        <button onClick={addJob} className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition-colors">
+                                            Post New Position
+                                        </button>
+                                    </div>
+                                    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr className="bg-slate-50 border-b border-slate-200">
+                                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Position</th>
+                                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Department</th>
+                                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Location</th>
+                                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Type</th>
+                                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Posted</th>
+                                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-100">
+                                                {jobs.map((job) => (
+                                                    <tr key={job.id} className="hover:bg-slate-50 transition-colors group">
+                                                        <td className="px-6 py-4">
+                                                            <div className={`text-sm font-bold text-slate-900 ${editLang === 'kh' ? 'font-siemreap' : ''}`}>{job.title[editLang]}</div>
+                                                            <div className="text-[10px] text-slate-400 font-mono mt-0.5">{job.id}</div>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <span className="px-2 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-600 border border-slate-200 uppercase">{job.dept}</span>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <div className={`text-xs text-slate-600 flex items-center gap-1.5 ${editLang === 'kh' ? 'font-siemreap' : ''}`}>
+                                                                <MapPin size={12} className="text-slate-300" /> {job.loc[editLang]}
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <div className={`text-xs text-slate-500 ${editLang === 'kh' ? 'font-siemreap' : ''}`}>{job.type[editLang]}</div>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <div className="text-xs text-slate-500 font-medium">{job.date[editLang]}</div>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <ActionDropdown
+                                                                onEdit={() => setEditingJobId(job.id)}
+                                                                onDelete={() => deleteJob(job.id, job.title.en)}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                        {jobs.length === 0 && (
+                                            <div className="p-12 text-center text-slate-400">
+                                                No job positions posted yet.
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* --- TESTIMONIALS --- */}
+                            {activeSection === 'testimonials' && (
+                                <div className="space-y-8">
+                                    <div className="flex items-center justify-between border-b pb-4">
+                                        <h3 className="text-lg font-bold text-slate-900">Client Testimonials</h3>
+                                        <button onClick={addTestimonial} className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 flex items-center gap-2">
+                                            <Plus size={16} /> Add Testimonial
+                                        </button>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {testimonials.map((t, i) => (
+                                            <div key={t.id} className="p-6 border border-slate-200 rounded-2xl bg-white shadow-sm hover:shadow-md transition-all relative group">
+                                                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <ActionDropdown onDelete={() => deleteTestimonial(t.id, t.author.en)} />
+                                                </div>
+                                                <div className="space-y-4">
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">Testimonial Quote ({editLang.toUpperCase()})</label>
+                                                        <textarea
+                                                            rows={4}
+                                                            className={`w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm italic text-slate-600 focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none resize-none transition-all ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                            value={t.quote[editLang] || ''}
+                                                            onChange={(e) => {
+                                                                const newT = [...testimonials];
+                                                                newT[i].quote = { ...newT[i].quote, [editLang]: e.target.value };
+                                                                setTestimonials(newT);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Client Name</label>
+                                                            <input
+                                                                className={`w-full p-2 bg-slate-50 border border-slate-100 rounded-lg text-sm font-bold text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/10 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={t.author[editLang] || ''}
+                                                                onChange={(e) => {
+                                                                    const newT = [...testimonials];
+                                                                    newT[i].author = { ...newT[i].author, [editLang]: e.target.value };
+                                                                    setTestimonials(newT);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Organization/Role</label>
+                                                            <input
+                                                                className={`w-full p-2 bg-slate-50 border border-slate-100 rounded-lg text-sm text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500/10 ${editLang === 'kh' ? 'font-siemreap' : ''}`}
+                                                                value={t.role[editLang] || ''}
+                                                                onChange={(e) => {
+                                                                    const newT = [...testimonials];
+                                                                    newT[i].role = { ...newT[i].role, [editLang]: e.target.value };
+                                                                    setTestimonials(newT);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -890,7 +1675,7 @@ function AdminContentEditor() {
                                                     <textarea
                                                         rows={3}
                                                         className={`w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none ${editLang === 'kh' ? 'font-siemreap' : 'font-medium'}`}
-                                                        value={contact.address[editLang]}
+                                                        value={contact.address[editLang] || ''}
                                                         onChange={(e) => setContact({ ...contact, address: { ...contact.address, [editLang]: e.target.value } })}
                                                     />
                                                 </div>
@@ -900,7 +1685,7 @@ function AdminContentEditor() {
                                                     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Working Hours ({editLang.toUpperCase()})</label>
                                                     <input
                                                         className={`w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all ${editLang === 'kh' ? 'font-siemreap' : 'font-medium'}`}
-                                                        value={contact.hours[editLang]}
+                                                        value={contact.hours[editLang] || ''}
                                                         onChange={(e) => setContact({ ...contact, hours: { ...contact.hours, [editLang]: e.target.value } })}
                                                     />
                                                 </div>
@@ -970,25 +1755,41 @@ function AdminContentEditor() {
                                 </div>
                             )}
                         </motion.div>
-                    </AnimatePresence>
-                </div>
-            </div>
+                    </AnimatePresence >
+                </div >
+            </div >
 
             {/* Service Detail Modal Editor */}
             <AnimatePresence>
-                {editingServiceId && detailsMap[editingServiceId] && (
-                    <ServiceDetailEditor
-                        detail={detailsMap[editingServiceId]}
-                        editLang={editLang}
-                        onClose={closeServiceDetails}
-                        onSave={(updated) => {
-                            updateServiceDetail(updated);
-                            closeServiceDetails();
-                        }}
-                    />
-                )}
-            </AnimatePresence>
-        </div>
+                {
+                    editingServiceId && detailsMap[editingServiceId] && (
+                        <ServiceDetailEditor
+                            detail={detailsMap[editingServiceId]}
+                            editLang={editLang}
+                            onClose={closeServiceDetails}
+                            onSave={(updated) => {
+                                updateServiceDetail(updated);
+                                closeServiceDetails();
+                            }}
+                        />
+                    )
+                }
+                {
+                    editingJobId && jobs.find(j => j.id === editingJobId) && (
+                        <JobEditor
+                            job={jobs.find(j => j.id === editingJobId)!}
+                            editLang={editLang}
+                            onClose={() => setEditingJobId(null)}
+                            onSave={(updated) => {
+                                const newJobs = jobs.map(j => j.id === updated.id ? updated : j);
+                                setJobs(newJobs);
+                                setEditingJobId(null);
+                            }}
+                        />
+                    )
+                }
+            </AnimatePresence >
+        </div >
     );
 }
 

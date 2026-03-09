@@ -132,9 +132,10 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                                 <span className="w-2 h-8 bg-titan-red rounded-full"></span>
                                 {t('Biography')}
                             </h3>
-                            <p className="text-xl text-titan-navy/70 leading-relaxed font-light mb-12">
-                                {getLocalizedText(member.bio, language)}
-                            </p>
+                            <div
+                                className="text-xl text-titan-navy/70 leading-relaxed font-light mb-12 prose prose-lg prose-slate max-w-none prose-p:mb-4"
+                                dangerouslySetInnerHTML={{ __html: getLocalizedText(member.bio, language) }}
+                            />
 
                             <div className="grid md:grid-cols-2 gap-8 mb-16">
                                 <div className="bg-white p-8 rounded-2xl shadow-lg border-l-4 border-titan-red">

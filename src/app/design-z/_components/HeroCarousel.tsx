@@ -7,35 +7,44 @@ import Image from 'next/image';
 import { ArrowRight, ChevronLeft, ChevronRight, Phone } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
-export default function HeroCarousel() {
+export default function HeroCarousel({ initialData }: { initialData?: any }) {
     const { t, language, fontClassName } = useLanguage();
 
-    const slides = [
+    const defaultSlides = [
         {
             id: 1,
             image: '/images/projects/Thumbnail-1.jpg',
             subtitle: t('Government Infrastructure'),
             title: t('Ministry of Economy'),
             desc: t('Slide 1 Desc'),
-            link: '/design-z/projects/1'
+            link: '/design-z/projects/mef'
         },
         {
             id: 2,
             image: '/images/projects/Thumbnail-2.jpg',
-            subtitle: t('Commercial Excellence'),
-            title: t('Vattanac Capital Extension'),
+            subtitle: t('Water Infrastructure'),
+            title: t('Khleang Toeuk WTP'),
             desc: t('Slide 2 Desc'),
-            link: '/design-z/projects/2'
+            link: '/design-z/projects/kt-wtp'
         },
         {
             id: 3,
             image: '/images/projects/Thumbnail-3.jpg',
-            subtitle: t('National Development'),
-            title: t('Sihanoukville Deep Sea Port'),
+            subtitle: t('Infrastructure Protection'),
+            title: t('Mekong Bank Protection'),
             desc: t('Slide 3 Desc'),
-            link: '/design-z/projects/3'
+            link: '/design-z/projects/mekong-slope'
         }
     ];
+
+    const slides = (initialData && initialData.slides) ? initialData.slides.map((s: any, idx: number) => ({
+        id: idx + 1,
+        image: s.image,
+        subtitle: s.subtitle[language] || s.subtitle.en || '',
+        title: s.title[language] || s.title.en || '',
+        desc: s.desc[language] || s.desc.en || '',
+        link: s.link || '/design-z/projects'
+    })) : defaultSlides;
 
     const [current, setCurrent] = useState(0);
     const [direction, setDirection] = useState(0);
@@ -185,7 +194,7 @@ export default function HeroCarousel() {
                 <div className="max-w-[1400px] mx-auto px-6 flex items-end justify-between">
                     {/* Pagination Lines */}
                     <div className="flex gap-4">
-                        {slides.map((_, idx) => (
+                        {slides.map((_: any, idx: number) => (
                             <button
                                 key={idx}
                                 onClick={() => goToSlide(idx)}

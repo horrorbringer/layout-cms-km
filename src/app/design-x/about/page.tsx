@@ -735,8 +735,8 @@ export default function AboutPage() {
             <section className="py-24 px-4 bg-white overflow-hidden" id='leadership'>
                 <div className="max-w-[1400px] mx-auto text-center">
                     <FadeInWhenVisible>
-                        <div className="text-center mb-16">
-                            <h2 className="text-4xl font-black text-titan-navy uppercase mb-16 tracking-tight">{t('Organization Structure')}</h2>
+                        <div className="text-center mb-16 px-2">
+                            <h2 className="text-3xl md:text-5xl font-black text-titan-navy uppercase mb-12 md:mb-16 tracking-tight leading-tight">{t('Organization Structure')}</h2>
                         </div>
                     </FadeInWhenVisible>
 
@@ -781,24 +781,26 @@ export default function AboutPage() {
                     </div>
 
                     {/* --- MOBILE VIEW: Vertical Tree (Matching Sketch) --- */}
-                    <div className="md:hidden flex flex-col items-center max-w-[340px] mx-auto">
+                    <div className="md:hidden flex flex-col items-center w-full max-w-[340px] mx-auto pb-10">
                         {/* CEO Card */}
-                        <div className="relative mb-12 w-full flex justify-center">
+                        <div className="relative mb-6 w-full flex flex-col items-center">
                             <TeamMemberCard member={ceo} isCEO onClick={handleMemberClick} />
-                            {/* Connector down to spine */}
-                            <div className="absolute top-[85%] left-1/2 -translate-x-1/2 w-px h-12 bg-gray-200 z-0"></div>
+                            {/* Connector down from CEO */}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200 -z-10"></div>
+                            {/* horizontal line connecting center to left spine */}
+                            <div className="absolute top-[calc(100%+2rem)] left-0 w-1/2 h-px bg-gray-200 -z-10"></div>
                         </div>
 
                         {/* Managers List with Spine */}
-                        <div className="relative w-full pl-10">
+                        <div className="relative w-full pl-6 mt-6">
                             {/* Vertical Spine */}
-                            <div className="absolute left-0 top-[-1rem] bottom-10 w-px bg-gray-200"></div>
+                            <div className="absolute left-0 top-[-2rem] bottom-8 w-px bg-gray-200 -z-10"></div>
 
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 {[...managersL2, ...managersL3].map((member, i) => (
-                                    <div key={i} className="relative">
+                                    <div key={i} className="relative w-full z-10 pl-2">
                                         {/* Horizontal Connection Line */}
-                                        <div className="absolute -left-10 top-1/2 -translate-y-1/2 w-10 h-px bg-gray-200"></div>
+                                        <div className="absolute left-[-1.5rem] top-1/2 -translate-y-1/2 w-8 h-px bg-gray-200 -z-10"></div>
 
                                         <TeamMemberRowCard member={member} onClick={handleMemberClick} />
                                     </div>

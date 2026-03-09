@@ -78,7 +78,7 @@ export const allNews: NewsItem[] = [
             "en": "Breaking Ground on the New Sihanoukville Logistics Hub",
             "kh": "ការបញ្ចុះបឋមសិលាបើកការដ្ឋានមជ្ឈមណ្ឌលភស្តុភារកម្មក្រុងព្រះសីហនុថ្មី"
         },
-        "category": "Project Updates",
+        "category": "Updates",
         "date": {
             "en": "Sep 22, 2025",
             "kh": "២២ កញ្ញា ២០២៥"

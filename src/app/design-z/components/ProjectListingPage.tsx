@@ -36,6 +36,7 @@ interface ProjectListingPageProps {
         message: string;
     };
     categories?: string[];
+    initialProjects?: any[];
 }
 
 export default function ProjectListingPage({
@@ -47,7 +48,8 @@ export default function ProjectListingPage({
     filterStatus,
     badgeConfig,
     emptyState,
-    categories = types
+    categories = types,
+    initialProjects
 }: ProjectListingPageProps) {
     const { t, language } = useLanguage();
     const searchParams = useSearchParams();
@@ -57,6 +59,9 @@ export default function ProjectListingPage({
 
     const [filterLoc, setFilterLoc] = useState('All');
     const [filterType, setFilterType] = useState(validInitialType);
+    const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+
+    const allProjects = initialProjects || projects;
 
     // Sync state with URL query params
     useEffect(() => {
@@ -66,12 +71,20 @@ export default function ProjectListingPage({
         } else if (!type) {
             setFilterType('All');
         }
+        setSearchTerm(searchParams.get('search') || '');
     }, [searchParams, categories]);
 
-    const filteredProjects = projects.filter(p => {
-        return (filterLoc === 'All' || p.location.en === filterLoc) &&
-            (filterType === 'All' || p.type.en === filterType) &&
-            p.status.en === filterStatus;
+    const filteredProjects = allProjects.filter(p => {
+        const matchesLoc = filterLoc === 'All' || (p.location.en || p.location) === filterLoc;
+        const matchesType = filterType === 'All' || (p.type.en || p.type) === filterType;
+        const matchesStatus = (p.status.en || p.status) === filterStatus;
+        const matchesSearch = !searchTerm ||
+            (p.title.en || p.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.title.kh || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.location.en || p.location || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.summary?.en || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.type.en || p.type || '').toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesLoc && matchesType && matchesStatus && matchesSearch;
     });
 
     return (
@@ -186,6 +199,18 @@ export default function ProjectListingPage({
 
             {/* --- GRID --- */}
             <section className="px-6 pb-32 max-w-[1400px] mx-auto">
+                {searchTerm && (
+                    <div className="mb-8 flex items-center gap-3 px-5 py-3 bg-titan-navy/5 border border-titan-navy/10 rounded-xl text-sm">
+                        <span className="font-medium text-titan-navy/60">Showing results for:</span>
+                        <span className="font-black text-titan-navy">"{searchTerm}"</span>
+                        <button
+                            onClick={() => { setSearchTerm(''); window.history.pushState({}, '', window.location.pathname); }}
+                            className="ml-auto text-xs font-bold uppercase tracking-widest text-titan-navy/40 hover:text-titan-red transition-colors"
+                        >
+                            ✕ Clear
+                        </button>
+                    </div>
+                )}
                 <AnimatePresence mode='wait'>
                     <motion.div
                         layout
