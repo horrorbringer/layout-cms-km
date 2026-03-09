@@ -37,8 +37,8 @@ export const jobData: Job[] = [
         },
         "dept": "Operations",
         "summary": {
-            "en": null,
-            "kh": null
+            "en": "",
+            "kh": ""
         },
         "salary": {
             "en": "Negotiable",
@@ -48,6 +48,7 @@ export const jobData: Job[] = [
             "en": "2-3 Years",
             "kh": "2-3 Years"
         },
+        "tags": [],
         "responsibilities": [],
         "requirements": [],
         "benefits": []
