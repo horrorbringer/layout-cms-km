@@ -5,5 +5,5 @@ export interface ConfigData {
 }
 
 export const configData: ConfigData = {
-    "khmerFont": "Koulen"
+    "khmerFont": "System"
 };
